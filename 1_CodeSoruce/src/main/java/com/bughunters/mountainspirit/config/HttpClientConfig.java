@@ -50,29 +50,15 @@ public class HttpClientConfig {
         // .filter(errorMappingFilter())
     }
 
-    // [4] 서비스 공공 데이터 전용 WebClient (싱글톤 객체)
+    // [4] WebClient (싱글톤 객체)
     //  - 애플리케이션 시작시 한 번 생성 → 이후 계속 재사용
     //  - 커넥션은 "1개"가 아니라 [1]의 풀에서 "필요한 만큼" 요청 시마다 자동 대여/반환
     @Bean
     public WebClient servicePublicDataClient(WebClient.Builder builder) {
         return builder.clone()                // 전역 builder 상태 복제(스레드 안전)
-//                .baseUrl("https://apis.data.go.kr/B553662")
                 .defaultHeaders(h -> {
                     h.setAccept(List.of(MediaType.APPLICATION_JSON));
                 })
                 .build();                     // 완성된 불변 WebClient
     }
-
-
 }
-//http://apis.data.go.kr/B553662/peakPoiInfoService/getPeakPoiInfoList?numOfRows=100&pageNo=1&serviceKey=7a162b2698e08c06f13a25c9fe96fd89c1788751a7d3adc46918921e9ee2e2a5&type=json
-//https://apis.data.go.kr/B553662/top100FamtListBasiInfoService/getTop100FamtListBasiInfoList?serviceKey=7a162b2698e08c06f13a25c9fe96fd89c1788751a7d3adc46918921e9ee2e2a5&pageNo=1&numOfRows=100&type=json
-
-//{"frtrlId":"0000000020","orgnExmnnPrgrsDrcntNm":null,"placeNm":"정상","sgnpstDstn1Nm":null,
-// "sgnpstDstn2Nm":null,"sgnpstDstn3Nm":null,"sgnpstDstn4Nm":null,"lot":127.320518,
-// "orgnPlaceTpeCd":"PEAK","crtrDt":"2025-09-23 02:27:22","aslAltide":860.983,
-// "dscrtCn":"878m","orgnPlaceTpeNm":"봉우리","orgnSgnpstDstn2DrcntNm":null,
-// "orgnSgnpstDstn3DrcntCd":null,"orgnSgnpstDstn1DrcntNm":null,
-// "orgnSgnpstDstn3DrcntNm":null,"poiId":"0000007654","orgnSgnpstDstn4DrcntNm":null,
-// "orgnSgnpstDstn1DrcntCd":null,"frtrlNm":"대둔산","lat":36.124691,
-// "orgnSgnpstDstn2DrcntCd":null,"orgnSgnpstDstn4DrcntCd":null}
