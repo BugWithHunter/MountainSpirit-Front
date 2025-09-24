@@ -1,0 +1,9 @@
+package com.bughunters.mountainspirit.crew.query.service;
+
+import com.bughunters.mountainspirit.crew.query.dto.CrewDTO;
+
+import java.util.List;
+
+public interface CrewService {
+    List<CrewDTO> findAllCrews();
+}
