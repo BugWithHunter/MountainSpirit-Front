@@ -6,4 +6,6 @@ import java.util.List;
 
 public interface CrewService {
     List<CrewDTO> findAllCrews();
+
+    CrewDTO findOneCrewById(Long crewId);
 }

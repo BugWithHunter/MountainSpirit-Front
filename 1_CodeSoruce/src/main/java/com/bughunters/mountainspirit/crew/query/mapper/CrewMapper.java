@@ -8,4 +8,6 @@ import java.util.List;
 @Mapper
 public interface CrewMapper {
     List<CrewDTO> findAllCrews();
+
+    CrewDTO findOneCrewById(Long crewId);
 }

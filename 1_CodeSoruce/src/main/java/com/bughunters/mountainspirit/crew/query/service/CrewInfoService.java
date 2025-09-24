@@ -23,4 +23,9 @@ public class CrewInfoService implements CrewService {
     public List<CrewDTO> findAllCrews() {
         return crewMapper.findAllCrews();
     }
+
+    @Override
+    public CrewDTO findOneCrewById(Long crewId) {
+        return crewMapper.findOneCrewById(crewId);
+    }
 }

@@ -25,4 +25,17 @@
              , a.crewRankGauge
           FROM Crew a
     </select>
+    <select id="findOneCrewById" resultMap="crewResultMap" parameterType="_int">
+        SELECT
+               a.id
+             , a.crewIsRecruit
+             , a.crewCreateDate
+             , a.crewMaxPeople
+             , a.crewIntro
+             , a.crewIsDeleted
+             , a.crewBanDate
+             , a.crewRankGauge
+          FROM Crew a
+         WHERE a.id = ${crewId}
+    </select>
 </mapper>
