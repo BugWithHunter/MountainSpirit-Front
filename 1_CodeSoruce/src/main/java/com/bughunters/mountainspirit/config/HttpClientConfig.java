@@ -56,7 +56,7 @@ public class HttpClientConfig {
     @Bean
     public WebClient servicePublicDataClient(WebClient.Builder builder) {
         return builder.clone()                // 전역 builder 상태 복제(스레드 안전)
-                .baseUrl("http://apis.data.go.kr/B553662")
+//                .baseUrl("https://apis.data.go.kr/B553662")
                 .defaultHeaders(h -> {
                     h.setAccept(List.of(MediaType.APPLICATION_JSON));
                 })
