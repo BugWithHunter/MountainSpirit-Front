@@ -11,6 +11,7 @@ import java.time.LocalDateTime;
 @ToString
 public class CrewDTO {
     private long id;
+    private String crewName;
     private char crewIsRecruit;
     private LocalDateTime crewCreateDate;
     private Integer crewMaxPeople;

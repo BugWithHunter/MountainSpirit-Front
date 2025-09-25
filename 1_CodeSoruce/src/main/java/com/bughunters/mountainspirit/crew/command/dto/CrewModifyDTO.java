@@ -1,18 +1,19 @@
 package com.bughunters.mountainspirit.crew.command.dto;
 
 
+import jakarta.persistence.Column;
 import lombok.*;
-
-import java.time.LocalDateTime;
 
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
 @ToString
-public class CrewRegistDTO {
+public class CrewModifyDTO {
+    private Long id;
     private String crewName;
-    private LocalDateTime crewCreateDate;
+    private char crewIsRecruit;
+    private Integer crewMaxPeople;
     private String crewIntro;
-    private long crewRankGauge;
+    private int crewBanDate;
 }

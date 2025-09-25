@@ -17,10 +17,12 @@ public class Crew {
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     @Column(name="id")
     private Long id;
+    @Column(name="crewName")
+    private String crewName;
     @Column(name="crewIsRecruit")
     private char crewIsRecruit;
     @Column(name="crewCreateDate")
-    private LocalDateTime crewCreateDate;
+    private String crewCreateDate;
     @Column(name="crewMaxPeople")
     private Integer crewMaxPeople;
     @Column(name="crewIntro")
