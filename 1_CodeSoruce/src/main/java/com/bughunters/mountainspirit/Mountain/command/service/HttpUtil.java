@@ -1,4 +1,4 @@
-package com.bughunters.mountainspirit.Mountain.command.service;
+package com.bughunters.mountainspirit.mountain.command.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;

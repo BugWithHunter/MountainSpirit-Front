@@ -1,11 +1,11 @@
-package com.bughunters.mountainspirit.Mountain.command.service;
+package com.bughunters.mountainspirit.mountain.command.service;
 
-import com.bughunters.mountainspirit.Mountain.command.dto.ResponseApiMountainDTO;
-import com.bughunters.mountainspirit.Mountain.command.dto.ResponseApiPeakDTO;
-import com.bughunters.mountainspirit.Mountain.command.entity.Course;
-import com.bughunters.mountainspirit.Mountain.command.entity.Mountain;
-import com.bughunters.mountainspirit.Mountain.command.repository.CourseRepository;
-import com.bughunters.mountainspirit.Mountain.command.repository.MountainRepository;
+import com.bughunters.mountainspirit.mountain.command.dto.ResponseApiMountainDTO;
+import com.bughunters.mountainspirit.mountain.command.dto.ResponseApiPeakDTO;
+import com.bughunters.mountainspirit.mountain.command.entity.Course;
+import com.bughunters.mountainspirit.mountain.command.entity.Mountain;
+import com.bughunters.mountainspirit.mountain.command.repository.CourseRepository;
+import com.bughunters.mountainspirit.mountain.command.repository.MountainRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
