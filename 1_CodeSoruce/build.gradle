@@ -37,6 +37,8 @@ dependencies {
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
     // https://mvnrepository.com/artifact/org.modelmapper/modelmapper
     implementation 'org.modelmapper:modelmapper:3.1.1'
+    // HttpCleint 사용을 위한 라이브러리
+    implementation 'org.springframework.boot:spring-boot-starter-webflux'
 }
 tasks.withType(JavaCompile) {
     options.encoding = 'UTF-8'
