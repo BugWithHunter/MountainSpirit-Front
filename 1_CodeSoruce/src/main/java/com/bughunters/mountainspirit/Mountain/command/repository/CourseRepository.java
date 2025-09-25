@@ -1,8 +1,7 @@
-package com.bughunters.mountainspirit.Mountain.command.repository;
+package com.bughunters.mountainspirit.mountain.command.repository;
 
 
-import com.bughunters.mountainspirit.Mountain.command.entity.Course;
-import com.bughunters.mountainspirit.Mountain.command.entity.Mountain;
+import com.bughunters.mountainspirit.mountain.command.entity.Course;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
