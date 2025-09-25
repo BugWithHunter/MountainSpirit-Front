@@ -10,9 +10,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.coyote.Request;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.net.URI;
 import java.time.LocalDateTime;
 
 @RestController
@@ -34,13 +36,13 @@ public class CrewCommendController {
     @PostMapping("/crew_create")
     public ResponseEntity<?> createCrew(@RequestBody CrewRegistDTO crewRegistDTO) {
         crewCommendServiceInter.insertCrew(crewRegistDTO);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.created(URI.create("crew/crew_info")).build();
     }
 
     @PutMapping("/crew_modify")
     public ResponseEntity<?> modifyCrew(@RequestBody CrewModifyDTO crewModifyDTO) {
         crewCommendServiceInter.modifyCrew(crewModifyDTO);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.created(URI.create("crew/crew_info/" + crewModifyDTO.getId())).build();
     }
 
     @PutMapping("/crew_delete")

@@ -34,7 +34,7 @@ public class CrewCommendService implements CrewCommendServiceInter {
         // 기본값 세팅
         Crew crew = setDefaultCrewValues(modelMapper.map(crewRegistDTO, Crew.class));
 
-        log.info("crewEntity : {}", crew);
+//        log.info("crewEntity : {}", crew);
 
         crewCommendRepository.save(crew);
     }
@@ -43,6 +43,35 @@ public class CrewCommendService implements CrewCommendServiceInter {
     @Transactional
     public void modifyCrew(CrewModifyDTO crewModifyDTO) {
         Crew crew = crewCommendRepository.findById(crewModifyDTO.getId()).get();
+        modifyCrewEntity(crewModifyDTO, crew);
+    }
+
+    @Override
+    @Transactional
+    public void deleteCrew(CrewDeleteDTO crewDeleteDTO) {
+        Crew crew = crewCommendRepository.findById(crewDeleteDTO.getId()).get();
+        crew.setCrewIsDeleted('Y');
+    }
+
+
+
+
+    // ////////////////////////////클래스 내에서 사용되는 함수들////////////////////////////
+
+    private Crew setDefaultCrewValues(Crew crew) {
+        LocalDateTime now = LocalDateTime.now();
+
+        crew.setCrewIsRecruit('Y');
+        crew.setCrewCreateDate(now.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+        if (crew.getCrewMaxPeople() == null) crew.setCrewMaxPeople(5);
+        crew.setCrewIsDeleted('N');
+        crew.setCrewBanDate(30);
+        crew.setCrewRankGauge(1);
+
+        return crew;
+    }
+
+    private static void modifyCrewEntity(CrewModifyDTO crewModifyDTO, Crew crew) {
         if (!crew.getCrewName().equals(crewModifyDTO.getCrewName()))
             crew.setCrewName(crewModifyDTO.getCrewName());
 
@@ -57,30 +86,5 @@ public class CrewCommendService implements CrewCommendServiceInter {
 
         if (!(crew.getCrewBanDate() == crewModifyDTO.getCrewBanDate()))
             crew.setCrewBanDate(crewModifyDTO.getCrewBanDate());
-    }
-
-    @Override
-    @Transactional
-    public void deleteCrew(CrewDeleteDTO crewDeleteDTO) {
-        Crew crew = crewCommendRepository.findById(crewDeleteDTO.getId()).get();
-        crew.setCrewIsDeleted('Y');
-    }
-
-
-
-    
-    // ////////////////////////////클래스 내에서 사용되는 함수들////////////////////////////
-
-    private Crew setDefaultCrewValues(Crew crew) {
-        LocalDateTime now = LocalDateTime.now();
-
-        crew.setCrewIsRecruit('Y');
-        crew.setCrewCreateDate(now.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
-        if (crew.getCrewMaxPeople() == null) crew.setCrewMaxPeople(5);
-        crew.setCrewIsDeleted('N');
-        crew.setCrewBanDate(30);
-        crew.setCrewRankGauge(1);
-
-        return crew;
     }
 }

@@ -5,6 +5,7 @@
 <mapper namespace="com.bughunters.mountainspirit.crew.query.mapper.CrewMapper">
     <resultMap id="crewResultMap" type="com.bughunters.mountainspirit.crew.query.dto.CrewDTO">
         <id property="id" column="id"/>
+        <result property="crewName" column="crewName"/>
         <result property="crewIsRecruit" column="crewIsRecruit"/>
         <result property="crewCreateDate" column="crewCreateDate"/>
         <result property="crewMaxPeople" column="crewMaxPeople"/>
@@ -16,6 +17,7 @@
     <select id="findAllCrews" resultMap="crewResultMap">
         SELECT
                a.id
+             , a.crewName
              , a.crewIsRecruit
              , a.crewCreateDate
              , a.crewMaxPeople
@@ -28,6 +30,7 @@
     <select id="findOneCrewById" resultMap="crewResultMap" parameterType="_int">
         SELECT
                a.id
+             , a.crewName
              , a.crewIsRecruit
              , a.crewCreateDate
              , a.crewMaxPeople

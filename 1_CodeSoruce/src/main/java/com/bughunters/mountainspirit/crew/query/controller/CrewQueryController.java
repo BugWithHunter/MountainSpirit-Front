@@ -30,7 +30,7 @@ public class CrewQueryController {
         return ResponseEntity.ok().body(crews);
     }
 
-    @GetMapping("/{crewId}")
+    @GetMapping("/crew_info/{crewId}")
     public ResponseEntity<CrewDTO> findOneCrewById(@PathVariable("crewId") Long crewId){
         CrewDTO crew = crewQueryServiceInter.findOneCrewById(crewId);
         return ResponseEntity.ok().body(crew);
