@@ -1,9 +1,10 @@
 package com.bughunters.mountainspirit.crew.query.controller;
 
 import com.bughunters.mountainspirit.crew.query.dto.CrewDTO;
-import com.bughunters.mountainspirit.crew.query.service.CrewService;
+import com.bughunters.mountainspirit.crew.query.service.CrewQueryService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,22 +16,23 @@ import java.util.List;
 @Slf4j
 @RequestMapping("/crew")
 public class CrewQueryController {
-    private CrewService crewService;
+    private final CrewQueryService crewQueryService;
 
     @Autowired
-    public CrewQueryController(CrewService crewService) {
-        this.crewService = crewService;
+    public CrewQueryController(CrewQueryService crewQueryService) {
+        this.crewQueryService = crewQueryService;
     }
 
     @GetMapping
-    public List<CrewDTO> findAllCrews(){
-        List<CrewDTO> crews = crewService.findAllCrews();
+    public ResponseEntity<List<CrewDTO>> findAllCrews(){
+        List<CrewDTO> crews = crewQueryService.findAllCrews();
         log.debug(crews.toString());
-        return crews;
+        return ResponseEntity.ok().body(crews);
     }
 
     @GetMapping("/{crewId}")
-    public CrewDTO findOneCrewById(@PathVariable("crewId") Long crewId){
-        return crewService.findOneCrewById(crewId);
+    public ResponseEntity<CrewDTO> findOneCrewById(@PathVariable("crewId") Long crewId){
+        CrewDTO crew = crewQueryService.findOneCrewById(crewId);
+        return ResponseEntity.ok().body(crew);
     }
 }

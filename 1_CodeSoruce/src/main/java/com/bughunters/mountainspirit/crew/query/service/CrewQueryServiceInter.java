@@ -4,7 +4,7 @@ import com.bughunters.mountainspirit.crew.query.dto.CrewDTO;
 
 import java.util.List;
 
-public interface CrewService {
+public interface CrewQueryService {
     List<CrewDTO> findAllCrews();
 
     CrewDTO findOneCrewById(Long crewId);
