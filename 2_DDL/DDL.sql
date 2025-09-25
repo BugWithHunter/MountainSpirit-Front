@@ -160,8 +160,8 @@ CREATE TABLE CourseReview (
 
 CREATE TABLE ClimbCheck (
 	id	bigint	NOT NULL	auto_increment,
-	stateCode	varchar(255)	NULL,
-	updateTime	datetime	NULL,
+	stateCode	varchar(255)	NULL DEFAULT 'N',
+	updateTime	datetime	NULL DEFAULT now(),
 	endTime	datetime	NULL,
 	cumId	BIGINT	NOT NULL,
 	frtrlId	varchar(10)	NULL,
