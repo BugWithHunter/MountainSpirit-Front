@@ -1,4 +1,4 @@
-package com.bughunters.mountainspirit.Mountain.command.entity;
+package com.bughunters.mountainspirit.mountain.command.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
