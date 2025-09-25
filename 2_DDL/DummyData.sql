@@ -1,4 +1,4 @@
-
+-- 1. 회원 테이블 더미 데이터
 INSERT INTO `Member`
     (memId, email, nickname, memPwd, memName, birth, gender, signInDate, lastLogin, climbCnt, banCnt, loginFailCnt, quitDate, loginLockUntil, score, memRankId, memStsId, crewId)
     VALUES ('user001', 'user001@example.com', 'nick001', 'pwd001', 'William Yoon', '2001-09-23', 'M', '2018-08-07', '2023-08-11 00:00:00', 98, 1, 9, '2024-11-27 00:00:00', '2025-02-10 00:00:00', 367, NULL, NULL, NULL),
@@ -51,3 +51,6 @@ INSERT INTO `Member`
     ('user048', 'user048@example.com', 'nick048', 'pwd048', 'Jane Lim', '1987-08-21', 'F', '2016-06-01', '2023-07-03 00:00:00', 29, 1, 3, '2021-09-17 00:00:00', '2024-10-19 00:00:00', 2808, NULL, NULL, NULL),
     ('user049', 'user049@example.com', 'nick049', 'pwd049', 'Alice Park', '1995-03-27', 'F', '2024-11-18', '2023-12-17 00:00:00', 184, 4, 1, NULL, '2023-05-03 00:00:00', 3198, NULL, NULL, NULL),
     ('user050', 'user050@example.com', 'nick050', 'pwd050', 'James Yoon', '2001-07-09', 'M', '2017-03-01', '2023-08-03 00:00:00', 93, 0, 6, '2022-05-24 00:00:00', '2024-11-16 00:00:00', 2171, NULL, NULL, NULL);
+
+
+-- 
