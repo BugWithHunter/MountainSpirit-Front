@@ -1,4 +1,4 @@
-package com.bughunters.mountainspirit.member.query.dto;
+package com.bughunters.mountainspirit.climbhistory.command.dto;
 
 import java.time.LocalDateTime;
 import lombok.*;
@@ -8,10 +8,8 @@ import lombok.*;
 @Getter
 @Setter
 @ToString
-public class FindClimbCheckQueryDTO {
-    private String memberName;
+public class FindClimbCheckDTO {
     private LocalDateTime updateTime;
-    private LocalDateTime endTime;
     private String frtrlNm;
     private String placeNm;
     private String stateCode;

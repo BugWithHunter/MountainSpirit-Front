@@ -1,4 +1,4 @@
-package com.bughunters.mountainspirit.member.command.dto;
+package com.bughunters.mountainspirit.climbhistory.command.dto;
 
 import lombok.*;
 

@@ -1,4 +1,4 @@
-package com.bughunters.mountainspirit.member.command.dto;
+package com.bughunters.mountainspirit.climbhistory.query.dto;
 
 import lombok.*;
 
@@ -7,7 +7,7 @@ import lombok.*;
 @Getter
 @Setter
 @ToString
-public class RequestStartClimbMountainDTO {
+public class RequestStartClimbMountainQueryDTO {
     private long cumId;
     private String frtrlId;
     private String poiId;

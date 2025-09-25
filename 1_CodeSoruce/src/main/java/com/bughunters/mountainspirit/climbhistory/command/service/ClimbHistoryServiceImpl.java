@@ -1,31 +1,27 @@
-package com.bughunters.mountainspirit.member.command.service;
+package com.bughunters.mountainspirit.climbhistory.command.service;
 
-import com.bughunters.mountainspirit.member.command.dto.FindClimbCheckDTO;
-import com.bughunters.mountainspirit.member.command.dto.RequestStartClimbMountainDTO;
-import com.bughunters.mountainspirit.member.command.dto.ResponseClimbMountainDTO;
-import com.bughunters.mountainspirit.member.command.entity.ClimbCheck;
-import com.bughunters.mountainspirit.member.command.repository.ClimbCheckRepository;
-import com.bughunters.mountainspirit.member.query.dto.FindClimbCheckQueryDTO;
-import com.bughunters.mountainspirit.member.query.dto.RequestStartClimbMountainQueryDTO;
-import com.bughunters.mountainspirit.member.query.service.MemberQueryServiceImpl;
+import com.bughunters.mountainspirit.climbhistory.command.dto.FindClimbCheckDTO;
+import com.bughunters.mountainspirit.climbhistory.command.dto.RequestStartClimbMountainDTO;
+import com.bughunters.mountainspirit.climbhistory.command.entity.ClimbCheck;
+import com.bughunters.mountainspirit.climbhistory.command.repository.ClimbCheckRepository;
+import com.bughunters.mountainspirit.climbhistory.query.dto.FindClimbCheckQueryDTO;
+import com.bughunters.mountainspirit.climbhistory.query.dto.RequestStartClimbMountainQueryDTO;
+import com.bughunters.mountainspirit.climbhistory.query.service.ClimbHistoryQueryServiceImpl;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-
 @Service
-public class MemberServiceImpl implements MemberService {
+public class ClimbHistoryServiceImpl implements ClimbHistoryService {
 
-    private final MemberQueryServiceImpl memberQueryServiceImpl;
+    private final ClimbHistoryQueryServiceImpl climbHistoryQueryServiceImpl;
     private final ModelMapper modelMapper;
     private final ClimbCheckRepository climbCheckRepository;
 
-    public MemberServiceImpl(MemberQueryServiceImpl memberQueryServiceImpl
+    public ClimbHistoryServiceImpl(ClimbHistoryQueryServiceImpl climbHistoryQueryServiceImpl
             , ModelMapper modelMapper
             , ClimbCheckRepository climbCheckRepository) {
-        this.memberQueryServiceImpl = memberQueryServiceImpl;
+        this.climbHistoryQueryServiceImpl = climbHistoryQueryServiceImpl;
         this.modelMapper = modelMapper;
         this.climbCheckRepository = climbCheckRepository;
     }
@@ -38,7 +34,7 @@ public class MemberServiceImpl implements MemberService {
                 modelMapper.map(request, RequestStartClimbMountainQueryDTO.class);
 
         FindClimbCheckQueryDTO findClimbCheckQueryDTO
-                = memberQueryServiceImpl.findClimbCheckByMember(requestStartClimbMountainQueryDTO);
+                = climbHistoryQueryServiceImpl.findClimbCheckByMember(requestStartClimbMountainQueryDTO);
         FindClimbCheckDTO findClimbCheckDTO = null;
 
         //메모. null 이면 등산 시작 데이터 insert

@@ -1,10 +1,9 @@
-package com.bughunters.mountainspirit.member.command.controller;
+package com.bughunters.mountainspirit.climbhistory.command.controller;
 
 import com.bughunters.mountainspirit.common.ResponseMessage;
-import com.bughunters.mountainspirit.member.command.dto.FindClimbCheckDTO;
-import com.bughunters.mountainspirit.member.command.dto.RequestStartClimbMountainDTO;
-import com.bughunters.mountainspirit.member.command.dto.ResponseClimbMountainDTO;
-import com.bughunters.mountainspirit.member.command.service.MemberService;
+import com.bughunters.mountainspirit.climbhistory.command.dto.FindClimbCheckDTO;
+import com.bughunters.mountainspirit.climbhistory.command.dto.RequestStartClimbMountainDTO;
+import com.bughunters.mountainspirit.climbhistory.command.service.ClimbHistoryService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -12,20 +11,20 @@ import java.util.HashMap;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/member")
-public class MemberController {
+@RequestMapping("/climb-history")
+public class ClimbHistoryController {
 
-    private final MemberService memberService;
+    private final ClimbHistoryService climbHistoryService;
 
-    public MemberController(MemberService memberService) {
-        this.memberService = memberService;
+    public ClimbHistoryController(ClimbHistoryService climbHistoryService) {
+
+        this.climbHistoryService = climbHistoryService;
     }
 
     //메모. 등산 시작 인증
-//    @PostMapping("/members/{memberId}/mountain/{frtrlId}/course/{poiId}")
-    @PostMapping("/members")
+    @PostMapping("/climbing")
     public ResponseEntity<ResponseMessage> startClimbMountain(@RequestBody RequestStartClimbMountainDTO request) {
-        FindClimbCheckDTO findClimbCheckDTO = memberService.startClimbMountain(request);
+        FindClimbCheckDTO findClimbCheckDTO = climbHistoryService.startClimbMountain(request);
         String responseMessage = "";
 
         Map<String, Object> responseMap = new HashMap<>();

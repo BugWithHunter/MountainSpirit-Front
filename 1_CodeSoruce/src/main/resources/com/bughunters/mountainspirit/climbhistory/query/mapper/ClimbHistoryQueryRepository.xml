@@ -2,8 +2,8 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.bughunters.mountainspirit.member.query.mapper.MemberQueryRepository">
-<resultMap id="findClimbCheckResultMap" type="com.bughunters.mountainspirit.member.query.dto.FindClimbCheckQueryDTO">
+<mapper namespace="com.bughunters.mountainspirit.climbhistory.query.mapper.ClimbHistoryQueryRepository">
+<resultMap id="findClimbCheckResultMap" type="com.bughunters.mountainspirit.climbhistory.query.dto.FindClimbCheckQueryDTO">
     <result property="memberName" column="memberName"/>
     <result property="updateTime" column="updateTime"/>
     <result property="endTime" column="endTime"/>
@@ -11,7 +11,7 @@
     <result property="placeNm" column="placeNm"/>
     <result property="stateCode" column="stateCode"/>
 </resultMap>
-    <select id="selectClimbCheckByMember" parameterType="com.bughunters.mountainspirit.member.query.dto.RequestStartClimbMountainQueryDTO"
+    <select id="selectClimbCheckByMember" parameterType="com.bughunters.mountainspirit.climbhistory.query.dto.RequestStartClimbMountainQueryDTO"
     resultMap="findClimbCheckResultMap">
         SELECT
                b.memName as memberName
