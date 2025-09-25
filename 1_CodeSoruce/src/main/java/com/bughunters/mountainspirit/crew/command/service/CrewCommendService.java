@@ -60,7 +60,6 @@ public class CrewCommendService implements CrewCommendServiceInter {
 
     private Crew setDefaultCrewValues(Crew crew) {
         LocalDateTime now = LocalDateTime.now();
-
         crew.setCrewIsRecruit('Y');
         crew.setCrewCreateDate(now.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
         if (crew.getCrewMaxPeople() == null) crew.setCrewMaxPeople(5);
