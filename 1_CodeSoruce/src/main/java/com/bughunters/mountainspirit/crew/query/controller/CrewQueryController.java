@@ -23,14 +23,14 @@ public class CrewQueryController {
         this.crewQueryServiceInter = crewQueryServiceInter;
     }
 
-    @GetMapping("/crew_info")
+    @GetMapping("/crew-info")
     public ResponseEntity<List<CrewDTO>> findAllCrews(){
         List<CrewDTO> crews = crewQueryServiceInter.findAllCrews();
         log.debug(crews.toString());
         return ResponseEntity.ok().body(crews);
     }
 
-    @GetMapping("/crew_info/{crewId}")
+    @GetMapping("/crew-info/{crewId}")
     public ResponseEntity<CrewDTO> findOneCrewById(@PathVariable("crewId") Long crewId){
         CrewDTO crew = crewQueryServiceInter.findOneCrewById(crewId);
         return ResponseEntity.ok().body(crew);

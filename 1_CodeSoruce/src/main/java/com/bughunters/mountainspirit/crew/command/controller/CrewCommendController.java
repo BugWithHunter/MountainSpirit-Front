@@ -33,19 +33,19 @@ public class CrewCommendController {
         return "I'm OK";
     }
 
-    @PostMapping("/crew_create")
+    @PostMapping("/crew-create")
     public ResponseEntity<?> createCrew(@RequestBody CrewRegistDTO crewRegistDTO) {
         crewCommendServiceInter.insertCrew(crewRegistDTO);
         return ResponseEntity.created(URI.create("crew/crew_info")).build();
     }
 
-    @PutMapping("/crew_modify")
+    @PutMapping("/crew-modify")
     public ResponseEntity<?> modifyCrew(@RequestBody CrewModifyDTO crewModifyDTO) {
         crewCommendServiceInter.modifyCrew(crewModifyDTO);
         return ResponseEntity.created(URI.create("crew/crew_info/" + crewModifyDTO.getId())).build();
     }
 
-    @PutMapping("/crew_delete")
+    @PutMapping("/crew-delete")
     public ResponseEntity<?> deleteCrew(@RequestBody CrewDeleteDTO crewDeleteDTO) {
         crewCommendServiceInter.deleteCrew(crewDeleteDTO);
         return ResponseEntity.noContent().build();
