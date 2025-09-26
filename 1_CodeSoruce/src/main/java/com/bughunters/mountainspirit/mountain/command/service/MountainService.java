@@ -1,6 +1,5 @@
 package com.bughunters.mountainspirit.mountain.command.service;
 
-import com.bughunters.mountainspirit.mountain.command.dto.MountainDTO;
 import com.bughunters.mountainspirit.mountain.command.dto.ResponseApiMountainDTO;
 import com.bughunters.mountainspirit.mountain.command.dto.ResponseApiPeakDTO;
 import com.bughunters.mountainspirit.mountain.command.entity.Course;
