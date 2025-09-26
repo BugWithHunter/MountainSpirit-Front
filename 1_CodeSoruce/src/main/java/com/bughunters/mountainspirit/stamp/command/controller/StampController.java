@@ -1,6 +1,6 @@
 package com.bughunters.mountainspirit.stamp.command.controller;
 
-import com.bughunters.mountainspirit.climbhistory.command.dto.RequestStartClimbMountainDTO;
+import com.bughunters.mountainspirit.stamp.command.dto.RequestSubmmitClimbMountainDTO;
 import com.bughunters.mountainspirit.stamp.command.service.StampServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,9 +19,9 @@ public class StampController {
     }
 
     @GetMapping("/test")
-    public String test(@RequestBody RequestStartClimbMountainDTO request) {
-        stampService.copleteClimbingMountain
-                (request);
+    public String test(@RequestBody RequestSubmmitClimbMountainDTO request) {
+
+        stampService.copleteClimbingMountain(request);
 
 
         return "";

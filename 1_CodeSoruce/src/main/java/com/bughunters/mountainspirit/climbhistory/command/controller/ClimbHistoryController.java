@@ -2,7 +2,7 @@ package com.bughunters.mountainspirit.climbhistory.command.controller;
 
 import com.bughunters.mountainspirit.common.ResponseMessage;
 import com.bughunters.mountainspirit.climbhistory.command.dto.FindClimbCheckDTO;
-import com.bughunters.mountainspirit.climbhistory.command.dto.RequestStartClimbMountainDTO;
+import com.bughunters.mountainspirit.climbhistory.command.dto.RequestSubmmitClimbMountainDTO;
 import com.bughunters.mountainspirit.climbhistory.command.service.ClimbHistoryService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -23,7 +23,7 @@ public class ClimbHistoryController {
 
     //메모. 등산 시작 인증
     @PostMapping("/climbing")
-    public ResponseEntity<ResponseMessage> startClimbMountain(@RequestBody RequestStartClimbMountainDTO request) {
+    public ResponseEntity<ResponseMessage> startClimbMountain(@RequestBody RequestSubmmitClimbMountainDTO request) {
         FindClimbCheckDTO findClimbCheckDTO = climbHistoryService.startClimbMountain(request);
         String responseMessage = "";
 
@@ -43,7 +43,7 @@ public class ClimbHistoryController {
 
     //메모. 등산 완료 인증
     @PutMapping("/climbing")
-    public ResponseEntity<ResponseMessage> completeClimbMountain(@RequestBody RequestStartClimbMountainDTO request) {
+    public ResponseEntity<ResponseMessage> completeClimbMountain(@RequestBody RequestSubmmitClimbMountainDTO request) {
         FindClimbCheckDTO findClimbCheckDTO = climbHistoryService.completeClimbMountain(request);
         String responseMessage = "";
 

@@ -1,4 +1,4 @@
-package com.bughunters.mountainspirit.stamp.command.dto;
+package com.bughunters.mountainspirit.mountain.command.dto;
 import lombok.*;
 
 @NoArgsConstructor
@@ -10,4 +10,5 @@ public class ResponseCourseDTO {
     private String poiId;
     private String placeNm;
     private String frtrlId;
+    private Long rankId;
 }

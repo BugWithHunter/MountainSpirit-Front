@@ -1,10 +1,10 @@
 package com.bughunters.mountainspirit.climbhistory.command.service;
 
 import com.bughunters.mountainspirit.climbhistory.command.dto.FindClimbCheckDTO;
-import com.bughunters.mountainspirit.climbhistory.command.dto.RequestStartClimbMountainDTO;
+import com.bughunters.mountainspirit.climbhistory.command.dto.RequestSubmmitClimbMountainDTO;
 
 public interface ClimbHistoryService {
-    FindClimbCheckDTO startClimbMountain(RequestStartClimbMountainDTO request);
+    FindClimbCheckDTO startClimbMountain(RequestSubmmitClimbMountainDTO request);
 
-    FindClimbCheckDTO completeClimbMountain(RequestStartClimbMountainDTO request);
+    FindClimbCheckDTO completeClimbMountain(RequestSubmmitClimbMountainDTO request);
 }

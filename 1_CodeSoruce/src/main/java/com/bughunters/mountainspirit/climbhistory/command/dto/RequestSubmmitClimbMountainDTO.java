@@ -7,7 +7,7 @@ import lombok.*;
 @Getter
 @Setter
 @ToString
-public class RequestStartClimbMountainDTO {
+public class RequestSubmmitClimbMountainDTO {
     private long cumId;
     private String frtrlId;
     private String poiId;
