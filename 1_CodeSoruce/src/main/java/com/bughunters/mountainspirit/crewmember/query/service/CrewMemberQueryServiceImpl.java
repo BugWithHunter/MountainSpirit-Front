@@ -5,6 +5,7 @@ import com.bughunters.mountainspirit.crewmember.query.mapper.CrewMemberMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -19,6 +20,7 @@ public class CrewMemberQueryServiceImpl implements CrewMemberQueryService {
     }
 
     @Override
+    @Transactional
     public CrewApplyListDTO findAllCrewApplied(CrewApplyListDTO crewApplyListDTO) {
         long crewId = crewApplyListDTO.getCrewId();
         crewApplyListDTO = crewMemberMapper.findAllCrewAppliedByCrewId(crewId);

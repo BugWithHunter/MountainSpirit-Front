@@ -41,7 +41,9 @@ public class CrewMemberCommendServiceImpl implements CrewMemberCommendService {
     @Transactional
     public void crewApplyRequest(CrewApplyDTO crewApplyDTO) {
         // ///////이미 가입 신청이 되어있을 시 가입 신청 불가 구현 요망///////
-
+        if(crewApplyCommendRepository.findByCrewIdAndCumIdIsNull(crewApplyDTO.getCrewId(),crewApplyDTO.getCumId())){
+            
+        }
 
         // ///////////////////////////////////////////////////////////
         CrewApply crewApply = new CrewApply();
@@ -56,7 +58,7 @@ public class CrewMemberCommendServiceImpl implements CrewMemberCommendService {
     @Override
     @Transactional
     public void crewApplyCancel(CrewApplyDTO crewApplyDTO) {
-        // 크루 신청 정보 검색
+        // 크루 가입 신청 정보 검색
         CrewApply crewApply = crewApplyCommendRepository.findByCrewIdAndCumId(crewApplyDTO.getCrewId(),crewApplyDTO.getCumId());
 
         // 크루 가입 신청 삭제
@@ -69,6 +71,8 @@ public class CrewMemberCommendServiceImpl implements CrewMemberCommendService {
     public void registCrewMemberByCrewApplyApprove(CrewApplyDTO crewApplyDTO) {
         if(crewApplyDTO.getCrewId()==null||crewApplyDTO.getCumId()==null)return;
         CrewApply crewApply = crewApplyCommendRepository.findByCrewIdAndCumId(crewApplyDTO.getCrewId(),crewApplyDTO.getCumId());
+//        log.info("service crewApply 값 : {}",crewApply.toString());
+
         crewApplyDTO.setId(crewApply.getId());
         crewApplyDTO.setCrewApplyDate(crewApply.getCrewApplyDate());
 
@@ -77,7 +81,7 @@ public class CrewMemberCommendServiceImpl implements CrewMemberCommendService {
         crewMemberCommendRepository.save(crewMember);
 
         // 크루 가입 신청 히스토리(CrewApplyHistory)에 데이터 insert
-        CrewApplyHistory crewApplyHistory = setCrewApplyHistoryInfo(crewApplyDTO);
+        CrewApplyHistory crewApplyHistory = setCrewApplyHistoryInfo(crewApplyDTO,'Y');
         crewApplyHistoryCommendRepository.save(crewApplyHistory);
 
         // 크루 구성원 히스토리(CrewMemberHistory) 테이블에서 crewMemberHistoryState를 JOINED로 설정하고 insert
@@ -94,7 +98,21 @@ public class CrewMemberCommendServiceImpl implements CrewMemberCommendService {
         // 후에 DB에 쿼리문 여러번 날아가지 않게 ToString 수정을 하든지 해야 될듯하다., 테스트 케이스로 개선사항 작성하면 더 좋을듯하다.
     }
 
+    @Override
+    @Transactional
+    public void crewApplyRejected(CrewApplyDTO crewApplyDTO) {
+        // 크루 가입 신청 정보 검색
+        CrewApply crewApply = crewApplyCommendRepository.findByCrewIdAndCumId(crewApplyDTO.getCrewId(),crewApplyDTO.getCumId());
+        crewApplyDTO.setCrewApplyDate(crewApply.getCrewApplyDate());
 
+        // 크루 가입 신청 히스토리 데이터 insert
+        CrewApplyHistory crewApplyHistory = setCrewApplyHistoryInfo(crewApplyDTO,'N');
+        crewApplyHistoryCommendRepository.save(crewApplyHistory);
+
+        // 크루 가입 신청 데이터 delete
+        crewApplyCommendRepository.delete(crewApply);
+
+    }
 
 
     // //////////////////////////////////////////////
@@ -124,13 +142,13 @@ public class CrewMemberCommendServiceImpl implements CrewMemberCommendService {
         return crewMemberHistory;
     }
 
-    private CrewApplyHistory setCrewApplyHistoryInfo(CrewApplyDTO crewApplyDTO) {
+    private CrewApplyHistory setCrewApplyHistoryInfo(CrewApplyDTO crewApplyDTO, char isAccepted) {
         CrewApplyHistory crewApplyHistory = new CrewApplyHistory();
         LocalDateTime now = LocalDateTime.now();
 
         crewApplyHistory.setCrewId(crewApplyDTO.getCrewId());
         crewApplyHistory.setCrewApplyHistoryDate(crewApplyDTO.getCrewApplyDate());
-        crewApplyHistory.setCrewApplyHistoryIsAccepted('Y');
+        crewApplyHistory.setCrewApplyHistoryIsAccepted(isAccepted);
         crewApplyHistory.setCrewApplyHistoryAcceptDate(now.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
         crewApplyHistory.setCumId(crewApplyDTO.getCumId());
         return crewApplyHistory;

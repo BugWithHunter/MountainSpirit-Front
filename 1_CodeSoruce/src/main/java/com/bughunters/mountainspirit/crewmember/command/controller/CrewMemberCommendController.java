@@ -40,4 +40,10 @@ public class CrewMemberCommendController {
         return ResponseEntity.created(URI.create("")).build();
     }
 
+    @PostMapping("/apply-reject")
+    public ResponseEntity<?> crewApplyRejected(@RequestBody CrewApplyDTO crewApplyDTO) {
+        crewMemberCommendService.crewApplyRejected(crewApplyDTO);
+//        log.info("크루DTO 확인 : {}",crewApplyDTO.toString());
+        return ResponseEntity.created(URI.create("")).build();
+    }
 }

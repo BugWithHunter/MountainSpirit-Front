@@ -5,4 +5,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface CrewApplyCommendRepository extends JpaRepository<CrewApply, Long> {
     CrewApply findByCrewIdAndCumId(Long crewId, Long cumId);
+
+    boolean findByCrewIdAndCumIdIsNull(Long crewId, Long cumId);
 }
