@@ -1,5 +1,4 @@
 package com.bughunters.mountainspirit.stamp.command.dto;
-
 import lombok.*;
 
 @NoArgsConstructor
@@ -7,9 +6,8 @@ import lombok.*;
 @Getter
 @Setter
 @ToString
-public class RequestStartClimbMountainDTO {
-    private long cumId;
-    private String frtrlId;
+public class ResponseCourseDTO {
     private String poiId;
-    private String stateCode;
+    private String placeNm;
+    private String frtrlId;
 }
