@@ -2,7 +2,7 @@ package com.bughunters.mountainspirit.crewmember.command.service;
 
 import com.bughunters.mountainspirit.crewmember.command.dto.CrewApplyDTO;
 import com.bughunters.mountainspirit.crewmember.command.entity.CrewApply;
-import com.bughunters.mountainspirit.crewmember.command.repository.CrewMemberApplyRepository;
+import com.bughunters.mountainspirit.crewmember.command.repository.CrewMemberCommendRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
@@ -10,13 +10,13 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 @Service
-public class CrewMemberServiceImpl implements CrewMemberService {
+public class CrewMemberCommendServiceImpl implements CrewMemberCommendService {
     private final ModelMapper modelMapper;
-    CrewMemberApplyRepository crewMemberApplyRepository;
+    CrewMemberCommendRepository crewMemberCommendRepository;
 
-    public CrewMemberServiceImpl(ModelMapper modelMapper, CrewMemberApplyRepository crewMemberApplyRepository) {
+    public CrewMemberCommendServiceImpl(ModelMapper modelMapper, CrewMemberCommendRepository crewMemberCommendRepository) {
         this.modelMapper = modelMapper;
-        this.crewMemberApplyRepository = crewMemberApplyRepository;
+        this.crewMemberCommendRepository = crewMemberCommendRepository;
     }
 
     @Override
@@ -27,6 +27,8 @@ public class CrewMemberServiceImpl implements CrewMemberService {
         crewApply.setCrewId(crewApplyDTO.getCrewId());
         crewApply.setCumId(crewApplyDTO.getCumId());
 
-        crewMemberApplyRepository.save(crewApply);
+        crewMemberCommendRepository.save(crewApply);
     }
+
+
 }

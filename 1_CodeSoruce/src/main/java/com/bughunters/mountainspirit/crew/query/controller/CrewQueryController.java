@@ -35,4 +35,6 @@ public class CrewQueryController {
         CrewDTO crew = crewQueryService.findOneCrewById(crewId);
         return ResponseEntity.ok().body(crew);
     }
+
+
 }
