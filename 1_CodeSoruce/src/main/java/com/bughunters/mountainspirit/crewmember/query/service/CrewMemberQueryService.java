@@ -6,4 +6,6 @@ import java.util.List;
 
 public interface CrewMemberQueryService {
     CrewApplyListDTO findAllCrewApplied(CrewApplyListDTO crewApplyListDTO);
+
+    Integer checkCrewApplyIsBanned(Long crewId, Long cumId);
 }

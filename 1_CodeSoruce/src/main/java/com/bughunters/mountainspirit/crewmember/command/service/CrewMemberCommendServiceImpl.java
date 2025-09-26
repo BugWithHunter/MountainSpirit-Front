@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 @Service
@@ -46,10 +47,21 @@ public class CrewMemberCommendServiceImpl implements CrewMemberCommendService {
 //        if(crewMemberHistory!=null){
 //            String date = crewMemberHistory
 //                    .stream()
-//                    .map(CrewMemberHistory::getCrewMemberHistoryStateUpdateDate).max(Collections.reverseOrder()).toString();
-//            log.info("스트림 참 어렵네 : {}",date);
+//                    .map(CrewMemberHistory::getCrewMemberHistoryStateUpdateDate)
+//                    .min(Collections.reverseOrder())
+//                    .toString();
+//            Collections.sort(list, new Comparator<Object>() {
+//
+//                @Override
+//                public int compare(Object o1, Object o2) {
+//                    return 0;
+//                }
+//            });
+//
 //            LocalDateTime toCompareDateTime = LocalDateTime.parse(date, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")).plusMonths(30L);
 //            LocalDateTime now =  LocalDateTime.now();
+//            log.info("toCompareDateTime : {}",toCompareDateTime);
+//            log.info("now : {}",now);
 //            if(toCompareDateTime.isBefore(now)){
 //                log.info("추방당한 회원입니다.");
 //                return;
@@ -84,7 +96,9 @@ public class CrewMemberCommendServiceImpl implements CrewMemberCommendService {
     @Override
     @Transactional
     public void registCrewMemberByCrewApplyApprove(CrewApplyDTO crewApplyDTO) {
+        // 넘어온 데이터에 값이 없으면 리턴
         if(crewApplyDTO.getCrewId()==null||crewApplyDTO.getCumId()==null)return;
+
         CrewApply crewApply = crewApplyCommendRepository.findByCrewIdAndCumId(crewApplyDTO.getCrewId(),crewApplyDTO.getCumId());
 //        log.info("service crewApply 값 : {}",crewApply.toString());
 

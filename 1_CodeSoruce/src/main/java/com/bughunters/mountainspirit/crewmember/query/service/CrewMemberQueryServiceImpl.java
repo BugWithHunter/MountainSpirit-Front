@@ -26,4 +26,11 @@ public class CrewMemberQueryServiceImpl implements CrewMemberQueryService {
         crewApplyListDTO = crewMemberMapper.findAllCrewAppliedByCrewId(crewId);
         return crewApplyListDTO;
     }
+
+    @Override
+    @Transactional
+    public Integer checkCrewApplyIsBanned(Long crewId, Long cumId) {
+        
+        return 0;
+    }
 }
