@@ -15,4 +15,5 @@ public class FindClimbCheckQueryDTO {
     private String frtrlNm;
     private String placeNm;
     private String stateCode;
+    private long id;
 }

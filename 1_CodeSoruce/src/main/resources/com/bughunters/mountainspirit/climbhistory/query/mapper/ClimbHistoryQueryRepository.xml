@@ -10,6 +10,7 @@
     <result property="frtrlNm" column="frtrlNm"/>
     <result property="placeNm" column="placeNm"/>
     <result property="stateCode" column="stateCode"/>
+    <result property="id" column="id"/>
 </resultMap>
     <select id="selectClimbCheckByMember" parameterType="com.bughunters.mountainspirit.climbhistory.query.dto.RequestStartClimbMountainQueryDTO"
     resultMap="findClimbCheckResultMap">
@@ -20,6 +21,7 @@
               , c.frtrlNm
               , d.placeNm
               , a.stateCode
+              , a.id
           FROM ClimbCheck a
           JOIN Member b on a.cumId = b.id
           JOIN Mountain c on a.frtrlId = c.frtrlId

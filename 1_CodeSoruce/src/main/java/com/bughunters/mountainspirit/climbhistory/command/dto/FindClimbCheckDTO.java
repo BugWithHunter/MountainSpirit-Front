@@ -10,6 +10,7 @@ import lombok.*;
 @ToString
 public class FindClimbCheckDTO {
     private LocalDateTime updateTime;
+    private LocalDateTime endTime;
     private String frtrlNm;
     private String placeNm;
     private String stateCode;

@@ -5,4 +5,6 @@ import com.bughunters.mountainspirit.climbhistory.command.dto.RequestStartClimbM
 
 public interface ClimbHistoryService {
     FindClimbCheckDTO startClimbMountain(RequestStartClimbMountainDTO request);
+
+    FindClimbCheckDTO completeClimbMountain(RequestStartClimbMountainDTO request);
 }
