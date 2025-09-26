@@ -75,7 +75,7 @@ public class ClimbHistoryServiceImpl implements ClimbHistoryService {
             insertClimbRecod(request, findClimbCheckQueryDTO, completeTime);
 
             //메모. 3.코스도장 희득 조건 확인 후 도장 흭득(흭득 유무 boolean 반환 점수 반영을 위함)
-//            getStampDTO stampService.
+//            StampWithCourseAndMountainDTO stampDTO = stampService.copleteClimbingMountain(request);
             //메모. 4.산도장 흭득 조건 확인 후 도장 흭득(흭득 유무 boolean 반환 점수 반영을 위함)
 
             //메모. 5.점수 집계
