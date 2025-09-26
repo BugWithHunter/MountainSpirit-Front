@@ -1,4 +1,4 @@
-package com.bughunters.mountainspirit.Mountain.command.dto;
+package com.bughunters.mountainspirit.mountain.command.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;

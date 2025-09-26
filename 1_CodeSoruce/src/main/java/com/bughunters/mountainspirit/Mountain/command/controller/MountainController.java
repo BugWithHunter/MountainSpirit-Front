@@ -1,7 +1,6 @@
-package com.bughunters.mountainspirit.Mountain.command.controller;
+package com.bughunters.mountainspirit.mountain.command.controller;
 
-import com.bughunters.mountainspirit.Mountain.command.service.MountainService;
-import org.springframework.web.bind.annotation.GetMapping;
+import com.bughunters.mountainspirit.mountain.command.service.MountainService;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
