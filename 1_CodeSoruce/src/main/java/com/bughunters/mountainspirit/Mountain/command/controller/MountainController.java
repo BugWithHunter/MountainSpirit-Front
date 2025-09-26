@@ -1,10 +1,14 @@
-package com.bughunters.mountainspirit.Mountain.command.controller;
+package com.bughunters.mountainspirit.mountain.command.controller;
 
-import com.bughunters.mountainspirit.Mountain.command.service.MountainService;
+import com.bughunters.mountainspirit.mountain.command.dto.MountainDTO;
+import com.bughunters.mountainspirit.mountain.command.service.MountainService;
+import lombok.Getter;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 
 @RestController
@@ -26,4 +30,5 @@ public class MountainController {
     public void mergeAllCourses() {
         mountainService.mergeAllCourses();
     }
+
 }

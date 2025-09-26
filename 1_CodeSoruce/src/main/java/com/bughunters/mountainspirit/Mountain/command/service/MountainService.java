@@ -1,11 +1,12 @@
-package com.bughunters.mountainspirit.Mountain.command.service;
+package com.bughunters.mountainspirit.mountain.command.service;
 
-import com.bughunters.mountainspirit.Mountain.command.dto.ResponseApiMountainDTO;
-import com.bughunters.mountainspirit.Mountain.command.dto.ResponseApiPeakDTO;
-import com.bughunters.mountainspirit.Mountain.command.entity.Course;
-import com.bughunters.mountainspirit.Mountain.command.entity.Mountain;
-import com.bughunters.mountainspirit.Mountain.command.repository.CourseRepository;
-import com.bughunters.mountainspirit.Mountain.command.repository.MountainRepository;
+import com.bughunters.mountainspirit.mountain.command.dto.MountainDTO;
+import com.bughunters.mountainspirit.mountain.command.dto.ResponseApiMountainDTO;
+import com.bughunters.mountainspirit.mountain.command.dto.ResponseApiPeakDTO;
+import com.bughunters.mountainspirit.mountain.command.entity.Course;
+import com.bughunters.mountainspirit.mountain.command.entity.Mountain;
+import com.bughunters.mountainspirit.mountain.command.repository.CourseRepository;
+import com.bughunters.mountainspirit.mountain.command.repository.MountainRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -51,7 +52,7 @@ public class MountainService {
         for (int i = 1; i <= pages; i++) {
             List<ResponseApiMountainDTO> items = httpUtil.fetchItems(i, size,mountainPath,ResponseApiMountainDTO.class); // 100개 단위로 데이터 조회
 
-            mergeData(items , Mountain.class, mountainRepository);
+            mergeData(items, Mountain.class, mountainRepository);
         }
     }
 
@@ -62,7 +63,7 @@ public class MountainService {
         courseRepository.findAllCourses();
         for (int i = 1; i <= pages; i++) {
             List<ResponseApiPeakDTO> items = httpUtil.fetchItems(i, size,peakPath, ResponseApiPeakDTO.class); // 100개 단위로 데이터 조회
-            mergeData(items , Course.class, courseRepository);
+            mergeData(items, Course.class, courseRepository);
         }
     }
 

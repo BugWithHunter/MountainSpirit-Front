@@ -1,4 +1,4 @@
-package com.bughunters.mountainspirit.Mountain.command.entity;
+package com.bughunters.mountainspirit.mountain.command.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
@@ -6,7 +6,7 @@ import lombok.*;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "Mountain1")
+@Table(name = "Mountain")
 @Getter
 @Setter
 @NoArgsConstructor
