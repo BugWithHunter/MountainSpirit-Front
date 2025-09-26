@@ -9,6 +9,7 @@ import com.bughunters.mountainspirit.climbhistory.command.repository.ClimbRecord
 import com.bughunters.mountainspirit.climbhistory.query.dto.FindClimbCheckQueryDTO;
 import com.bughunters.mountainspirit.climbhistory.query.dto.RequestStartClimbMountainQueryDTO;
 import com.bughunters.mountainspirit.climbhistory.query.service.ClimbHistoryQueryServiceImpl;
+import com.bughunters.mountainspirit.stamp.command.service.StampService;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,15 +23,18 @@ public class ClimbHistoryServiceImpl implements ClimbHistoryService {
     private final ModelMapper modelMapper;
     private final ClimbCheckRepository climbCheckRepository;
     private final ClimbRecordRepository climbRecordRepository;
+    private final StampService stampService;
 
     public ClimbHistoryServiceImpl(ClimbHistoryQueryServiceImpl climbHistoryQueryServiceImpl
             , ModelMapper modelMapper
             , ClimbCheckRepository climbCheckRepository
-    , ClimbRecordRepository climbRecordRepository) {
+            , ClimbRecordRepository climbRecordRepository
+            , StampService stampService) {
         this.climbHistoryQueryServiceImpl = climbHistoryQueryServiceImpl;
         this.modelMapper = modelMapper;
         this.climbCheckRepository = climbCheckRepository;
         this.climbRecordRepository = climbRecordRepository;
+        this.stampService = stampService;
     }
 
     @Override
@@ -71,17 +75,17 @@ public class ClimbHistoryServiceImpl implements ClimbHistoryService {
             insertClimbRecod(request, findClimbCheckQueryDTO, completeTime);
 
             //메모. 3.코스도장 희득 조건 확인 후 도장 흭득(흭득 유무 boolean 반환 점수 반영을 위함)
-
+//            getStampDTO stampService.
             //메모. 4.산도장 흭득 조건 확인 후 도장 흭득(흭득 유무 boolean 반환 점수 반영을 위함)
 
             //메모. 5.점수 집계
 
             //메모. 7.등급 기준 체크, 등급 업 할 등급 코드 반환
-            
+
             //메모. 8.산마스터 등급 기준 체크, 기준 등급 반환
-            
+
             //메모. 9.산신령 등급으로 올라 갈 경우 기존 해당 산의 산신령 등급 변경
-            
+
             //메모. 10.회원 테이블 등산 횟수 , 점수 ,등급 update
 
 
