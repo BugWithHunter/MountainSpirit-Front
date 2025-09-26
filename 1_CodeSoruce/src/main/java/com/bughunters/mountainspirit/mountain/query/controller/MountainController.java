@@ -10,6 +10,7 @@ import java.util.List;
 
 
 @RestController("MountainSearchController")
+@RequestMapping("/mountain")
 public class MountainController {
     private final MountainSearchService mountainSearchService;
 
@@ -18,7 +19,7 @@ public class MountainController {
         this.mountainSearchService = mountainSearchService;
     }
 
-    @GetMapping("/mountain")    // 전체 산 조회
+    @GetMapping("/mountainall")    // 전체 산 조회
     public List<MountainDTO> getAllMountains(){
         List<MountainDTO> mountainList = mountainSearchService.getAllMountainInfo();
         return mountainList;
@@ -30,7 +31,7 @@ public class MountainController {
         return mountainSearchList;
     }
 
-    @GetMapping("/course")  // 전체 코스 조회
+    @GetMapping("/courseall")  // 전체 코스 조회
     public List<CourseDTO> getAllCourses(){
         List<CourseDTO> courseList = mountainSearchService.getAllCourseInfo();
         return courseList;
