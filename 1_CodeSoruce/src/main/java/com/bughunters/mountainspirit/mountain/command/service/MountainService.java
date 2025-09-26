@@ -1,5 +1,6 @@
 package com.bughunters.mountainspirit.mountain.command.service;
 
+import com.bughunters.mountainspirit.mountain.command.dto.MountainDTO;
 import com.bughunters.mountainspirit.mountain.command.dto.ResponseApiMountainDTO;
 import com.bughunters.mountainspirit.mountain.command.dto.ResponseApiPeakDTO;
 import com.bughunters.mountainspirit.mountain.command.entity.Course;
@@ -51,7 +52,7 @@ public class MountainService {
         for (int i = 1; i <= pages; i++) {
             List<ResponseApiMountainDTO> items = httpUtil.fetchItems(i, size,mountainPath,ResponseApiMountainDTO.class); // 100개 단위로 데이터 조회
 
-            mergeData(items , Mountain.class, mountainRepository);
+            mergeData(items, Mountain.class, mountainRepository);
         }
     }
 
@@ -62,7 +63,7 @@ public class MountainService {
         courseRepository.findAllCourses();
         for (int i = 1; i <= pages; i++) {
             List<ResponseApiPeakDTO> items = httpUtil.fetchItems(i, size,peakPath, ResponseApiPeakDTO.class); // 100개 단위로 데이터 조회
-            mergeData(items , Course.class, courseRepository);
+            mergeData(items, Course.class, courseRepository);
         }
     }
 
