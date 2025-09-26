@@ -1,12 +1,8 @@
 package com.bughunters.mountainspirit.crewmember.command.service;
 
 import com.bughunters.mountainspirit.crewmember.command.dto.CrewApplyDTO;
-import com.bughunters.mountainspirit.crewmember.command.entity.CrewApply;
-import com.bughunters.mountainspirit.crewmember.command.entity.CrewMember;
-import com.bughunters.mountainspirit.crewmember.command.repository.CrewApplyCommendRepository;
-import com.bughunters.mountainspirit.crewmember.command.repository.CrewApplyHistoryCommendRepository;
-import com.bughunters.mountainspirit.crewmember.command.repository.CrewMemberCommendRepository;
-import com.bughunters.mountainspirit.crewmember.command.repository.CrewMemberHistoryCommendRepository;
+import com.bughunters.mountainspirit.crewmember.command.entity.*;
+import com.bughunters.mountainspirit.crewmember.command.repository.*;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,18 +20,21 @@ public class CrewMemberCommendServiceImpl implements CrewMemberCommendService {
     CrewMemberHistoryCommendRepository crewMemberHistoryCommendRepository;
     CrewApplyCommendRepository crewApplyCommendRepository;
     CrewApplyHistoryCommendRepository crewApplyHistoryCommendRepository;
+    MemberCommendRepository memberCommendRepository;
 
     @Autowired
     public CrewMemberCommendServiceImpl(ModelMapper modelMapper,
                                         CrewMemberCommendRepository crewMemberCommendRepository,
                                         CrewMemberHistoryCommendRepository crewMemberHistoryCommendRepository,
                                         CrewApplyCommendRepository crewApplyCommendRepository,
-                                        CrewApplyHistoryCommendRepository crewApplyHistoryCommendRepository) {
+                                        CrewApplyHistoryCommendRepository crewApplyHistoryCommendRepository,
+                                        MemberCommendRepository memberCommendRepository) {
         this.modelMapper = modelMapper;
         this.crewMemberCommendRepository = crewMemberCommendRepository;
         this.crewMemberHistoryCommendRepository = crewMemberHistoryCommendRepository;
         this.crewApplyCommendRepository = crewApplyCommendRepository;
         this.crewApplyHistoryCommendRepository = crewApplyHistoryCommendRepository;
+        this.memberCommendRepository = memberCommendRepository;
     }
 
     @Override
@@ -68,20 +67,33 @@ public class CrewMemberCommendServiceImpl implements CrewMemberCommendService {
     @Override
     @Transactional
     public void registCrewMemberByCrewApplyApprove(CrewApplyDTO crewApplyDTO) {
-        // CrewMember 테이블에 크루 회원 insert
+        if(crewApplyDTO.getCrewId()==null||crewApplyDTO.getCumId()==null)return;
+        CrewApply crewApply = crewApplyCommendRepository.findByCrewIdAndCumId(crewApplyDTO.getCrewId(),crewApplyDTO.getCumId());
+        crewApplyDTO.setId(crewApply.getId());
+        crewApplyDTO.setCrewApplyDate(crewApply.getCrewApplyDate());
+
+        // 크루구성원(CrewMember) 테이블에 크루구성원 데이터 insert
         CrewMember crewMember = setCrewMemberInfo(crewApplyDTO);
         crewMemberCommendRepository.save(crewMember);
 
         // 크루 가입 신청 히스토리(CrewApplyHistory)에 데이터 insert
-        
+        CrewApplyHistory crewApplyHistory = setCrewApplyHistoryInfo(crewApplyDTO);
+        crewApplyHistoryCommendRepository.save(crewApplyHistory);
 
         // 크루 구성원 히스토리(CrewMemberHistory) 테이블에서 crewMemberHistoryState를 JOINED로 설정하고 insert
+        CrewMemberHistory crewMemberHistory = setCrewMemberHistoryInfo(crewApplyDTO,1L);
+        crewMemberHistoryCommendRepository.save(crewMemberHistory);
 
         // 회원(Member) 테이블에 크루 정보 수정
+        Member member = memberCommendRepository.findById(crewApplyDTO.getCumId()).get();
+        member.setCrewId(crewApplyDTO.getCrewId());
 
         // 크루 가입 신청(CrewApply) 테이블에서 신청 데이터 delete
+        crewApplyCommendRepository.delete(crewApply);
 
+        // 후에 DB에 쿼리문 여러번 날아가지 않게 ToString 수정을 하든지 해야 될듯하다., 테스트 케이스로 개선사항 작성하면 더 좋을듯하다.
     }
+
 
 
 
@@ -89,6 +101,7 @@ public class CrewMemberCommendServiceImpl implements CrewMemberCommendService {
     private CrewMember setCrewMemberInfo(CrewApplyDTO crewApplyDTO) {
         LocalDateTime now = LocalDateTime.now();
         CrewMember crewMember = new CrewMember();
+
         crewMember.setCrewMemberJoinDate(now.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
         crewMember.setCrewMemberRoleUpdateDate(now.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
         crewMember.setCrewId(crewApplyDTO.getCrewId());
@@ -96,5 +109,33 @@ public class CrewMemberCommendServiceImpl implements CrewMemberCommendService {
         crewMember.setCrewRoleId(1L);
         return crewMember;
     }
+
+    private CrewMemberHistory setCrewMemberHistoryInfo(CrewApplyDTO crewApplyDTO,Long crewMemberRole) {
+        CrewMemberHistory crewMemberHistory = new CrewMemberHistory();
+        LocalDateTime now = LocalDateTime.now();
+
+        crewMemberHistory.setCrewRoleId(crewMemberRole);
+        crewMemberHistory.setCrewId(crewApplyDTO.getCrewId());
+        crewMemberHistory.setCrewMemberHistoryJoinDate(now.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+        crewMemberHistory.setCrewMemberHistoryStateUpdateDate(now.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+        crewMemberHistory.setCrewMemberHistoryState("JOINED");
+        crewMemberHistory.setCrewMemberHistoryUpdateReason("크루 가입");
+        crewMemberHistory.setCumId(crewApplyDTO.getCumId());
+        return crewMemberHistory;
+    }
+
+    private CrewApplyHistory setCrewApplyHistoryInfo(CrewApplyDTO crewApplyDTO) {
+        CrewApplyHistory crewApplyHistory = new CrewApplyHistory();
+        LocalDateTime now = LocalDateTime.now();
+
+        crewApplyHistory.setCrewId(crewApplyDTO.getCrewId());
+        crewApplyHistory.setCrewApplyHistoryDate(crewApplyDTO.getCrewApplyDate());
+        crewApplyHistory.setCrewApplyHistoryIsAccepted('Y');
+        crewApplyHistory.setCrewApplyHistoryAcceptDate(now.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+        crewApplyHistory.setCumId(crewApplyDTO.getCumId());
+        return crewApplyHistory;
+    }
+
+
 
 }

@@ -16,6 +16,8 @@ public class CrewApplyHistory {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Column
+    private Long crewId;
+    @Column
     private String crewApplyHistoryDate;
     @Column
     private char crewApplyHistoryIsAccepted;
