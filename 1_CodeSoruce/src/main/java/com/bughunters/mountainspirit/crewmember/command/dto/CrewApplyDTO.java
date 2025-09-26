@@ -8,6 +8,8 @@ import lombok.*;
 @Setter
 @ToString
 public class CrewApplyDTO {
+    private Long id;
+    private String crewApplyDate;
     private Long crewId;
     private Long cumId;
 }

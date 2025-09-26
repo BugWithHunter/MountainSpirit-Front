@@ -23,7 +23,6 @@ public class CrewMemberQueryController {
 
     @GetMapping("/apply-list/{crewId}")
     public ResponseEntity<CrewApplyListDTO> crewApplyList(@PathVariable long crewId) {
-        log.info("크루아이디 넘어온거 : {}", crewId);
         CrewApplyListDTO resultList = crewMemberQueryService.findAllCrewApplied(new CrewApplyListDTO(crewId,null));
         return ResponseEntity.ok().body(resultList);
     }

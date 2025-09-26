@@ -6,4 +6,6 @@ public interface CrewMemberCommendService {
     void crewApplyRequest(CrewApplyDTO crewApplyDTO);
 
     void crewApplyCancel(CrewApplyDTO crewApplyDTO);
+
+    void registCrewMemberByCrewApplyApprove(CrewApplyDTO crewApplyDTO);
 }

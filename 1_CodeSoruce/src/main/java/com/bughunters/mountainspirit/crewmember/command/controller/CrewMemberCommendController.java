@@ -34,4 +34,10 @@ public class CrewMemberCommendController {
         return ResponseEntity.created(URI.create("")).build();
     }
 
+    @PostMapping("/apply-approved")
+    public ResponseEntity<?> crewApplyApproved(@RequestBody CrewApplyDTO crewApplyDTO) {
+        crewMemberCommendService.registCrewMemberByCrewApplyApprove(crewApplyDTO);
+        return ResponseEntity.created(URI.create("")).build();
+    }
+
 }
