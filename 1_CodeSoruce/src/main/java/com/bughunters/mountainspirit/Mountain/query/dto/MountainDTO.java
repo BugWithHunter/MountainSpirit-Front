@@ -1,7 +1,6 @@
-package com.bughunters.mountainspirit.mountain.command.dto;
+package com.bughunters.mountainspirit.mountain.query.dto;
 
 import lombok.*;
-import org.springframework.web.bind.annotation.GetMapping;
 
 @NoArgsConstructor
 @AllArgsConstructor

@@ -1,20 +1,17 @@
-package com.bughunters.mountainspirit.mountain.command.dto;
+package com.bughunters.mountainspirit.mountain.query.dto;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
 
 import java.time.LocalDateTime;
 
 @NoArgsConstructor
 @AllArgsConstructor
-@Setter
 @Getter
+@Setter
 @ToString
-@JsonIgnoreProperties(ignoreUnknown = true)
-public class ResponseApiPeakDTO {
+public class CourseDTO {
     private String poiId;
-    private LocalDateTime createDate;
+    private java.sql.Date createDate;
     private double lat;
     private double lot;
     private double aslAltide;
@@ -33,11 +30,9 @@ public class ResponseApiPeakDTO {
     private String orgnSgnpstDstn2DrcntCd;
     private String orgnSgnpstDstn3DrcntCd;
     private String orgnSgnpstDstn4DrcntCd;
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private LocalDateTime crtrDt;
+    private java.sql.Date crtrDt;
     private String stampPath;
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private LocalDateTime stampUpdateDate;
+    private java.sql.Date stampUpdateDate;
     private String orgnPlaceTpeCd;
     private String frtrlId;
     private Long rankId;
