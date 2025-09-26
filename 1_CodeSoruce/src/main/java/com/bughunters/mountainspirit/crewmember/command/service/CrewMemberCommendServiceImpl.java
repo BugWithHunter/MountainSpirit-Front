@@ -11,6 +11,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Collections;
+import java.util.List;
 
 @Service
 @Slf4j
@@ -40,12 +42,26 @@ public class CrewMemberCommendServiceImpl implements CrewMemberCommendService {
     @Override
     @Transactional
     public void crewApplyRequest(CrewApplyDTO crewApplyDTO) {
-        // ///////이미 가입 신청이 되어있을 시 가입 신청 불가 구현 요망///////
-        if(crewApplyCommendRepository.findByCrewIdAndCumIdIsNull(crewApplyDTO.getCrewId(),crewApplyDTO.getCumId())){
-            
+//        List<CrewMemberHistory> crewMemberHistory = crewMemberHistoryCommendRepository.findAllByCrewIdAndCumIdAndCrewMemberHistoryState(crewApplyDTO.getCrewId(), crewApplyDTO.getCumId(), "BANNED");
+//        if(crewMemberHistory!=null){
+//            String date = crewMemberHistory
+//                    .stream()
+//                    .map(CrewMemberHistory::getCrewMemberHistoryStateUpdateDate).max(Collections.reverseOrder()).toString();
+//            log.info("스트림 참 어렵네 : {}",date);
+//            LocalDateTime toCompareDateTime = LocalDateTime.parse(date, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")).plusMonths(30L);
+//            LocalDateTime now =  LocalDateTime.now();
+//            if(toCompareDateTime.isBefore(now)){
+//                log.info("추방당한 회원입니다.");
+//                return;
+//            }
+//        }
+
+        // 이미 가입 신청이 되어있을 시 가입 신청 불가
+        if(crewApplyCommendRepository.existsByCrewIdAndCumId(crewApplyDTO.getCrewId(),crewApplyDTO.getCumId())) {
+            log.info("이미 크루 가입 신청이 되어 있습니다.");
+            return;
         }
 
-        // ///////////////////////////////////////////////////////////
         CrewApply crewApply = new CrewApply();
         LocalDateTime now = LocalDateTime.now();
         crewApply.setCrewApplyDate(now.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
@@ -63,7 +79,6 @@ public class CrewMemberCommendServiceImpl implements CrewMemberCommendService {
 
         // 크루 가입 신청 삭제
         crewApplyCommendRepository.delete(crewApply);
-
     }
 
     @Override
@@ -95,7 +110,7 @@ public class CrewMemberCommendServiceImpl implements CrewMemberCommendService {
         // 크루 가입 신청(CrewApply) 테이블에서 신청 데이터 delete
         crewApplyCommendRepository.delete(crewApply);
 
-        // 후에 DB에 쿼리문 여러번 날아가지 않게 ToString 수정을 하든지 해야 될듯하다., 테스트 케이스로 개선사항 작성하면 더 좋을듯하다.
+        // 후에 DB에 쿼리문 여러번 날아가지 않게 ToString 수정을 하든지 해야 될듯하다, 테스트 케이스로 개선사항 작성하면 더 좋을듯하다.
     }
 
     @Override
@@ -111,7 +126,6 @@ public class CrewMemberCommendServiceImpl implements CrewMemberCommendService {
 
         // 크루 가입 신청 데이터 delete
         crewApplyCommendRepository.delete(crewApply);
-
     }
 
 
