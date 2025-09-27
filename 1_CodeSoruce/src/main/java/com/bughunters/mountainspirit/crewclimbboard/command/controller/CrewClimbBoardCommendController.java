@@ -29,4 +29,10 @@ public class CrewClimbBoardCommendController {
         crewClimbBoardCommendService.modifyCrewClimbBoard(crewClimbBoardDTO);
         return ResponseEntity.ok().build();
     }
+
+    @PutMapping("/climb-delete/{id}")
+    public ResponseEntity<?> deleteCrewClimbBoardById(@PathVariable Long id){
+        crewClimbBoardCommendService.deleteCrewClimbBoardById(id);
+        return ResponseEntity.ok().build();
+    }
 }

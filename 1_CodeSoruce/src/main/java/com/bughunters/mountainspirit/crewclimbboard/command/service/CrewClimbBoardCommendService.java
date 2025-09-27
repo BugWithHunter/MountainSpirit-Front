@@ -6,4 +6,6 @@ public interface CrewClimbBoardCommendService {
     void registCrewClimbBoard(CrewClimbBoardDTO crewClimbBoardDTO);
 
     void modifyCrewClimbBoard(CrewClimbBoardDTO crewClimbBoardDTO);
+
+    void deleteCrewClimbBoardById(Long id);
 }
