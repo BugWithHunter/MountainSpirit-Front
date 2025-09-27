@@ -28,4 +28,12 @@
           FROM CrewApply a JOIN Member b ON (a.cumId = b.id)
          WHERE a.crewId = #{crewId}
     </select>
+    <select id="checkCrewBannedDateByCrewIdAndCumId" parameterType="_long" resultType="string">
+        SELECT
+               MAX(crewMemberHistoryStateUpdateDate)
+          FROM CrewMemberHistory
+         WHERE crewId = #{crewId}
+           AND crewMemberHistoryState = 'BANNED'
+           AND cumId = #{cumId}
+    </select>
 </mapper>

@@ -4,6 +4,7 @@ import com.bughunters.mountainspirit.crewmember.command.dto.CrewApplyDTO;
 import com.bughunters.mountainspirit.crewmember.command.service.CrewMemberCommendService;
 import com.bughunters.mountainspirit.crewmember.query.service.CrewMemberQueryService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -20,13 +21,20 @@ public class CrewMemberCommendController {
     private CrewMemberCommendService crewMemberCommendService;
     private CrewMemberQueryService crewMemberQueryService;
 
-    public CrewMemberCommendController(CrewMemberCommendService crewMemberCommendService) {
+    @Autowired
+    public CrewMemberCommendController(CrewMemberCommendService crewMemberCommendService,
+                                       CrewMemberQueryService crewMemberQueryService) {
         this.crewMemberCommendService = crewMemberCommendService;
+        this.crewMemberQueryService = crewMemberQueryService;
     }
 
     @PostMapping("/apply-request")
     public ResponseEntity<?> crewApplyRequest(@RequestBody CrewApplyDTO crewApplyDTO) {
-        Integer forCheckBanDate = crewMemberQueryService.checkCrewApplyIsBanned(crewApplyDTO.getCrewId(),crewApplyDTO.getCumId());
+        boolean forCheckBanDate = crewMemberQueryService.checkCrewApplyIsBanned(crewApplyDTO.getCrewId(),crewApplyDTO.getCumId());
+        if(forCheckBanDate==true){
+            log.info("추방당한 회원입니다.");
+            return ResponseEntity.ok().build();
+        }
         crewMemberCommendService.crewApplyRequest(crewApplyDTO);
         return ResponseEntity.ok().build();
     }
