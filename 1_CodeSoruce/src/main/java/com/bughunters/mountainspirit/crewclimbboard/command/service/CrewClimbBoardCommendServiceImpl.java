@@ -3,6 +3,7 @@ package com.bughunters.mountainspirit.crewclimbboard.command.service;
 import com.bughunters.mountainspirit.crewclimbboard.command.dto.CrewClimbBoardDTO;
 import com.bughunters.mountainspirit.crewclimbboard.command.entity.CrewClimbBoard;
 import com.bughunters.mountainspirit.crewclimbboard.command.repository.CrewClimbBoardCommendRepository;
+import com.bughunters.mountainspirit.crewclimbboard.command.repository.CrewClimbRecordCommendRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class CrewClimbBoardCommendServiceImpl implements CrewClimbBoardCommendService {
     ModelMapper modelMapper;
     private CrewClimbBoardCommendRepository crewClimbBoardCommendRepository;
+    private CrewClimbRecordCommendRepository crewClimbRecordCommendRepository;
 
     @Autowired
     public CrewClimbBoardCommendServiceImpl(CrewClimbBoardCommendRepository crewClimbBoardCommendRepository,
@@ -25,10 +27,13 @@ public class CrewClimbBoardCommendServiceImpl implements CrewClimbBoardCommendSe
     @Override
     @Transactional
     public void registCrewClimbBoard(CrewClimbBoardDTO crewClimbBoardDTO) {
+        // 넘어온 DTO값 맵핑 + default값 세팅
         CrewClimbBoard crewClimbBoard = modelMapper.map(crewClimbBoardDTO, CrewClimbBoard.class);
         log.info("Service 크루 모집 일정 넘어온거 맵핑 값 : {}", crewClimbBoard);
         crewClimbBoard.setCrewClimbIsDeleted('N');
         crewClimbBoard.setCrewClimbIsEnded('N');
+
+        // 등산 모집 일정 insert
         crewClimbBoardCommendRepository.save(crewClimbBoard);
     }
 
@@ -62,6 +67,17 @@ public class CrewClimbBoardCommendServiceImpl implements CrewClimbBoardCommendSe
             return;
         }
         crewClimbBoard.setCrewClimbIsDeleted('Y');
+    }
+
+    @Override
+    @Transactional
+    public void closeCrewClimbBoardApplyById(Long id) {
+        CrewClimbBoard crewClimbBoard = crewClimbBoardCommendRepository.findById(id).orElse(null);
+        if(crewClimbBoard==null){
+            log.info("없는 데이터에 접근하였습니다.");
+            return;
+        }
+        crewClimbBoard.setCrewClimbIsEnded('Y');
     }
 
 
