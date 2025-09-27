@@ -1,5 +1,6 @@
 package com.bughunters.mountainspirit.crewmember.query.service;
 
+import com.bughunters.mountainspirit.crewmember.query.dto.CrewAndMemberDTO;
 import com.bughunters.mountainspirit.crewmember.query.dto.CrewApplyListDTO;
 import com.bughunters.mountainspirit.crewmember.query.mapper.CrewMemberMapper;
 import lombok.extern.slf4j.Slf4j;
@@ -43,5 +44,10 @@ public class CrewMemberQueryServiceImpl implements CrewMemberQueryService {
             LocalDateTime forCompareDate = LocalDateTime.parse(date, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")).plusMonths(1);
             return now.isBefore(forCompareDate);
         }
+    }
+
+    @Override
+    public List<CrewAndMemberDTO> findCrewMemberListByCrewId(long crewId) {
+        return crewMemberMapper.findCrewMemberListByCrewId(crewId);
     }
 }
