@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bughunters.mountainspirit.crewmember.query.mapper.CrewMemberMapper">
+    <resultMap id="crewMemberResultMap" type="com.bughunters.mountainspirit.crewmember.query.dto.CrewMemberDTO">
+        <id property="id" column="id"/>
+        <result property="crewMemberJoinDate" column="crewMemberJoinDate"/>
+        <result property="crewMemberRoleUpdateDate" column="crewMemberRoleUpdateDate"/>
+        <result property="crewId" column="crewId"/>
+        <result property="cumId" column="cumId"/>
+        <result property="crewRoleId" column="crewRoleId"/>
+    </resultMap>
+    <resultMap id="crewMemberListResultMap" type="com.bughunters.mountainspirit.crewmember.query.dto.CrewApplyListDTO">
+        <id property="crewId" column="crewId"/>
+        <collection property="appliedList" ofType="com.bughunters.mountainspirit.crewmember.query.dto.AppliedMemberInfoDTO">
+            <id property="id" column="id"/>
+            <result property="memId" column="memId"/>
+            <result property="nickname" column="nickname"/>
+        </collection>
+    </resultMap>
+    <select id="findAllCrewAppliedByCrewId" parameterType="_long" resultMap="crewMemberListResultMap">
+        SELECT
+               a.crewId
+             , b.id
+             , b.memId
+             , b.nickname
+          FROM CrewApply a JOIN Member b ON (a.cumId = b.id)
+         WHERE a.crewId = #{crewId}
+    </select>
+    <select id="checkCrewBannedDateByCrewIdAndCumId" parameterType="_long" resultType="string">
+        SELECT
+               MAX(crewMemberHistoryStateUpdateDate)
+          FROM CrewMemberHistory
+         WHERE crewId = #{crewId}
+           AND crewMemberHistoryState = 'BANNED'
+           AND cumId = #{cumId}
+    </select>
+</mapper>
