@@ -12,8 +12,9 @@
     <result property="stateCode" column="stateCode"/>
     <result property="id" column="id"/>
 </resultMap>
-    <select id="selectClimbCheckByMember" parameterType="com.bughunters.mountainspirit.climbhistory.query.dto.RequestStartClimbMountainQueryDTO"
-    resultMap="findClimbCheckResultMap">
+    <select id="selectClimbCheckByMember"
+            parameterType="com.bughunters.mountainspirit.climbhistory.query.dto.RequestStartClimbMountainQueryDTO"
+            resultMap="findClimbCheckResultMap">
         SELECT
                b.memName as memberName
               , a.updateTime
