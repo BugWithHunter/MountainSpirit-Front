@@ -117,6 +117,7 @@ public class ClimbHistoryServiceImpl implements ClimbHistoryService {
                                     HashMap::new
                             ));
             modifyStatusOfMemberDTO.setBaseMemberRanks(baseScoreMap);
+            modifyStatusOfMemberDTO.setCumId(request.getCumId());
 
             //메모. 7.등급 기준 체크, 등급 업 할 등급 코드 반환
             ResponseStatusDTO responseStatusDTO = memberService.modifyStatusAfterClimbMountian(modifyStatusOfMemberDTO);
