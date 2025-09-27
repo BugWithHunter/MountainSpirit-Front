@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bughunters.mountainspirit.report.query.mapper.BanQueryMapper">
+
+    <resultMap id="banQueryResultMap" type="com.bughunters.mountainspirit.report.query.dto.BanQueryDTO">
+        <id property="id" column="id"/>
+        <result property="startDate" column="startDate"/>
+        <result property="endDate" column="endDate"/>
+        <result property="userId" column="userId"/>
+        <result property="adminId" column="adminId"/>
+    </resultMap>
+
+    <select id="selectAllBan" resultMap="banQueryResultMap">
+        SELECT *
+        FROM Ban
+    </select>
+</mapper>
