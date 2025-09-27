@@ -74,4 +74,8 @@ public class MountainService {
         repo.saveAll(entities);
     }
 
+    public String getMountainName(String frtrlId){
+        return mountainRepository.findNameById(frtrlId);
+    }
+
 }
