@@ -7,6 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @Slf4j
@@ -22,11 +23,55 @@ public class CrewClimbBoardCommendServiceImpl implements CrewClimbBoardCommendSe
     }
 
     @Override
+    @Transactional
     public void registCrewClimbBoard(CrewClimbBoardDTO crewClimbBoardDTO) {
         CrewClimbBoard crewClimbBoard = modelMapper.map(crewClimbBoardDTO, CrewClimbBoard.class);
         log.info("Service 크루 모집 일정 넘어온거 맵핑 값 : {}", crewClimbBoard);
         crewClimbBoard.setCrewClimbIsDeleted('N');
         crewClimbBoard.setCrewClimbIsEnded('N');
         crewClimbBoardCommendRepository.save(crewClimbBoard);
+    }
+
+    @Override
+    @Transactional
+    public void modifyCrewClimbBoard(CrewClimbBoardDTO crewClimbBoardDTO) {
+        // 크루 등산 일정 맵핑
+        CrewClimbBoard crewClimbBoard = modelMapper.map(crewClimbBoardDTO, CrewClimbBoard.class);
+        log.info("Service 크루 모집 수정 넘어온거 맵핑 값 : {}", crewClimbBoard);
+
+        // 크루 등산 일정 원본
+        CrewClimbBoard originalCrewClimbBoard = crewClimbBoardCommendRepository.findById(crewClimbBoardDTO.getId()).orElse(null);
+        log.info("Service 크루 모집 수정 할 원본 Entity : {}", originalCrewClimbBoard);
+
+        // 만약 크루 등산 일정 원본이 없으면
+        if(originalCrewClimbBoard==null){
+            log.info("없는 데이터에 접근하였습니다.");
+            return;
+        }
+
+        // 크루 등산 일정 수정 수행
+        compareAndModifyCrewClimbBoard(crewClimbBoard,originalCrewClimbBoard);
+    }
+
+
+
+
+
+    private void compareAndModifyCrewClimbBoard(CrewClimbBoard crewClimbBoard, CrewClimbBoard originalCrewClimbBoard) {
+        if(!crewClimbBoard.getCrewClimbStartDate().equals(originalCrewClimbBoard.getCrewClimbStartDate())){
+            originalCrewClimbBoard.setCrewClimbStartDate(crewClimbBoard.getCrewClimbStartDate());
+        }
+        if(!crewClimbBoard.getCrewClimbRecruitStartDate().equals(originalCrewClimbBoard.getCrewClimbRecruitStartDate())){
+            originalCrewClimbBoard.setCrewClimbRecruitStartDate(crewClimbBoard.getCrewClimbRecruitStartDate());
+        }
+        if(!crewClimbBoard.getCrewClimbRecruitEndDate().equals(originalCrewClimbBoard.getCrewClimbRecruitEndDate())){
+            originalCrewClimbBoard.setCrewClimbRecruitEndDate(crewClimbBoard.getCrewClimbRecruitEndDate());
+        }
+        if(!crewClimbBoard.getCrewClimbContent().equals(originalCrewClimbBoard.getCrewClimbContent())){
+            originalCrewClimbBoard.setCrewClimbContent(crewClimbBoard.getCrewClimbContent());
+        }
+        if(crewClimbBoard.getCrewClimbAmountOfPeople().equals(originalCrewClimbBoard.getCrewClimbAmountOfPeople())){
+            originalCrewClimbBoard.setCrewClimbAmountOfPeople(crewClimbBoard.getCrewClimbAmountOfPeople());
+        }
     }
 }

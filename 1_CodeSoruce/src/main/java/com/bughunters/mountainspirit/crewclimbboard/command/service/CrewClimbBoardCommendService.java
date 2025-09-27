@@ -4,4 +4,6 @@ import com.bughunters.mountainspirit.crewclimbboard.command.dto.CrewClimbBoardDT
 
 public interface CrewClimbBoardCommendService {
     void registCrewClimbBoard(CrewClimbBoardDTO crewClimbBoardDTO);
+
+    void modifyCrewClimbBoard(CrewClimbBoardDTO crewClimbBoardDTO);
 }
