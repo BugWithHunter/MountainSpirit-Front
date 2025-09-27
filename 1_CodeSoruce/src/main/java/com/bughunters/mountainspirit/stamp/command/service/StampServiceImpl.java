@@ -101,9 +101,11 @@ public class StampServiceImpl implements StampService {
                 stampDTO.setNewMountainStamp(true);
 //                requestRankDTO.setNewMountainStamp(true);
 
-                //메모. 산 도장 추가 
-                mountainStampRepository.save(new MountainStamp(
-                        null, LocalDateTime.now(), request.getCumId(), request.getFrtrlId()));
+                if(mountainStampRepository.findByCumId(request.getCumId()) == null){
+                    //메모. 산 도장 추가
+                    mountainStampRepository.save(new MountainStamp(
+                            null, LocalDateTime.now(), request.getCumId(), request.getFrtrlId()));
+                }
             }
         }
 

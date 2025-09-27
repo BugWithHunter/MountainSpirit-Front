@@ -174,6 +174,11 @@ public class MemberRankServiceImpl implements MemberRankService {
 
                     addResponseRankDataOfMountainRank(previousRank, responseMountainRankDTOs, "previous");
                 }
+            } else if(requestRankDTO.isNewMountainStamp()){
+                // 봉우리 마스터로 등급 변경
+                myRank.setMtRankId(2L);
+                MountainRank myMountainRank = mountainsRankRepository.save(myRank);
+                addResponseRankDataOfMountainRank(myMountainRank, responseMountainRankDTOs, "me");
             }
         }
 
