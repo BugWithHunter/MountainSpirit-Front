@@ -1,6 +1,6 @@
-package com.bughunters.mountainspirit.memberrank.command.dto;
+package com.bughunters.mountainspirit.stamp.command.dto;
 
-import com.bughunters.mountainspirit.memberrank.command.entity.MemberRank;
+import com.bughunters.mountainspirit.memberrank.command.dto.ResponseMountainRankDTO;
 import lombok.*;
 
 import java.util.List;
@@ -13,6 +13,4 @@ import java.util.List;
 public class ResponseRankDTO {
     private boolean modifyMyMountainRank;
     private List<ResponseMountainRankDTO> modifyRanks;
-    private List<MemberRank> baseMemberRanks;
-    private int summaryScore;
 }

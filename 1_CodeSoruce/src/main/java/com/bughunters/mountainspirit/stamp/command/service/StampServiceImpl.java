@@ -1,6 +1,6 @@
 package com.bughunters.mountainspirit.stamp.command.service;
 
-import com.bughunters.mountainspirit.memberrank.command.dto.ResponseRankDTO;
+import com.bughunters.mountainspirit.stamp.command.dto.ResponseRankDTO;
 import com.bughunters.mountainspirit.memberrank.command.service.MemberRankService;
 import com.bughunters.mountainspirit.mountain.command.service.MountainService;
 import com.bughunters.mountainspirit.memberrank.command.dto.RequestRankDTO;
@@ -42,10 +42,11 @@ public class StampServiceImpl implements StampService {
     @Transactional
     public StampWithCourseAndMountainDTO copleteClimbingMountain(RequestSubmmitClimbMountainDTO request) {
 
-        StampWithCourseAndMountainDTO stampDTO = new StampWithCourseAndMountainDTO();
+        StampWithCourseAndMountainDTO stampDTO
+                = modelMapper.map(request, StampWithCourseAndMountainDTO.class);
         
         //등급 변경을 위해 memberrank 패키지로 넘길 DTO
-        RequestRankDTO requestRankDTO = modelMapper.map(request,RequestRankDTO.class);
+//        RequestRankDTO requestRankDTO = modelMapper.map(request,RequestRankDTO.class);
 
         //메모. 해당 산의 전체 경로 정보 조회
         List<com.bughunters.mountainspirit.mountain.command.dto.ResponseCourseDTO> courses
@@ -56,14 +57,16 @@ public class StampServiceImpl implements StampService {
 
         //해당 산의 처음 최초 등산 인지 확인
         if(courseStamps.isEmpty()){
-            requestRankDTO.setFirstClimbForMountain(true);
+//            requestRankDTO.setFirstClimbForMountain(true);
+            stampDTO.setFirstClimbForMountain(true);
         }
 
         MountainStamp mountainStamp = mountainStampRepository.findByCumId(request.getCumId());
 
         // 원래 산 도장이 있던 회원인지 조회
         if(mountainStamp != null){
-            requestRankDTO.setAlreadyExistsMountainStamp(true);
+//            requestRankDTO.setAlreadyExistsMountainStamp(true);
+            stampDTO.setAlreadyExistsMountainStamp(true);
         }
 
         //메모. 현재 경로의 도장이 있는지 확인
@@ -87,16 +90,16 @@ public class StampServiceImpl implements StampService {
         //메모. 해당 코스 최초 등산으로 도장 흭득
         if (courseStamp == null) {
             stampDTO.setNewCourseStamp(true);
-            requestRankDTO.setNewCourseStamp(true);
+//            requestRankDTO.setNewCourseStamp(true);
 
             //메모. 코스 도장 추가
             courseStampRepository.save(new CourseStamp(
                     null, LocalDateTime.now(), request.getPoiId(), request.getCumId()));
 
             //메모. 해당산의 모든 코스 수 == 회원의 기존 도장수 + 추가 도장 수가 같으면 모든 도장을 모아 산도장 흭득
-            if (courses.size() == courseStamps.size()) {
+            if (courses.size() == courseStamps.size() + 1) {
                 stampDTO.setNewMountainStamp(true);
-                requestRankDTO.setNewMountainStamp(true);
+//                requestRankDTO.setNewMountainStamp(true);
 
                 //메모. 산 도장 추가 
                 mountainStampRepository.save(new MountainStamp(
@@ -104,19 +107,16 @@ public class StampServiceImpl implements StampService {
             }
         }
 
-        //메모. 등급 변경 조건 확인 하고 등급 변경
-        modifyMemberRank(requestRankDTO);
+//        //메모. 등급 변경 조건 확인 하고 등급 변경
+//        com.bughunters.mountainspirit.memberrank.command.dto.ResponseRankDTO responseRankDTO
+//                = memberRankService.modifyMemberRank(requestRankDTO);
+//
+//        //Stamp패키지에 있는 맵퍼로 변환
+//        ResponseRankDTO rankDTO = modelMapper.map(responseRankDTO, ResponseRankDTO.class);
+//        stampDTO.setResponseRankDTO(rankDTO);
 
-//        MountainStamp mountainStamp
-//                = mountainStampRepository.findById(Long.parseLong(request.getFrtrlId())).orElse(null);
-
-        return null;
+        return stampDTO;
     }
 
-    private void modifyMemberRank(RequestRankDTO requestRankDTO) {
-
-        //메모. 해당산의 최초 코스 도장 흭득하여 산별 회원 등급에 등급 테이블에 insert
-        ResponseRankDTO rankDTO = memberRankService.modifyMemberRank(requestRankDTO);
-    }
 
 }

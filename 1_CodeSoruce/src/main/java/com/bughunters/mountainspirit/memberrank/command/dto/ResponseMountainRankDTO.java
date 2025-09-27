@@ -10,6 +10,7 @@ import lombok.*;
 public class ResponseMountainRankDTO {
     private Long cumId;
     private Long mtRankId;
+    private String mtRankName;
     private Long climbCount;
 
     private String memberType;

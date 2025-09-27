@@ -3,10 +3,11 @@ package com.bughunters.mountainspirit.memberrank.command.service;
 import com.bughunters.mountainspirit.memberrank.command.dto.RequestRankDTO;
 import com.bughunters.mountainspirit.memberrank.command.dto.ResponseMountainRankDTO;
 import com.bughunters.mountainspirit.memberrank.command.dto.ResponseRankDTO;
+import com.bughunters.mountainspirit.memberrank.command.entity.MemberRank;
 import com.bughunters.mountainspirit.memberrank.command.entity.MountainRank;
-import com.bughunters.mountainspirit.memberrank.command.repository.MemberRankRepository;
-import com.bughunters.mountainspirit.memberrank.command.repository.MountainRankRepository;
-import com.bughunters.mountainspirit.memberrank.command.repository.MountainRankStandardRepository;
+import com.bughunters.mountainspirit.memberrank.command.entity.MountainRankStandard;
+import com.bughunters.mountainspirit.memberrank.command.entity.ScoreStandard;
+import com.bughunters.mountainspirit.memberrank.command.repository.*;
 import com.bughunters.mountainspirit.memberrank.query.dto.HigherClimber;
 import com.bughunters.mountainspirit.memberrank.query.service.MemberRankQueryService;
 import org.modelmapper.ModelMapper;
@@ -22,18 +23,24 @@ public class MemberRankServiceImpl implements MemberRankService {
     private final MemberRankRepository memberRankRepository;
     private final MountainRankStandardRepository mountainRankStandardRepository;
     private final MemberRankQueryService memberRankQueryService;
+    private final MemberRankRepositroy memberRankRepositroy;
+    private final ScoreStandardRepository scoreStandardRepository;
     private final ModelMapper modelMapper;
 
     public MemberRankServiceImpl(MountainRankRepository mountainsRankRepository
             , MemberRankRepository memberRankRepository
             , MountainRankStandardRepository mountainRankStandardRepository
             , MemberRankQueryService memberRankQueryService
-            , ModelMapper modelMapper) {
+            , ModelMapper modelMapper
+            , MemberRankRepositroy memberRankRepositroy
+            , ScoreStandardRepository scoreStandardRepository) {
         this.mountainsRankRepository = mountainsRankRepository;
         this.memberRankRepository = memberRankRepository;
         this.mountainRankStandardRepository = mountainRankStandardRepository;
         this.memberRankQueryService = memberRankQueryService;
         this.modelMapper = modelMapper;
+        this.memberRankRepositroy = memberRankRepositroy;
+        this.scoreStandardRepository = scoreStandardRepository;
     }
 
     @Override
@@ -43,6 +50,62 @@ public class MemberRankServiceImpl implements MemberRankService {
         //응답으로 전송 할 데이터(내 등급, 이전 산신령이 있었을 경우 이전 산신령 정보)
         List<ResponseMountainRankDTO> responseMountainRankDTOs = new ArrayList<>();
 
+        //회원별 산에대한 등급 변경
+        modifyMountainRankOfMember(requestRankDTO, responseMountainRankDTOs);
+
+        //점수 계산
+        int score = calculateScore(requestRankDTO);
+
+        //산 등급변경 정보를 반환 객체에 담아 요청으로 전달
+        responseRankDTO.setModifyRanks(responseMountainRankDTOs);
+
+        if (responseMountainRankDTOs.size() > 0) {
+            responseRankDTO.setModifyMyMountainRank(true);
+        }
+
+        // 점수별 등급 기준
+        List<MemberRank> memberRanks = memberRankRepositroy.findAll();
+        responseRankDTO.setBaseMemberRanks(memberRanks);
+        responseRankDTO.setSummaryScore(score);
+
+        return responseRankDTO;
+    }
+
+    private int calculateScore(RequestRankDTO requestRankDTO) {
+        int score = 0;
+
+        // 베이스 점수표
+        List<ScoreStandard> baseScores = scoreStandardRepository.findAll();
+
+        //1. 코스 난이도 별 점수
+        ScoreStandard baseScoreForCourse = baseScores.stream()
+                .filter(x -> x.getId().equals(requestRankDTO.getCourseRank()))
+                .findFirst()
+                .orElse(null);
+        score += baseScoreForCourse != null ? baseScoreForCourse.getScore() : 0;
+
+        //2. 코스 도장을 흭득한 경우
+        if (requestRankDTO.isNewCourseStamp()) {
+            ScoreStandard baseScoreForStamp = baseScores.stream()
+                    .filter(x -> x.getId().equals(4L))
+                    .findFirst()
+                    .orElse(null);
+            score += baseScoreForStamp != null ? baseScoreForStamp.getScore() : 0;
+        }
+
+        //3. 산 도장을 흭득한 경우
+        if (requestRankDTO.isNewCourseStamp()) {
+            ScoreStandard baseScoreForStamp = baseScores.stream()
+                    .filter(x -> x.getId().equals(5L))
+                    .findFirst()
+                    .orElse(null);
+            score += baseScoreForStamp != null ? baseScoreForStamp.getScore() : 0;
+        }
+
+        return score;
+    }
+
+    private void modifyMountainRankOfMember(RequestRankDTO requestRankDTO, List<ResponseMountainRankDTO> responseMountainRankDTOs) {
         //메모. 처음 해당 산의 코스 도장을 받은 경우 산 등급 insert
         if (requestRankDTO.isFirstClimbForMountain()) {
             MountainRank mountainRank = new MountainRank(
@@ -54,14 +117,6 @@ public class MemberRankServiceImpl implements MemberRankService {
         } else {
             checkHighestClimber(requestRankDTO, responseMountainRankDTOs);
         }
-
-        responseRankDTO.setModifyRanks(responseMountainRankDTOs);
-
-        if (responseMountainRankDTOs.size() > 0) {
-            responseRankDTO.setModifyMyMountainRank(true);
-        }
-
-        return responseRankDTO;
     }
 
     private void checkHighestClimber(RequestRankDTO requestRankDTO
@@ -120,9 +175,8 @@ public class MemberRankServiceImpl implements MemberRankService {
                     addResponseRankDataOfMountainRank(previousRank, responseMountainRankDTOs, "previous");
                 }
             }
-
-
         }
+
     }
 
     // 등급 변경 정보를 프론트에 뿌리기위해 보낼 데이터 저장
@@ -130,6 +184,17 @@ public class MemberRankServiceImpl implements MemberRankService {
             , List<ResponseMountainRankDTO> responseMountainRankDTOs
             , String memberType) {
         ResponseMountainRankDTO responseMyRank = modelMapper.map(mountainRank, ResponseMountainRankDTO.class);
+
+        //등급 코드의 이름 을 가지고 오기위함 1: 산길 탐험가, 2: 봉우리마스터, 3: 산신령
+        List<MountainRankStandard> mountainRankStandards = mountainRankStandardRepository.findAll();
+        MountainRankStandard mountainRankStandard = mountainRankStandards.stream()
+                .filter(x -> x.getId().equals(responseMyRank.getMtRankId()))
+                .findFirst()
+                .orElse(null);
+        if (mountainRankStandard != null) {
+            responseMyRank.setMtRankName(mountainRankStandard.getRankName());
+        }
+
         responseMyRank.setMemberType(memberType);
         responseMountainRankDTOs.add(responseMyRank);
     }

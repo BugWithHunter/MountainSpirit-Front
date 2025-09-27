@@ -1,4 +1,4 @@
-package com.bughunters.mountainspirit.memberrank.command.dto;
+package com.bughunters.mountainspirit.climbhistory.command.dto;
 
 import lombok.*;
 
@@ -12,8 +12,6 @@ public class RequestRankDTO {
     private String poiId;
     private String frtrlId;
 
-    //산 난이도 id
-    private Long courseRank;
     //메모. 새로운 도장을 받았는지 확인 하는 변수
     private boolean newMountainStamp;
     private boolean newCourseStamp;
