@@ -8,4 +8,6 @@ public interface CrewClimbBoardCommendService {
     void modifyCrewClimbBoard(CrewClimbBoardDTO crewClimbBoardDTO);
 
     void deleteCrewClimbBoardById(Long id);
+
+    void closeCrewClimbBoardApplyById(Long id);
 }

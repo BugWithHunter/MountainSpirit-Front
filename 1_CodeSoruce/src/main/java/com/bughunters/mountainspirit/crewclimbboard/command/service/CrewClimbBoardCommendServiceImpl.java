@@ -64,6 +64,17 @@ public class CrewClimbBoardCommendServiceImpl implements CrewClimbBoardCommendSe
         crewClimbBoard.setCrewClimbIsDeleted('Y');
     }
 
+    @Override
+    @Transactional
+    public void closeCrewClimbBoardApplyById(Long id) {
+        CrewClimbBoard crewClimbBoard = crewClimbBoardCommendRepository.findById(id).orElse(null);
+        if(crewClimbBoard==null){
+            log.info("없는 데이터에 접근하였습니다.");
+            return;
+        }
+        crewClimbBoard.setCrewClimbIsEnded('Y');
+    }
+
 
     private void compareAndModifyCrewClimbBoard(CrewClimbBoard crewClimbBoard, CrewClimbBoard originalCrewClimbBoard) {
         if(!crewClimbBoard.getCrewClimbStartDate().equals(originalCrewClimbBoard.getCrewClimbStartDate())){

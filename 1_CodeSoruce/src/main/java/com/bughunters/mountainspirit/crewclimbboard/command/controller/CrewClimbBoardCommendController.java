@@ -35,4 +35,13 @@ public class CrewClimbBoardCommendController {
         crewClimbBoardCommendService.deleteCrewClimbBoardById(id);
         return ResponseEntity.ok().build();
     }
+
+    @PutMapping("/climb-close-apply/{id}")
+    public ResponseEntity<?> closeCrewClimbBoardApplyById(@PathVariable Long id){
+        crewClimbBoardCommendService.closeCrewClimbBoardApplyById(id);
+        return ResponseEntity.ok().build();
+    }
+
+
+
 }
