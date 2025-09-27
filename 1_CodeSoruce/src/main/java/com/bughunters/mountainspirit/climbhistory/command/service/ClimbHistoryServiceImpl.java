@@ -1,6 +1,9 @@
 package com.bughunters.mountainspirit.climbhistory.command.service;
 
 import com.bughunters.mountainspirit.climbhistory.command.dto.FindClimbCheckDTO;
+import com.bughunters.mountainspirit.member.command.dto.RequestModifyStatusOfMemberDTO;
+import com.bughunters.mountainspirit.member.command.dto.ResponseStatusDTO;
+import com.bughunters.mountainspirit.member.command.service.MemberService;
 import com.bughunters.mountainspirit.memberrank.command.dto.RequestRankDTO;
 import com.bughunters.mountainspirit.climbhistory.command.dto.RequestSubmmitClimbMountainDTO;
 import com.bughunters.mountainspirit.climbhistory.command.entity.ClimbCheck;
@@ -19,6 +22,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Service
 public class ClimbHistoryServiceImpl implements ClimbHistoryService {
@@ -28,20 +37,22 @@ public class ClimbHistoryServiceImpl implements ClimbHistoryService {
     private final ClimbCheckRepository climbCheckRepository;
     private final ClimbRecordRepository climbRecordRepository;
     private final StampService stampService;
+    private final MemberService memberService;
     private final MemberRankService memberRankService;
-//    private final MemberService memberService;
 
     public ClimbHistoryServiceImpl(ClimbHistoryQueryServiceImpl climbHistoryQueryServiceImpl
             , ModelMapper modelMapper
             , ClimbCheckRepository climbCheckRepository
             , ClimbRecordRepository climbRecordRepository
             , StampService stampService
+            , MemberService memberService
             , MemberRankService memberRankService) {
         this.climbHistoryQueryServiceImpl = climbHistoryQueryServiceImpl;
         this.modelMapper = modelMapper;
         this.climbCheckRepository = climbCheckRepository;
         this.climbRecordRepository = climbRecordRepository;
         this.stampService = stampService;
+        this.memberService = memberService;
         this.memberRankService = memberRankService;
     }
 
@@ -84,18 +95,31 @@ public class ClimbHistoryServiceImpl implements ClimbHistoryService {
 
             //메모. 3.코스도장, 산도장 희득 조건 확인 후 도장 흭득(흭득 유무 boolean 반환 점수 반영을 위함)
             com.bughunters.mountainspirit.stamp.command.dto.RequestSubmmitClimbMountainDTO requestDTO
-                    = modelMapper.map(request,com.bughunters.mountainspirit.stamp.command.dto.RequestSubmmitClimbMountainDTO.class);
+                    = modelMapper.map(request, com.bughunters.mountainspirit.stamp.command.dto.RequestSubmmitClimbMountainDTO.class);
             StampWithCourseAndMountainDTO stampDTO = stampService.copleteClimbingMountain(requestDTO);
 
             //메모. 4.산마스터 등급 기준 체크, 기준 등급 반환, 산신령 등급으로 올라 갈 경우 기존 산신령 등급 하락
             //메모. 5. 점수 집계
             ResponseRankDTO responseRankDTO = modifyMemberRank(stampDTO);
 
+            RequestModifyStatusOfMemberDTO modifyStatusOfMemberDTO =
+                    new RequestModifyStatusOfMemberDTO();
+            modifyStatusOfMemberDTO.setSummaryScore(responseRankDTO.getSummaryScore());
+
+            //스코어 관련 객체를 맵으로 생성
+            Map<Integer, Long> baseScoreMap =
+                    responseRankDTO.getBaseMemberRanks()
+                            .stream()
+                            .collect(Collectors.toMap(
+                                    k -> k.getStandard(),
+                                    v -> v.getId(),
+                                    (a, b) -> a,
+                                    HashMap::new
+                            ));
+            modifyStatusOfMemberDTO.setBaseMemberRanks(baseScoreMap);
+
             //메모. 7.등급 기준 체크, 등급 업 할 등급 코드 반환
-
-
-
-
+            ResponseStatusDTO responseStatusDTO = memberService.modifyStatusAfterClimbMountian(modifyStatusOfMemberDTO);
 
 
             //메모. 10.회원 테이블 등산 횟수 , 점수 ,등급 update
