@@ -51,24 +51,18 @@ VALUES
 (null ,'도배글', 3),
 (null ,'혐오컨텐츠', 3),
 (null ,'노쇼', 5);
-# 바로 블랙리스트인 신고 카테고리는 어떻게?
-# 신고카테고리 중 중 광고/도둑질에 대한 신고횟수 기준이 없음[없애든지/기준을 정하기]
-
-# CrewRankStandard[크루등급기준]에 대한 정책을 안정함
-   -- crewRankGauge을 null로 바꿔야됨 -> 정책 안정할거면 
-   -- 데이터가 안들어가니 crewRankGauge컬럼 없애는게 나을 듯
    
 
 INSERT INTO CourseDifficulty
 VALUES
 (null ,'상'),
 (null ,'중'),
-(null ,'하');    -- 상중하? 아님 쉬움,보통,어려움?
+(null ,'하'); 
 
 
 INSERT INTO CrewMemberRole
 VALUES
-(null ,'크루원', null),     -- 권한은 뭐라고 할지?
+(null ,'크루원', null),
 (null ,'크루장', '모집'),
 (null ,'크루장', '강퇴');
 
@@ -76,6 +70,5 @@ VALUES
 INSERT INTO AuthorityList
 VALUES
 (null ,'사용자', null),
-(null ,'관리자', null);  -- 크루장은 크루원 등급기준 테이블에 써서 이 테이블에 안넣음
-
+(null ,'관리자', null);
 
