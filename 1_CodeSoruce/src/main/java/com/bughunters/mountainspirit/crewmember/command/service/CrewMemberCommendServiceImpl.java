@@ -1,6 +1,7 @@
 package com.bughunters.mountainspirit.crewmember.command.service;
 
 import com.bughunters.mountainspirit.crewmember.command.dto.CrewApplyDTO;
+import com.bughunters.mountainspirit.crewmember.command.dto.CrewIdentifyMemberDTO;
 import com.bughunters.mountainspirit.crewmember.command.entity.*;
 import com.bughunters.mountainspirit.crewmember.command.repository.*;
 import lombok.extern.slf4j.Slf4j;
@@ -116,6 +117,28 @@ public class CrewMemberCommendServiceImpl implements CrewMemberCommendService {
 
         // 크루 가입 신청 데이터 delete
         crewApplyCommendRepository.delete(crewApply);
+    }
+
+    @Override
+    public void leaveCrew(CrewIdentifyMemberDTO crewIdentifyMemberDTO) {
+        // 크루원 select
+        CrewMember crewMember = crewMemberCommendRepository.findByCrewIdAndCumId(crewIdentifyMemberDTO.getCrewId(),crewIdentifyMemberDTO.getCumId());
+
+        // 크루원 히스토리 insert
+        LocalDateTime now = LocalDateTime.now();
+        CrewMemberHistory crewMemberHistory = new CrewMemberHistory();
+        crewMemberHistory.setCrewRoleId(crewMember.getCrewRoleId());
+        crewMemberHistory.setCrewId(crewMember.getCrewId());
+        crewMemberHistory.setCrewMemberHistoryJoinDate(crewMember.getCrewMemberJoinDate());
+        crewMemberHistory.setCrewMemberHistoryStateUpdateDate(now.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+        crewMemberHistory.setCrewMemberHistoryState("QUITED");
+        crewMemberHistory.setCrewMemberHistoryUpdateReason("크루 탈퇴");
+        crewMemberHistory.setCumId(crewMember.getCumId());
+
+        crewMemberHistoryCommendRepository.save(crewMemberHistory);
+
+        // 크루원 delete
+        crewMemberCommendRepository.delete(crewMember);
     }
 
 

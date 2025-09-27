@@ -1,6 +1,7 @@
 package com.bughunters.mountainspirit.crewmember.command.controller;
 
 import com.bughunters.mountainspirit.crewmember.command.dto.CrewApplyDTO;
+import com.bughunters.mountainspirit.crewmember.command.dto.CrewIdentifyMemberDTO;
 import com.bughunters.mountainspirit.crewmember.command.service.CrewMemberCommendService;
 import com.bughunters.mountainspirit.crewmember.query.service.CrewMemberQueryService;
 import lombok.extern.slf4j.Slf4j;
@@ -15,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import java.net.URI;
 
 @Controller
-@RequestMapping("/crew-apply")
+@RequestMapping("/crew-member")
 @Slf4j
 public class CrewMemberCommendController {
     private CrewMemberCommendService crewMemberCommendService;
@@ -55,5 +56,12 @@ public class CrewMemberCommendController {
     public ResponseEntity<?> crewApplyRejected(@RequestBody CrewApplyDTO crewApplyDTO) {
         crewMemberCommendService.crewApplyRejected(crewApplyDTO);
         return ResponseEntity.created(URI.create("")).build();
+    }
+
+    @PostMapping("/leave-crew")
+    public ResponseEntity<?> leaveCrew(@RequestBody CrewIdentifyMemberDTO crewIdentifyMemberDTO){
+        // 크루장이면 탈퇴 못하게 막는 기능도 필요
+        crewMemberCommendService.leaveCrew(crewIdentifyMemberDTO);
+        return ResponseEntity.ok().build();
     }
 }
