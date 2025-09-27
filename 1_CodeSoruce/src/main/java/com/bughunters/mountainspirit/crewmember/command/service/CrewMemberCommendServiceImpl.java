@@ -43,36 +43,12 @@ public class CrewMemberCommendServiceImpl implements CrewMemberCommendService {
     @Override
     @Transactional
     public void crewApplyRequest(CrewApplyDTO crewApplyDTO) {
-//        List<CrewMemberHistory> crewMemberHistory = crewMemberHistoryCommendRepository.findAllByCrewIdAndCumIdAndCrewMemberHistoryState(crewApplyDTO.getCrewId(), crewApplyDTO.getCumId(), "BANNED");
-//        if(crewMemberHistory!=null){
-//            String date = crewMemberHistory
-//                    .stream()
-//                    .map(CrewMemberHistory::getCrewMemberHistoryStateUpdateDate)
-//                    .min(Collections.reverseOrder())
-//                    .toString();
-//            Collections.sort(list, new Comparator<Object>() {
-//
-//                @Override
-//                public int compare(Object o1, Object o2) {
-//                    return 0;
-//                }
-//            });
-//
-//            LocalDateTime toCompareDateTime = LocalDateTime.parse(date, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")).plusMonths(30L);
-//            LocalDateTime now =  LocalDateTime.now();
-//            log.info("toCompareDateTime : {}",toCompareDateTime);
-//            log.info("now : {}",now);
-//            if(toCompareDateTime.isBefore(now)){
-//                log.info("추방당한 회원입니다.");
-//                return;
-//            }
-//        }
-
         // 이미 가입 신청이 되어있을 시 가입 신청 불가
         if(crewApplyCommendRepository.existsByCrewIdAndCumId(crewApplyDTO.getCrewId(),crewApplyDTO.getCumId())) {
             log.info("이미 크루 가입 신청이 되어 있습니다.");
             return;
         }
+
 
         CrewApply crewApply = new CrewApply();
         LocalDateTime now = LocalDateTime.now();
@@ -100,7 +76,7 @@ public class CrewMemberCommendServiceImpl implements CrewMemberCommendService {
         if(crewApplyDTO.getCrewId()==null||crewApplyDTO.getCumId()==null)return;
 
         CrewApply crewApply = crewApplyCommendRepository.findByCrewIdAndCumId(crewApplyDTO.getCrewId(),crewApplyDTO.getCumId());
-//        log.info("service crewApply 값 : {}",crewApply.toString());
+        log.info("service crewApply 값 : {}",crewApply.toString());
 
         crewApplyDTO.setId(crewApply.getId());
         crewApplyDTO.setCrewApplyDate(crewApply.getCrewApplyDate());
