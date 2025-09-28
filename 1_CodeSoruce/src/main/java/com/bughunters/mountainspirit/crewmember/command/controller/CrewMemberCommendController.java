@@ -3,6 +3,7 @@ package com.bughunters.mountainspirit.crewmember.command.controller;
 import com.bughunters.mountainspirit.crewmember.command.dto.CrewApplyDTO;
 import com.bughunters.mountainspirit.crewmember.command.dto.CrewIdentifyMemberDTO;
 import com.bughunters.mountainspirit.crewmember.command.dto.CrewMemberAuthModifyDTO;
+import com.bughunters.mountainspirit.crewmember.command.dto.CrewMemberRoleModifyDTO;
 import com.bughunters.mountainspirit.crewmember.command.service.CrewMemberCommendService;
 import com.bughunters.mountainspirit.crewmember.query.service.CrewMemberQueryService;
 import lombok.extern.slf4j.Slf4j;
@@ -66,17 +67,20 @@ public class CrewMemberCommendController {
     // //////////////////////////관리자 권한 기능//////////////////////////
     @PostMapping("/regist-crew-role")
     public ResponseEntity<?> registCrewRole(@RequestBody String crewRole){
-        log.info("controller 권한명 : {}",crewRole);
-
         crewMemberCommendService.registCrewRole(crewRole);
         return ResponseEntity.ok().build();
     }
 
     @PostMapping("/modify-crew-role")
     public ResponseEntity<?> modifyCrewRole(@RequestBody CrewMemberAuthModifyDTO crewMemberAuthModifyDTO){
-        log.info("controller 권한명 : {}",crewMemberAuthModifyDTO);
-
         crewMemberCommendService.modifyCrewRole(crewMemberAuthModifyDTO);
+        return ResponseEntity.ok().build();
+    }
+
+    // //////////////////////////크루장 권한 기능//////////////////////////
+    @PostMapping("/modify-crew-member-role")
+    public ResponseEntity<?> modifyCrewMemberRole(@RequestBody CrewMemberRoleModifyDTO crewMemberRoleModifyDTO){
+        crewMemberCommendService.modifyCrewMemberRole(crewMemberRoleModifyDTO);
         return ResponseEntity.ok().build();
     }
 }

@@ -3,6 +3,7 @@ package com.bughunters.mountainspirit.crewmember.command.service;
 import com.bughunters.mountainspirit.crewmember.command.dto.CrewApplyDTO;
 import com.bughunters.mountainspirit.crewmember.command.dto.CrewIdentifyMemberDTO;
 import com.bughunters.mountainspirit.crewmember.command.dto.CrewMemberAuthModifyDTO;
+import com.bughunters.mountainspirit.crewmember.command.dto.CrewMemberRoleModifyDTO;
 import com.bughunters.mountainspirit.crewmember.command.entity.*;
 import com.bughunters.mountainspirit.crewmember.command.repository.*;
 import lombok.extern.slf4j.Slf4j;
@@ -134,7 +135,6 @@ public class CrewMemberCommendServiceImpl implements CrewMemberCommendService {
 
         // 크루원 히스토리 insert
         CrewMemberHistory crewMemberHistory = setCrewMemberQuitHistoryInfo(crewMember);
-
         crewMemberHistoryCommendRepository.save(crewMemberHistory);
 
         // 크루원 delete
@@ -160,6 +160,37 @@ public class CrewMemberCommendServiceImpl implements CrewMemberCommendService {
 
         crewMemberRole.setCrewRoleName(crewMemberAuthModifyDTO.getCrewRoleName());
         crewMemberAuth.setCrewRoleAuth(crewMemberAuthModifyDTO.getCrewRoleAuth());
+    }
+
+    @Override
+    public void modifyCrewMemberRole(CrewMemberRoleModifyDTO crewMemberRoleModifyDTO) {
+        if(crewMemberRoleModifyDTO==null){
+            log.info("입력된 권한이 없습니다.");
+        }
+        // 크루 구성원 정보 select
+        CrewMember crewMember = crewMemberCommendRepository.findById(crewMemberRoleModifyDTO.getId()).orElse(null);
+
+        // 크루 구성원 등급 update
+        crewMember.setCrewRoleId(crewMemberRoleModifyDTO.getCrewRoleId());
+        LocalDateTime now = LocalDateTime.now();
+        crewMember.setCrewMemberRoleUpdateDate(now.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+
+        // 크루 구성원 히스토리 insert
+        CrewMemberHistory crewMemberHistory = setCrewMemberRoleUpdateHistory(crewMember,crewMemberRoleModifyDTO,now);
+        crewMemberHistoryCommendRepository.save(crewMemberHistory);
+
+    }
+
+    private CrewMemberHistory setCrewMemberRoleUpdateHistory(CrewMember crewMember,CrewMemberRoleModifyDTO crewMemberRoleModifyDTO,LocalDateTime now) {
+        CrewMemberHistory crewMemberHistory = new CrewMemberHistory();
+        crewMemberHistory.setCrewRoleId(crewMemberRoleModifyDTO.getCrewRoleId());
+        crewMemberHistory.setCrewId(crewMember.getCrewId());
+        crewMemberHistory.setCrewMemberHistoryJoinDate(crewMember.getCrewMemberJoinDate());
+        crewMemberHistory.setCrewMemberHistoryStateUpdateDate(now.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+        crewMemberHistory.setCrewMemberHistoryState("ROLECHANGED");
+        crewMemberHistory.setCrewMemberHistoryUpdateReason("등급 변경");
+        crewMemberHistory.setCumId(crewMember.getCumId());
+        return crewMemberHistory;
     }
 
 
