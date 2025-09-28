@@ -13,7 +13,7 @@ import java.util.List;
 
 @RestController
 @Slf4j
-@RequestMapping("/blacklist")
+@RequestMapping("/blacklists")
 public class BlacklistQueryController {
 
     private final BlacklistQueryService blacklistQueryService;
@@ -23,7 +23,7 @@ public class BlacklistQueryController {
         this.blacklistQueryService = blacklistQueryService;
     }
 
-    @GetMapping("/all")
+    @GetMapping("")
     public ResponseEntity<List<BlacklistQueryDTO>> getAllBlacklist() {
         List<BlacklistQueryDTO> getAllBlacklist = blacklistQueryService.getAllBlacklist();
         log.debug("Blacklist size={}", getAllBlacklist.size());

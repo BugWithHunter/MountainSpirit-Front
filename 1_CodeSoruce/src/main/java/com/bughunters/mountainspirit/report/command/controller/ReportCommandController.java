@@ -18,7 +18,7 @@ public class ReportCommandController {
         this.reportCommandService = reportCommandService;
     }
 
-    @PostMapping("/report_create")
+    @PostMapping("")
     public ResponseEntity<ReportResponseCommandDTO> createReport(@RequestBody ReportRequestCommandDTO reportRequestCommandDTO){
         ReportResponseCommandDTO reportResponseCommandDTO = reportCommandService.createReport(reportRequestCommandDTO);
         return ResponseEntity.ok().body(reportResponseCommandDTO);

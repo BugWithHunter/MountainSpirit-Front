@@ -13,7 +13,7 @@ import java.util.List;
 
     @RestController
     @Slf4j
-    @RequestMapping("/ban")
+    @RequestMapping("/bans")
     public class BanQueryController {
 
         private final BanQueryService banQueryService;
@@ -23,7 +23,7 @@ import java.util.List;
             this.banQueryService = banQueryService;
         }
 
-        @GetMapping("/all")
+        @GetMapping("")
         public ResponseEntity<List<BanQueryDTO>> getAllBan() {
             List<BanQueryDTO> selectAllBan = banQueryService.selectAllBan();
             log.debug("BanQuery size={}", selectAllBan.size());

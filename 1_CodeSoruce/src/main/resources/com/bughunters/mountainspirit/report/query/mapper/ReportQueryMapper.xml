@@ -20,37 +20,37 @@
     </resultMap>
     <select id="reportAll" resultMap="reportResultMap">
         SELECT
-            id,
-            reportDate,
-            reportType,
-            adminId,
-            reason,
-            isAccepted,
-            reportedId,
-            categoryId,
-            reportId,
-            crewPostId,
-            replyId,
-            postId,
-            suspension_cycle
+              id
+            , reportDate
+            , reportType
+            , adminId
+            , reason
+            , isAccepted
+            , reportedId
+            , categoryId
+            , reportId
+            , crewPostId
+            , replyId
+            , postId
+            , suspension_cycle
         from Report
     </select>
     <!-- 조건별 조회 -->
     <select id="findReportsByTypeAndStatus" resultMap="reportResultMap">
         SELECT
-        id,
-        reportDate,
-        reportType,
-        adminId,
-        reason,
-        isAccepted,
-        reportedId,
-        categoryId,
-        reportId,
-        crewPostId,
-        replyId,
-        postId,
-        suspension_cycle
+              id
+            , reportDate
+            , reportType
+            , adminId
+            , reason
+            , isAccepted
+            , reportedId
+            , categoryId
+            , reportId
+            , crewPostId
+            , replyId
+            , postId
+            , suspension_cycle
         FROM Report
         WHERE 1=1
         <if test="reportType != null">
