@@ -15,4 +15,7 @@ public interface ReportQueryMapper {
             @Param("reportType") String reportType,
             @Param("isAccepted") String isAccepted
     );
+
+    // 회원 단건 신고 조회
+    List<ReportQueryDTO> findReportsByMemberId(@Param("memberId") Long memberId);
 }

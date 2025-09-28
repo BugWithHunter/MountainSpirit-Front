@@ -1,6 +1,7 @@
 package com.bughunters.mountainspirit.report.command.service;
 
 import com.bughunters.mountainspirit.member.command.entity.Member;
+import com.bughunters.mountainspirit.report.command.dto.ReportIsAccepted;
 import com.bughunters.mountainspirit.report.command.dto.ReportRequestCommandDTO;
 import com.bughunters.mountainspirit.report.command.dto.ReportResponseCommandDTO;
 import com.bughunters.mountainspirit.report.command.entity.*;
@@ -48,7 +49,7 @@ public class ReportCommandServiceImpl implements ReportCommandService {
 
         Member member = reportMemberCommandRepository
                 .findById(reportRequestCommandDTO.getReportedId())
-                .orElseThrow(() -> new RuntimeException("Member not found"));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "회원을 찾을 수 없습니다"));
 
         // 회원 상태 체크: 정지(3), 블랙리스트(5)면 신고 불가
         if (member.getMemStsId() != null && (member.getMemStsId() == 3L || member.getMemStsId() == 5L)) {
@@ -62,7 +63,7 @@ public class ReportCommandServiceImpl implements ReportCommandService {
         ReportCommandEntity rce = modelMapper.map(reportRequestCommandDTO, ReportCommandEntity.class);
         rce.setReportDate(LocalDateTime.now());
         rce.setSuspensionCycle(suspensionCycle);
-        rce.setIsAccepted("N");
+        rce.setIsAccepted(ReportIsAccepted.N);
 
         // 현재 코드는 생성되는 기준에서 다른 테이블의 생성에 코드가 작성되었는데
         // 추후에 상태가 변경되었을 때를 기준으로 정지테이블과 블랙리스트 테이블 생성 예정
@@ -72,7 +73,7 @@ public class ReportCommandServiceImpl implements ReportCommandService {
         // ReportCategory 가져오기
         ReportCategoryCommandEntity rcce = reportCategoryCommandRepository
                 .findById(reportRequestCommandDTO.getCategoryId())
-                .orElseThrow(() -> new RuntimeException("Category not found"));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "카테고리를 찾을 수 없습니다"));
 
         String result = "NORMAL";
         
@@ -110,6 +111,23 @@ public class ReportCommandServiceImpl implements ReportCommandService {
         rrcdto.setResult(result);
 
         return rrcdto;
+    }
+
+    @Override
+    @Transactional
+    public ReportResponseCommandDTO updateReportStatus(Long reportedId, ReportIsAccepted status) {
+        // report 조회
+        ReportCommandEntity report = reportCommandRepository.findById(reportedId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "신고를 찾을 수 없습니다"));
+
+        // 상태 업데이트
+        report.setIsAccepted(status);
+
+        // 저장
+        reportCommandRepository.save(report);
+
+        // DTO로 변환 후 반환
+        return modelMapper.map(report, ReportResponseCommandDTO.class);
     }
 
     private void createBan(Member member, ReportRequestCommandDTO rrdto) {

@@ -26,4 +26,9 @@ public class ReportQueryServiceImpl implements ReportQueryService {
     public List<ReportQueryDTO> selectReportsByTypeAndStatus(String reportType, String isAccepted) {
         return reportQueryMapper.findReportsByTypeAndStatus(reportType, isAccepted);
     }
+
+    @Override
+    public List<ReportQueryDTO> selectReportsByMemberId(Long memberId) {
+        return reportQueryMapper.findReportsByMemberId(memberId);
+    }
 }
