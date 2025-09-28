@@ -26,6 +26,7 @@ DROP TABLE IF EXISTS CrewClimbRecord;
 DROP TABLE IF EXISTS CrewMemberRole;
 DROP TABLE IF EXISTS CrewMemberHistory;
 DROP TABLE IF EXISTS CrewRankStandard;
+DROP TABLE IF EXISTS CrewMemberAuth;
 
 DROP TABLE IF EXISTS Mountain;
 DROP TABLE IF EXISTS MountainImage;
@@ -307,9 +308,16 @@ CREATE TABLE IF NOT EXISTS CrewClimbRecord
 CREATE TABLE IF NOT EXISTS CrewMemberRole
 (
     id           BIGINT AUTO_INCREMENT       NOT NULL,
-    crewRoleName VARCHAR(255) NULL,
-    crewRoleAuth VARCHAR(255) NULL,
+    crewRoleName VARCHAR(255) NULL
     CONSTRAINT pk_CrewMemberRole_id PRIMARY KEY (id)
+);
+
+CREATE TABLE IF NOT EXISTS CrewMemberAuth
+(
+    id           BIGINT AUTO_INCREMENT NOT NULL,
+    crewRoleAuth VARCHAR(255)          NOT NULL,
+    crewRoleId   BIGINT                NOT NULL,
+    CONSTRAINT pk_CrewMemberAuth_id PRIMARY KEY (id)
 );
 
 CREATE TABLE IF NOT EXISTS CrewMemberHistory
@@ -659,6 +667,9 @@ ALTER TABLE CrewClimbRecord
     ADD CONSTRAINT fk_CrewClimbRecord_CrewClimbBoard_crewClimbId FOREIGN KEY (crewClimbId) REFERENCES CrewClimbBoard (id),
     ADD CONSTRAINT fk_CrewClimbRecord_Mountain_frtrlId FOREIGN KEY (frtrlId) REFERENCES Mountain (frtrlId),
     ADD CONSTRAINT fk_CrewClimbRecord_CrewMember_crewMemberId FOREIGN KEY (crewMemberId) REFERENCES CrewMember (id) ON DELETE SET NULL;
+
+ALTER TABLE CrewMemberAuth
+    ADD CONSTRAINT fk_CrewMemberAuth_CrewMemberRole_crewRoleId FOREIGN KEY (crewRoleId) REFERENCES CrewMemberRole (id);
 
 
 ALTER TABLE MountainImage ADD CONSTRAINT fk_MountainImage_Mountain_frtrlId 

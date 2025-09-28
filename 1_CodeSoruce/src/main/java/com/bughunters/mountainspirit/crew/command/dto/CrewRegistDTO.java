@@ -15,4 +15,5 @@ public class CrewRegistDTO {
     private LocalDateTime crewCreateDate;
     private String crewIntro;
     private long crewRankGauge;
+//    private long memId;   // 크루 생성될때 크루장을 CrewMember 테이블에 등록 + 회원 테이블에 크루 삽입해야됨
 }
