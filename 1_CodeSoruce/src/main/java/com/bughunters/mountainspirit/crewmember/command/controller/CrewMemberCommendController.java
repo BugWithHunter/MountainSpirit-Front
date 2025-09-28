@@ -64,4 +64,10 @@ public class CrewMemberCommendController {
         crewMemberCommendService.leaveCrew(crewIdentifyMemberDTO);
         return ResponseEntity.ok().build();
     }
+
+    // //////////////////////////관리자 권한 기능//////////////////////////
+    @PostMapping("/modify-crew-role")
+    public ResponseEntity<?> modifyCrewRole(){
+        return ResponseEntity.ok().build();
+    }
 }
