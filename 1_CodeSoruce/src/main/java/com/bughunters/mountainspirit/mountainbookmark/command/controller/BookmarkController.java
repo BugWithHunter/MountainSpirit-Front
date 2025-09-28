@@ -16,26 +16,26 @@ public class BookmarkController {
         this.bookmarkService = bookmarkService;
     }
 
-    @PostMapping
+    @PostMapping("/mountain")
     public String registMountainBookmark(@RequestBody MountainBookmarkDTO newBookmark){
         bookmarkService.registMountain(newBookmark);
         return "북마크 추가 완료";
     }
 
-    @DeleteMapping("/{bookmarkCode}")
+    @DeleteMapping("/mountain/{bookmarkCode}")
     public String deleteMountainBookmark(@PathVariable long bookmarkCode){
         bookmarkService.deleteMountain(bookmarkCode);
         return "북마크 삭제 완료";
     }
 
-    @PostMapping("/registCourse")
-    public String registCourse(@RequestBody CourseBookmarkDTO newBookmark){
+    @PostMapping("/course")
+    public String registCourseBookmark(@RequestBody CourseBookmarkDTO newBookmark){
         bookmarkService.registCourse(newBookmark);
         return "북마크 추가 완료";
     }
 
-    @PostMapping("/deleteCourse")
-    public String deleteCourse(@RequestParam long bookmarkCode){
+    @DeleteMapping("/course/{bookmarkCode}")
+    public String deleteCourse(@PathVariable long bookmarkCode){
         bookmarkService.deleteCourse(bookmarkCode);
         return "북마크 삭제 완료";
     }
