@@ -15,11 +15,15 @@ import java.time.LocalDateTime;
 public class BlacklistCommandEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private Long id;
 
+    @Column(name = "createDate")
     private LocalDateTime createDate;
 
+    @Column(name = "adminId")
     private Long adminId;
 
+    @Column(name = "memberId")
     private Long memberId;
 }

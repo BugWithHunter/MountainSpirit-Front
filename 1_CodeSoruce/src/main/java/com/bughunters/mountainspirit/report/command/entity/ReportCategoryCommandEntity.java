@@ -14,9 +14,12 @@ public class ReportCategoryCommandEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private Long id;
 
+    @Column(name = "reportName")
     private String reportName;
 
+    @Column(name = "countStandard")
     private int countStandard;
 }

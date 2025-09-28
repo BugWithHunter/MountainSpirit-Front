@@ -72,7 +72,6 @@ public class ReportCommandServiceImpl implements ReportCommandService {
                     BlacklistCommandEntity.builder()
                             .createDate(LocalDateTime.now())
                             .memberId(reportRequestCommandDTO.getReportedId())
-                            .adminId(reportRequestCommandDTO.getAdminId())
                             .build();
             blacklistCommandRepository.save(bce);
             result = "BLACKLIST";
@@ -119,7 +118,6 @@ public class ReportCommandServiceImpl implements ReportCommandService {
             BlacklistCommandEntity blcEntity = BlacklistCommandEntity.builder()
                     .createDate(LocalDateTime.now())
                     .memberId(rrdto.getReportedId())
-                    .adminId(rrdto.getAdminId())
                     .build();
             blacklistCommandRepository.save(blcEntity);
 
@@ -132,8 +130,8 @@ public class ReportCommandServiceImpl implements ReportCommandService {
                 .startDate(startDate)
                 .endDate(endDate)
                 .userId(rrdto.getReportedId())
-                .adminId(rrdto.getAdminId())
                 .build();
+        banCommandRepository.save(bcEntity);
 
         // 회원 banCnt도 증가
         member.setBanCnt(member.getBanCnt() + 1);

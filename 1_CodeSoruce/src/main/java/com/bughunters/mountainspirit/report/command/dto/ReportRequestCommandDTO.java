@@ -12,5 +12,5 @@ public class ReportRequestCommandDTO {
     private String reason;
     private Long reportedId;
     private Long categoryId;
-    private Long adminId;
+    private Long reportId;
 }

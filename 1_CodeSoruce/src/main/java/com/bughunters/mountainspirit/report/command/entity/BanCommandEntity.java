@@ -6,7 +6,7 @@ import lombok.*;
 import java.time.LocalDateTime;
 
 @Entity
-@Table
+@Table(name = "Ban")
 @Getter
 @Setter
 @NoArgsConstructor
@@ -15,13 +15,18 @@ import java.time.LocalDateTime;
 public class BanCommandEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private Long id;
 
+    @Column(name = "startDate")
     private LocalDateTime startDate;
 
+    @Column(name = "endDate")
     private LocalDateTime endDate;
 
+    @Column(name = "userId")
     private Long userId;
 
+    @Column(name = "adminId")
     private Long adminId;
 }
