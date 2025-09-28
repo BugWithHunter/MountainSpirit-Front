@@ -9,9 +9,9 @@ VALUES
 
 INSERT INTO ScoreStandard
 VALUES
-(null ,'등산완료[하]', 1),
-(null ,'등산완료[중]', 2),
-(null ,'등산완료[상]', 3),
+(null ,'하', 1),
+(null ,'중', 2),
+(null ,'상', 3),
 (null ,'봉우리 도장획득', 5),
 (null ,'산 도장획득', 10);
 
@@ -28,9 +28,9 @@ VALUES
 
 INSERT INTO MountainRankStandard
 VALUES
-(null ,'산신령'),
+(null ,'산길탐험가'),
 (null ,'봉우리마스터'),
-(null ,'산길탐험가');
+(null ,'산신령');
 
 
 INSERT INTO ReportTargetType
@@ -55,9 +55,9 @@ VALUES
 
 INSERT INTO CourseDifficulty
 VALUES
-(null ,'상'),
+(null ,'하'),
 (null ,'중'),
-(null ,'하'); 
+(null ,'상'); 
 
 
 INSERT INTO CrewMemberRole
