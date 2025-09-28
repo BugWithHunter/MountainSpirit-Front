@@ -66,8 +66,11 @@ public class CrewMemberCommendController {
     }
 
     // //////////////////////////관리자 권한 기능//////////////////////////
-    @PostMapping("/modify-crew-role")
-    public ResponseEntity<?> modifyCrewRole(){
+    @PostMapping("/regist-crew-role")
+    public ResponseEntity<?> registCrewRole(@RequestBody String crewRole){
+        log.info("controller 권한명 : {}",crewRole);
+
+        crewMemberCommendService.registCrewRole(crewRole);
         return ResponseEntity.ok().build();
     }
 }

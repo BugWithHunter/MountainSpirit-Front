@@ -13,4 +13,6 @@ public interface CrewMemberCommendService {
     void crewApplyRejected(CrewApplyDTO crewApplyDTO);
 
     void leaveCrew(CrewIdentifyMemberDTO crewIdentifyMemberDTO);
+
+    void registCrewRole(String crewRole);
 }

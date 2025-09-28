@@ -25,6 +25,7 @@ public class CrewMemberCommendServiceImpl implements CrewMemberCommendService {
     CrewApplyCommendRepository crewApplyCommendRepository;
     CrewApplyHistoryCommendRepository crewApplyHistoryCommendRepository;
     MemberCommendRepository memberCommendRepository;
+    CrewMemberRoleCommendRepository crewMemberRoleCommendRepository;
 
     @Autowired
     public CrewMemberCommendServiceImpl(ModelMapper modelMapper,
@@ -32,13 +33,15 @@ public class CrewMemberCommendServiceImpl implements CrewMemberCommendService {
                                         CrewMemberHistoryCommendRepository crewMemberHistoryCommendRepository,
                                         CrewApplyCommendRepository crewApplyCommendRepository,
                                         CrewApplyHistoryCommendRepository crewApplyHistoryCommendRepository,
-                                        MemberCommendRepository memberCommendRepository) {
+                                        MemberCommendRepository memberCommendRepository,
+                                        CrewMemberRoleCommendRepository crewMemberRoleCommendRepository) {
         this.modelMapper = modelMapper;
         this.crewMemberCommendRepository = crewMemberCommendRepository;
         this.crewMemberHistoryCommendRepository = crewMemberHistoryCommendRepository;
         this.crewApplyCommendRepository = crewApplyCommendRepository;
         this.crewApplyHistoryCommendRepository = crewApplyHistoryCommendRepository;
         this.memberCommendRepository = memberCommendRepository;
+        this.crewMemberRoleCommendRepository = crewMemberRoleCommendRepository;
     }
 
     @Override
@@ -125,6 +128,25 @@ public class CrewMemberCommendServiceImpl implements CrewMemberCommendService {
         CrewMember crewMember = crewMemberCommendRepository.findByCrewIdAndCumId(crewIdentifyMemberDTO.getCrewId(),crewIdentifyMemberDTO.getCumId());
 
         // 크루원 히스토리 insert
+        CrewMemberHistory crewMemberHistory = setCrewMemberQuitHistoryInfo(crewMember);
+
+        crewMemberHistoryCommendRepository.save(crewMemberHistory);
+
+        // 크루원 delete
+        crewMemberCommendRepository.delete(crewMember);
+    }
+
+    @Override
+    public void registCrewRole(String crewRole) {
+        CrewMemberRole crewMemberRole = new CrewMemberRole();
+        crewMemberRole.setCrewRoleName(crewRole);
+        crewMemberRoleCommendRepository.save(crewMemberRole);
+    }
+
+
+    // //////////////////////////////////////////////
+
+    private static CrewMemberHistory setCrewMemberQuitHistoryInfo(CrewMember crewMember) {
         LocalDateTime now = LocalDateTime.now();
         CrewMemberHistory crewMemberHistory = new CrewMemberHistory();
         crewMemberHistory.setCrewRoleId(crewMember.getCrewRoleId());
@@ -134,15 +156,9 @@ public class CrewMemberCommendServiceImpl implements CrewMemberCommendService {
         crewMemberHistory.setCrewMemberHistoryState("QUITED");
         crewMemberHistory.setCrewMemberHistoryUpdateReason("크루 탈퇴");
         crewMemberHistory.setCumId(crewMember.getCumId());
-
-        crewMemberHistoryCommendRepository.save(crewMemberHistory);
-
-        // 크루원 delete
-        crewMemberCommendRepository.delete(crewMember);
+        return crewMemberHistory;
     }
 
-
-    // //////////////////////////////////////////////
     private CrewMember setCrewMemberInfo(CrewApplyDTO crewApplyDTO) {
         LocalDateTime now = LocalDateTime.now();
         CrewMember crewMember = new CrewMember();
@@ -180,7 +196,5 @@ public class CrewMemberCommendServiceImpl implements CrewMemberCommendService {
         crewApplyHistory.setCumId(crewApplyDTO.getCumId());
         return crewApplyHistory;
     }
-
-
 
 }
