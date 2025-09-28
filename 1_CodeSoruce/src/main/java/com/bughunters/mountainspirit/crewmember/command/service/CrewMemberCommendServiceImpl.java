@@ -3,6 +3,7 @@ package com.bughunters.mountainspirit.crewmember.command.service;
 import com.bughunters.mountainspirit.crewmember.command.dto.*;
 import com.bughunters.mountainspirit.crewmember.command.entity.*;
 import com.bughunters.mountainspirit.crewmember.command.repository.*;
+import com.bughunters.mountainspirit.member.command.service.MemberService;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,9 +24,9 @@ public class CrewMemberCommendServiceImpl implements CrewMemberCommendService {
     CrewMemberHistoryCommendRepository crewMemberHistoryCommendRepository;
     CrewApplyCommendRepository crewApplyCommendRepository;
     CrewApplyHistoryCommendRepository crewApplyHistoryCommendRepository;
-    MemberCommendRepository memberCommendRepository;
     CrewMemberRoleCommendRepository crewMemberRoleCommendRepository;
     CrewMemberAuthCommendRepository crewMemberAuthCommendRepository;
+    MemberService memberService;
 
     @Autowired
     public CrewMemberCommendServiceImpl(ModelMapper modelMapper,
@@ -33,17 +34,17 @@ public class CrewMemberCommendServiceImpl implements CrewMemberCommendService {
                                         CrewMemberHistoryCommendRepository crewMemberHistoryCommendRepository,
                                         CrewApplyCommendRepository crewApplyCommendRepository,
                                         CrewApplyHistoryCommendRepository crewApplyHistoryCommendRepository,
-                                        MemberCommendRepository memberCommendRepository,
                                         CrewMemberRoleCommendRepository crewMemberRoleCommendRepository,
-                                        CrewMemberAuthCommendRepository crewMemberAuthCommendRepository) {
+                                        CrewMemberAuthCommendRepository crewMemberAuthCommendRepository,
+                                        MemberService memberService) {
         this.modelMapper = modelMapper;
         this.crewMemberCommendRepository = crewMemberCommendRepository;
         this.crewMemberHistoryCommendRepository = crewMemberHistoryCommendRepository;
         this.crewApplyCommendRepository = crewApplyCommendRepository;
         this.crewApplyHistoryCommendRepository = crewApplyHistoryCommendRepository;
-        this.memberCommendRepository = memberCommendRepository;
         this.crewMemberRoleCommendRepository = crewMemberRoleCommendRepository;
         this.crewMemberAuthCommendRepository = crewMemberAuthCommendRepository;
+        this.memberService = memberService;
     }
 
     @Override
@@ -100,8 +101,9 @@ public class CrewMemberCommendServiceImpl implements CrewMemberCommendService {
         crewMemberHistoryCommendRepository.save(crewMemberHistory);
 
         // 회원(Member) 테이블에 크루 정보 수정
-        Member member = memberCommendRepository.findById(crewApplyDTO.getCumId()).get();
-        member.setCrewId(crewApplyDTO.getCrewId());
+//        Member member = memberCommendRepository.findById(crewApplyDTO.getCumId()).get();
+//        member.setCrewId(crewApplyDTO.getCrewId());
+        memberService.setMemberCrewId(crewApplyDTO.getCumId(),crewApplyDTO.getCrewId());
 
         // 크루 가입 신청(CrewApply) 테이블에서 신청 데이터 delete
         crewApplyCommendRepository.delete(crewApply);

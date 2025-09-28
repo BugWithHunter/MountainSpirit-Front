@@ -8,4 +8,6 @@ public interface MemberService {
     ResponseStatusDTO modifyStatusAfterClimbMountian(RequestModifyStatusOfMemberDTO modifyStatusOfMemberDTO);
 
     Member getTest(Long id);
+
+    void setMemberCrewId(Long cumId, Long crewId);
 }

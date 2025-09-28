@@ -17,7 +17,7 @@ public class MemberController {
         this.memberService = memberService;
     }
 
-    @GetMapping("/memberTest/{id}")
+    @GetMapping("/member-info/{id}")
     public Member memberTest(@PathVariable Long id) {
 
         Member member = memberService.getTest(id);

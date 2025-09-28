@@ -61,4 +61,15 @@ public class MemberServiceImpl implements MemberService{
         return memberRepository.findById(id).orElse(null);
 
     }
+
+    @Override
+    public void setMemberCrewId(Long cumId, Long crewId) {
+        Member member = memberRepository.findById(cumId).orElse(null);
+
+        if(member == null){
+            throw new NullPointerException("Member not found");
+        }
+
+        member.setCrewId(crewId);
+    }
 }
