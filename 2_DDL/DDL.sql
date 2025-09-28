@@ -171,7 +171,6 @@ CREATE TABLE ClimbCheck (
 
 CREATE TABLE ClimbRecord (
 	id	bigint	NOT NULL	auto_increment,
-	count	int	NOT NULL,
 	startTime	datetime	NOT NULL,
 	endTime	datetime	NOT NULL,
 	cumId	BIGINT	NOT NULL,
