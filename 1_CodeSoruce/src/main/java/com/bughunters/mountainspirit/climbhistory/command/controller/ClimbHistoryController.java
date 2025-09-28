@@ -48,7 +48,6 @@ public class ClimbHistoryController {
         String responseMessage = "";
 
 
-        // 여기서부터 수정 필요
         Map<String, Object> responseMap = new HashMap<>();
         if (findClimbCheckDTO != null) {
             responseMap.put("member", findClimbCheckDTO);
