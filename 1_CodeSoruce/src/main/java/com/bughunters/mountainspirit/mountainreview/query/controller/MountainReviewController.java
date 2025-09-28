@@ -1,5 +1,6 @@
 package com.bughunters.mountainspirit.mountainreview.query.controller;
 
+import com.bughunters.mountainspirit.mountainreview.query.dto.CourseReviewDTO;
 import com.bughunters.mountainspirit.mountainreview.query.service.MountainReviewService;
 import com.bughunters.mountainspirit.mountainreview.query.dto.MountainReviewDTO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,7 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
-@RestController
+@RestController("MountainReviewQueryController")
 @RequestMapping("/mountainreview")
 public class MountainReviewController {
     private final MountainReviewService mountainReviewService;
@@ -23,5 +24,11 @@ public class MountainReviewController {
     public List<MountainReviewDTO> getMountainReviewList(@RequestParam String mountainName){
         List<MountainReviewDTO> mountainReviewList = mountainReviewService.getMountainReview(mountainName);
         return mountainReviewList;
+    }
+
+    @GetMapping("/coursereview")
+    public List<CourseReviewDTO> getCourseReviewList(@RequestParam String courseName){
+        List<CourseReviewDTO> courseReviewList = mountainReviewService.getCourseReview(courseName);
+        return courseReviewList;
     }
 }

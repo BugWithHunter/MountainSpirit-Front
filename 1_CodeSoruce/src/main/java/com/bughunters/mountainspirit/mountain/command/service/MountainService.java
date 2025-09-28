@@ -10,4 +10,6 @@ public interface MountainService {
     void mergeAllCourses();
 
     List<ResponseCourseDTO> selectCoursesByPoiId(String poiId);
+
+    String getMountainName(String frtrlId);
 }

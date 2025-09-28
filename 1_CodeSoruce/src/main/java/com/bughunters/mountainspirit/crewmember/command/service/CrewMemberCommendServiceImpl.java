@@ -1,6 +1,6 @@
 package com.bughunters.mountainspirit.crewmember.command.service;
 
-import com.bughunters.mountainspirit.crewmember.command.dto.CrewApplyDTO;
+import com.bughunters.mountainspirit.crewmember.command.dto.*;
 import com.bughunters.mountainspirit.crewmember.command.entity.*;
 import com.bughunters.mountainspirit.crewmember.command.repository.*;
 import lombok.extern.slf4j.Slf4j;
@@ -24,6 +24,8 @@ public class CrewMemberCommendServiceImpl implements CrewMemberCommendService {
     CrewApplyCommendRepository crewApplyCommendRepository;
     CrewApplyHistoryCommendRepository crewApplyHistoryCommendRepository;
     MemberCommendRepository memberCommendRepository;
+    CrewMemberRoleCommendRepository crewMemberRoleCommendRepository;
+    CrewMemberAuthCommendRepository crewMemberAuthCommendRepository;
 
     @Autowired
     public CrewMemberCommendServiceImpl(ModelMapper modelMapper,
@@ -31,13 +33,17 @@ public class CrewMemberCommendServiceImpl implements CrewMemberCommendService {
                                         CrewMemberHistoryCommendRepository crewMemberHistoryCommendRepository,
                                         CrewApplyCommendRepository crewApplyCommendRepository,
                                         CrewApplyHistoryCommendRepository crewApplyHistoryCommendRepository,
-                                        MemberCommendRepository memberCommendRepository) {
+                                        MemberCommendRepository memberCommendRepository,
+                                        CrewMemberRoleCommendRepository crewMemberRoleCommendRepository,
+                                        CrewMemberAuthCommendRepository crewMemberAuthCommendRepository) {
         this.modelMapper = modelMapper;
         this.crewMemberCommendRepository = crewMemberCommendRepository;
         this.crewMemberHistoryCommendRepository = crewMemberHistoryCommendRepository;
         this.crewApplyCommendRepository = crewApplyCommendRepository;
         this.crewApplyHistoryCommendRepository = crewApplyHistoryCommendRepository;
         this.memberCommendRepository = memberCommendRepository;
+        this.crewMemberRoleCommendRepository = crewMemberRoleCommendRepository;
+        this.crewMemberAuthCommendRepository = crewMemberAuthCommendRepository;
     }
 
     @Override
@@ -118,8 +124,93 @@ public class CrewMemberCommendServiceImpl implements CrewMemberCommendService {
         crewApplyCommendRepository.delete(crewApply);
     }
 
+    @Override
+    @Transactional
+    public void leaveCrew(CrewIdentifyMemberDTO crewIdentifyMemberDTO) {
+        // 크루원 select
+        CrewMember crewMember = crewMemberCommendRepository.findByCrewIdAndCumId(crewIdentifyMemberDTO.getCrewId(),crewIdentifyMemberDTO.getCumId());
+
+        // 크루원 히스토리 insert
+        CrewMemberHistory crewMemberHistory = setCrewMemberQuitHistoryInfo(crewMember);
+        crewMemberHistoryCommendRepository.save(crewMemberHistory);
+
+        // 크루원 delete
+        crewMemberCommendRepository.delete(crewMember);
+    }
+
+    @Override
+    @Transactional
+    public void registCrewRole(String crewRole) {
+        CrewMemberRole crewMemberRole = new CrewMemberRole();
+        crewMemberRole.setCrewRoleName(crewRole);
+        crewMemberRoleCommendRepository.save(crewMemberRole);
+    }
+
+    @Override
+    @Transactional
+    public void modifyCrewRole(CrewMemberAuthModifyDTO crewMemberAuthModifyDTO) {
+        log.info("넘어온 권한 수정 dto : {}", crewMemberAuthModifyDTO);
+        CrewMemberRole crewMemberRole = crewMemberRoleCommendRepository.findByCrewRoleName(crewMemberAuthModifyDTO.getCrewRoleOriginalName());
+        CrewMemberAuth crewMemberAuth = crewMemberAuthCommendRepository.findByCrewRoleIdAndCrewRoleAuth(crewMemberRole.getId(),crewMemberAuthModifyDTO.getCrewRoleOriginalAuth());
+        log.info("service crewMemberRole : {}",crewMemberRole);
+        log.info("service crewMemberAuth : {}",crewMemberAuth);
+
+        crewMemberRole.setCrewRoleName(crewMemberAuthModifyDTO.getCrewRoleName());
+        crewMemberAuth.setCrewRoleAuth(crewMemberAuthModifyDTO.getCrewRoleAuth());
+    }
+
+    @Override
+    @Transactional
+    public void modifyCrewMemberRole(CrewMemberRoleModifyDTO crewMemberRoleModifyDTO) {
+        if(crewMemberRoleModifyDTO==null){
+            log.info("입력된 권한이 없습니다.");
+        }
+        // 크루 구성원 정보 select
+        CrewMember crewMember = crewMemberCommendRepository.findById(crewMemberRoleModifyDTO.getId()).orElse(null);
+
+        // 크루 구성원 등급 update
+        crewMember.setCrewRoleId(crewMemberRoleModifyDTO.getCrewRoleId());
+        LocalDateTime now = LocalDateTime.now();
+        crewMember.setCrewMemberRoleUpdateDate(now.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+
+        // 크루 구성원 히스토리 insert
+        CrewMemberHistory crewMemberHistory = setCrewMemberRoleUpdateHistoryInfo(crewMember,crewMemberRoleModifyDTO,now);
+        crewMemberHistoryCommendRepository.save(crewMemberHistory);
+
+    }
+
+    @Override
+    @Transactional
+    public void banCrewMember(CrewMemberBanDTO crewMemberBanDTO) {
+        // 크루원 정보 select
+        CrewMember crewMember = crewMemberCommendRepository.findById(crewMemberBanDTO.getId()).orElse(null);
+
+        // 크루 구성원 히스토리에 insert
+        CrewMemberHistory crewMemberHistory = setCrewMemberBanHistoryInfo(crewMember,crewMemberBanDTO.getBanReason());
+        crewMemberHistoryCommendRepository.save(crewMemberHistory);
+
+        // 크루 구성원 테이블에서 delete
+        crewMemberCommendRepository.delete(crewMember);
+    }
+
+
+
 
     // //////////////////////////////////////////////
+
+    private static CrewMemberHistory setCrewMemberQuitHistoryInfo(CrewMember crewMember) {
+        LocalDateTime now = LocalDateTime.now();
+        CrewMemberHistory crewMemberHistory = new CrewMemberHistory();
+        crewMemberHistory.setCrewRoleId(crewMember.getCrewRoleId());
+        crewMemberHistory.setCrewId(crewMember.getCrewId());
+        crewMemberHistory.setCrewMemberHistoryJoinDate(crewMember.getCrewMemberJoinDate());
+        crewMemberHistory.setCrewMemberHistoryStateUpdateDate(now.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+        crewMemberHistory.setCrewMemberHistoryState("QUITED");
+        crewMemberHistory.setCrewMemberHistoryUpdateReason("크루 탈퇴");
+        crewMemberHistory.setCumId(crewMember.getCumId());
+        return crewMemberHistory;
+    }
+
     private CrewMember setCrewMemberInfo(CrewApplyDTO crewApplyDTO) {
         LocalDateTime now = LocalDateTime.now();
         CrewMember crewMember = new CrewMember();
@@ -158,6 +249,30 @@ public class CrewMemberCommendServiceImpl implements CrewMemberCommendService {
         return crewApplyHistory;
     }
 
+    private CrewMemberHistory setCrewMemberRoleUpdateHistoryInfo(CrewMember crewMember,CrewMemberRoleModifyDTO crewMemberRoleModifyDTO,LocalDateTime now) {
+        CrewMemberHistory crewMemberHistory = new CrewMemberHistory();
+        crewMemberHistory.setCrewRoleId(crewMemberRoleModifyDTO.getCrewRoleId());
+        crewMemberHistory.setCrewId(crewMember.getCrewId());
+        crewMemberHistory.setCrewMemberHistoryJoinDate(crewMember.getCrewMemberJoinDate());
+        crewMemberHistory.setCrewMemberHistoryStateUpdateDate(now.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+        crewMemberHistory.setCrewMemberHistoryState("ROLECHANGED");
+        crewMemberHistory.setCrewMemberHistoryUpdateReason("등급 변경");
+        crewMemberHistory.setCumId(crewMember.getCumId());
+        return crewMemberHistory;
+    }
 
+    private CrewMemberHistory setCrewMemberBanHistoryInfo(CrewMember crewMember, String banReason) {
+        CrewMemberHistory crewMemberHistory = new CrewMemberHistory();
+        LocalDateTime now = LocalDateTime.now();
+
+        crewMemberHistory.setCrewRoleId(crewMember.getCrewRoleId());
+        crewMemberHistory.setCrewId(crewMember.getCrewId());
+        crewMemberHistory.setCrewMemberHistoryJoinDate(crewMember.getCrewMemberJoinDate());
+        crewMemberHistory.setCrewMemberHistoryStateUpdateDate(now.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+        crewMemberHistory.setCrewMemberHistoryState("BANNED");
+        crewMemberHistory.setCrewMemberHistoryUpdateReason(banReason);
+        crewMemberHistory.setCumId(crewMember.getCumId());
+        return crewMemberHistory;
+    }
 
 }
