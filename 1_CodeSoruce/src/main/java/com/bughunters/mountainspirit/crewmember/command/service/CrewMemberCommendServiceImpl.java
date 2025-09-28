@@ -2,6 +2,7 @@ package com.bughunters.mountainspirit.crewmember.command.service;
 
 import com.bughunters.mountainspirit.crewmember.command.dto.CrewApplyDTO;
 import com.bughunters.mountainspirit.crewmember.command.dto.CrewIdentifyMemberDTO;
+import com.bughunters.mountainspirit.crewmember.command.dto.CrewMemberAuthModifyDTO;
 import com.bughunters.mountainspirit.crewmember.command.entity.*;
 import com.bughunters.mountainspirit.crewmember.command.repository.*;
 import lombok.extern.slf4j.Slf4j;
@@ -26,6 +27,7 @@ public class CrewMemberCommendServiceImpl implements CrewMemberCommendService {
     CrewApplyHistoryCommendRepository crewApplyHistoryCommendRepository;
     MemberCommendRepository memberCommendRepository;
     CrewMemberRoleCommendRepository crewMemberRoleCommendRepository;
+    CrewMemberAuthCommendRepository crewMemberAuthCommendRepository;
 
     @Autowired
     public CrewMemberCommendServiceImpl(ModelMapper modelMapper,
@@ -34,7 +36,8 @@ public class CrewMemberCommendServiceImpl implements CrewMemberCommendService {
                                         CrewApplyCommendRepository crewApplyCommendRepository,
                                         CrewApplyHistoryCommendRepository crewApplyHistoryCommendRepository,
                                         MemberCommendRepository memberCommendRepository,
-                                        CrewMemberRoleCommendRepository crewMemberRoleCommendRepository) {
+                                        CrewMemberRoleCommendRepository crewMemberRoleCommendRepository,
+                                        CrewMemberAuthCommendRepository crewMemberAuthCommendRepository) {
         this.modelMapper = modelMapper;
         this.crewMemberCommendRepository = crewMemberCommendRepository;
         this.crewMemberHistoryCommendRepository = crewMemberHistoryCommendRepository;
@@ -42,6 +45,7 @@ public class CrewMemberCommendServiceImpl implements CrewMemberCommendService {
         this.crewApplyHistoryCommendRepository = crewApplyHistoryCommendRepository;
         this.memberCommendRepository = memberCommendRepository;
         this.crewMemberRoleCommendRepository = crewMemberRoleCommendRepository;
+        this.crewMemberAuthCommendRepository = crewMemberAuthCommendRepository;
     }
 
     @Override
@@ -123,6 +127,7 @@ public class CrewMemberCommendServiceImpl implements CrewMemberCommendService {
     }
 
     @Override
+    @Transactional
     public void leaveCrew(CrewIdentifyMemberDTO crewIdentifyMemberDTO) {
         // 크루원 select
         CrewMember crewMember = crewMemberCommendRepository.findByCrewIdAndCumId(crewIdentifyMemberDTO.getCrewId(),crewIdentifyMemberDTO.getCumId());
@@ -137,10 +142,23 @@ public class CrewMemberCommendServiceImpl implements CrewMemberCommendService {
     }
 
     @Override
+    @Transactional
     public void registCrewRole(String crewRole) {
         CrewMemberRole crewMemberRole = new CrewMemberRole();
         crewMemberRole.setCrewRoleName(crewRole);
         crewMemberRoleCommendRepository.save(crewMemberRole);
+    }
+
+    @Override
+    @Transactional
+    public void modifyCrewRole(CrewMemberAuthModifyDTO crewMemberAuthModifyDTO) {
+        log.info("넘어온 권한 수정 dto : {}", crewMemberAuthModifyDTO);
+        CrewMemberRole crewMemberRole = crewMemberRoleCommendRepository.findByCrewRoleName(crewMemberAuthModifyDTO.getCrewRoleOriginalName());
+        CrewMemberAuth crewMemberAuth = crewMemberAuthCommendRepository.findByCrewRoleIdAndCrewRoleAuth(crewMemberRole.getId(),crewMemberAuthModifyDTO.getCrewRoleOriginalAuth());
+        log.info("service crewMemberRole : {}",crewMemberRole);
+        log.info("service crewMemberAuth : {}",crewMemberAuth);
+
+        crewMemberAuth.setCrewRoleAuth(crewMemberAuthModifyDTO.getCrewRoleAuth());
     }
 
 

@@ -2,20 +2,18 @@ package com.bughunters.mountainspirit.crewmember.command.controller;
 
 import com.bughunters.mountainspirit.crewmember.command.dto.CrewApplyDTO;
 import com.bughunters.mountainspirit.crewmember.command.dto.CrewIdentifyMemberDTO;
+import com.bughunters.mountainspirit.crewmember.command.dto.CrewMemberAuthModifyDTO;
 import com.bughunters.mountainspirit.crewmember.command.service.CrewMemberCommendService;
 import com.bughunters.mountainspirit.crewmember.query.service.CrewMemberQueryService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 
-@Controller
+@RestController
 @RequestMapping("/crew-member")
 @Slf4j
 public class CrewMemberCommendController {
@@ -71,6 +69,14 @@ public class CrewMemberCommendController {
         log.info("controller 권한명 : {}",crewRole);
 
         crewMemberCommendService.registCrewRole(crewRole);
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/modify-crew-role")
+    public ResponseEntity<?> modifyCrewRole(@RequestBody CrewMemberAuthModifyDTO crewMemberAuthModifyDTO){
+        log.info("controller 권한명 : {}",crewMemberAuthModifyDTO);
+
+        crewMemberCommendService.modifyCrewRole(crewMemberAuthModifyDTO);
         return ResponseEntity.ok().build();
     }
 }

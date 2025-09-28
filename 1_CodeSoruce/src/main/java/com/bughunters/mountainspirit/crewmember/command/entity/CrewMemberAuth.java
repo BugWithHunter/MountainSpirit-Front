@@ -18,5 +18,5 @@ public class CrewMemberAuth {
     @Column
     private String crewRoleAuth;
     @Column
-    private String crewRoleId;
+    private Long crewRoleId;
 }

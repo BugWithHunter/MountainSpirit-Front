@@ -16,5 +16,5 @@ public class CrewMemberRole {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Column
-    private String CrewRoleName;
+    private String crewRoleName;
 }
