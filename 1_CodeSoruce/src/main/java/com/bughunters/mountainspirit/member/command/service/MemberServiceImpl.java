@@ -55,4 +55,10 @@ public class MemberServiceImpl implements MemberService{
 
         return responseStatusDTO;
     }
+
+    @Override
+    public Member getTest(Long id) {
+        return memberRepository.findById(id).orElse(null);
+
+    }
 }
