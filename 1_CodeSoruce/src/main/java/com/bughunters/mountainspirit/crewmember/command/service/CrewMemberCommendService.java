@@ -1,9 +1,6 @@
 package com.bughunters.mountainspirit.crewmember.command.service;
 
-import com.bughunters.mountainspirit.crewmember.command.dto.CrewApplyDTO;
-import com.bughunters.mountainspirit.crewmember.command.dto.CrewIdentifyMemberDTO;
-import com.bughunters.mountainspirit.crewmember.command.dto.CrewMemberAuthModifyDTO;
-import com.bughunters.mountainspirit.crewmember.command.dto.CrewMemberRoleModifyDTO;
+import com.bughunters.mountainspirit.crewmember.command.dto.*;
 
 public interface CrewMemberCommendService {
     void crewApplyRequest(CrewApplyDTO crewApplyDTO);
@@ -21,4 +18,6 @@ public interface CrewMemberCommendService {
     void modifyCrewRole(CrewMemberAuthModifyDTO crewMemberAuthModifyDTO);
 
     void modifyCrewMemberRole(CrewMemberRoleModifyDTO crewMemberRoleModifyDTO);
+
+    void banCrewMember(CrewMemberBanDTO crewMemberBanDTO);
 }

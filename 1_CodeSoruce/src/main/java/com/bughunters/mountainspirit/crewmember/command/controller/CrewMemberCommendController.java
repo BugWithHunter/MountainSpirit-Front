@@ -1,9 +1,6 @@
 package com.bughunters.mountainspirit.crewmember.command.controller;
 
-import com.bughunters.mountainspirit.crewmember.command.dto.CrewApplyDTO;
-import com.bughunters.mountainspirit.crewmember.command.dto.CrewIdentifyMemberDTO;
-import com.bughunters.mountainspirit.crewmember.command.dto.CrewMemberAuthModifyDTO;
-import com.bughunters.mountainspirit.crewmember.command.dto.CrewMemberRoleModifyDTO;
+import com.bughunters.mountainspirit.crewmember.command.dto.*;
 import com.bughunters.mountainspirit.crewmember.command.service.CrewMemberCommendService;
 import com.bughunters.mountainspirit.crewmember.query.service.CrewMemberQueryService;
 import lombok.extern.slf4j.Slf4j;
@@ -81,6 +78,12 @@ public class CrewMemberCommendController {
     @PostMapping("/modify-crew-member-role")
     public ResponseEntity<?> modifyCrewMemberRole(@RequestBody CrewMemberRoleModifyDTO crewMemberRoleModifyDTO){
         crewMemberCommendService.modifyCrewMemberRole(crewMemberRoleModifyDTO);
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/ban-crew-member")
+    public ResponseEntity<?> banCrewMember(@RequestBody CrewMemberBanDTO crewMemberBanDTO){
+        crewMemberCommendService.banCrewMember(crewMemberBanDTO);
         return ResponseEntity.ok().build();
     }
 }
