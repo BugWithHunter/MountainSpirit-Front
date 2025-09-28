@@ -158,6 +158,7 @@ public class CrewMemberCommendServiceImpl implements CrewMemberCommendService {
         log.info("service crewMemberRole : {}",crewMemberRole);
         log.info("service crewMemberAuth : {}",crewMemberAuth);
 
+        crewMemberRole.setCrewRoleName(crewMemberAuthModifyDTO.getCrewRoleName());
         crewMemberAuth.setCrewRoleAuth(crewMemberAuthModifyDTO.getCrewRoleAuth());
     }
 
