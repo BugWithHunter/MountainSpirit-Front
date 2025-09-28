@@ -6,7 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
 public interface ReportCommandRepository extends JpaRepository<ReportCommandEntity, Long> {
-    List<ReportCommandEntity> findByReportedIdAndSuspensionCycleAndCategoryId(Long reportedId, int suspensionCycle, Long categoryId);
+    long countByReportedIdAndSuspensionCycleAndCategoryId(Long reportedId, int suspensionCycle, Long categoryId);
 
     List<ReportCommandEntity> findByReportedIdAndSuspensionCycle(Long reportedId, int suspensionCycle);
 }
