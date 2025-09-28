@@ -9,6 +9,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Service
 public class MemberServiceImpl implements MemberService {
@@ -91,6 +92,28 @@ public class MemberServiceImpl implements MemberService {
 
 
         return checkBeforeSignUp(member);
+    }
+
+    @Override
+    public ResponseQuitDTO memberQuit(RequestQuitMemberDTO memberDTO) {
+        ResponseQuitDTO responseQuitDTO = new ResponseQuitDTO();
+        Member member = memberRepository.findById(memberDTO.getId()).orElse(null);
+
+        if (member == null) { //테스트중에는 값을 잘못 입력해서 null 이 나올수 있어서 처리 함.
+            return null;
+        }
+
+        //암호가 틀렸을 때
+        if (!member.getMemPwd().equals(memberDTO.getMemPwd())) {
+            responseQuitDTO.setInvalidPwd(true);
+            return responseQuitDTO;
+        }
+
+        member.setQuitDate(LocalDateTime.now());
+        member.setMemStsId(2L);
+        memberRepository.save(member);
+
+        return responseQuitDTO;
     }
 
     // 회원 가입 제한 사항 확인, 이메일 중복, 이미 가입한 회원, 블랙리스트 등등

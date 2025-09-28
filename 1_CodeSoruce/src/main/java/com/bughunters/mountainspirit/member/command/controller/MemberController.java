@@ -2,6 +2,8 @@ package com.bughunters.mountainspirit.member.command.controller;
 
 import com.bughunters.mountainspirit.common.ResponseMessage;
 import com.bughunters.mountainspirit.member.command.dto.RequestMemberDTO;
+import com.bughunters.mountainspirit.member.command.dto.RequestQuitMemberDTO;
+import com.bughunters.mountainspirit.member.command.dto.ResponseQuitDTO;
 import com.bughunters.mountainspirit.member.command.dto.ResponseSignUpDTO;
 import com.bughunters.mountainspirit.member.command.entity.Member;
 import com.bughunters.mountainspirit.member.command.service.MemberService;
@@ -50,7 +52,6 @@ public class MemberController {
                 responseMessage.setMessage("회원가입이 완료 되었습니다.");
             }
 
-
             if (!responseMap.isEmpty())
                 responseMessage.setResult(responseMap);
 
@@ -63,5 +64,26 @@ public class MemberController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body(responseMessage);
         }
+    }
+
+    @DeleteMapping("/member")
+    public ResponseEntity<ResponseMessage> deleteMember(@RequestBody RequestQuitMemberDTO member) {
+        ResponseQuitDTO responseQuitDTO = memberService.memberQuit(member);
+        ResponseMessage responseMessage = new ResponseMessage();
+
+        if (responseQuitDTO == null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+
+        if (responseQuitDTO.isInvalidPwd()) {
+            responseMessage.setMessage("암호가 틀렸습니다.");
+        } else {
+            responseMessage.setMessage("회원 탈퇴가 완료 됐습니다.");
+        }
+
+        responseMessage.setHttpStatus(HttpStatus.OK.value());
+
+        return ResponseEntity.ok()
+                .body(responseMessage);
     }
 }
