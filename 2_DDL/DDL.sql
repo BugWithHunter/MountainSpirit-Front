@@ -73,7 +73,8 @@ CREATE TABLE Member (
 	memStsId	bigint	NULL,
 	crewId	bigint	NULL	,
 	constraint pk_Member_id primary key(id),
-	constraint ch_Member_gender check(gender in('F','M'))
+	constraint ch_Member_gender check(gender in('F','M')),
+	constraint uk_Member_email Unique(email)
 );
 
 CREATE TABLE ScoreStandard (
