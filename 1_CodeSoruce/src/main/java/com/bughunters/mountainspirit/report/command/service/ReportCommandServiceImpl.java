@@ -1,5 +1,6 @@
 package com.bughunters.mountainspirit.report.command.service;
 
+import com.bughunters.mountainspirit.member.command.entity.Member;
 import com.bughunters.mountainspirit.report.command.dto.ReportRequestCommandDTO;
 import com.bughunters.mountainspirit.report.command.dto.ReportResponseCommandDTO;
 import com.bughunters.mountainspirit.report.command.entity.*;
@@ -43,12 +44,12 @@ public class ReportCommandServiceImpl implements ReportCommandService {
     @Override
     public ReportResponseCommandDTO createReport(ReportRequestCommandDTO reportRequestCommandDTO) {
 
-        ReportMemberCommandEntity rmce = reportMemberCommandRepository
+        Member member = reportMemberCommandRepository
                 .findById(reportRequestCommandDTO.getReportedId())
                 .orElseThrow(() -> new RuntimeException("Member not found"));
 
         // suspensionCycle은 member의 bancnt와 동일
-        int suspensionCycle = rmce.getBanCnt();
+        int suspensionCycle = member.getBanCnt();
 
         // Report 엔티티 매핑
         ReportCommandEntity rce = modelMapper.map(reportRequestCommandDTO, ReportCommandEntity.class);
@@ -82,7 +83,7 @@ public class ReportCommandServiceImpl implements ReportCommandService {
         );
 
         if (instanceCntNum >= rcce.getCountStandard()) {
-            createBan(rmce,reportRequestCommandDTO);
+            createBan(member ,reportRequestCommandDTO);
             result = "BAN";
         }
                 
@@ -92,7 +93,7 @@ public class ReportCommandServiceImpl implements ReportCommandService {
                 );
 
         if (rcelist.size() == 10) {
-            createBan(rmce, reportRequestCommandDTO);
+            createBan(member, reportRequestCommandDTO);
             result = "BAN";
         }
 
@@ -102,7 +103,7 @@ public class ReportCommandServiceImpl implements ReportCommandService {
         return rrcdto;
     }
 
-    private void createBan(ReportMemberCommandEntity rmEntity, ReportRequestCommandDTO rrdto) {
+    private void createBan(Member member, ReportRequestCommandDTO rrdto) {
         int banCount = banCommandRepository.countByUserId(rrdto.getReportedId()) + 1;
 
         LocalDateTime startDate = LocalDateTime.now();
@@ -123,8 +124,8 @@ public class ReportCommandServiceImpl implements ReportCommandService {
             blacklistCommandRepository.save(blcEntity);
 
             // 회원 banCnt도 증가
-            rmEntity.setBanCnt(rmEntity.getBanCnt() + 1);
-            reportMemberCommandRepository.save(rmEntity);
+            member.setBanCnt(member.getBanCnt() + 1);
+            reportMemberCommandRepository.save(member);
         }
 
         BanCommandEntity bcEntity = BanCommandEntity.builder()
@@ -135,7 +136,7 @@ public class ReportCommandServiceImpl implements ReportCommandService {
                 .build();
 
         // 회원 banCnt도 증가
-        rmEntity.setBanCnt(rmEntity.getBanCnt() + 1);
-        reportMemberCommandRepository.save(rmEntity);
+        member.setBanCnt(member.getBanCnt() + 1);
+        reportMemberCommandRepository.save(member);
     }
 }
