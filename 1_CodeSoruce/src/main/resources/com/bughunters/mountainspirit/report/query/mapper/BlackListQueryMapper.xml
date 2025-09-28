@@ -12,6 +12,10 @@
     </resultMap>
 
     <select id="selectAllBlacklist" resultMap="blacklistResultMap">
-        SELECT * FROM Blacklist
+        SELECT
+            creaDate,
+            adminId,
+            memberId
+            FROM Blacklist
     </select>
 </mapper>

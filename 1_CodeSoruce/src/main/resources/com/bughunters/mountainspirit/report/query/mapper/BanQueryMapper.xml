@@ -14,7 +14,11 @@
     </resultMap>
 
     <select id="selectAllBan" resultMap="banQueryResultMap">
-        SELECT *
+        SELECT
+            startDate,
+            endDate,
+            userId,
+            adminId
         FROM Ban
     </select>
 </mapper>
