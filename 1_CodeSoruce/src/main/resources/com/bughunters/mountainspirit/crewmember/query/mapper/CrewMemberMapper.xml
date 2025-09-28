@@ -11,7 +11,8 @@
         <result property="cumId" column="cumId"/>
         <result property="crewRoleId" column="crewRoleId"/>
     </resultMap>
-    <resultMap id="crewMemberListResultMap" type="com.bughunters.mountainspirit.crewmember.query.dto.CrewApplyListDTO">
+
+    <resultMap id="crewApplyListResultMap" type="com.bughunters.mountainspirit.crewmember.query.dto.CrewApplyListDTO">
         <id property="crewId" column="crewId"/>
         <collection property="appliedList" ofType="com.bughunters.mountainspirit.crewmember.query.dto.AppliedMemberInfoDTO">
             <id property="id" column="id"/>
@@ -19,7 +20,20 @@
             <result property="nickname" column="nickname"/>
         </collection>
     </resultMap>
-    <select id="findAllCrewAppliedByCrewId" parameterType="_long" resultMap="crewMemberListResultMap">
+
+    <resultMap id="crewMemberListResultMap" type="com.bughunters.mountainspirit.crewmember.query.dto.CrewAndMemberDTO">
+        <id property="id" column="id"/>
+        <result property="crewMemberJoinDate" column="crewMemberJoinDate"/>
+        <result property="crewMemberRoleUpdateDate" column="crewMemberRoleUpdateDate"/>
+        <result property="crewId" column="crewId"/>
+        <result property="crewRoleId" column="crewRoleId"/>
+        <association property="memberList" javaType="com.bughunters.mountainspirit.crewmember.query.dto.MemberDTO">
+            <id property="userId" column="userId"/>
+            <result property="nickName" column="nickName"/>
+        </association>
+    </resultMap>
+
+    <select id="findAllCrewAppliedByCrewId" parameterType="_long" resultMap="crewApplyListResultMap">
         SELECT
                a.crewId
              , b.id
@@ -35,5 +49,17 @@
          WHERE crewId = #{crewId}
            AND crewMemberHistoryState = 'BANNED'
            AND cumId = #{cumId}
+    </select>
+    <select id="findCrewMemberListByCrewId" parameterType="_long" resultMap="crewMemberListResultMap">
+        SELECT
+               a.id as id
+             , a.crewMemberJoinDate
+             , a.crewMemberRoleUpdateDate
+             , a.crewId
+             , a.crewRoleId
+             , b.id as userId
+             , b.nickName
+          FROM CrewMember a JOIN Member b ON a.cumId = b.id
+         WHERE b.crewId = #{crewId}
     </select>
 </mapper>
