@@ -46,8 +46,11 @@ public class MemberServiceImpl implements MemberService{
 
         ResponseStatusDTO responseStatusDTO = new ResponseStatusDTO();
         responseStatusDTO.setScore(score);
+        responseStatusDTO.setMemRankId(findRankId);
+        responseStatusDTO.setCumNm(member.getMemName());
+
         // 등급업으로 프론트에 변경 됐다는것을 알리기 위함
-        if(previousRankId.equals(member.getMemRankId())){
+        if(!previousRankId.equals(member.getMemRankId())){
             responseStatusDTO.setModifyMemberRank(true);
         }
 

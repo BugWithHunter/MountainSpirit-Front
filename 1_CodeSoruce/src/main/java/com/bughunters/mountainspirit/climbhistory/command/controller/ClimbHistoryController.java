@@ -51,7 +51,7 @@ public class ClimbHistoryController {
         // 여기서부터 수정 필요
         Map<String, Object> responseMap = new HashMap<>();
         if (findClimbCheckDTO != null) {
-            responseMap.put("item", findClimbCheckDTO);
+            responseMap.put("member", findClimbCheckDTO);
             responseMessage = "봉우리 완등 인증 완료";
         } else {
             responseMessage = "현재 등산로에 등산 시작 정보가 없습니다.\n 등산완료 인증 실패";

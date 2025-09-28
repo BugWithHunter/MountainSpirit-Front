@@ -11,4 +11,6 @@ import java.util.List;
 public class ResponseStatusDTO {
     private int score;
     private boolean modifyMemberRank;
+    private long memRankId;
+    private String cumNm;
 }
