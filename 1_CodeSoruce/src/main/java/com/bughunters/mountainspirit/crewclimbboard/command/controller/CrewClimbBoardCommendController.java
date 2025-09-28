@@ -42,6 +42,5 @@ public class CrewClimbBoardCommendController {
         return ResponseEntity.ok().build();
     }
 
-
-
+    
 }
