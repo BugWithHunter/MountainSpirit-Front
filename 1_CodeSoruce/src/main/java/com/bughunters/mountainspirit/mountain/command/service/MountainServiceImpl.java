@@ -87,4 +87,9 @@ public class MountainServiceImpl implements MountainService {
         repo.saveAll(entities);
     }
 
+    @Override
+    public String getMountainName(String frtrlId) {
+        return mountainRepository.findNameById(frtrlId);
+    }
+
 }
