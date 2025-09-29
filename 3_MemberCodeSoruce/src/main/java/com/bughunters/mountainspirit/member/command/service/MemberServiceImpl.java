@@ -162,7 +162,7 @@ public class MemberServiceImpl implements MemberService {
     @Override
     @Transactional
     public void updateInvlidPassword(RequsetloginHisotry requestLoginHisotry) {
-
+        Member member = memberRepository.findById(requestLoginHisotry.getId()).orElse(null);
     }
 
 
