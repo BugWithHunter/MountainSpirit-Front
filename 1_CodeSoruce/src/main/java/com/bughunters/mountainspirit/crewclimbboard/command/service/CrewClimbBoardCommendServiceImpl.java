@@ -89,7 +89,7 @@ public class CrewClimbBoardCommendServiceImpl implements CrewClimbBoardCommendSe
             return;
         }
         crewClimbBoard.setCrewClimbIsDeleted('Y');
-        crewClimbRecordCommendRepository.deleteById(id);
+        crewClimbRecordCommendRepository.deleteByCrewClimbId(id);
 
     }
 
@@ -140,6 +140,8 @@ public class CrewClimbBoardCommendServiceImpl implements CrewClimbBoardCommendSe
         }
         crewClimbRecordCommendRepository.delete(crewClimbRecord);
     }
+
+
 
 
     // ////////////////////////////////////////////
