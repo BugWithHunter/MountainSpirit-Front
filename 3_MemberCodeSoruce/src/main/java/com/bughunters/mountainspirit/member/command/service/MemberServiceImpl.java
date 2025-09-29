@@ -3,6 +3,8 @@ package com.bughunters.mountainspirit.member.command.service;
 
 import com.bughunters.mountainspirit.member.command.dto.*;
 import com.bughunters.mountainspirit.member.command.entity.Member;
+import com.bughunters.mountainspirit.member.command.repository.LoginFailureRecordRepository;
+import com.bughunters.mountainspirit.member.command.repository.LoginRecordRepository;
 import com.bughunters.mountainspirit.member.command.repository.MemberRepository;
 import com.bughunters.mountainspirit.member.query.dto.BlackListDTO;
 import com.bughunters.mountainspirit.member.command.dto.RequestLoginwithAuthoritiesDTO;
@@ -13,6 +15,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -26,17 +29,25 @@ public class MemberServiceImpl implements MemberService {
     private final MemberRepository memberRepository;
     private final MemberQueryService memberQueryService;
     private final ModelMapper modelMapper;
+    private final LoginFailureRecordRepository loginFailureRecordRepository;
+    private final LoginRecordRepository LoginRecordRepository;
 
     public MemberServiceImpl(MemberRepository memberRepository
             , MemberQueryService memberQueryService
             , ModelMapper modelMapper
-            , BCryptPasswordEncoder bCryptPasswordEncoder) {
+            , BCryptPasswordEncoder bCryptPasswordEncoder
+            , LoginFailureRecordRepository loginFailureRecordRepository
+            , LoginRecordRepository LoginRecordRepository) {
         this.memberRepository = memberRepository;
         this.memberQueryService = memberQueryService;
         this.modelMapper = modelMapper;
+        this.loginFailureRecordRepository = loginFailureRecordRepository;
+        this.LoginRecordRepository = LoginRecordRepository;
     }
 
+    //등산 이후 회원 정보 변경
     @Override
+    @Transactional
     public ResponseStatusDTO modifyStatusAfterClimbMountian(RequestModifyStatusOfMemberDTO modifyStatusOfMemberDTO) {
         Member member = memberRepository.findById(modifyStatusOfMemberDTO.getCumId()).orElse(null);
 
@@ -74,8 +85,6 @@ public class MemberServiceImpl implements MemberService {
             responseStatusDTO.setModifyMemberRank(true);
         }
 
-//        memberRepository.save(member);
-
         return responseStatusDTO;
     }
 
@@ -97,11 +106,14 @@ public class MemberServiceImpl implements MemberService {
 
     //회원 가입
     @Override
+    @Transactional
     public ResponseSignUpDTO signUp(RequestMemberDTO member) {
         return checkBeforeSignUp(member);
     }
 
+    //회원 탈퇴
     @Override
+    @Transactional
     public ResponseQuitDTO memberQuit(RequestQuitMemberDTO memberDTO) {
         ResponseQuitDTO responseQuitDTO = new ResponseQuitDTO();
         Member member = memberRepository.findById(memberDTO.getId()).orElse(null);
@@ -123,6 +135,7 @@ public class MemberServiceImpl implements MemberService {
         return responseQuitDTO;
     }
 
+    //spring security에서 회원정보 조회에 사용
     @Override
     public UserDetails loadUserByUsername(String email) {
         com.bughunters.mountainspirit.member.query.dto.RequestLoginwithAuthoritiesDTO loginDTO =
@@ -144,6 +157,14 @@ public class MemberServiceImpl implements MemberService {
 
         return userImpl;
     }
+
+    //로그인 실패시 실패이력 insert 및 회원테이블 실패 횟 수 업데이트
+    @Override
+    @Transactional
+    public void updateInvlidPassword(RequsetloginHisotry requestLoginHisotry) {
+
+    }
+
 
     // 회원 가입 제한 사항 확인, 이메일 중복, 이미 가입한 회원, 블랙리스트 등등
     private ResponseSignUpDTO checkBeforeSignUp(RequestMemberDTO memberDTO) throws IllegalArgumentException {
@@ -188,4 +209,6 @@ public class MemberServiceImpl implements MemberService {
 
         return responseSignUpDTO;
     }
+
+
 }

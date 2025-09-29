@@ -18,6 +18,7 @@
         <result property="memberName" column="memName"/>
         <result property="memStsId" column="memStsId"/>
         <result property="birth" column="birth"/>
+        <result property="loginLockUntil" column="loginLockUntil"/>
         <result property="pwd" column="memPwd"/>
         <collection property="authorities" ofType="com.bughunters.mountainspirit.member.query.dto.Authority">
             <result property="cumId" column="cumId"/>
@@ -44,6 +45,7 @@
              , a.birth
              , a.memStsId
              , a.memPwd
+             , a.loginLockUntil
              , b.cumId
              , b.authId
              , c.authName

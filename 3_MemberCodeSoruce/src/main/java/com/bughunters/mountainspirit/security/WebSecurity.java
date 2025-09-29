@@ -9,6 +9,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
@@ -36,9 +37,13 @@ public class WebSecurity {
     }
 
     @Bean
-    protected SecurityFilterChain securityFilterChain(HttpSecurity http, JwtUtil jwtUtil) throws Exception {
+    protected SecurityFilterChain securityFilterChain(HttpSecurity http,
+                                                      JwtUtil jwtUtil,
+                                                      JsonAuthFailureHandler failure) throws Exception {
 
-        http.csrf(csrf -> csrf.disable());
+        http.csrf(csrf -> csrf.disable())
+                // 기본 formLogin 필터 비활성화 (중복 방지)
+                .formLogin(AbstractHttpConfigurer::disable);
         http.authorizeHttpRequests(authz ->
                                 authz.requestMatchers("/**").permitAll()
 //                                authz.requestMatchers(HttpMethod.GET, "/member/**").permitAll()
@@ -56,7 +61,7 @@ public class WebSecurity {
                         session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
         /* 설명. 매니저를 지닌 필터 등록 */
-        http.addFilter(getAuthenticationFilter(authenticationManager()));
+        http.addFilter(getAuthenticationFilter(authenticationManager(),failure));
 
         /* 설명. 로그인 이후 토큰을 들고 온다면 JwtFilter를 추가해서 검증하도록 함 */
         /* 설명. UsernamePasswordAuthenticationFilter 보다 JwtFilter가 먼저 실행 하게 됌 */
@@ -66,8 +71,11 @@ public class WebSecurity {
     }
 
     /* 설명. Filter를 등록하기 위해 사용하는 메소드 */
-    private Filter getAuthenticationFilter(AuthenticationManager authenticationManager) {
-        return new AuthenticationFilter(authenticationManager, env);
+    private Filter getAuthenticationFilter(AuthenticationManager authenticationManager
+            , JsonAuthFailureHandler failure) {
+        AuthenticationFilter authenticationFilter = new AuthenticationFilter(authenticationManager, env);
+        authenticationFilter.setAuthenticationFailureHandler(failure);
+        return authenticationFilter;
     }
 
 

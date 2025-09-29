@@ -1,6 +1,7 @@
 package com.bughunters.mountainspirit.member.query.dto;
 import lombok.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 
@@ -15,6 +16,7 @@ public class RequestLoginwithAuthoritiesDTO {
     private String memberName;
     private String birth;
     private Long memStsId;
+    private LocalDateTime loginLockUntil;
     private String pwd;
     private List<Authority> authorities;
 

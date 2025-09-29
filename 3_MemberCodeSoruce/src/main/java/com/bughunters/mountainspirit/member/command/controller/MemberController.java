@@ -1,14 +1,16 @@
 package com.bughunters.mountainspirit.member.command.controller;
 
 import com.bughunters.mountainspirit.common.ResponseMessage;
-import com.bughunters.mountainspirit.member.command.dto.RequestMemberDTO;
-import com.bughunters.mountainspirit.member.command.dto.RequestQuitMemberDTO;
-import com.bughunters.mountainspirit.member.command.dto.ResponseQuitDTO;
-import com.bughunters.mountainspirit.member.command.dto.ResponseSignUpDTO;
+import com.bughunters.mountainspirit.member.command.dto.*;
 import com.bughunters.mountainspirit.member.command.entity.Member;
 import com.bughunters.mountainspirit.member.command.service.MemberService;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,11 +30,16 @@ public class MemberController {
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
     }
 
+    @PostMapping("/login")
+    public String test(HttpServletRequest request, HttpServletResponse response) {
+
+
+        return"";
+    }
+
     @GetMapping("/member-info/{id}")
-    public Member memberTest(@PathVariable Long id) {
-
+    public Member memberTest(@PathVariable Long id ) {
         Member member = memberService.getTest(id);
-
         return member;
     }
 
@@ -42,6 +49,7 @@ public class MemberController {
         try {
             // BCrypt 암호화
             member.setMemPwd(bCryptPasswordEncoder.encode(member.getMemPwd()));
+
             ResponseSignUpDTO memberSignUpDTO = memberService.signUp(member);
             Map<String, Object> responseMap = new HashMap<>();
             ResponseMessage responseMessage = new ResponseMessage();

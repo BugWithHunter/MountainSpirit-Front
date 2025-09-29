@@ -16,4 +16,6 @@ public interface MemberService {
     ResponseQuitDTO memberQuit(RequestQuitMemberDTO member);
 
     UserDetails loadUserByUsername(String email);
+
+    void updateInvlidPassword(RequsetloginHisotry user);
 }

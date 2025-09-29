@@ -1,7 +1,10 @@
 package com.bughunters.mountainspirit.security;
 
 
+import com.bughunters.mountainspirit.member.command.dto.RequsetloginHisotry;
+import com.bughunters.mountainspirit.member.command.dto.UserImpl;
 import com.bughunters.mountainspirit.member.command.service.MemberService;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -11,7 +14,11 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.WebAuthenticationDetails;
 import org.springframework.stereotype.Component;
+
+import java.time.LocalDateTime;
+import java.util.Map;
 
 /* 설명. Jwt 토큰 방식의 로그인을 구현할 때 UsernamePasswordAuthenticationToken을 처리 할 프로바이더 */
 /* 설명. Service 계층의 UserDetailService를 활용해 DB에서 사용자 조회 후 인증 */
@@ -32,21 +39,65 @@ public class JwtAuthenticationProvider implements AuthenticationProvider {
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
 
+
+        // 1) 요청 메타데이터(details) 꺼내기
+        Object d = authentication.getDetails();
+
+        // (2) 커스텀을 안 썼어도 기본 WebAuthenticationDetails는 존재
+        WebAuthenticationDetails web = (d instanceof WebAuthenticationDetails)
+                ? (WebAuthenticationDetails) d : null;
+
+        //클라이언트 ip 조회
+        String clientIp = (web != null ? web.getRemoteAddress() : "unknown");
+
         /* 설명. 사용자가 로그인 시 입력한 값 */
         String email = authentication.getName();
         String pwd = authentication.getCredentials().toString();
 
         /* 설명. DB에 있는 해당 회원의 정보 */
         UserDetails userDetails = memberService.loadUserByUsername(email);
+        UserImpl user = (UserImpl) userDetails;
 
-        if(!passwordEncoder.matches(pwd,userDetails.getPassword())){
+        RequsetloginHisotry loginHistory = new RequsetloginHisotry();
+        loginHistory.setId(user.getId());
+        loginHistory.setClientIp(clientIp);
+        loginHistory.setDateTime(LocalDateTime.now());
+
+        if (!passwordEncoder.matches(pwd, userDetails.getPassword())) {
+            loginHistory.setReason("Wrong password");
+            memberService.updateInvlidPassword(loginHistory);
             throw new BadCredentialsException("비밀번호가 일치하지 않습니다.");
         }
 
-        /* 설명. 예외가 발생하지 않고 이 부분 이후가 실행되면 UserDetails에 담긴(인증된 회원정보) 정보로 Token 생성 */
+        //회원 상태에 따라 토큰을 발행하지 않고 로그인 실패처리
+        checkMemberStatus(user);
 
+        /* 설명. 예외가 발생하지 않고 이 부분 이후가 실행되면 UserDetails에 담긴(인증된 회원정보) 정보로 Token 생성 */
         return new UsernamePasswordAuthenticationToken(
                 userDetails, null, userDetails.getAuthorities());
+    }
+
+    // 회원 상태에 따라 접속 제한 메시지 선택
+    private void checkMemberStatus(UserImpl user) {
+        // 1) 회원 상태별 선제 차단
+        switch ((int) (long) user.getMemStsId()) {
+            case 2 -> throw new MemberStatusAuthenticationException(
+                    "WITHDRAWN", "탈퇴한 계정 입니다.", HttpServletResponse.SC_FORBIDDEN);
+            case 3 -> {
+                String until = String.valueOf(user.getLoginLockUntil());
+                throw new MemberStatusAuthenticationException(
+                        "LOCKED_UNTIL", until + " 까지 접속 불가 계정 입니다.",
+                        HttpServletResponse.SC_FORBIDDEN,
+                        Map.of("lockUntil", until));
+            }
+            case 4 -> throw new MemberStatusAuthenticationException(
+                    "DORMANT", "휴면 상태 입니다.", HttpServletResponse.SC_FORBIDDEN);
+            case 5 -> throw new MemberStatusAuthenticationException(
+                    "BANNED", "접근 불가 계정 입니다.", HttpServletResponse.SC_FORBIDDEN);
+            default -> {
+                /* 통과 */
+            }
+        }
     }
 
     //어떤 토큰을 처리하겠습니다(필터에서 만든 토큰이 여기로 넘어옴)

@@ -10,7 +10,7 @@ import java.util.Collection;
 
 @Getter
 @ToString
-public class UserImpl extends User {
+public class RequestSignInDTO extends User {
     private Long id;
     private String email;
     private String memberName;
@@ -19,7 +19,7 @@ public class UserImpl extends User {
     private LocalDateTime loginLockUntil;
 
     /* 설명. username, password, authorities 필드 대신 생성자로 대체 */
-    public UserImpl(String username, String password, Collection<? extends GrantedAuthority> authorities) {
+    public RequestSignInDTO(String username, String password, Collection<? extends GrantedAuthority> authorities) {
         super(username, password, authorities);
     }
 
