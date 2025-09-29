@@ -1,6 +1,7 @@
 package com.bughunters.mountainspirit.crew.query.controller;
 
 import com.bughunters.mountainspirit.crew.query.dto.CrewDTO;
+import com.bughunters.mountainspirit.crew.query.dto.CrewInfoDTO;
 import com.bughunters.mountainspirit.crew.query.service.CrewQueryService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,8 +32,8 @@ public class CrewQueryController {
     }
 
     @GetMapping("/crew-info/{crewId}")
-    public ResponseEntity<CrewDTO> findOneCrewById(@PathVariable("crewId") Long crewId){
-        CrewDTO crew = crewQueryService.findOneCrewById(crewId);
+    public ResponseEntity<CrewInfoDTO> findOneCrewById(@PathVariable("crewId") Long crewId){
+        CrewInfoDTO crew = crewQueryService.findOneCrewById(crewId);
         return ResponseEntity.ok().body(crew);
     }
 
