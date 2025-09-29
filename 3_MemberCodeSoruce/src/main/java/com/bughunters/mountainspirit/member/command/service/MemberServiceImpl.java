@@ -31,19 +31,19 @@ public class MemberServiceImpl implements MemberService {
     private final MemberQueryService memberQueryService;
     private final ModelMapper modelMapper;
     private final LoginFailureRecordRepository loginFailureRecordRepository;
-    private final LoginRecordRepository LoginRecordRepository;
+    private final LoginRecordRepository loginRecordRepository;
 
     public MemberServiceImpl(MemberRepository memberRepository
             , MemberQueryService memberQueryService
             , ModelMapper modelMapper
             , BCryptPasswordEncoder bCryptPasswordEncoder
             , LoginFailureRecordRepository loginFailureRecordRepository
-            , LoginRecordRepository LoginRecordRepository) {
+            , LoginRecordRepository loginRecordRepository) {
         this.memberRepository = memberRepository;
         this.memberQueryService = memberQueryService;
         this.modelMapper = modelMapper;
         this.loginFailureRecordRepository = loginFailureRecordRepository;
-        this.LoginRecordRepository = LoginRecordRepository;
+        this.loginRecordRepository = loginRecordRepository;
     }
 
     //등산 이후 회원 정보 변경
@@ -211,6 +211,7 @@ public class MemberServiceImpl implements MemberService {
         Member member =  memberRepository.findById(loginHistory.getCumId()).orElse(null);
         member.setLoginFailCnt(0);
         memberRepository.save(member);
+        loginRecordRepository.save(loginRecord);
     }
 
 
