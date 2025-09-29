@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bughunters.mountainspirit.mountainbookmark.query.mapper.MountainBookmarkGetMapper">
+    <resultMap type="com.bughunters.mountainspirit.mountainbookmark.query.dto.MountainBookmarkDTO" id="mountainBookmarkResultMap">
+        <id property="id" column="id"/>
+        <result property="time" column="time"/>
+        <result property="frtrlId" column="frtrlId"/>
+        <result property="cumId" column="cumId"/>
+    </resultMap>
+    <select id="selectMountainBookmarkById" resultMap="mountainBookmarkResultMap">
+        select
+               id
+             , time
+             , frtrlId
+             , cumId
+          from MountainBookmark
+         where cumId = #{memberId}
+    </select>
+
+</mapper>
