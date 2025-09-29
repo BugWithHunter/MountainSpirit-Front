@@ -92,6 +92,8 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
                 .compact();
 
         response.addHeader("token", token);
+        // 정상 종료로  AuthenticationSuccessHandler 호출
+        getSuccessHandler().onAuthenticationSuccess(request, response, authResult);
     }
 
 
