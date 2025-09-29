@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bughunters.mountainspirit.mountainreview.query.mapper.MountainReviewGetMapper">
+    <resultMap type="com.bughunters.mountainspirit.mountainreview.query.dto.MountainReviewDTO" id="mountainReviewResultMap">
+        <id property="id" column="id"/>
+        <result property="registTime" column="registTime"/>
+        <result property="updateTime" column="updateTime"/>
+        <result property="content" column="content"/>
+        <result property="cumId" column="cumId"/>
+        <result property="frtrlId" column="frtrlId"/>
+    </resultMap>
+    <select id="selectMountainReviewByName" resultMap="mountainReviewResultMap">
+        select
+               A.id
+             , A.registTime
+             , A.updateTime
+             , A.content
+             , A.cumId
+             , A.frtrlId
+          from MountainReview A
+          join Mountain B on B.frtrlId = A.frtrlId
+         where B.frtrlNm = #{mountainName}
+    </select>
+</mapper>
