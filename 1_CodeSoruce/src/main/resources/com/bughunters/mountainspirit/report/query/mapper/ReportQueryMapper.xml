@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bughunters.mountainspirit.report.query.mapper.ReportQueryMapper">
+    <resultMap id="reportResultMap" type="com.bughunters.mountainspirit.report.query.dto.ReportQueryDTO">
+        <id property="id" column="id"/>
+        <result property="reportDate" column="reportDate"/>
+        <result property="reportType" column="reportType"/>
+        <result property="adminId" column="adminId"/>
+        <result property="reason" column="reason"/>
+        <result property="isAccepted" column="isAccepted"/>
+        <result property="reportedId" column="reportedId"/>
+        <result property="categoryId" column="categoryId"/>
+        <result property="reportId" column="reportId"/>
+        <result property="crewPostId" column="crewPostId"/>
+        <result property="replyId" column="replyId"/>
+        <result property="postId" column="postId"/>
+        <result property="suspensionCycle" column="suspension_cycle"/>
+    </resultMap>
+    <!--신고 전체 조회-->
+    <select id="reportAll" resultMap="reportResultMap">
+        SELECT
+              id
+            , reportDate
+            , reportType
+            , adminId
+            , reason
+            , isAccepted
+            , reportedId
+            , categoryId
+            , reportId
+            , crewPostId
+            , replyId
+            , postId
+            , suspension_cycle
+        from Report
+    </select>
+    <!-- 조건별 조회 -->
+    <select id="findReportsByTypeAndStatus" resultMap="reportResultMap">
+        SELECT
+              id
+            , reportDate
+            , reportType
+            , adminId
+            , reason
+            , isAccepted
+            , reportedId
+            , categoryId
+            , reportId
+            , crewPostId
+            , replyId
+            , postId
+            , suspension_cycle
+        FROM Report
+        WHERE 1=1
+        <if test="reportType != null">
+            AND reportType = #{reportType}
+        </if>
+        <if test="isAccepted != null">
+            AND isAccepted = #{isAccepted}
+        </if>
+    </select>
+    <!-- 회원 단건 신고 조회 -->
+    <select id="findReportsByMemberId" resultMap="reportResultMap">
+        SELECT
+               id
+             , reportDate
+             , reportType
+             , adminId
+             , reason
+             , isAccepted
+             , reportedId
+             , categoryId
+             , reportId
+             , crewPostId
+             , replyId
+             , postId
+             , suspension_cycle
+        FROM Report
+        WHERE reportedId = #{memberId}
+    </select>
+</mapper>
