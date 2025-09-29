@@ -10,7 +10,7 @@ import java.util.List;
 
 
 @RestController("MountainSearchController")
-@RequestMapping("/mountain")
+@RequestMapping("/search")
 public class MountainController {
     private final MountainSearchService mountainSearchService;
 
@@ -19,26 +19,26 @@ public class MountainController {
         this.mountainSearchService = mountainSearchService;
     }
 
-    @GetMapping("/mountainall")    // 전체 산 조회
+    @GetMapping("/mountain")    // 전체 산 조회
     public List<MountainDTO> getAllMountains(){
         List<MountainDTO> mountainList = mountainSearchService.getAllMountainInfo();
         return mountainList;
     }
 
-    @GetMapping("/mountainsearch")  // localhost:8080/mountainsearch?mountainName=봉(부분검색 가능)
-    public List<MountainDTO> getSearchMountain(@RequestParam String mountainName){
+    @GetMapping("/mountain/{mountainName}")  // localhost:8080/search/mountain/봉 (부분검색 가능)
+    public List<MountainDTO> getSearchMountain(@PathVariable String mountainName){
         List<MountainDTO> mountainSearchList = mountainSearchService.getSearchMountainInfo(mountainName);
         return mountainSearchList;
     }
 
-    @GetMapping("/courseall")  // 전체 코스 조회
+    @GetMapping("/course")  // 전체 코스 조회
     public List<CourseDTO> getAllCourses(){
         List<CourseDTO> courseList = mountainSearchService.getAllCourseInfo();
         return courseList;
     }
 
-    @GetMapping("/coursesearch")    // localhost:8080/coursesearch?mountainName=가야산(부분검색 불가능)
-    public List<CourseDTO> getSearchCourse(@RequestParam String mountainName){
+    @GetMapping("/course/{mountainName}")    // localhost:8080/search/course/가야산 (부분검색 불가능)
+    public List<CourseDTO> getSearchCourse(@PathVariable String mountainName){
         List<CourseDTO> courseSearchList = mountainSearchService.getSearchCourseInfo(mountainName);
         return courseSearchList;
     }
