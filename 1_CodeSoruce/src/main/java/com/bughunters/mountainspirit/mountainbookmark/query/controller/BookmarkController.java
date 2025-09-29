@@ -4,10 +4,7 @@ import com.bughunters.mountainspirit.mountainbookmark.query.dto.CourseBookmarkDT
 import com.bughunters.mountainspirit.mountainbookmark.query.dto.MountainBookmarkDTO;
 import com.bughunters.mountainspirit.mountainbookmark.query.service.BookmarkService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -21,14 +18,14 @@ public class BookmarkController {
         this.bookmarkService = bookmarkService;
     }
 
-    @GetMapping("/mountainBookmark")
-    public List<MountainBookmarkDTO> getMountainBookmarkList(@RequestParam Long memberId){
+    @GetMapping("/mountain/{memberId}")
+    public List<MountainBookmarkDTO> getMountainBookmarkList(@PathVariable Long memberId){
         List<MountainBookmarkDTO> mountainBookmarkList = bookmarkService.getMountainBookmark(memberId);
         return mountainBookmarkList;
     }
 
-    @GetMapping("/courseBookmark")
-    public List<CourseBookmarkDTO> getCourseBookmarkList(@RequestParam Long memberId){
+    @GetMapping("/course/{memberId}")
+    public List<CourseBookmarkDTO> getCourseBookmarkList(@PathVariable Long memberId){
         List<CourseBookmarkDTO> courseBookmarkList = bookmarkService.getCourseBookmark(memberId);
         return courseBookmarkList;
     }
