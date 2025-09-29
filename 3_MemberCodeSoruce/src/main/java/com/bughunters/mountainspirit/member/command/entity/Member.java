@@ -75,7 +75,7 @@ public class Member {
     @Column(name = "crewId")
     private Long crewId;
 
-    @OneToMany(fetch = FetchType.EAGER)
-    @JoinColumn(name = "cumId")
-    private List<MemberAuthority> authorities;
+//    @OneToMany(fetch = FetchType.EAGER)
+//    @JoinColumn(name = "cumId")
+//    private List<MemberAuthority> authorities;
 }

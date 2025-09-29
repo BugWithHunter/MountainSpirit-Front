@@ -1,6 +1,7 @@
 package com.bughunters.mountainspirit.security;
 
 import com.bughunters.mountainspirit.member.command.dto.RequestLoginDTO;
+import com.bughunters.mountainspirit.member.command.dto.UserImpl;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -90,7 +91,8 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
         /* 설명. 1. JWT 토큰 제작을 위한 재료 추출 */
         /* 설명. 프로바이더에서 반환한 내용 중 User의 내용은 principal로 저장되어 있음 */
         /* 설명. 토큰의 payload에 (id, 가진 권한들, 만료시간)을 담을 예정 */
-        String id = ((User)authResult.getPrincipal()).getUsername();
+        UserImpl user = (UserImpl)authResult.getPrincipal();
+        String id = ((UserImpl)authResult.getPrincipal()).getUsername();
         log.info("회원의 아이디(이메일): {}" , id);
 
         List<String> roles = authResult.getAuthorities().stream()
@@ -103,6 +105,10 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
         /* 설명. 2. 재료를 활용한 JWT 토큰 제작(feat. build.gradle에 라이브러리 추가) */
         Claims claims = Jwts.claims().setSubject(id);
         claims.put("auth",roles);
+        claims.put("username",user.getMemberName());
+        claims.put("id",user.getId());
+        claims.put("birth",user.getBirth());
+        claims.put("memStsId",user.getMemStsId());
 
         String token = Jwts.builder()
                 .setClaims(claims)      // 등록된 클레임 + 비공개 클레임

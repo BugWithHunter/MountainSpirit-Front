@@ -10,6 +10,23 @@
         <result property="memberId" column="memberId"/>
     </resultMap>
 
+
+    <resultMap id="selectByIdWithAuthoritiesResultMap"
+               type="com.bughunters.mountainspirit.member.query.dto.RequestLoginwithAuthoritiesDTO">
+        <id property="id" column="id"/>
+        <result property="email" column="email"/>
+        <result property="memberName" column="memName"/>
+        <result property="memStsId" column="memStsId"/>
+        <result property="birth" column="birth"/>
+        <result property="pwd" column="memPwd"/>
+        <collection property="authorities" ofType="com.bughunters.mountainspirit.member.query.dto.Authority">
+            <result property="cumId" column="cumId"/>
+            <result property="authId" column="authId"/>
+            <result property="authName" column="authName"/>
+            <result property="authDescribe" column="authDescribe"/>
+        </collection>
+    </resultMap>
+
     <select id="selectBlackListByMember" parameterType="_long" resultMap="blackListResultMap">
         SELECT
                a.id
@@ -19,4 +36,22 @@
           FROM Blacklist a
          WHERE a.memberId = #{id}
     </select>
+    <select id="selectByIdWithAuthorite" parameterType="string" resultMap="selectByIdWithAuthoritiesResultMap">
+        SELECT
+               a.id
+             , a.email
+             , a.memName
+             , a.birth
+             , a.memStsId
+             , a.memPwd
+             , b.cumId
+             , b.authId
+             , c.authName
+             , c.authDescribe
+          FROM Member a
+          JOIN MemberAuthority b on a.id = b.cumId
+          JOIN AuthorityList c on b.authId = c.id
+         WHERE a.email = #{email}
+    </select>
+
 </mapper>

@@ -1,17 +1,24 @@
 package com.bughunters.mountainspirit.member.command.service;
 
+
 import com.bughunters.mountainspirit.member.command.dto.*;
 import com.bughunters.mountainspirit.member.command.entity.Member;
 import com.bughunters.mountainspirit.member.command.repository.MemberRepository;
 import com.bughunters.mountainspirit.member.query.dto.BlackListDTO;
+import com.bughunters.mountainspirit.member.command.dto.RequestLoginwithAuthoritiesDTO;
 import com.bughunters.mountainspirit.member.query.service.MemberQueryService;
 import org.modelmapper.ModelMapper;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class MemberServiceImpl implements MemberService {
@@ -75,7 +82,6 @@ public class MemberServiceImpl implements MemberService {
     @Override
     public Member getTest(Long id) {
         return memberRepository.findById(id).orElse(null);
-
     }
 
     @Override
@@ -92,8 +98,6 @@ public class MemberServiceImpl implements MemberService {
     //회원 가입
     @Override
     public ResponseSignUpDTO signUp(RequestMemberDTO member) {
-
-
         return checkBeforeSignUp(member);
     }
 
@@ -121,9 +125,24 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     public UserDetails loadUserByUsername(String email) {
+        com.bughunters.mountainspirit.member.query.dto.RequestLoginwithAuthoritiesDTO loginDTO =
+                memberQueryService.findMemberWithAuthoriesByEmail(email);
 
+        //계정 권한
+        List<GrantedAuthority> grantedAuthorities
+                = loginDTO.getAuthorities().stream()
+                .map(x -> new SimpleGrantedAuthority(x.getAuthDescribe()))
+                .collect(Collectors.toList());
 
-        return null;
+        UserImpl userImpl =
+                new UserImpl(
+                        loginDTO.getEmail(),
+                        loginDTO.getPwd(),
+                        grantedAuthorities
+                );
+        userImpl.setDetails(modelMapper.map(loginDTO, RequestLoginwithAuthoritiesDTO.class));
+
+        return userImpl;
     }
 
     // 회원 가입 제한 사항 확인, 이메일 중복, 이미 가입한 회원, 블랙리스트 등등
