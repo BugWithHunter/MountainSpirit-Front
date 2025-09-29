@@ -21,11 +21,11 @@ public class ApplConfig {
     }
 
     @Bean
-    public
-    ObjectMapper objectMapper() {
+    public ObjectMapper objectMapper() {
         ObjectMapper om = new ObjectMapper();
         om.registerModule(new JavaTimeModule());
         om.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
         return om;
     }
+
 }

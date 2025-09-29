@@ -28,6 +28,7 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:3.0.5'
+    testImplementation 'org.springframework.security:spring-security-test'
     compileOnly 'org.projectlombok:lombok'
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
     runtimeOnly 'org.mariadb.jdbc:mariadb-java-client'
@@ -39,6 +40,15 @@ dependencies {
     implementation 'org.modelmapper:modelmapper:3.1.1'
     // HttpCleint 사용을 위한 라이브러리
     implementation 'org.springframework.boot:spring-boot-starter-webflux'
+
+    // JWT 토큰 라이브러리
+    // https://mvnrepository.com/artifact/io.jsonwebtoken/jjwt-api
+    implementation 'io.jsonwebtoken:jjwt-api:0.11.5'
+    // https://mvnrepository.com/artifact/io.jsonwebtoken/jjwt-impl
+    implementation 'io.jsonwebtoken:jjwt-impl:0.11.5'
+    // https://mvnrepository.com/artifact/io.jsonwebtoken/jjwt-jackson
+    runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.11.5'
+
 }
 tasks.withType(JavaCompile) {
     options.encoding = 'UTF-8'
