@@ -70,46 +70,9 @@ public class ReportCommandServiceImpl implements ReportCommandService {
 
         reportCommandRepository.save(rce);
 
-        // ReportCategory 가져오기
-        ReportCategoryCommandEntity rcce = reportCategoryCommandRepository
-                .findById(reportRequestCommandDTO.getCategoryId())
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "카테고리를 찾을 수 없습니다"));
-
-        String result = "NORMAL";
-        
-        if(rcce.getCountStandard() == 0) {
-            // 블랙리스트 처리
-            BlacklistCommandEntity bce =
-                    BlacklistCommandEntity.builder()
-                            .createDate(LocalDateTime.now())
-                            .memberId(reportRequestCommandDTO.getReportedId())
-                            .build();
-            blacklistCommandRepository.save(bce);
-            result = "BLACKLIST";
-        }
-
-        long instanceCntNum = reportCommandRepository.countByReportedIdAndSuspensionCycleAndCategoryId(
-                reportRequestCommandDTO.getReportedId(), suspensionCycle, reportRequestCommandDTO.getCategoryId()
-        );
-
-        if (instanceCntNum >= rcce.getCountStandard()) {
-            createBan(member ,reportRequestCommandDTO);
-            result = "BAN";
-        }
-                
-        List<ReportCommandEntity> rcelist = reportCommandRepository
-                .findByReportedIdAndSuspensionCycle(
-                        reportRequestCommandDTO.getReportedId(), suspensionCycle
-                );
-
-        if (rcelist.size() == 10) {
-            createBan(member, reportRequestCommandDTO);
-            result = "BAN";
-        }
-
+        //응답
         ReportResponseCommandDTO rrcdto = modelMapper.map(rce, ReportResponseCommandDTO.class);
-        rrcdto.setResult(result);
-
+        rrcdto.setResult("PENDING");
         return rrcdto;
     }
 
@@ -122,12 +85,55 @@ public class ReportCommandServiceImpl implements ReportCommandService {
 
         // 상태 업데이트
         report.setIsAccepted(status);
-
-        // 저장
         reportCommandRepository.save(report);
 
-        // DTO로 변환 후 반환
-        return modelMapper.map(report, ReportResponseCommandDTO.class);
+        String result = "UPDATED";
+
+        if (status == ReportIsAccepted.Y) {
+            // 신고 승인일 때만 제재 처리
+            Member member = reportMemberCommandRepository.findById(report.getReportedId())
+                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "회원을 찾을 수 없습니다"));
+
+            ReportCategoryCommandEntity rcce = reportCategoryCommandRepository
+                    .findById(report.getCategoryId())
+                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "카테고리를 찾을 수 없습니다"));
+
+            // 블랙리스트 즉시 처리
+            if (rcce.getCountStandard() == 0) {
+                BlacklistCommandEntity bce = BlacklistCommandEntity.builder()
+                        .createDate(LocalDateTime.now())
+                        .memberId(report.getReportedId())
+                        .build();
+                blacklistCommandRepository.save(bce);
+                member.setMemStsId(5L);
+                reportMemberCommandRepository.save(member);
+                result = "BLACKLIST";
+            } else {
+                long instanceCntNum = reportCommandRepository.countByReportedIdAndSuspensionCycleAndCategoryIdAndIsAccepted(
+                        report.getReportedId(),
+                        report.getSuspensionCycle(),
+                        report.getCategoryId(),
+                        ReportIsAccepted.Y
+                );
+
+                if (instanceCntNum == rcce.getCountStandard()) {
+                    createBan(member, modelMapper.map(report, ReportRequestCommandDTO.class));
+                    result = "BAN";
+                }
+
+                List<ReportCommandEntity> rcelist = reportCommandRepository
+                        .findByReportedIdAndSuspensionCycle(report.getReportedId(), report.getSuspensionCycle());
+
+                if (rcelist.size() == 10) {
+                    createBan(member, modelMapper.map(report, ReportRequestCommandDTO.class));
+                    result = "BAN";
+                }
+            }
+        }
+
+        ReportResponseCommandDTO rrcdto = modelMapper.map(report, ReportResponseCommandDTO.class);
+        rrcdto.setResult(result);
+        return rrcdto;
     }
 
     private void createBan(Member member, ReportRequestCommandDTO rrdto) {

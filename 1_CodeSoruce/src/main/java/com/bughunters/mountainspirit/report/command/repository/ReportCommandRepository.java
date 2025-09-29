@@ -20,4 +20,5 @@ public interface ReportCommandRepository extends JpaRepository<ReportCommandEnti
     int updateIsAcceptedById(Long id, ReportIsAccepted status);
 
 
+    long countByReportedIdAndSuspensionCycleAndCategoryIdAndIsAccepted(Long reportedId, int suspensionCycle, Long categoryId, ReportIsAccepted reportIsAccepted);
 }
