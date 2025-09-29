@@ -15,4 +15,4 @@ public class CrewInfoDTO {
     private Integer crewMaxPeople;
     private String crewIntro;
     private long crewRankGauge;
-}
+ }
