@@ -7,11 +7,16 @@
         <id property="id" column="id"/>
         <result property="crewName" column="crewName"/>
         <result property="crewIsRecruit" column="crewIsRecruit"/>
+        <result property="crewMaxPeople" column="crewMaxPeople"/>
+        <result property="crewRankGauge" column="crewRankGauge"/>
+    </resultMap>
+    <resultMap id="crewInfoResultMap" type="com.bughunters.mountainspirit.crew.query.dto.CrewInfoDTO">
+        <id property="id" column="id"/>
+        <result property="crewName" column="crewName"/>
+        <result property="crewIsRecruit" column="crewIsRecruit"/>
         <result property="crewCreateDate" column="crewCreateDate"/>
         <result property="crewMaxPeople" column="crewMaxPeople"/>
         <result property="crewIntro" column="crewIntro"/>
-        <result property="crewIsDeleted" column="crewIsDeleted"/>
-        <result property="crewBanDate" column="crewBanDate"/>
         <result property="crewRankGauge" column="crewRankGauge"/>
     </resultMap>
     <select id="findAllCrews" resultMap="crewResultMap">
@@ -23,7 +28,7 @@
              , a.crewRankGauge
           FROM Crew a
     </select>
-    <select id="findOneCrewById" resultMap="crewResultMap" parameterType="_int">
+    <select id="findOneCrewById" resultMap="crewInfoResultMap" parameterType="_long">
         SELECT
                a.id
              , a.crewName
@@ -31,8 +36,6 @@
              , a.crewCreateDate
              , a.crewMaxPeople
              , a.crewIntro
-             , a.crewIsDeleted
-             , a.crewBanDate
              , a.crewRankGauge
           FROM Crew a
          WHERE a.id = ${crewId}

@@ -30,7 +30,6 @@ public class CrewQueryServiceImpl implements CrewQueryService {
 
     @Override
     public CrewInfoDTO findOneCrewById(Long crewId) {
-//        testClient.feignClientCon("test for feign client");
         return crewMapper.findOneCrewById(crewId);
     }
 }
