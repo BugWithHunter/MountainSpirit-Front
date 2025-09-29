@@ -180,7 +180,13 @@ public class MemberServiceImpl implements MemberService {
 
         int failCount = member.getLoginFailCnt() == null
                 ? 1 : member.getLoginFailCnt()+ 1;
+
+        //연속 오 입력이 6이 됐다는건 15분 지나고 또 틀렸기 때문 .
+        // 1로 바꾸지 않으면 바로 접속 제한 걸려서 1부터 다시 카운트 시작
+        failCount = failCount >= 6 ? 1 : failCount;
+        
         member.setLoginFailCnt(failCount);
+
 
         if (failCount >= 5){
             LocalDateTime loginLockUnitlby = LocalDateTime.now().plusMinutes(15);
