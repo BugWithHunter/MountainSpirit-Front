@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bughunters.mountainspirit.stamp.query.mapper.CourseStampGetMapper">
+    <resultMap type="com.bughunters.mountainspirit.stamp.query.dto.CourseStampDTO" id="courseStampResultMap">
+        <id property="id" column="id"/>
+        <result property="date" column="date"/>
+        <result property="poiId" column="poiId"/>
+        <result property="cumId" column="cumId"/>
+    </resultMap>
+    <select id="selectCourseStampById" resultMap="courseStampResultMap">
+        select
+               id
+             , date
+             , poiId
+             , cumId
+          from CourseStamp
+         where cumId = #{memberId}
+    </select>
+</mapper>
