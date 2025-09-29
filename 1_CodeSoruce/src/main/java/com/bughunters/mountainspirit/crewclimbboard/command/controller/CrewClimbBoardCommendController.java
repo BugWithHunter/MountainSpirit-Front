@@ -1,6 +1,7 @@
 package com.bughunters.mountainspirit.crewclimbboard.command.controller;
 
 import com.bughunters.mountainspirit.crewclimbboard.command.dto.CrewClimbBoardApplyDTO;
+import com.bughunters.mountainspirit.crewclimbboard.command.dto.CrewClimbBoardCancelDTO;
 import com.bughunters.mountainspirit.crewclimbboard.command.dto.CrewClimbBoardDTO;
 import com.bughunters.mountainspirit.crewclimbboard.command.dto.CrewClimbRecordRegistDTO;
 import com.bughunters.mountainspirit.crewclimbboard.command.service.CrewClimbBoardCommendService;
@@ -50,5 +51,10 @@ public class CrewClimbBoardCommendController {
         return ResponseEntity.ok().build();
     }
 
+    @PostMapping("/climb-cancel")
+    public ResponseEntity<?> cancelCrewClimb(@RequestBody CrewClimbBoardCancelDTO crewClimbBoardCancelDTO){
+        crewClimbBoardCommendService.cancelCrewClimb(crewClimbBoardCancelDTO);
+        return ResponseEntity.ok().build();
+    }
 
 }

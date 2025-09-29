@@ -6,4 +6,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface CrewClimbRecordCommendRepository extends JpaRepository<CrewClimbRecord,Long> {
 
     int countByCrewClimbId(Long crewClimbId);
+
+    CrewClimbRecord findByCrewClimbIdAndCrewMemberId(Long crewClimbId, Long crewMemberId);
 }

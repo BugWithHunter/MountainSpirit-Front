@@ -1,6 +1,7 @@
 package com.bughunters.mountainspirit.crewclimbboard.command.service;
 
 import com.bughunters.mountainspirit.crewclimbboard.command.dto.CrewClimbBoardApplyDTO;
+import com.bughunters.mountainspirit.crewclimbboard.command.dto.CrewClimbBoardCancelDTO;
 import com.bughunters.mountainspirit.crewclimbboard.command.dto.CrewClimbBoardDTO;
 import com.bughunters.mountainspirit.crewclimbboard.command.dto.CrewClimbRecordRegistDTO;
 import com.bughunters.mountainspirit.crewclimbboard.command.entity.CrewClimbBoard;
@@ -46,6 +47,7 @@ public class CrewClimbBoardCommendServiceImpl implements CrewClimbBoardCommendSe
 
         // 등산 기록 저장을 위한 DTO 맵핑
         CrewClimbRecord crewClimbRecord = new CrewClimbRecord();
+//        crewClimbRecord.setCrewClimbHistoryIsSucceed('N');
         crewClimbRecord.setCrewClimbId(crewClimbBoard.getId());
         crewClimbRecord.setCrewMemberId(crewClimbBoard.getCrewMemberId());
         crewClimbRecord.setFrtrlId(crewClimbBoard.getFrtrlId());
@@ -129,6 +131,16 @@ public class CrewClimbBoardCommendServiceImpl implements CrewClimbBoardCommendSe
 
     }
 
+    @Override
+    public void cancelCrewClimb(CrewClimbBoardCancelDTO crewClimbBoardCancelDTO) {
+        CrewClimbRecord crewClimbRecord = crewClimbRecordCommendRepository.findByCrewClimbIdAndCrewMemberId(crewClimbBoardCancelDTO.getCrewClimbId(),crewClimbBoardCancelDTO.getCrewMemberId());
+        if(crewClimbRecord==null){
+            log.info("없는 데이터에 접근하였습니다.");
+            return;
+        }
+        crewClimbRecordCommendRepository.delete(crewClimbRecord);
+    }
+
 
     // ////////////////////////////////////////////
     private void compareAndModifyCrewClimbBoard(CrewClimbBoard crewClimbBoard, CrewClimbBoard originalCrewClimbBoard) {
@@ -151,6 +163,7 @@ public class CrewClimbBoardCommendServiceImpl implements CrewClimbBoardCommendSe
 
     private static CrewClimbRecord setCrewClimbRecordRegistInfo(CrewClimbBoardApplyDTO crewClimbBoardApplyDTO) {
         CrewClimbRecord crewClimbRecord = new CrewClimbRecord();
+//        crewClimbRecord.setCrewClimbHistoryIsSucceed('N');
         crewClimbRecord.setCrewClimbId(crewClimbBoardApplyDTO.getCrewClimbId());
         crewClimbRecord.setCrewMemberId(crewClimbBoardApplyDTO.getCrewMemberId());
         crewClimbRecord.setFrtrlId(crewClimbBoardApplyDTO.getFrtrlId());
