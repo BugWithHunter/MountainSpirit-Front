@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 
 @RestController("MountainReviewCommandController")
-@RequestMapping("/mountainreview")
+@RequestMapping("/review")
 public class MountainReviewController {
     private final MountainReviewService mountainReviewService;
     private final MountainService mountainService;
@@ -22,57 +22,39 @@ public class MountainReviewController {
         this.mountainService = mountainService;
     }
 
-    @GetMapping("/registMountain")
-    public void registMountain(){}
-
-    @PostMapping("/registMountain")
+    @PostMapping("/mountain")   // insert - 산 후기
     public String registMountain(@RequestBody MountainReviewDTO newReview){
         mountainReviewService.registMountain(newReview);
         String frtrlNm = mountainService.getMountainName(newReview.getFrtrlId());
         return "/redirect:/mountainreview/review?mountainName=" + frtrlNm;
     }
 
-    @GetMapping("/modifyMountain")
-    public void modifyMountain(){}
-
-    @PostMapping("/modifyMountain")
+    @PutMapping("/mountain")    // update - 산 후기
     public String modifyMountain(@RequestBody MountainReviewDTO modifyReview){
         mountainReviewService.modifyMountain(modifyReview);
         return "redirect:/mountainreview/" + modifyReview.getId();
     }
 
-    @GetMapping("/deleteMountain")
-    public void deleteMountain(){}
-
-    @PostMapping("/deleteMountain")
-    public String deleteMountain(@RequestParam long reviewCode){
+    @DeleteMapping("/mountain/{reviewCode}")    // delete - 산 후기
+    public String deleteMountain(@PathVariable long reviewCode){
         mountainReviewService.deleteMountain(reviewCode);
         return "삭제 완료";
     }
 
-    @GetMapping("/registCourse")
-    public void registCourse(){}
-
-    @PostMapping("/registCourse")
+    @PostMapping("/course") // insert - 코스 후기
     public String registCourse(@RequestBody CourseReviewDTO newReview){
         mountainReviewService.registCourse(newReview);
         return "코스 후기 등록 완료";
     }
 
-    @GetMapping("/modifyCourse")
-    public void modifyCourse(){}
-
-    @PostMapping("/modifyCourse")
+    @PutMapping("/course")  // update - 코스 후기
     public String modifyCourse(@RequestBody CourseReviewDTO modifyReview){
         mountainReviewService.modifyCourse(modifyReview);
         return "redirect:/mountainreview/" + modifyReview.getId();
     }
 
-    @GetMapping("/deleteCourse")
-    public void deleteCourse(){}
-
-    @PostMapping("/deleteCourse")
-    public String deleteCourse(@RequestParam long reviewCode){
+    @DeleteMapping("/course/{reviewCode}")  // delete - 코스 후기
+    public String deleteCourse(@PathVariable long reviewCode){
         mountainReviewService.deleteCourse(reviewCode);
         return "삭제 완료";
     }

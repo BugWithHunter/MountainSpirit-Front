@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController("MountainReviewQueryController")
-@RequestMapping("/mountainreview")
+@RequestMapping("/review")
 public class MountainReviewController {
     private final MountainReviewService mountainReviewService;
 
@@ -20,14 +20,14 @@ public class MountainReviewController {
         this.mountainReviewService = mountainReviewService;
     }
 
-    @GetMapping("/review")   // localhost:8080/mountain/review?mountainName=가야산(부분검색 불가능)
-    public List<MountainReviewDTO> getMountainReviewList(@RequestParam String mountainName){
+    @GetMapping("/mountain/{mountainName}")   // 산 이름 정확히 일치해야함
+    public List<MountainReviewDTO> getMountainReviewList(@PathVariable String mountainName){
         List<MountainReviewDTO> mountainReviewList = mountainReviewService.getMountainReview(mountainName);
         return mountainReviewList;
     }
 
-    @GetMapping("/coursereview")
-    public List<CourseReviewDTO> getCourseReviewList(@RequestParam String courseName){
+    @GetMapping("/course/{courseName}")  // 코스 이름 정확히 일치해야함
+    public List<CourseReviewDTO> getCourseReviewList(@PathVariable String courseName){
         List<CourseReviewDTO> courseReviewList = mountainReviewService.getCourseReview(courseName);
         return courseReviewList;
     }
