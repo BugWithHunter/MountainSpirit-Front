@@ -2,6 +2,8 @@ package com.bughunters.mountainspirit.member.command.service;
 
 
 import com.bughunters.mountainspirit.member.command.dto.*;
+import com.bughunters.mountainspirit.member.command.entity.LoginFailureRecord;
+import com.bughunters.mountainspirit.member.command.entity.LoginRecord;
 import com.bughunters.mountainspirit.member.command.entity.Member;
 import com.bughunters.mountainspirit.member.command.repository.LoginFailureRecordRepository;
 import com.bughunters.mountainspirit.member.command.repository.LoginRecordRepository;
@@ -19,7 +21,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -141,6 +142,9 @@ public class MemberServiceImpl implements MemberService {
         com.bughunters.mountainspirit.member.query.dto.RequestLoginwithAuthoritiesDTO loginDTO =
                 memberQueryService.findMemberWithAuthoriesByEmail(email);
 
+        if(loginDTO == null)
+            return null;
+
         //계정 권한
         List<GrantedAuthority> grantedAuthorities
                 = loginDTO.getAuthorities().stream()
@@ -162,7 +166,45 @@ public class MemberServiceImpl implements MemberService {
     @Override
     @Transactional
     public void updateInvlidPassword(RequsetloginHisotry requestLoginHisotry) {
-        Member member = memberRepository.findById(requestLoginHisotry.getId()).orElse(null);
+        Member member = memberRepository.findById(requestLoginHisotry.getCumId()).orElse(null);
+        if(member == null)
+            return;
+
+        LoginFailureRecord loginFailureRecord = new LoginFailureRecord(
+                null
+                ,requestLoginHisotry.getDateTime()
+                ,requestLoginHisotry.getClientIp()
+                ,requestLoginHisotry.getReason()
+                ,member.getId()
+        );
+
+        int failCount = member.getLoginFailCnt() == null
+                ? 1 : member.getLoginFailCnt()+ 1;
+        member.setLoginFailCnt(failCount);
+
+        if (failCount >= 5){
+            LocalDateTime loginLockUnitlby = LocalDateTime.now().plusMinutes(15);
+            member.setLoginLockUntil(loginLockUnitlby); // 15분간 접속 불가
+        }
+        loginFailureRecordRepository.save(loginFailureRecord);
+        memberRepository.save(member);
+    }
+
+    //정상 로그인 hitory 기록
+    @Override
+    @Transactional
+    public void updateCompleteLogin(RequsetloginHisotry loginHistory) {
+        LoginRecord loginRecord = new LoginRecord(
+                null,
+                loginHistory.getDateTime(),
+                loginHistory.getClientIp(),
+                "",
+                loginHistory.getCumId()
+        );
+
+        Member member =  memberRepository.findById(loginHistory.getCumId()).orElse(null);
+        member.setLoginFailCnt(0);
+        memberRepository.save(member);
     }
 
 

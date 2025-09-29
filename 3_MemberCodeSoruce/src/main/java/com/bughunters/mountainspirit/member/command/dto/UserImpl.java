@@ -16,6 +16,7 @@ public class UserImpl extends User {
     private String memberName;
     private String birth;
     private Long memStsId;
+    private Integer loginFailCnt;
     private LocalDateTime loginLockUntil;
 
     /* 설명. username, password, authorities 필드 대신 생성자로 대체 */

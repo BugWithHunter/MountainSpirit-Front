@@ -7,6 +7,7 @@ import com.bughunters.mountainspirit.member.command.service.MemberService;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -56,21 +57,35 @@ public class JwtAuthenticationProvider implements AuthenticationProvider {
 
         /* 설명. DB에 있는 해당 회원의 정보 */
         UserDetails userDetails = memberService.loadUserByUsername(email);
+        if(userDetails == null){
+            throw new BadCredentialsException("일치하는 회원 정보가 없습니다.");
+        }
         UserImpl user = (UserImpl) userDetails;
 
+        // 아직 연속 접속 제한시간이 남아있을 경우(연속 비밀번호 오 입력)
+        if(user.getLoginLockUntil() != null && LocalDateTime.now().isBefore(user.getLoginLockUntil()) ){
+            throw new MemberStatusAuthenticationException(
+                    "LOCKED_UNTIL",
+                    "연속 비밀번호 오 입력으로 (" + user.getLoginLockUntil() + "까지 접속 불가)",
+                    HttpServletResponse.SC_FORBIDDEN);
+        }
+
         RequsetloginHisotry loginHistory = new RequsetloginHisotry();
-        loginHistory.setId(user.getId());
+        loginHistory.setCumId(user.getId());
         loginHistory.setClientIp(clientIp);
         loginHistory.setDateTime(LocalDateTime.now());
 
         if (!passwordEncoder.matches(pwd, userDetails.getPassword())) {
             loginHistory.setReason("Wrong password");
             memberService.updateInvlidPassword(loginHistory);
-            throw new BadCredentialsException("비밀번호가 일치하지 않습니다.");
+            throw new BadCredentialsException("일치하는 회원 정보가 없습니다.");
         }
 
         //회원 상태에 따라 토큰을 발행하지 않고 로그인 실패처리
         checkMemberStatus(user);
+
+        //여기 까지 오면 정상 로그인 상태로 로그인 히스토리 저장
+        memberService.updateCompleteLogin(loginHistory);
 
         /* 설명. 예외가 발생하지 않고 이 부분 이후가 실행되면 UserDetails에 담긴(인증된 회원정보) 정보로 Token 생성 */
         return new UsernamePasswordAuthenticationToken(
@@ -93,7 +108,7 @@ public class JwtAuthenticationProvider implements AuthenticationProvider {
             case 4 -> throw new MemberStatusAuthenticationException(
                     "DORMANT", "휴면 상태 입니다.", HttpServletResponse.SC_FORBIDDEN);
             case 5 -> throw new MemberStatusAuthenticationException(
-                    "BANNED", "접근 불가 계정 입니다.", HttpServletResponse.SC_FORBIDDEN);
+                    "BANNED", "접속 불가 계정 입니다.", HttpServletResponse.SC_FORBIDDEN);
             default -> {
                 /* 통과 */
             }

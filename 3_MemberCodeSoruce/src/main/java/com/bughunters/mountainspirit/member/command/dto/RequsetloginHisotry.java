@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 @Builder
 public class RequsetloginHisotry {
     private String clientIp;
-    private Long id;
+    private Long cumId;
     private String reason;
     private LocalDateTime dateTime;
 }

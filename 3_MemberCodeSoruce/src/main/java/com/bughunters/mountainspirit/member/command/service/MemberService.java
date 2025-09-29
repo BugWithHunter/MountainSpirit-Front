@@ -18,4 +18,6 @@ public interface MemberService {
     UserDetails loadUserByUsername(String email);
 
     void updateInvlidPassword(RequsetloginHisotry user);
+
+    void updateCompleteLogin(RequsetloginHisotry loginHistory);
 }
