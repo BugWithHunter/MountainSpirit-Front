@@ -44,10 +44,10 @@ public class Member {
     @Column(name = "signInDate", nullable = false)
     private LocalDate signInDate;
 
-    @Column(name = "lastLogin", nullable = false)
+    @Column(name = "lastLogin")
     private LocalDateTime lastLogin;
 
-    @Column(name = "climbCnt", nullable = false)
+    @Column(name = "climbCnt", nullable = false, insertable = false, updatable = true)
     private Long climbCnt;
 
     @Column(name = "banCnt")
@@ -59,10 +59,10 @@ public class Member {
     @Column(name = "quitDate")
     private LocalDateTime quitDate;
 
-    @Column(name = "loginLockUntil", nullable = false)
+    @Column(name = "loginLockUntil")
     private LocalDateTime loginLockUntil;
 
-    @Column(name = "score", nullable = false)
+    @Column(name = "score", nullable = false, insertable = false, updatable = true)
     private Integer score;
 
     @Column(name = "memRankId")

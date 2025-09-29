@@ -119,20 +119,56 @@ public class ClimbHistoryServiceImpl implements ClimbHistoryService {
             modifyStatusOfMemberDTO.setBaseMemberRanks(baseScoreMap);
             modifyStatusOfMemberDTO.setCumId(request.getCumId());
 
-            //메모. 7.등급 기준 체크, 등급 업 할 등급 코드 반환
+            //메모. 6.등급 기준 체크, 등급 업 할 등급 코드 반환
             ResponseStatusDTO responseStatusDTO = memberService.modifyStatusAfterClimbMountian(modifyStatusOfMemberDTO);
 
 
-            //메모. 10.회원 테이블 등산 횟수 , 점수 ,등급 update
-
-
-            //메모. 11.반환 할 데이터
-            findClimbCheckDTO = modelMapper.map(findClimbCheckQueryDTO, FindClimbCheckDTO.class);
-            findClimbCheckDTO.setStateCode("Y");
-            findClimbCheckDTO.setEndTime(completeTime);
+            //메모. 7.반환 할 데이터
+            //메모. 7-1. 등산 히스토리 , 산, 코스 정보
+            findClimbCheckDTO = registResponseDTO(request, findClimbCheckQueryDTO, completeTime, stampDTO, responseRankDTO, responseStatusDTO);
         } else {
         }
 
+        return findClimbCheckDTO;
+    }
+
+    private FindClimbCheckDTO registResponseDTO(RequestSubmmitClimbMountainDTO request, FindClimbCheckQueryDTO findClimbCheckQueryDTO, LocalDateTime completeTime, StampWithCourseAndMountainDTO stampDTO, ResponseRankDTO responseRankDTO, ResponseStatusDTO responseStatusDTO) {
+        FindClimbCheckDTO findClimbCheckDTO;
+        findClimbCheckDTO = modelMapper.map(findClimbCheckQueryDTO, FindClimbCheckDTO.class);
+        findClimbCheckDTO.setStateCode("Y");
+        findClimbCheckDTO.setEndTime(completeTime);
+        findClimbCheckDTO.setCumId(request.getCumId());
+        findClimbCheckDTO.setFrtrlId(request.getFrtrlId());
+        findClimbCheckDTO.setPoiId(request.getPoiId());
+
+        //메모. 7-2. 스탬프 정보
+        findClimbCheckDTO.setGetMountainStamp(stampDTO.isNewMountainStamp());
+        findClimbCheckDTO.setGetCourseStamp(stampDTO.isNewCourseStamp());
+        findClimbCheckDTO.setMountainStampImagePath(stampDTO.getMountainStampImagePath());
+        findClimbCheckDTO.setCourseStampImagePath(stampDTO.getCourseStampImagePath());
+
+        //메모. 7-3. 산별 등급 정보
+        findClimbCheckDTO.setModifyMyMountainRank(responseRankDTO.isModifyMyMountainRank());
+        findClimbCheckDTO.setModifyRanks(responseRankDTO.getModifyRanks());
+
+        //메모. 7-4. 회원 흭득 점수 및 회원 변경 정보
+        findClimbCheckDTO.setSummaryScore(responseRankDTO.getSummaryScore());
+        findClimbCheckDTO.setMemRankId(responseStatusDTO.getMemRankId());
+        findClimbCheckDTO.setCumNm(responseStatusDTO.getCumNm());
+
+        String memRankNm = "";
+        if (responseRankDTO.getBaseMemberRanks().stream()
+                .filter(x -> x.getId().equals(responseStatusDTO.getMemRankId()))
+                .findFirst()
+                .orElse(null) != null) {
+
+            memRankNm = responseRankDTO.getBaseMemberRanks().stream()
+                    .filter(x -> x.getId().equals(responseStatusDTO.getMemRankId()))
+                    .findFirst()
+                    .orElse(null).getName();
+        }
+
+        findClimbCheckDTO.setMemRankNm(memRankNm);
         return findClimbCheckDTO;
     }
 
