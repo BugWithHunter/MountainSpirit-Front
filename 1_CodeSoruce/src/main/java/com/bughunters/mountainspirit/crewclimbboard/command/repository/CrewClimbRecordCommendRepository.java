@@ -4,4 +4,6 @@ import com.bughunters.mountainspirit.crewclimbboard.command.entity.CrewClimbReco
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface CrewClimbRecordCommendRepository extends JpaRepository<CrewClimbRecord,Long> {
+
+    int countByCrewClimbId(Long crewClimbId);
 }

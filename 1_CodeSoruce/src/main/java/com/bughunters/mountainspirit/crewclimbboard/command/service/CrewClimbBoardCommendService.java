@@ -1,6 +1,8 @@
 package com.bughunters.mountainspirit.crewclimbboard.command.service;
 
+import com.bughunters.mountainspirit.crewclimbboard.command.dto.CrewClimbBoardApplyDTO;
 import com.bughunters.mountainspirit.crewclimbboard.command.dto.CrewClimbBoardDTO;
+import com.bughunters.mountainspirit.crewclimbboard.command.dto.CrewClimbRecordRegistDTO;
 
 public interface CrewClimbBoardCommendService {
     void registCrewClimbBoard(CrewClimbBoardDTO crewClimbBoardDTO);
@@ -9,5 +11,7 @@ public interface CrewClimbBoardCommendService {
 
     void deleteCrewClimbBoardById(Long id);
 
-    void closeCrewClimbBoardApplyById(Long id);
+    void closeCrewClimbBoardById(Long id);
+
+    void applyCrewClimbBoard(CrewClimbBoardApplyDTO crewClimbBoardApplyDTO);
 }

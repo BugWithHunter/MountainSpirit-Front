@@ -1,5 +1,6 @@
 package com.bughunters.mountainspirit.crewclimbboard.command.service;
 
+import com.bughunters.mountainspirit.crewclimbboard.command.dto.CrewClimbBoardApplyDTO;
 import com.bughunters.mountainspirit.crewclimbboard.command.dto.CrewClimbBoardDTO;
 import com.bughunters.mountainspirit.crewclimbboard.command.dto.CrewClimbRecordRegistDTO;
 import com.bughunters.mountainspirit.crewclimbboard.command.entity.CrewClimbBoard;
@@ -11,6 +12,8 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 @Slf4j
@@ -39,7 +42,7 @@ public class CrewClimbBoardCommendServiceImpl implements CrewClimbBoardCommendSe
 
         // 등산 모집 일정 insert
         crewClimbBoard = crewClimbBoardCommendRepository.save(crewClimbBoard);
-        log.info("등산일정 : {}",crewClimbBoard);
+        log.info("등산일정 : {}", crewClimbBoard);
 
         // 등산 기록 저장을 위한 DTO 맵핑
         CrewClimbRecord crewClimbRecord = new CrewClimbRecord();
@@ -77,6 +80,7 @@ public class CrewClimbBoardCommendServiceImpl implements CrewClimbBoardCommendSe
     @Override
     @Transactional
     public void deleteCrewClimbBoardById(Long id) {
+        // 삭제 작업 시 등산 기록에 있는 정보들도 transactional 하게 삭제되게 구현
         CrewClimbBoard crewClimbBoard = crewClimbBoardCommendRepository.findById(id).orElse(null);
         if (crewClimbBoard == null) {
             log.info("없는 데이터에 접근하였습니다.");
@@ -89,7 +93,7 @@ public class CrewClimbBoardCommendServiceImpl implements CrewClimbBoardCommendSe
 
     @Override
     @Transactional
-    public void closeCrewClimbBoardApplyById(Long id) {
+    public void closeCrewClimbBoardById(Long id) {
         CrewClimbBoard crewClimbBoard = crewClimbBoardCommendRepository.findById(id).orElse(null);
         if (crewClimbBoard == null) {
             log.info("없는 데이터에 접근하였습니다.");
@@ -98,6 +102,32 @@ public class CrewClimbBoardCommendServiceImpl implements CrewClimbBoardCommendSe
         crewClimbBoard.setCrewClimbIsEnded('Y');
     }
 
+    @Override
+    @Transactional
+    public void applyCrewClimbBoard(CrewClimbBoardApplyDTO crewClimbBoardApplyDTO) {
+        int climbMemberCnt = crewClimbRecordCommendRepository.countByCrewClimbId(crewClimbBoardApplyDTO.getCrewClimbId());
+
+        // 등산 인원이 차있을 시 등산 신청 불가
+        if (climbMemberCnt >= crewClimbBoardApplyDTO.getCrewClimbAmountOfPeople()) {
+            log.info("크루 인원이 가득 차 있습니다.");
+            return;
+        }
+
+        CrewClimbRecord crewClimbRecord = setCrewClimbRecordRegistInfo(crewClimbBoardApplyDTO);
+        crewClimbRecordCommendRepository.save(crewClimbRecord);
+
+        // 등산 인원이 가득 차 있지 않으면 메소드 종료
+        if (climbMemberCnt + 1 < crewClimbBoardApplyDTO.getCrewClimbAmountOfPeople()) return;
+
+        // 등산 인원이 가득 찼을 시 자동으로 모집 마감
+        CrewClimbBoard crewClimbBoard = crewClimbBoardCommendRepository.findById(crewClimbBoardApplyDTO.getCrewClimbId()).orElse(null);
+        if (crewClimbBoard == null) {
+            log.info("없는 데이터에 접근하였습니다.");
+            return;
+        }
+        crewClimbBoard.setCrewClimbIsEnded('Y');
+
+    }
 
 
     // ////////////////////////////////////////////
@@ -117,5 +147,13 @@ public class CrewClimbBoardCommendServiceImpl implements CrewClimbBoardCommendSe
         if (crewClimbBoard.getCrewClimbAmountOfPeople().equals(originalCrewClimbBoard.getCrewClimbAmountOfPeople())) {
             originalCrewClimbBoard.setCrewClimbAmountOfPeople(crewClimbBoard.getCrewClimbAmountOfPeople());
         }
+    }
+
+    private static CrewClimbRecord setCrewClimbRecordRegistInfo(CrewClimbBoardApplyDTO crewClimbBoardApplyDTO) {
+        CrewClimbRecord crewClimbRecord = new CrewClimbRecord();
+        crewClimbRecord.setCrewClimbId(crewClimbBoardApplyDTO.getCrewClimbId());
+        crewClimbRecord.setCrewMemberId(crewClimbBoardApplyDTO.getCrewMemberId());
+        crewClimbRecord.setFrtrlId(crewClimbBoardApplyDTO.getFrtrlId());
+        return crewClimbRecord;
     }
 }
