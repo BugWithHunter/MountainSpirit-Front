@@ -23,7 +23,7 @@ spring:
         - id: member-client2
           uri: lb://MEMBER-CLIENT
           predicates:
-            - Path=/member-client/member
+            - Path=/member-client/member/member,/member-client/login
             - Method=POST
           filters:
             - RewritePath=/member-client/(?<segment>.*), /$\{segment}

@@ -3,6 +3,7 @@ package com.bughunters.gateway.common;
 import io.jsonwebtoken.Jwts;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
 import org.springframework.cloud.gateway.filter.factory.AbstractGatewayFilterFactory;
 import org.springframework.core.env.Environment;
@@ -20,12 +21,13 @@ import java.util.List;
 @Component
 @Slf4j
 public class JwtTokenFilter extends AbstractGatewayFilterFactory<JwtTokenFilter.Config> {
-    private Environment env;
+//    private Environment env;
 
-    @Autowired
-    public JwtTokenFilter(Environment env) {
+    @Value(value = "${token.secret}")
+    private String tokenSecret;
+
+    public JwtTokenFilter() {
         super(Config.class);
-        this.env = env;
     }
 
     public static class Config {
@@ -56,7 +58,7 @@ public class JwtTokenFilter extends AbstractGatewayFilterFactory<JwtTokenFilter.
                  * */
                 try {
                     subject = Jwts.parser()
-                            .setSigningKey(env.getProperty("token.secret"))
+                            .setSigningKey(tokenSecret)
                             .parseClaimsJws(jwt)
                             .getBody()
                             .getSubject();
