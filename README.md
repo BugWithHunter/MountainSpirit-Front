@@ -22,6 +22,7 @@
 [7. 동료 평가](#7-동료-평가)
 
 ## 1. 프로젝트 소개
+산에 대한 정보 얻기 번거로움
 
 ## 2. DDD
 
@@ -29,6 +30,7 @@
 ### 3-1. 논리 모델링
 
 ### 3-2. 물리 모델링
+<img width="5800" height="2842" alt="Image" src="https://github.com/user-attachments/assets/355e9759-ce68-4b22-8df7-ee1539663bb7" />
 
 ### 3-3. API 명세
 
