@@ -100,4 +100,14 @@ public class MemberController {
         return ResponseEntity.ok()
                 .body(responseMessage);
     }
+
+    @GetMapping("/crew-insertion")
+    public ResponseEntity<ResponseMessage> crewInfoInsertion(long crewId,long cumId) {
+        ResponseMessage responseMessage = new ResponseMessage();
+        memberService.registCrewId(crewId,cumId);
+
+        responseMessage.setHttpStatus(HttpStatus.OK.value());
+        return ResponseEntity.ok()
+                .body(responseMessage);
+    }
 }
