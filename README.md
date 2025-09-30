@@ -200,10 +200,11 @@
 - 개발 툴
 
 <div> 
-<img src="https://img.shields.io/badge/spring-236DB33F.svg?style=for-the-badge&logo=spring&logoColor=white">
-<img src="https://img.shields.io/badge/spring_security-6DB33F?style=for-the-badge&logo=springsecurity&logoColor=white">
-<img src="https://img.shields.io/badge/spring_boot-6DB33F?style=for-the-badge&logo=springboot&logoColor=white">
-<img src="https://img.shields.io/badge/apache-D22128?style=for-the-badge&logo=apache&logoColor=white">
+<img src="https://img.shields.io/badge/Spring-236DB33F.svg?style=for-the-badge&logo=spring&logoColor=white">
+<img src="https://img.shields.io/badge/Spring_Security-6DB33F?style=for-the-badge&logo=springsecurity&logoColor=white">
+<img src="https://img.shields.io/badge/Spring_Boot-6DB33F?style=for-the-badge&logo=springboot&logoColor=white">
+<img src="https://img.shields.io/badge/Apache-D22128?style=for-the-badge&logo=apache&logoColor=white">
+<img src="https://img.shields.io/badge/Apache_Tomcat-F8DC75?style=for-the-badge&logo=apachetomcat&logoColor=white">
 <img src="https://img.shields.io/badge/intelliJ_IDEA-000000?style=for-the-badge&logo=intellijidea&logoColor=white">
 </div>
 
