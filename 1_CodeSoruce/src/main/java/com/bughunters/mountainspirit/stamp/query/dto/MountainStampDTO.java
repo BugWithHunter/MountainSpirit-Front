@@ -2,6 +2,8 @@ package com.bughunters.mountainspirit.stamp.query.dto;
 
 import lombok.*;
 
+import java.time.LocalDateTime;
+
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
@@ -9,7 +11,7 @@ import lombok.*;
 @ToString
 public class MountainStampDTO {
     private long id;
-    private java.sql.Date date;
+    private LocalDateTime date;
     private long cumId;
     private String frtrlId;
 }
