@@ -3,6 +3,8 @@ package com.bughunters.mountainspirit.mountain.command.dto;
 import lombok.*;
 import org.springframework.web.bind.annotation.GetMapping;
 
+import java.time.LocalDateTime;
+
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
@@ -15,8 +17,8 @@ public class MountainDTO {
     private String addrNm;
     private double lat;
     private double lot;
-    private java.sql.Date crtrDt;
+    private LocalDateTime crtrDt;
     private long mtnCd;
     private String stampPath;
-    private java.sql.Date stampUpdateDate;
+    private LocalDateTime stampUpdateDate;
 }
