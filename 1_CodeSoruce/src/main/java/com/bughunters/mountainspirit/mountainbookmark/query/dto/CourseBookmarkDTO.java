@@ -2,6 +2,8 @@ package com.bughunters.mountainspirit.mountainbookmark.query.dto;
 
 import lombok.*;
 
+import java.time.LocalDateTime;
+
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
@@ -9,7 +11,7 @@ import lombok.*;
 @ToString
 public class CourseBookmarkDTO {
     private long id;
-    private java.sql.Date bookmarkDate;
+    private LocalDateTime bookmarkDate;
     private long cumId;
     private String poiId;
 }
