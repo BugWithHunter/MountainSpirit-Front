@@ -20,4 +20,6 @@ public interface MemberService {
     void updateInvlidPassword(RequsetloginHisotry user);
 
     void updateCompleteLogin(RequsetloginHisotry loginHistory);
+
+    void registCrewId(long crewId, long cumId);
 }
