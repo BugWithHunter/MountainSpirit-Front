@@ -55,6 +55,25 @@
 ### 4-2. API 테스트
 <details>
   <summary>API 테스트</summary>
+  <details>
+    <summary>회원 테스트</summary>
+  </details>
+  
+  <details>
+    <summary>산, 코스 테스트</summary>
+  </details>
+
+  <details>
+    <summary>게시판 테스트</summary>
+  </details>
+
+  <details>
+    <summary>크루 테스트</summary>
+  </details>
+
+  <details>
+    <summary>신고 테스트</summary>
+  </details>
 </details>
 
 ## 5. 문서
