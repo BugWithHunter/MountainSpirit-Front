@@ -1,12 +1,9 @@
 package com.bughunters.mountainspirit.report.command.service;
 
-import com.bughunters.mountainspirit.member.command.entity.Member;
-import com.bughunters.mountainspirit.report.command.dto.ReportIsAccepted;
-import com.bughunters.mountainspirit.report.command.dto.ReportRequestCommandDTO;
-import com.bughunters.mountainspirit.report.command.dto.ReportResponseCommandDTO;
+import com.bughunters.mountainspirit.report.command.dto.*;
 import com.bughunters.mountainspirit.report.command.entity.*;
+import com.bughunters.mountainspirit.report.command.infrastructure.MemberFeignClient;
 import com.bughunters.mountainspirit.report.command.repository.*;
-import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -18,28 +15,27 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
-@RequiredArgsConstructor
 public class ReportCommandServiceImpl implements ReportCommandService {
 
-    private ReportCommandRepository reportCommandRepository;
-    private ReportCategoryCommandRepository reportCategoryCommandRepository;
-    private ReportMemberCommandRepository reportMemberCommandRepository;
-    private BanCommandRepository banCommandRepository;
-    private BlacklistCommandRepository blacklistCommandRepository;
-    private ModelMapper modelMapper;
+    private final ReportCommandRepository reportCommandRepository;
+    private final ReportCategoryCommandRepository reportCategoryCommandRepository;
+    private final BanCommandRepository banCommandRepository;
+    private final BlacklistCommandRepository blacklistCommandRepository;
+    private final MemberFeignClient memberFeignClient;
+    private final ModelMapper modelMapper;
 
     @Autowired
     public ReportCommandServiceImpl(ReportCommandRepository reportCommandRepository,
                                     ReportCategoryCommandRepository reportCategoryCommandRepository,
-                                    ReportMemberCommandRepository reportMemberCommandRepository,
                                     BanCommandRepository banCommandRepository,
                                     BlacklistCommandRepository blacklistCommandRepository,
+                                    MemberFeignClient memberFeignClient,
                                     ModelMapper modelMapper){
         this.reportCommandRepository = reportCommandRepository;
         this.reportCategoryCommandRepository = reportCategoryCommandRepository;
-        this.reportMemberCommandRepository = reportMemberCommandRepository;
         this.banCommandRepository = banCommandRepository;
         this.blacklistCommandRepository = blacklistCommandRepository;
+        this.memberFeignClient = memberFeignClient;
         this.modelMapper = modelMapper;
     }
 
@@ -47,9 +43,8 @@ public class ReportCommandServiceImpl implements ReportCommandService {
     @Override
     public ReportResponseCommandDTO createReport(ReportRequestCommandDTO reportRequestCommandDTO) {
 
-        Member member = reportMemberCommandRepository
-                .findById(reportRequestCommandDTO.getReportedId())
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "회원을 찾을 수 없습니다"));
+        ReportMemberDTO member = memberFeignClient
+                .getMemberInfo(reportRequestCommandDTO.getReportedId());
 
         // 회원 상태 체크: 정지(3), 블랙리스트(5)면 신고 불가
         if (member.getMemStsId() != null && (member.getMemStsId() == 3L || member.getMemStsId() == 5L)) {
@@ -91,8 +86,7 @@ public class ReportCommandServiceImpl implements ReportCommandService {
 
         if (status == ReportIsAccepted.Y) {
             // 신고 승인일 때만 제재 처리
-            Member member = reportMemberCommandRepository.findById(report.getReportedId())
-                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "회원을 찾을 수 없습니다"));
+            ReportMemberDTO member = memberFeignClient.getMemberInfo(report.getReportedId());
 
             ReportCategoryCommandEntity rcce = reportCategoryCommandRepository
                     .findById(report.getCategoryId())
@@ -119,7 +113,7 @@ public class ReportCommandServiceImpl implements ReportCommandService {
 
         // 블랙리스트가 아닌 경우 항상 BAN 적용
         if (member.getMemStsId() == null || member.getMemStsId() != 5L) {
-            createBan(member, modelMapper.map(report, ReportRequestCommandDTO.class));
+            createBan(member, report);
             if (!"BLACKLIST".equals(result)) {
                 result = "BAN";
                 }
@@ -133,8 +127,8 @@ public class ReportCommandServiceImpl implements ReportCommandService {
 
 
 
-    private void createBan(Member member, ReportRequestCommandDTO rrdto) {
-        int banCount = banCommandRepository.countByUserId(rrdto.getReportedId()) + 1;
+    private void createBan(ReportMemberDTO member, ReportCommandEntity rcdto) {
+        int banCount = banCommandRepository.countByUserId(rcdto.getReportedId()) + 1;
 
         LocalDateTime startDate = LocalDateTime.now();
         LocalDateTime endDate = null;
@@ -152,24 +146,23 @@ public class ReportCommandServiceImpl implements ReportCommandService {
             endDate = startDate.plusDays(30);
         }  else if (banCount >= 4) {
             // 밴 인스턴스 횟수가 4회 이상일 때 블랙리스트 테이블 생성
-            createBlacklist(member, modelMapper.map(rrdto, ReportCommandEntity.class));
+            createBlacklist(member, rcdto);
             return;
         }
 
         BanCommandEntity bcEntity = BanCommandEntity.builder()
                 .startDate(startDate)
                 .endDate(endDate)
-                .userId(rrdto.getReportedId())
+                .userId(rcdto.getReportedId())
                 .build();
         banCommandRepository.save(bcEntity);
 
-        // 회원 banCnt도 증가
-        member.setBanCnt(member.getBanCnt() + 1);
-        member.setMemStsId(3L);
-        reportMemberCommandRepository.save(member);
+        // Member 상태 업데이트 Feign 호출
+        ReportMemberUpdateDTO updateDTO = new ReportMemberUpdateDTO(member.getId(), 3L, banCount);
+        memberFeignClient.updateMemberStatus(member.getId(), updateDTO);
     }
 
-    private void createBlacklist(Member member, ReportCommandEntity report) {
+    private void createBlacklist(ReportMemberDTO member, ReportCommandEntity report) {
         if (member.getMemStsId() != null && member.getMemStsId() == 5L) {
             return; // 이미 블랙리스트 상태면 중복 방지
         }
@@ -180,7 +173,8 @@ public class ReportCommandServiceImpl implements ReportCommandService {
                 .build();
         blacklistCommandRepository.save(bce);
 
-        member.setMemStsId(5L);
-        reportMemberCommandRepository.save(member);
+        // Member 상태 업데이트 Feign 호출
+        ReportMemberUpdateDTO updateDTO = new ReportMemberUpdateDTO(member.getId(), 5L, member.getBanCnt());
+        memberFeignClient.updateMemberStatus(member.getId(), updateDTO);
     }
 }

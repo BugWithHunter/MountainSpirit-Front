@@ -2,6 +2,8 @@ package com.bughunters.mountainspirit.mountainreview.query.dto;
 
 import lombok.*;
 
+import java.time.LocalDateTime;
+
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
@@ -9,8 +11,8 @@ import lombok.*;
 @ToString
 public class CourseReviewDTO {
     private long id;
-    private java.sql.Date commitDate;
-    private java.sql.Date updateDate;
+    private LocalDateTime commitDate;
+    private LocalDateTime updateDate;
     private String reviewContent;
     private String poiId;
     private long cumId;

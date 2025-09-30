@@ -23,6 +23,7 @@
             , addrNm
             , lat
             , lot
+            , aslAltide
             , crtrDt
             , mtnCd
             , stampPath
@@ -37,6 +38,7 @@
              , addrNm
              , lat
              , lot
+             , aslAltide
              , crtrDt
              , mtnCd
              , stampPath

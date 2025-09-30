@@ -1,5 +1,6 @@
 package com.bughunters.mountainspirit.crew.query.service;
 
+//import com.bughunters.mountainspirit.crew.command.infrastructure.TestClient;
 import com.bughunters.mountainspirit.crew.query.dto.CrewDTO;
 import com.bughunters.mountainspirit.crew.query.dto.CrewInfoDTO;
 import com.bughunters.mountainspirit.crew.query.mapper.CrewMapper;
@@ -13,10 +14,13 @@ import java.util.List;
 @Slf4j
 public class CrewQueryServiceImpl implements CrewQueryService {
     private CrewMapper crewMapper;
+//    TestClient testClient;
 
     @Autowired
-    public CrewQueryServiceImpl(CrewMapper crewMapper) {
+    public CrewQueryServiceImpl(CrewMapper crewMapper){
+//                                TestClient testClient) {
         this.crewMapper = crewMapper;
+//        this.testClient = testClient;
     }
 
     @Override

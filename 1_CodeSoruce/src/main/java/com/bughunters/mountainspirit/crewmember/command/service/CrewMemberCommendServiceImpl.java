@@ -2,8 +2,9 @@ package com.bughunters.mountainspirit.crewmember.command.service;
 
 import com.bughunters.mountainspirit.crewmember.command.dto.*;
 import com.bughunters.mountainspirit.crewmember.command.entity.*;
+import com.bughunters.mountainspirit.crewmember.command.infrastructure.MemberServiceClient;
 import com.bughunters.mountainspirit.crewmember.command.repository.*;
-import com.bughunters.mountainspirit.member.command.service.MemberService;
+//import com.bughunters.mountainspirit.member.command.service.MemberService;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +27,8 @@ public class CrewMemberCommendServiceImpl implements CrewMemberCommendService {
     CrewApplyHistoryCommendRepository crewApplyHistoryCommendRepository;
     CrewMemberRoleCommendRepository crewMemberRoleCommendRepository;
     CrewMemberAuthCommendRepository crewMemberAuthCommendRepository;
-    MemberService memberService;
+    MemberServiceClient memberServiceClient;
+//    MemberService memberService;
 
     @Autowired
     public CrewMemberCommendServiceImpl(ModelMapper modelMapper,
@@ -36,7 +38,8 @@ public class CrewMemberCommendServiceImpl implements CrewMemberCommendService {
                                         CrewApplyHistoryCommendRepository crewApplyHistoryCommendRepository,
                                         CrewMemberRoleCommendRepository crewMemberRoleCommendRepository,
                                         CrewMemberAuthCommendRepository crewMemberAuthCommendRepository,
-                                        MemberService memberService) {
+//                                        MemberService memberService) {
+                                        MemberServiceClient memberServiceClient) {
         this.modelMapper = modelMapper;
         this.crewMemberCommendRepository = crewMemberCommendRepository;
         this.crewMemberHistoryCommendRepository = crewMemberHistoryCommendRepository;
@@ -44,14 +47,15 @@ public class CrewMemberCommendServiceImpl implements CrewMemberCommendService {
         this.crewApplyHistoryCommendRepository = crewApplyHistoryCommendRepository;
         this.crewMemberRoleCommendRepository = crewMemberRoleCommendRepository;
         this.crewMemberAuthCommendRepository = crewMemberAuthCommendRepository;
-        this.memberService = memberService;
+//        this.memberService = memberService;
+        this.memberServiceClient = memberServiceClient;
     }
 
     @Override
     @Transactional
     public void crewApplyRequest(CrewApplyDTO crewApplyDTO) {
         // 이미 가입 신청이 되어있을 시 가입 신청 불가
-        if(crewApplyCommendRepository.existsByCrewIdAndCumId(crewApplyDTO.getCrewId(),crewApplyDTO.getCumId())) {
+        if (crewApplyCommendRepository.existsByCrewIdAndCumId(crewApplyDTO.getCrewId(), crewApplyDTO.getCumId())) {
             log.info("이미 크루 가입 신청이 되어 있습니다.");
             return;
         }
@@ -70,20 +74,32 @@ public class CrewMemberCommendServiceImpl implements CrewMemberCommendService {
     @Transactional
     public void crewApplyCancel(CrewApplyDTO crewApplyDTO) {
         // 크루 가입 신청 정보 검색
-        CrewApply crewApply = crewApplyCommendRepository.findByCrewIdAndCumId(crewApplyDTO.getCrewId(),crewApplyDTO.getCumId());
+        CrewApply crewApply = crewApplyCommendRepository.findByCrewIdAndCumId(crewApplyDTO.getCrewId(), crewApplyDTO.getCumId());
 
         // 크루 가입 신청 삭제
         crewApplyCommendRepository.delete(crewApply);
     }
 
     @Override
-    @Transactional
     public void registCrewMemberByCrewApplyApprove(CrewApplyDTO crewApplyDTO) {
-        // 넘어온 데이터에 값이 없으면 리턴
-        if(crewApplyDTO.getCrewId()==null||crewApplyDTO.getCumId()==null)return;
+        try {
+            crewMemberRegistTransaction(crewApplyDTO);
+            // feign client 통신
+            memberServiceClient.updateMemberCrewInfo(crewApplyDTO.getCrewId(), crewApplyDTO.getCumId());
+            log.info("feign client 통신 끝");
+        } catch (Exception e) {
 
-        CrewApply crewApply = crewApplyCommendRepository.findByCrewIdAndCumId(crewApplyDTO.getCrewId(),crewApplyDTO.getCumId());
-        log.info("service crewApply 값 : {}",crewApply.toString());
+        }
+    }
+
+
+    @Transactional
+    public void crewMemberRegistTransaction(CrewApplyDTO crewApplyDTO) {
+        // 넘어온 데이터에 값이 없으면 리턴
+        if (crewApplyDTO.getCrewId() == null || crewApplyDTO.getCumId() == null) return;
+
+        CrewApply crewApply = crewApplyCommendRepository.findByCrewIdAndCumId(crewApplyDTO.getCrewId(), crewApplyDTO.getCumId());
+        log.info("service crewApply 값 : {}", crewApply.toString());
 
         crewApplyDTO.setId(crewApply.getId());
         crewApplyDTO.setCrewApplyDate(crewApply.getCrewApplyDate());
@@ -91,22 +107,28 @@ public class CrewMemberCommendServiceImpl implements CrewMemberCommendService {
         // 크루구성원(CrewMember) 테이블에 크루구성원 데이터 insert
         CrewMember crewMember = setCrewMemberInfo(crewApplyDTO);
         crewMemberCommendRepository.save(crewMember);
+        log.info("service crewMember 값 : {}", crewMember.toString());
 
         // 크루 가입 신청 히스토리(CrewApplyHistory)에 데이터 insert
-        CrewApplyHistory crewApplyHistory = setCrewApplyHistoryInfo(crewApplyDTO,'Y');
+        CrewApplyHistory crewApplyHistory = setCrewApplyHistoryInfo(crewApplyDTO, 'Y');
+        log.info("service CrewApplyHistory 값 : {}", crewApplyHistory.toString());
         crewApplyHistoryCommendRepository.save(crewApplyHistory);
 
+
         // 크루 구성원 히스토리(CrewMemberHistory) 테이블에서 crewMemberHistoryState를 JOINED로 설정하고 insert
-        CrewMemberHistory crewMemberHistory = setCrewMemberHistoryInfo(crewApplyDTO,1L);
+        CrewMemberHistory crewMemberHistory = setCrewMemberHistoryInfo(crewApplyDTO, 1L);
+        log.info("service CrewMemberHistory 값 : {}", crewMemberHistory.toString());
         crewMemberHistoryCommendRepository.save(crewMemberHistory);
 
         // 회원(Member) 테이블에 크루 정보 수정
 //        Member member = memberCommendRepository.findById(crewApplyDTO.getCumId()).get();
 //        member.setCrewId(crewApplyDTO.getCrewId());
-        memberService.setMemberCrewId(crewApplyDTO.getCumId(),crewApplyDTO.getCrewId());
+//        memberService.setMemberCrewId(crewApplyDTO.getCumId(),crewApplyDTO.getCrewId());
 
         // 크루 가입 신청(CrewApply) 테이블에서 신청 데이터 delete
         crewApplyCommendRepository.delete(crewApply);
+        log.info("service 가입신청 삭제 완료");
+
 
         // 후에 DB에 쿼리문 여러번 날아가지 않게 ToString 수정을 하든지 해야 될듯하다, 테스트 케이스로 개선사항 작성하면 더 좋을듯하다.
     }
@@ -115,11 +137,11 @@ public class CrewMemberCommendServiceImpl implements CrewMemberCommendService {
     @Transactional
     public void crewApplyRejected(CrewApplyDTO crewApplyDTO) {
         // 크루 가입 신청 정보 검색
-        CrewApply crewApply = crewApplyCommendRepository.findByCrewIdAndCumId(crewApplyDTO.getCrewId(),crewApplyDTO.getCumId());
+        CrewApply crewApply = crewApplyCommendRepository.findByCrewIdAndCumId(crewApplyDTO.getCrewId(), crewApplyDTO.getCumId());
         crewApplyDTO.setCrewApplyDate(crewApply.getCrewApplyDate());
 
         // 크루 가입 신청 히스토리 데이터 insert
-        CrewApplyHistory crewApplyHistory = setCrewApplyHistoryInfo(crewApplyDTO,'N');
+        CrewApplyHistory crewApplyHistory = setCrewApplyHistoryInfo(crewApplyDTO, 'N');
         crewApplyHistoryCommendRepository.save(crewApplyHistory);
 
         // 크루 가입 신청 데이터 delete
@@ -130,7 +152,7 @@ public class CrewMemberCommendServiceImpl implements CrewMemberCommendService {
     @Transactional
     public void leaveCrew(CrewIdentifyMemberDTO crewIdentifyMemberDTO) {
         // 크루원 select
-        CrewMember crewMember = crewMemberCommendRepository.findByCrewIdAndCumId(crewIdentifyMemberDTO.getCrewId(),crewIdentifyMemberDTO.getCumId());
+        CrewMember crewMember = crewMemberCommendRepository.findByCrewIdAndCumId(crewIdentifyMemberDTO.getCrewId(), crewIdentifyMemberDTO.getCumId());
 
         // 크루원 히스토리 insert
         CrewMemberHistory crewMemberHistory = setCrewMemberQuitHistoryInfo(crewMember);
@@ -153,9 +175,9 @@ public class CrewMemberCommendServiceImpl implements CrewMemberCommendService {
     public void modifyCrewRole(CrewMemberAuthModifyDTO crewMemberAuthModifyDTO) {
         log.info("넘어온 권한 수정 dto : {}", crewMemberAuthModifyDTO);
         CrewMemberRole crewMemberRole = crewMemberRoleCommendRepository.findByCrewRoleName(crewMemberAuthModifyDTO.getCrewRoleOriginalName());
-        CrewMemberAuth crewMemberAuth = crewMemberAuthCommendRepository.findByCrewRoleIdAndCrewRoleAuth(crewMemberRole.getId(),crewMemberAuthModifyDTO.getCrewRoleOriginalAuth());
-        log.info("service crewMemberRole : {}",crewMemberRole);
-        log.info("service crewMemberAuth : {}",crewMemberAuth);
+        CrewMemberAuth crewMemberAuth = crewMemberAuthCommendRepository.findByCrewRoleIdAndCrewRoleAuth(crewMemberRole.getId(), crewMemberAuthModifyDTO.getCrewRoleOriginalAuth());
+        log.info("service crewMemberRole : {}", crewMemberRole);
+        log.info("service crewMemberAuth : {}", crewMemberAuth);
 
         crewMemberRole.setCrewRoleName(crewMemberAuthModifyDTO.getCrewRoleName());
         crewMemberAuth.setCrewRoleAuth(crewMemberAuthModifyDTO.getCrewRoleAuth());
@@ -164,7 +186,7 @@ public class CrewMemberCommendServiceImpl implements CrewMemberCommendService {
     @Override
     @Transactional
     public void modifyCrewMemberRole(CrewMemberRoleModifyDTO crewMemberRoleModifyDTO) {
-        if(crewMemberRoleModifyDTO==null){
+        if (crewMemberRoleModifyDTO == null) {
             log.info("입력된 권한이 없습니다.");
         }
         // 크루 구성원 정보 select
@@ -176,7 +198,7 @@ public class CrewMemberCommendServiceImpl implements CrewMemberCommendService {
         crewMember.setCrewMemberRoleUpdateDate(now.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
 
         // 크루 구성원 히스토리 insert
-        CrewMemberHistory crewMemberHistory = setCrewMemberRoleUpdateHistoryInfo(crewMember,crewMemberRoleModifyDTO,now);
+        CrewMemberHistory crewMemberHistory = setCrewMemberRoleUpdateHistoryInfo(crewMember, crewMemberRoleModifyDTO, now);
         crewMemberHistoryCommendRepository.save(crewMemberHistory);
 
     }
@@ -188,14 +210,12 @@ public class CrewMemberCommendServiceImpl implements CrewMemberCommendService {
         CrewMember crewMember = crewMemberCommendRepository.findById(crewMemberBanDTO.getId()).orElse(null);
 
         // 크루 구성원 히스토리에 insert
-        CrewMemberHistory crewMemberHistory = setCrewMemberBanHistoryInfo(crewMember,crewMemberBanDTO.getBanReason());
+        CrewMemberHistory crewMemberHistory = setCrewMemberBanHistoryInfo(crewMember, crewMemberBanDTO.getBanReason());
         crewMemberHistoryCommendRepository.save(crewMemberHistory);
 
         // 크루 구성원 테이블에서 delete
         crewMemberCommendRepository.delete(crewMember);
     }
-
-
 
 
     // //////////////////////////////////////////////
@@ -225,7 +245,7 @@ public class CrewMemberCommendServiceImpl implements CrewMemberCommendService {
         return crewMember;
     }
 
-    private CrewMemberHistory setCrewMemberHistoryInfo(CrewApplyDTO crewApplyDTO,Long crewMemberRole) {
+    private CrewMemberHistory setCrewMemberHistoryInfo(CrewApplyDTO crewApplyDTO, Long crewMemberRole) {
         CrewMemberHistory crewMemberHistory = new CrewMemberHistory();
         LocalDateTime now = LocalDateTime.now();
 
@@ -251,7 +271,7 @@ public class CrewMemberCommendServiceImpl implements CrewMemberCommendService {
         return crewApplyHistory;
     }
 
-    private CrewMemberHistory setCrewMemberRoleUpdateHistoryInfo(CrewMember crewMember,CrewMemberRoleModifyDTO crewMemberRoleModifyDTO,LocalDateTime now) {
+    private CrewMemberHistory setCrewMemberRoleUpdateHistoryInfo(CrewMember crewMember, CrewMemberRoleModifyDTO crewMemberRoleModifyDTO, LocalDateTime now) {
         CrewMemberHistory crewMemberHistory = new CrewMemberHistory();
         crewMemberHistory.setCrewRoleId(crewMemberRoleModifyDTO.getCrewRoleId());
         crewMemberHistory.setCrewId(crewMember.getCrewId());
