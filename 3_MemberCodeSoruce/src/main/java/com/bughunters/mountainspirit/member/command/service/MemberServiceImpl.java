@@ -216,8 +216,9 @@ public class MemberServiceImpl implements MemberService {
 
     // Member id 를 받아 crew id 삽입
     @Override
+    @Transactional
     public void registCrewId(long crewId, long cumId) {
-        Member member = memberRepository.findById(crewId).orElse(null);
+        Member member = memberRepository.findById(cumId).orElse(null);
         if(member == null)
             return;
         member.setCrewId(crewId);
