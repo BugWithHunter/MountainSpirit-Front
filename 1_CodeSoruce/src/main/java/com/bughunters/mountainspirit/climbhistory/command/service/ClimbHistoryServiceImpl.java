@@ -37,7 +37,7 @@ public class ClimbHistoryServiceImpl implements ClimbHistoryService {
     private final ClimbCheckRepository climbCheckRepository;
     private final ClimbRecordRepository climbRecordRepository;
     private final StampService stampService;
-    private final FeignClientClimbHisotryToMember memberService;
+    private final FeignClientClimbHisotryToMember feignClientClimbHisotryToMember;
     private final MemberRankService memberRankService;
 
     public ClimbHistoryServiceImpl(ClimbHistoryQueryServiceImpl climbHistoryQueryServiceImpl
@@ -45,14 +45,14 @@ public class ClimbHistoryServiceImpl implements ClimbHistoryService {
             , ClimbCheckRepository climbCheckRepository
             , ClimbRecordRepository climbRecordRepository
             , StampService stampService
-            , FeignClientClimbHisotryToMember memberService
+            , FeignClientClimbHisotryToMember feignClientClimbHisotryToMember
             , MemberRankService memberRankService) {
         this.climbHistoryQueryServiceImpl = climbHistoryQueryServiceImpl;
         this.modelMapper = modelMapper;
         this.climbCheckRepository = climbCheckRepository;
         this.climbRecordRepository = climbRecordRepository;
         this.stampService = stampService;
-        this.memberService = memberService;
+        this.feignClientClimbHisotryToMember = feignClientClimbHisotryToMember;
         this.memberRankService = memberRankService;
     }
 
@@ -120,7 +120,7 @@ public class ClimbHistoryServiceImpl implements ClimbHistoryService {
             modifyStatusOfMemberDTO.setCumId(request.getCumId());
 
             //메모. 6.등급 기준 체크, 등급 업 할 등급 코드 반환
-            ResponseStatusDTO responseStatusDTO = memberService.modifyStatusAfterClimbMountian(modifyStatusOfMemberDTO);
+            ResponseStatusDTO responseStatusDTO = feignClientClimbHisotryToMember.modifyStatusAfterClimbMountian(modifyStatusOfMemberDTO);
 
 
             //메모. 7.반환 할 데이터
