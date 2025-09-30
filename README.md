@@ -36,10 +36,10 @@
 
 ### 3-4. API 명세
 <details>
-  <summary>User Service</summary>
+  <summary>Member Service</summary>
 </details>
 <details>
-  <summary>Core Service</summary>
+  <summary>Main Service</summary>
 </details>
 
 ### 3-5. 로그인 토큰
