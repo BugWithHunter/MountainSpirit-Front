@@ -72,7 +72,7 @@
 <details>
   <summary>산, 코스 테스트</summary>
  <details>
-  <summary>🐢산 & 코스 전체 조회, 검색 조회</summary><br>
+  <summary>🐢산 & 코스 전체 조회, 검색 조회</summary>
   
   - 산 전체 조회
   <img width="1743" height="879" alt="Image" src="https://github.com/user-attachments/assets/77619dc4-6891-439b-b0ac-efbe73ded4cb" /><br>
