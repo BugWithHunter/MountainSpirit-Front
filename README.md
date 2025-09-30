@@ -93,6 +93,8 @@
 - 프레임워크
 
 ![Spring](https://img.shields.io/badge/spring-%236DB33F.svg?style=for-the-badge&logo=spring&logoColor=white)
+![Spring](https://img.shields.io/badge/spring_security-%6DB33F?style=for-the-badge&logo=springsecurity&logoColor=white)
+![Spring](https://img.shields.io/badge/spring_boot-%6DB33F?style=for-the-badge&logo=springboot&logoColor=white)
 - 버전 관리
 
 ![Git](https://img.shields.io/badge/git-%23F05033.svg?style=for-the-badge&logo=git&logoColor=white)
