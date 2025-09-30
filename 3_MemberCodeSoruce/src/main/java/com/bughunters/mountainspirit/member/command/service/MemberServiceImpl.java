@@ -36,6 +36,7 @@ public class MemberServiceImpl implements MemberService {
     private final ModelMapper modelMapper;
     private final LoginFailureRecordRepository loginFailureRecordRepository;
     private final LoginRecordRepository loginRecordRepository;
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
     public MemberServiceImpl(MemberRepository memberRepository
             , MemberQueryService memberQueryService
@@ -48,6 +49,7 @@ public class MemberServiceImpl implements MemberService {
         this.modelMapper = modelMapper;
         this.loginFailureRecordRepository = loginFailureRecordRepository;
         this.loginRecordRepository = loginRecordRepository;
+        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
     }
 
     //등산 이후 회원 정보 변경
@@ -129,7 +131,7 @@ public class MemberServiceImpl implements MemberService {
         }
 
         //암호가 틀렸을 때
-        if (!member.getMemPwd().equals(memberDTO.getMemPwd())) {
+        if (bCryptPasswordEncoder.matches(member.getMemPwd(),memberDTO.getMemPwd())) {
             responseQuitDTO.setInvalidPwd(true);
             return responseQuitDTO;
         }

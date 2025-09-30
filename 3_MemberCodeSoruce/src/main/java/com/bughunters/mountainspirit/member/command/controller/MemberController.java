@@ -84,6 +84,8 @@ public class MemberController {
 
     @DeleteMapping("/member")
     public ResponseEntity<ResponseMessage> deleteMember(@RequestBody RequestQuitMemberDTO member) {
+        member.setMemPwd(bCryptPasswordEncoder.encode(member.getMemPwd()));
+
         ResponseQuitDTO responseQuitDTO = memberService.memberQuit(member);
         ResponseMessage responseMessage = new ResponseMessage();
 
