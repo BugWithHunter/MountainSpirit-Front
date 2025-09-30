@@ -72,46 +72,91 @@
 <details>
   <summary>산, 코스 테스트</summary>
  <details>
-  <summary>🐢산 & 코스 전체 조회, 검색 조회</summary>
-  - 산 전체 조회
-  - 산 검색 조회
-  - 코스 전체 조회
-  - 코스 검색 조회
- </details>
- <details>
-  <summary>🐢산 후기 조회/등록/수정/삭제</summary>
-  - 산 후기 조회
-  - 산 후기 등록
-  - 산 후기 수정
-  - 산 후기 삭제
- </details>
- <details>
-  <summary>🐢코스 후기 조회/등록/수정/삭제</summary>
-  - 코스 후기 조회
-  - 코스 후기 등록
-  - 코스 후기 수정
-  - 코스 후기 삭제
- </details>
- <details>
-  <summary>🐢산 북마크 조회/등록/삭제</summary>
-  - 산 북마크 조회
-  - 산 북마크 등록
-  - 산 북마크 삭제
- </details>
- <details>
-  <summary>🐢코스 북마크 조회/등록/삭제</summary>
-  - 코스 북마크 조회
+  <summary>🐢산 & 코스 전체 조회, 검색 조회</summary><br>
   
-  - 코스 북마크 등록
-   
-  - 코스 북마크 삭제
+  - 산 전체 조회
+  <img width="1743" height="879" alt="Image" src="https://github.com/user-attachments/assets/77619dc4-6891-439b-b0ac-efbe73ded4cb" /><br>
+  
+  - 산 검색 조회
+<img width="1731" height="862" alt="image" src="https://github.com/user-attachments/assets/2ee6a6c9-9e22-4f8a-9205-fe2efde9fa1c" /><br>
+  
+  - 코스 전체 조회
+<img width="1741" height="858" alt="image" src="https://github.com/user-attachments/assets/84ba9ac0-9f15-481b-a5f1-100c62de5dc6" /><br>
+
+  - 코스 검색 조회
+<img width="1742" height="866" alt="image" src="https://github.com/user-attachments/assets/d42e2fd1-86f1-4d8d-ac09-32c38dc2da35" /><br>
 
  </details>
  <details>
-  <summary>🐢산 & 코스 도장 조회</summary>
-  - 산 도장 조회
+  <summary>🐢산 후기 조회/등록/수정/삭제</summary>
   
+  - 산 후기 조회
+<img width="1722" height="862" alt="image" src="https://github.com/user-attachments/assets/8ec0402d-23fe-46e3-bc5b-a1f479f75330" /><br>
+
+  - 산 후기 등록
+<img width="1758" height="869" alt="image" src="https://github.com/user-attachments/assets/352a2775-5bbd-4cef-ab41-ca75e0e8268c" /><br>
+
+  - 산 후기 수정
+<img width="1747" height="865" alt="image" src="https://github.com/user-attachments/assets/0716de3a-b287-45bc-8723-6768b908b151" /><br>
+
+  - 산 후기 삭제
+<img width="1760" height="873" alt="image" src="https://github.com/user-attachments/assets/1a75ddb0-9367-4987-9b64-2301292f9bdc" /><br>
+
+ </details>
+ 
+ <details>
+  <summary>🐢코스 후기 조회/등록/수정/삭제</summary>
+  
+  - 코스 후기 조회
+  <img width="1745" height="867" alt="image" src="https://github.com/user-attachments/assets/159fe14f-b48a-40bc-87a2-3e39232ebafe" /><br>
+  
+  - 코스 후기 등록
+<img width="1745" height="871" alt="image" src="https://github.com/user-attachments/assets/b92e39da-5d23-4c04-b885-c0b4733d2226" /><br>
+
+  - 코스 후기 수정
+<img width="1729" height="880" alt="image" src="https://github.com/user-attachments/assets/5e446068-304e-4993-b889-2e64ce12c649" /><br>
+
+  - 코스 후기 삭제
+<img width="1738" height="874" alt="image" src="https://github.com/user-attachments/assets/6992b188-dc9c-44bf-8b80-ca59070b42ed" /><br>
+
+ </details>
+ 
+ <details>
+  <summary>🐢산 북마크 조회/등록/삭제</summary>
+  
+  - 산 북마크 조회
+<img width="1745" height="870" alt="image" src="https://github.com/user-attachments/assets/e596c21e-9efe-46d5-978b-706fda3da6df" /><br>
+
+  - 산 북마크 등록
+<img width="1738" height="870" alt="image" src="https://github.com/user-attachments/assets/a70dae32-b81a-4d4e-b152-76fe7ad4093a" /><br>
+
+  - 산 북마크 삭제
+<img width="1742" height="860" alt="image" src="https://github.com/user-attachments/assets/3aee5893-1932-4c1a-942c-c01c998276c6" /><br>
+
+ </details>
+ 
+ <details>
+  <summary>🐢코스 북마크 조회/등록/삭제</summary>
+  
+  - 코스 북마크 조회
+  <img width="1742" height="864" alt="image" src="https://github.com/user-attachments/assets/194ab119-b161-4283-b748-caa824bb41dc" /><br>
+
+  - 코스 북마크 등록
+   <img width="1735" height="874" alt="image" src="https://github.com/user-attachments/assets/3b1e4b78-df1a-4b2d-b0af-43874830a040" /><br>
+
+  - 코스 북마크 삭제
+<img width="1735" height="874" alt="image" src="https://github.com/user-attachments/assets/3708343f-2d90-40f4-aa8e-bee30ab791a6" />
+
+ </details>
+ 
+ <details>
+  <summary>🐢산 & 코스 도장 조회</summary>
+  
+  - 산 도장 조회
+  <img width="1750" height="877" alt="image" src="https://github.com/user-attachments/assets/2155669c-5233-4035-8587-b717340355e5" /><br>
+
   - 코스 도장 조회
+<img width="1753" height="879" alt="image" src="https://github.com/user-attachments/assets/ae14d49a-a77c-407e-9c82-011822d61400" /><br>
 
  </details>
 </details>
