@@ -23,6 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -69,8 +70,8 @@ public class MemberServiceImpl implements MemberService {
         int findKey = modifyStatusOfMemberDTO.getBaseMemberRanks()
                 .keySet()
                 .stream()
-                .sorted(Integer::compareTo) // 오름순 정렬
-                .filter(x -> x >= score)
+                .sorted(Comparator.reverseOrder()) // 내림차순 정렬
+                .filter(x -> x <= score)
                 .findFirst()
                 .orElse(//해당 되는게 없으면 최대등급을 초과하는 점수로 최고 등급으로 update
                         modifyStatusOfMemberDTO
