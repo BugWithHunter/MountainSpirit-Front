@@ -1,4 +1,5 @@
 # 🌳산신령🌳
+<img width="300" height="300" alt="Image" src="https://github.com/user-attachments/assets/5bebdea1-dcbf-44de-8cf8-d2a072a3ef31" />
 
 ## 팀원
 
