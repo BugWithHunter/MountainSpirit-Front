@@ -185,11 +185,12 @@
 <img width="1142" height="554" alt="Image" src="https://github.com/user-attachments/assets/3b304632-4b70-4566-adee-c7e18e61afee" />
 
 ## 6. 🛸기술 스택
+
 - DB
 
 <img src="https://img.shields.io/badge/MariaDB-003545?style=for-the-badge&logo=mariadb&logoColor=white">
 
-- 프레임워크
+- 개발 툴
 
 <div> 
 <img src="https://img.shields.io/badge/spring-236DB33F.svg?style=for-the-badge&logo=spring&logoColor=white">
@@ -197,7 +198,6 @@
 <img src="https://img.shields.io/badge/spring_boot-6DB33F?style=for-the-badge&logo=springboot&logoColor=white">
 <img src="https://img.shields.io/badge/apache-D22128?style=for-the-badge&logo=apache&logoColor=white">
 <img src="https://img.shields.io/badge/intelliJ_IDEA-000000?style=for-the-badge&logo=intellijidea&logoColor=white">
-<img src="https://img.shields.io/badge/spring_boot-6DB33F?style=for-the-badge&logo=springboot&logoColor=white">
 </div>
 
 - 버전 관리
