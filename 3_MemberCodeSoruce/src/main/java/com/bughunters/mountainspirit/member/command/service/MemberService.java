@@ -20,4 +20,6 @@ public interface MemberService {
     void updateInvlidPassword(RequsetloginHisotry user);
 
     void updateCompleteLogin(RequsetloginHisotry loginHistory);
+
+    boolean updateStatus(Long id, ReportMemberUpdateDTO dto);
 }

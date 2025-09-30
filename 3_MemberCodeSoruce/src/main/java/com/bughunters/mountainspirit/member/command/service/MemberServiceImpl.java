@@ -22,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -212,6 +213,24 @@ public class MemberServiceImpl implements MemberService {
         member.setLoginFailCnt(0);
         memberRepository.save(member);
         loginRecordRepository.save(loginRecord);
+    }
+
+    @Override
+    public boolean updateStatus(Long id, ReportMemberUpdateDTO dto) {
+        Optional<Member> optionalMember = memberRepository.findById(id);
+        if (optionalMember.isEmpty()) return false;
+
+        Member member = optionalMember.get();
+
+        if (dto.getMemStsId() != null) {
+            member.setMemStsId(dto.getMemStsId());
+        }
+        if (dto.getBanCnt() != null) {
+            member.setBanCnt(dto.getBanCnt());
+        }
+
+        memberRepository.save(member);
+        return true;
     }
 
 

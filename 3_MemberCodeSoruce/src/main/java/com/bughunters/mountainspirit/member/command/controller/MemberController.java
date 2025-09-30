@@ -100,4 +100,35 @@ public class MemberController {
         return ResponseEntity.ok()
                 .body(responseMessage);
     }
+
+    @GetMapping("/report/member-info/{id}")
+    public ResponseEntity<ReportMemberDTO> getMemberInfo(@PathVariable Long id) {
+        Member member = memberService.getTest(id);
+        if (member == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+
+        ReportMemberDTO dto = new ReportMemberDTO(
+                member.getId(),
+                member.getMemName(),
+                member.getEmail(),
+                member.getMemStsId(),
+                member.getBanCnt() != null ? member.getBanCnt() : 0
+        );
+
+        return ResponseEntity.ok().body(dto);
+    }
+
+    @PatchMapping("/report/update-status/{id}")
+    public ResponseEntity<Void> updateMemberStatus(@PathVariable Long id,
+                                                   @RequestBody ReportMemberUpdateDTO dto) {
+        boolean updated = memberService.updateStatus(id, dto);
+        if (!updated) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+        return ResponseEntity.ok().build();
+    }
+
+
+
 }
