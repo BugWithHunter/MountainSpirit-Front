@@ -1,10 +1,12 @@
 package com.bughunters.mountainspirit.report.command.service;
 
-import com.bughunters.mountainspirit.member.command.entity.Member;
 import com.bughunters.mountainspirit.report.command.dto.ReportIsAccepted;
+import com.bughunters.mountainspirit.report.command.dto.ReportMemberDTO;
 import com.bughunters.mountainspirit.report.command.dto.ReportRequestCommandDTO;
 import com.bughunters.mountainspirit.report.command.dto.ReportResponseCommandDTO;
-import com.bughunters.mountainspirit.report.command.entity.*;
+import com.bughunters.mountainspirit.report.command.entity.ReportCategoryCommandEntity;
+import com.bughunters.mountainspirit.report.command.entity.ReportCommandEntity;
+import com.bughunters.mountainspirit.report.command.infrastructure.MemberFeignClient;
 import com.bughunters.mountainspirit.report.command.repository.*;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -19,10 +21,8 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-
-// 미완성 테스트
 @ExtendWith(MockitoExtension.class)
-public class ReportCommandServiceImplTest {
+class ReportCommandServiceImplTest {
 
     @Mock
     private ReportCommandRepository reportCommandRepository;
@@ -31,13 +31,13 @@ public class ReportCommandServiceImplTest {
     private ReportCategoryCommandRepository reportCategoryCommandRepository;
 
     @Mock
-    private ReportMemberCommandRepository reportMemberCommandRepository;
-
-    @Mock
     private BanCommandRepository banCommandRepository;
 
     @Mock
     private BlacklistCommandRepository blacklistCommandRepository;
+
+    @Mock
+    private MemberFeignClient memberClient; // 회원 서버 FeignClient Mock
 
     @Mock
     private ModelMapper modelMapper;
@@ -50,14 +50,16 @@ public class ReportCommandServiceImplTest {
         ReportRequestCommandDTO dto = new ReportRequestCommandDTO();
         dto.setReportedId(1L);
 
-        Member member = new Member();
-        member.setMemStsId(null);
-        member.setBanCnt(0);
+        ReportMemberDTO member = new ReportMemberDTO(1L, "테스터", "test@test.com", null, 0);
 
         ReportCommandEntity entity = new ReportCommandEntity();
-        when(reportMemberCommandRepository.findById(1L)).thenReturn(Optional.of(member));
+
+        when(memberClient.getMemberInfo(1L)).thenReturn(member);
         when(modelMapper.map(dto, ReportCommandEntity.class)).thenReturn(entity);
-        when(modelMapper.map(entity, ReportResponseCommandDTO.class)).thenReturn(new ReportResponseCommandDTO());
+
+        ReportResponseCommandDTO responseDto = new ReportResponseCommandDTO();
+        responseDto.setResult("PENDING");
+        when(modelMapper.map(entity, ReportResponseCommandDTO.class)).thenReturn(responseDto);
 
         var result = reportCommandService.createReport(dto);
 
@@ -71,10 +73,9 @@ public class ReportCommandServiceImplTest {
         ReportRequestCommandDTO dto = new ReportRequestCommandDTO();
         dto.setReportedId(1L);
 
-        Member member = new Member();
-        member.setMemStsId(3L); // 정지 상태
+        ReportMemberDTO member = new ReportMemberDTO(1L, "테스터", "test@test.com", 3L, 1); // 정지 상태
 
-        when(reportMemberCommandRepository.findById(1L)).thenReturn(Optional.of(member));
+        when(memberClient.getMemberInfo(1L)).thenReturn(member);
 
         assertThrows(ResponseStatusException.class, () -> reportCommandService.createReport(dto));
     }
@@ -82,25 +83,27 @@ public class ReportCommandServiceImplTest {
     @Test
     void testUpdateReportStatus_Approve_Ban() {
         Long reportId = 1L;
+
         ReportCommandEntity report = new ReportCommandEntity();
         report.setReportedId(1L);
         report.setCategoryId(1L);
         report.setSuspensionCycle(0);
         report.setIsAccepted(ReportIsAccepted.N);
 
-        Member member = new Member();
-        member.setMemStsId(null);
-        member.setBanCnt(0);
+        ReportMemberDTO member = new ReportMemberDTO(1L, "테스터", "test@test.com", null, 0);
 
         ReportCategoryCommandEntity category = new ReportCategoryCommandEntity();
         category.setCountStandard(0);
 
         when(reportCommandRepository.findById(reportId)).thenReturn(Optional.of(report));
-        when(reportMemberCommandRepository.findById(1L)).thenReturn(Optional.of(member));
+        when(memberClient.getMemberInfo(1L)).thenReturn(member);
         when(reportCategoryCommandRepository.findById(1L)).thenReturn(Optional.of(category));
-        when(reportCommandRepository.countByReportedIdAndSuspensionCycleAndCategoryIdAndIsAccepted(anyLong(), anyInt(), anyLong(), any()))
-                .thenReturn(0L);
-        when(modelMapper.map(report, ReportResponseCommandDTO.class)).thenReturn(new ReportResponseCommandDTO());
+        when(reportCommandRepository.countByReportedIdAndSuspensionCycleAndCategoryIdAndIsAccepted(
+                anyLong(), anyInt(), anyLong(), any())).thenReturn(0L);
+
+        ReportResponseCommandDTO responseDto = new ReportResponseCommandDTO();
+        responseDto.setResult("BLACKLIST");
+        when(modelMapper.map(report, ReportResponseCommandDTO.class)).thenReturn(responseDto);
 
         var response = reportCommandService.updateReportStatus(reportId, ReportIsAccepted.Y);
 
@@ -116,12 +119,14 @@ public class ReportCommandServiceImplTest {
         report.setIsAccepted(ReportIsAccepted.N);
 
         when(reportCommandRepository.findById(reportId)).thenReturn(Optional.of(report));
-        when(modelMapper.map(report, ReportResponseCommandDTO.class)).thenReturn(new ReportResponseCommandDTO());
+
+        ReportResponseCommandDTO responseDto = new ReportResponseCommandDTO();
+        responseDto.setResult("UPDATED");
+        when(modelMapper.map(report, ReportResponseCommandDTO.class)).thenReturn(responseDto);
 
         var response = reportCommandService.updateReportStatus(reportId, ReportIsAccepted.N);
 
         assertNotNull(response);
         assertEquals("UPDATED", response.getResult());
     }
-
 }

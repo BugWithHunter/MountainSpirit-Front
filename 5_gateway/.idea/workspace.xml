@@ -5,10 +5,39 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="a2db7248-2dc6-49a1-b615-b1669c5f0d4b" name="변경" comment="">
-      <change beforePath="$PROJECT_DIR$/.gradle/8.14.3/checksums/checksums.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/8.14.3/checksums/checksums.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../1_CodeSoruce/src/main/java/com/bughunters/mountainspirit/report/command/infrastructure/MemberFeignClient.java" beforeDir="false" afterPath="$PROJECT_DIR$/../1_CodeSoruce/src/main/java/com/bughunters/mountainspirit/report/command/infrastructure/MemberFeignClient.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../1_CodeSoruce/src/test/java/com/bughunters/mountainspirit/report/command/service/ReportCommandServiceImplTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/../1_CodeSoruce/src/test/java/com/bughunters/mountainspirit/report/command/service/ReportCommandServiceImplTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../3_MemberCodeSoruce/src/main/java/com/bughunters/mountainspirit/member/command/controller/MemberController.java" beforeDir="false" afterPath="$PROJECT_DIR$/../3_MemberCodeSoruce/src/main/java/com/bughunters/mountainspirit/member/command/controller/MemberController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../4_eureka-server/.gradle/8.14.3/executionHistory/executionHistory.bin" beforeDir="false" afterPath="$PROJECT_DIR$/../4_eureka-server/.gradle/8.14.3/executionHistory/executionHistory.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../4_eureka-server/.gradle/8.14.3/executionHistory/executionHistory.lock" beforeDir="false" afterPath="$PROJECT_DIR$/../4_eureka-server/.gradle/8.14.3/executionHistory/executionHistory.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../4_eureka-server/.gradle/8.14.3/fileHashes/fileHashes.bin" beforeDir="false" afterPath="$PROJECT_DIR$/../4_eureka-server/.gradle/8.14.3/fileHashes/fileHashes.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../4_eureka-server/.gradle/8.14.3/fileHashes/fileHashes.lock" beforeDir="false" afterPath="$PROJECT_DIR$/../4_eureka-server/.gradle/8.14.3/fileHashes/fileHashes.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../4_eureka-server/.gradle/buildOutputCleanup/buildOutputCleanup.lock" beforeDir="false" afterPath="$PROJECT_DIR$/../4_eureka-server/.gradle/buildOutputCleanup/buildOutputCleanup.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../4_eureka-server/.gradle/buildOutputCleanup/outputFiles.bin" beforeDir="false" afterPath="$PROJECT_DIR$/../4_eureka-server/.gradle/buildOutputCleanup/outputFiles.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../4_eureka-server/.gradle/file-system.probe" beforeDir="false" afterPath="$PROJECT_DIR$/../4_eureka-server/.gradle/file-system.probe" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../4_eureka-server/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../4_eureka-server/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../4_eureka-server/build/libs/eurekaserver-0.0.1-SNAPSHOT-plain.jar" beforeDir="false" afterPath="$PROJECT_DIR$/../4_eureka-server/build/libs/eurekaserver-0.0.1-SNAPSHOT-plain.jar" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../4_eureka-server/build/libs/eurekaserver-0.0.1-SNAPSHOT.jar" beforeDir="false" afterPath="$PROJECT_DIR$/../4_eureka-server/build/libs/eurekaserver-0.0.1-SNAPSHOT.jar" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../4_eureka-server/build/reports/tests/test/classes/com.bughunters.eurekaserver.EurekaServerApplicationTests.html" beforeDir="false" afterPath="$PROJECT_DIR$/../4_eureka-server/build/reports/tests/test/classes/com.bughunters.eurekaserver.EurekaServerApplicationTests.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../4_eureka-server/build/reports/tests/test/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/../4_eureka-server/build/reports/tests/test/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../4_eureka-server/build/reports/tests/test/packages/com.bughunters.eurekaserver.html" beforeDir="false" afterPath="$PROJECT_DIR$/../4_eureka-server/build/reports/tests/test/packages/com.bughunters.eurekaserver.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../4_eureka-server/build/test-results/test/TEST-com.bughunters.eurekaserver.EurekaServerApplicationTests.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../4_eureka-server/build/test-results/test/TEST-com.bughunters.eurekaserver.EurekaServerApplicationTests.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../4_eureka-server/build/test-results/test/binary/output.bin" beforeDir="false" afterPath="$PROJECT_DIR$/../4_eureka-server/build/test-results/test/binary/output.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../4_eureka-server/build/test-results/test/binary/output.bin.idx" beforeDir="false" afterPath="$PROJECT_DIR$/../4_eureka-server/build/test-results/test/binary/output.bin.idx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../4_eureka-server/build/test-results/test/binary/results.bin" beforeDir="false" afterPath="$PROJECT_DIR$/../4_eureka-server/build/test-results/test/binary/results.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../4_eureka-server/build/tmp/bootJar/MANIFEST.MF" beforeDir="false" afterPath="$PROJECT_DIR$/../4_eureka-server/build/tmp/bootJar/MANIFEST.MF" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../4_eureka-server/build/tmp/jar/MANIFEST.MF" beforeDir="false" afterPath="$PROJECT_DIR$/../4_eureka-server/build/tmp/jar/MANIFEST.MF" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/8.14.3/executionHistory/executionHistory.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/8.14.3/executionHistory/executionHistory.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/8.14.3/executionHistory/executionHistory.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/8.14.3/executionHistory/executionHistory.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/8.14.3/fileHashes/fileHashes.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/8.14.3/fileHashes/fileHashes.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/8.14.3/fileHashes/fileHashes.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/8.14.3/fileHashes/fileHashes.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/outputFiles.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/outputFiles.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/file-system.probe" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/file-system.probe" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/reports/problems/problems-report.html" beforeDir="false" afterPath="$PROJECT_DIR$/build/reports/problems/problems-report.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/tmp/compileJava/previous-compilation-data.bin" beforeDir="false" afterPath="$PROJECT_DIR$/build/tmp/compileJava/previous-compilation-data.bin" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -70,8 +99,8 @@
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.git.unshallow": "true",
     "Spring Boot.GatewayApplication.executor": "Run",
-    "git-widget-placeholder": "ref/separate-server-khg",
-    "last_opened_file_path": "D:/2.BootCamp/04. Project/Bughunters/mountainspirit/5_gateway",
+    "git-widget-placeholder": "feat/jgi2",
+    "last_opened_file_path": "C:/Users/Playdata/Desktop/Team_project/02MountainSpirit/MountainSpirit/5_gateway",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -82,7 +111,7 @@
 }]]></component>
   <component name="RunManager">
     <configuration name="GatewayApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
-      <module name="gateway.main" />
+      <module name="com.bughunters.gateway.main" />
       <option name="SPRING_BOOT_MAIN_CLASS" value="com.bughunters.gateway.GatewayApplication" />
       <method v="2">
         <option name="Make" enabled="true" />
@@ -92,8 +121,8 @@
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-jdk-9823dce3aa75-fbdcb00ec9e3-intellij.indexing.shared.core-IU-251.27812.49" />
-        <option value="bundled-js-predefined-d6986cc7102b-09060db00ec0-JavaScript-IU-251.27812.49" />
+        <option value="bundled-jdk-9823dce3aa75-fbdcb00ec9e3-intellij.indexing.shared.core-IU-251.28293.39" />
+        <option value="bundled-js-predefined-d6986cc7102b-09060db00ec0-JavaScript-IU-251.28293.39" />
       </set>
     </attachedChunks>
   </component>
@@ -106,6 +135,7 @@
       <updated>1759198397562</updated>
       <workItem from="1759198398731" duration="885000" />
       <workItem from="1759202137645" duration="6253000" />
+      <workItem from="1759226160231" duration="3285000" />
     </task>
     <servers />
   </component>
