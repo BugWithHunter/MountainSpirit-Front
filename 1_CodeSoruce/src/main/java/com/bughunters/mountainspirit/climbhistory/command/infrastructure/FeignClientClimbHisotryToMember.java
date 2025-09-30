@@ -7,7 +7,7 @@ import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
-@FeignClient(name="member-client", url = "localhost:8000/member-client", configuration = FeignClientConfig.class)
+@FeignClient(name="feignClientClimbHisotryToMember", url = "localhost:8000/member-client", configuration = FeignClientConfig.class)
 public interface FeignClientClimbHisotryToMember {
     @PutMapping("/member/memberStatus")
     ResponseStatusDTO modifyStatusAfterClimbMountian(@RequestBody RequestModifyStatusOfMemberDTO modifyStatusOfMemberDTO);

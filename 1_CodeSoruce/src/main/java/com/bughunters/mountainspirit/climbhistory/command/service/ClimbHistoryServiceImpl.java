@@ -17,7 +17,9 @@ import com.bughunters.mountainspirit.memberrank.command.service.MemberRankServic
 import com.bughunters.mountainspirit.memberrank.command.dto.ResponseRankDTO;
 import com.bughunters.mountainspirit.stamp.command.dto.StampWithCourseAndMountainDTO;
 import com.bughunters.mountainspirit.stamp.command.service.StampService;
+import com.netflix.discovery.converters.Auto;
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -40,6 +42,7 @@ public class ClimbHistoryServiceImpl implements ClimbHistoryService {
     private final FeignClientClimbHisotryToMember memberService;
     private final MemberRankService memberRankService;
 
+    @Autowired
     public ClimbHistoryServiceImpl(ClimbHistoryQueryServiceImpl climbHistoryQueryServiceImpl
             , ModelMapper modelMapper
             , ClimbCheckRepository climbCheckRepository
