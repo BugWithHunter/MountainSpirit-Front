@@ -40,17 +40,20 @@
 ![산신령 (2)](https://github.com/user-attachments/assets/4f74f7ce-a075-4a3a-a715-c9f735529783)
 
 ## 3. 🔧설계
-### 3-1. 논리 모델링
+### 3-1. Flow Chart
+<img width="1321" height="1560" alt="image" src="https://github.com/user-attachments/assets/29236dfa-6ff4-4cb7-a1fe-71b1629ec417" />
+
+### 3-2. 논리 모델링
 <img width="2156" height="2044" alt="image" src="https://github.com/user-attachments/assets/db46cfd4-8ed1-441e-b392-2aebfa9c6783" />
 
-### 3-2. 물리 모델링
+### 3-3. 물리 모델링
 <img width="5800" height="2842" alt="Image" src="https://github.com/user-attachments/assets/355e9759-ce68-4b22-8df7-ee1539663bb7" />
 
-### 3-3. MSA 아키텍처
+### 3-4. MSA 아키텍처
 <img width="1919" height="1006" alt="image" src="https://github.com/user-attachments/assets/f4e0ef09-9a58-4e5d-8c98-7d755f2f277b" />
 
 
-### 3-4. API 명세
+### 3-5. API 명세
 <details>
   <summary>Member Service</summary>
  <img width="1610" height="1756" alt="image" src="https://github.com/user-attachments/assets/6370c764-00da-425b-88a6-a8724ffcba24" />
@@ -62,7 +65,7 @@
 
 </details>
 
-### 3-5. 로그인 토큰
+### 3-6. 로그인 토큰
 
 
 ## 4. 🚀테스트
