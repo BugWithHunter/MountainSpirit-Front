@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 public interface ReportCommandRepository extends JpaRepository<ReportCommandEntity, Long> {
@@ -21,4 +22,9 @@ public interface ReportCommandRepository extends JpaRepository<ReportCommandEnti
 
 
     long countByReportedIdAndSuspensionCycleAndCategoryIdAndIsAccepted(Long reportedId, int suspensionCycle, Long categoryId, ReportIsAccepted reportIsAccepted);
+
+    long countByReportedIdAndCategoryIdAndIsAccepted(Long reportedId, Long categoryId, ReportIsAccepted reportIsAccepted);
+
+
+    long countByReportedIdAndCategoryIdAndReportDateGreaterThanAndIsAccepted(Long reportedId, Long categoryId, LocalDateTime endDate, ReportIsAccepted reportIsAccepted);
 }
