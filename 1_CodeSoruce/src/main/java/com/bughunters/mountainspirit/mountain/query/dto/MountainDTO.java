@@ -2,6 +2,8 @@ package com.bughunters.mountainspirit.mountain.query.dto;
 
 import lombok.*;
 
+import java.time.LocalDateTime;
+
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
@@ -14,8 +16,9 @@ public class MountainDTO {
     private String addrNm;
     private double lat;
     private double lot;
-    private java.sql.Date crtrDt;
+    private double aslAltide;
+    private LocalDateTime crtrDt;
     private long mtnCd;
     private String stampPath;
-    private java.sql.Date stampUpdateDate;
+    private LocalDateTime stampUpdateDate;
 }

@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 @ToString
 public class CourseDTO {
     private String poiId;
-    private java.sql.Date createDate;
+    private LocalDateTime createDate;
     private double lat;
     private double lot;
     private double aslAltide;
@@ -30,9 +30,9 @@ public class CourseDTO {
     private String orgnSgnpstDstn2DrcntCd;
     private String orgnSgnpstDstn3DrcntCd;
     private String orgnSgnpstDstn4DrcntCd;
-    private java.sql.Date crtrDt;
+    private LocalDateTime crtrDt;
     private String stampPath;
-    private java.sql.Date stampUpdateDate;
+    private LocalDateTime stampUpdateDate;
     private String orgnPlaceTpeCd;
     private String frtrlId;
     private Long rankId;
