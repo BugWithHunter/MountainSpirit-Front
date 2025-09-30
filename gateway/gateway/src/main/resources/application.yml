@@ -12,16 +12,23 @@ spring:
   cloud:
     gateway:
       routes:
+        - id: main-client
+          uri: lb://MAIN-CLIENT
+          predicates:
+            - Path=/main-client/**
+          filters:
+            - RewritePath=/main-client/(?<segment>.*), /$\{segment}
+
+        - id: member-client
+          uri: lb://MEMBER-CLIENT
+          predicates:
+            - Path=/member-client/**
+          filters:
+            - RewritePath=/member-client/(?<segment>.*), /$\{segment}
+
         - id: test-client
           uri: lb://TEST-CLIENT
           predicates:
             - Path=/test-client/**
           filters:
             - RewritePath=/test-client/(?<segment>.*), /$\{segment}
-
-        - id: service-client
-          uri: lb://SERVICE-CLIENT
-          predicates:
-            - Path=/service-client/**
-          filters:
-            - RewritePath=/service-client/(?<segment>.*), /$\{segment}

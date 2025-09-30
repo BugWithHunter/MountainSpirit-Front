@@ -214,6 +214,15 @@ public class MemberServiceImpl implements MemberService {
         loginRecordRepository.save(loginRecord);
     }
 
+    // Member id 를 받아 crew id 삽입
+    @Override
+    public void registCrewId(long crewId, long cumId) {
+        Member member = memberRepository.findById(crewId).orElse(null);
+        if(member == null)
+            return;
+        member.setCrewId(crewId);
+    }
+
 
     // 회원 가입 제한 사항 확인, 이메일 중복, 이미 가입한 회원, 블랙리스트 등등
     private ResponseSignUpDTO checkBeforeSignUp(RequestMemberDTO memberDTO) throws IllegalArgumentException {
