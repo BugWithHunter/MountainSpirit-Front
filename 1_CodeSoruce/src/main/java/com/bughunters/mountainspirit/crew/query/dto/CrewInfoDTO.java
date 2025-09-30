@@ -16,3 +16,4 @@ public class CrewInfoDTO {
     private String crewIntro;
     private long crewRankGauge;
 }
+
