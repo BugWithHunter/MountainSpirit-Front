@@ -32,7 +32,9 @@
 ### 3-2. 물리 모델링
 <img width="5800" height="2842" alt="Image" src="https://github.com/user-attachments/assets/355e9759-ce68-4b22-8df7-ee1539663bb7" />
 
-### 3-3. API 명세
+### 3-3. MSA 아키텍처
+
+### 3-4. API 명세
 <details>
   <summary>user service</summary>
 </details>
@@ -40,7 +42,7 @@
   <summary>core service</summary>
 </details>
 
-### 3-4. 로그인 토큰
+### 3-5. 로그인 토큰
 
 
 ## 4. 테스트
