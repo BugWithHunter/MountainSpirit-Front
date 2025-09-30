@@ -21,5 +21,7 @@ public interface MemberService {
 
     void updateCompleteLogin(RequsetloginHisotry loginHistory);
 
+    void registCrewId(long crewId, long cumId);
+
     boolean updateStatus(Long id, ReportMemberUpdateDTO dto);
 }
