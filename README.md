@@ -41,6 +41,7 @@
 
 ## 3. 🔧설계
 ### 3-1. 논리 모델링
+<img width="2156" height="2044" alt="image" src="https://github.com/user-attachments/assets/db46cfd4-8ed1-441e-b392-2aebfa9c6783" />
 
 ### 3-2. 물리 모델링
 <img width="5800" height="2842" alt="Image" src="https://github.com/user-attachments/assets/355e9759-ce68-4b22-8df7-ee1539663bb7" />
