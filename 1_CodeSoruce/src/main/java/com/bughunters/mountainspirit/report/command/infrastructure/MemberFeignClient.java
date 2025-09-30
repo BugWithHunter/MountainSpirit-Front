@@ -13,8 +13,8 @@ public interface MemberFeignClient {
     ReportMemberDTO getMemberInfo(@PathVariable("id") Long id);
 
     // 회원 상태 업데이트 (banCnt, memStsId)
-    @PostMapping("/member/report/update-status/{id}")
-    void updateMemberStatus(@PathVariable("id") Long id,
+    @PostMapping("/member/report/update-status/{memberId}")
+    void updateMemberStatus(@PathVariable("memberId") Long memberId,
                             @RequestBody ReportMemberUpdateDTO dto);
 
 }

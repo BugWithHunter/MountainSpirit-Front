@@ -142,10 +142,13 @@ public class MemberController {
         return ResponseEntity.ok().body(dto);
     }
 
-    @PostMapping("/report/update-status/{id}")
-    public ResponseEntity<Void> updateMemberStatus(@PathVariable Long id,
+    @PostMapping("/report/update-status/{memberId}")
+    public ResponseEntity<Void> updateMemberStatus(@PathVariable Long memberId,
                                                    @RequestBody ReportMemberUpdateDTO dto) {
-        boolean updated = memberService.updateStatus(id, dto);
+        if (!memberId.equals(dto.getMemberId())) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+        boolean updated = memberService.updateStatus(memberId, dto);
         if (!updated) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }

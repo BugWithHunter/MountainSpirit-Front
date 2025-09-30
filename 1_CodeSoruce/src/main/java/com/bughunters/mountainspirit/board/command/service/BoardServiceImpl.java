@@ -60,13 +60,6 @@ public class BoardServiceImpl implements BoardService {
 
         List<Map<String, Object>> files = multiFileUpload(multiFiles, board);
         insertInBoardImageEntity(files);
-        // 하나의 트랜잭션이라 오류나는건지? 위의 내용과 분리되는 트랜잭션을 만들어야 하는지?
-//        for (int i = 0; i < boardDTO.getMultiFiles().size(); i++) {
-//            boardDTO.getMultiFiles().get(i).setPostId(board.getId());
-//            BoardImage boardImage = modelMapper.map(boardDTO.getBoardImages().get(i), BoardImage.class);
-//            boardImageRepository.save(boardImage);
-//        }
-
     }
 
     @Override
