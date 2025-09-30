@@ -47,7 +47,6 @@
 <img width="5800" height="2842" alt="Image" src="https://github.com/user-attachments/assets/355e9759-ce68-4b22-8df7-ee1539663bb7" />
 
 ### 3-3. MSA 아키텍처
-<img width="1165" height="680" alt="image" src="https://github.com/user-attachments/assets/abdd7984-7b0a-4039-aec8-d1c5a189ba31" />
 
 
 ### 3-4. API 명세
