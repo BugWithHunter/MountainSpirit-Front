@@ -2,7 +2,7 @@
 
 ## 팀원
 
-|<img width="150" height="150" alt="Image" src="" /> |<img width="150" height="150" alt="Image" src="" /> |<img width="150" height="150" alt="Image" src="" /> |<img width="150" height="150" alt="Image" src="" /> | <img width="150" height="150" alt="Image" src="" />|
+|<img width="150" height="150" alt="Image" src="https://github.com/user-attachments/assets/3200b60c-20c6-495d-87b8-a4fadff9827a" /> | <img width="150" height="150" alt="Image" src="https://github.com/user-attachments/assets/a2ad6646-42f2-48ef-bc32-5d8de4721925" /> | <img width="150" height="150" alt="Image" src="https://github.com/user-attachments/assets/6bb12f82-7f31-4383-825e-ba5c7e5e64be" /> |<img width="150" height="150" alt="Image" src="https://github.com/user-attachments/assets/10fa156a-1f3f-4d71-a2d7-944723c7c26d" /> | <img width="150" height="150" alt="Image" src="https://github.com/user-attachments/assets/ef2e5d74-09ed-4d47-b1b7-34ae8a607d19" />|
 |:---:|:---:|:---:|:---:|:---:|
 |강형규|강지현|정건일|윤서진|민수현|
 
