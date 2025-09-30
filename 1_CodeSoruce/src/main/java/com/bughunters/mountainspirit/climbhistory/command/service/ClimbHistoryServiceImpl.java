@@ -1,9 +1,9 @@
 package com.bughunters.mountainspirit.climbhistory.command.service;
 
 import com.bughunters.mountainspirit.climbhistory.command.dto.FindClimbCheckDTO;
-import com.bughunters.mountainspirit.member.command.dto.RequestModifyStatusOfMemberDTO;
-import com.bughunters.mountainspirit.member.command.dto.ResponseStatusDTO;
-import com.bughunters.mountainspirit.member.command.service.MemberService;
+import com.bughunters.mountainspirit.climbhistory.command.infrastructure.FeignClientClimbHisotryToMember;
+import com.bughunters.mountainspirit.climbhistory.command.dto.RequestModifyStatusOfMemberDTO;
+import com.bughunters.mountainspirit.climbhistory.command.dto.ResponseStatusDTO;
 import com.bughunters.mountainspirit.memberrank.command.dto.RequestRankDTO;
 import com.bughunters.mountainspirit.climbhistory.command.dto.RequestSubmmitClimbMountainDTO;
 import com.bughunters.mountainspirit.climbhistory.command.entity.ClimbCheck;
@@ -37,7 +37,7 @@ public class ClimbHistoryServiceImpl implements ClimbHistoryService {
     private final ClimbCheckRepository climbCheckRepository;
     private final ClimbRecordRepository climbRecordRepository;
     private final StampService stampService;
-    private final MemberService memberService;
+    private final FeignClientClimbHisotryToMember memberService;
     private final MemberRankService memberRankService;
 
     public ClimbHistoryServiceImpl(ClimbHistoryQueryServiceImpl climbHistoryQueryServiceImpl
@@ -45,7 +45,7 @@ public class ClimbHistoryServiceImpl implements ClimbHistoryService {
             , ClimbCheckRepository climbCheckRepository
             , ClimbRecordRepository climbRecordRepository
             , StampService stampService
-            , MemberService memberService
+            , FeignClientClimbHisotryToMember memberService
             , MemberRankService memberRankService) {
         this.climbHistoryQueryServiceImpl = climbHistoryQueryServiceImpl;
         this.modelMapper = modelMapper;

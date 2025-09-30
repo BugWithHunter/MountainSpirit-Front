@@ -25,7 +25,7 @@ public class MemberController {
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
     public MemberController(MemberService memberService
-    , BCryptPasswordEncoder bCryptPasswordEncoder) {
+            , BCryptPasswordEncoder bCryptPasswordEncoder) {
         this.memberService = memberService;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
     }
@@ -34,11 +34,11 @@ public class MemberController {
     public String test(HttpServletRequest request, HttpServletResponse response) {
 
 
-        return"";
+        return "";
     }
 
     @GetMapping("/member-info/{id}")
-    public Member memberTest(@PathVariable Long id ) {
+    public Member memberTest(@PathVariable Long id) {
         Member member = memberService.getTest(id);
         return member;
     }
@@ -100,4 +100,12 @@ public class MemberController {
         return ResponseEntity.ok()
                 .body(responseMessage);
     }
+
+    @PutMapping("member/memberStatus")
+    ResponseStatusDTO modifyStatusAfterClimbMountian(
+            @RequestBody RequestModifyStatusOfMemberDTO modifyStatusOfMemberDTO) {
+        ResponseStatusDTO responseStatusDTO = memberService.modifyStatusAfterClimbMountian(modifyStatusOfMemberDTO);
+        return responseStatusDTO;
+    }
+
 }
