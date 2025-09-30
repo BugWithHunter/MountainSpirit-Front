@@ -1,9 +1,7 @@
 package com.bughunters.mountainspirit.stamp.command.service;
 
-import com.bughunters.mountainspirit.stamp.command.dto.ResponseRankDTO;
 import com.bughunters.mountainspirit.memberrank.command.service.MemberRankService;
 import com.bughunters.mountainspirit.mountain.command.service.MountainService;
-import com.bughunters.mountainspirit.memberrank.command.dto.RequestRankDTO;
 import com.bughunters.mountainspirit.stamp.command.dto.RequestSubmmitClimbMountainDTO;
 import com.bughunters.mountainspirit.stamp.command.dto.StampWithCourseAndMountainDTO;
 import com.bughunters.mountainspirit.stamp.command.entity.CourseStamp;
@@ -23,18 +21,15 @@ public class StampServiceImpl implements StampService {
     private final CourseStampRepository courseStampRepository;
     private final MountainStampRepository mountainStampRepository;
     private final MountainService mountainService;
-    private final MemberRankService memberRankService;
     private final ModelMapper modelMapper;
 
     public StampServiceImpl(CourseStampRepository courseStampRepository
             , MountainStampRepository mountainStampRepository
             , MountainService mountainService
-            , MemberRankService memberRankService
             , ModelMapper modelMapper) {
         this.courseStampRepository = courseStampRepository;
         this.mountainStampRepository = mountainStampRepository;
         this.mountainService = mountainService;
-        this.memberRankService = memberRankService;
         this.modelMapper = modelMapper;
     }
 
