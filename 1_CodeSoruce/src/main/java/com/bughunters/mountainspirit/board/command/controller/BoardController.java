@@ -4,7 +4,6 @@ import com.bughunters.mountainspirit.board.command.dto.BoardDTO;
 import com.bughunters.mountainspirit.board.command.dto.BoardModifyDTO;
 import com.bughunters.mountainspirit.board.command.dto.RequestRegistPostDTO;
 import com.bughunters.mountainspirit.board.command.dto.ResponseRegistPostDTO;
-import com.bughunters.mountainspirit.board.command.entity.BoardImage;
 import com.bughunters.mountainspirit.board.command.service.BoardService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,7 +59,7 @@ public class BoardController {
     }
 
     @DeleteMapping("/modify-boardimg/{id}/delete")
-    public void deletePostById(@PathVariable long id) {
+    public void deleteBoardImage(@PathVariable long id) {
         boardService.deleteBoardImage(id);   // id는 이미지id임
     }
 
