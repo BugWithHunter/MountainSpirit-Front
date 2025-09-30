@@ -51,9 +51,13 @@
 ### 3-4. API 명세
 <details>
   <summary>Member Service</summary>
+ <img width="1610" height="1756" alt="image" src="https://github.com/user-attachments/assets/6370c764-00da-425b-88a6-a8724ffcba24" />
+
 </details>
 <details>
   <summary>Main Service</summary>
+ <img width="1542" height="1760" alt="image" src="https://github.com/user-attachments/assets/b95cb5d4-8c39-426e-9c19-5f1eba985b5b" />
+
 </details>
 
 ### 3-5. 로그인 토큰
