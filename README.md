@@ -1,4 +1,4 @@
-# 산신령🌳
+# 🌳산신령🌳
 
 ## 팀원
 
@@ -21,12 +21,12 @@
 
 [7. 동료 평가](#7-동료-평가)
 
-## 1. 프로젝트 소개⛰️
+## 1. 🍃프로젝트 소개
 산에 대한 정보 얻기 번거로움
 
-## 2. DDD
+## 2. 📄DDD
 
-## 3. 설계
+## 3. 🔧설계
 ### 3-1. 논리 모델링
 
 ### 3-2. 물리 모델링
@@ -45,7 +45,7 @@
 ### 3-5. 로그인 토큰
 
 
-## 4. 테스트
+## 4. 🚀테스트
 
 ### 4-1. 단위 테스트
 <details>
@@ -76,7 +76,7 @@
   </details>
 </details>
 
-## 5. 문서
+## 5. 📗문서
 
 ### 5-1. 요구사항 명세서
 <a href="https://docs.google.com/spreadsheets/d/1VBYRhzfoiGNax0MA7ngQUardj3lY4btuP-MUCo3M21k/edit?usp=sharing" target="_blank">🪝요구사항 명세서</a>
@@ -86,7 +86,7 @@
 <a href="https://docs.google.com/spreadsheets/d/1VBYRhzfoiGNax0MA7ngQUardj3lY4btuP-MUCo3M21k/edit?usp=sharing" target="_blank">📆WBS</a>
 <img width="1142" height="554" alt="Image" src="https://github.com/user-attachments/assets/3b304632-4b70-4566-adee-c7e18e61afee" />
 
-## 6. 기술 스택
+## 6. 🛸기술 스택
 - DB
 
 ![MariaDB](https://img.shields.io/badge/MariaDB-003545?style=for-the-badge&logo=mariadb&logoColor=white)
@@ -101,7 +101,7 @@
 
 ![Postman](https://img.shields.io/badge/Postman-FF6C37?style=for-the-badge&logo=postman&logoColor=white)
 
-## 7. 동료 평가
+## 7. ✨동료 평가
 - 강형규
 
 |이름|평가|
