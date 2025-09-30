@@ -142,7 +142,7 @@ public class MemberController {
         return ResponseEntity.ok().body(dto);
     }
 
-    @PatchMapping("/report/update-status/{id}")
+    @PostMapping("/report/update-status/{id}")
     public ResponseEntity<Void> updateMemberStatus(@PathVariable Long id,
                                                    @RequestBody ReportMemberUpdateDTO dto) {
         boolean updated = memberService.updateStatus(id, dto);
