@@ -1,5 +1,6 @@
 package com.bughunters.mountainspirit.report.command.controller;
 
+import com.bughunters.mountainspirit.report.command.dto.ReportIsAccepted;
 import com.bughunters.mountainspirit.report.command.dto.ReportRequestCommandDTO;
 import com.bughunters.mountainspirit.report.command.dto.ReportResponseCommandDTO;
 import com.bughunters.mountainspirit.report.command.service.ReportCommandService;
@@ -19,8 +20,20 @@ public class ReportCommandController {
     }
 
     @PostMapping("")
-    public ResponseEntity<ReportResponseCommandDTO> createReport(@RequestBody ReportRequestCommandDTO reportRequestCommandDTO){
+    public ResponseEntity<ReportResponseCommandDTO> createReport(
+            @RequestBody ReportRequestCommandDTO reportRequestCommandDTO){
         ReportResponseCommandDTO reportResponseCommandDTO = reportCommandService.createReport(reportRequestCommandDTO);
         return ResponseEntity.ok().body(reportResponseCommandDTO);
+    }
+
+    // report테이블 update id는 report테이블의 pk
+    @PatchMapping("/{id}")
+    public ResponseEntity<ReportResponseCommandDTO> updateReportStatus(
+            @PathVariable Long id,
+            @RequestBody ReportIsAccepted status) {
+
+        // 서비스 호출
+        ReportResponseCommandDTO updatedReport = reportCommandService.updateReportStatus(id, status);
+        return ResponseEntity.ok().body(updatedReport);
     }
 }

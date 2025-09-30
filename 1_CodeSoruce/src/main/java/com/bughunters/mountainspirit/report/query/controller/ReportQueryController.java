@@ -6,10 +6,7 @@ import com.bughunters.mountainspirit.report.query.service.ReportQueryService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -39,7 +36,16 @@ public class ReportQueryController {
             log.debug("searchReports result size={}", selectReports.size());
             return ResponseEntity.ok().body(selectReports);
         }
+    }
 
+    // 회원 한 명의 신고 조회: /reports/{id}
+    @GetMapping("/{id}")
+    public ResponseEntity<List<ReportQueryDTO>> getReportsByMember(
+            @PathVariable("id") Long memberId
+    ){
+        List<ReportQueryDTO> reports = reportQueryService.selectReportsByMemberId(memberId);
+        log.debug("memberId={} reports size={}", memberId, reports.size());
+        return ResponseEntity.ok().body(reports);
     }
 
 }

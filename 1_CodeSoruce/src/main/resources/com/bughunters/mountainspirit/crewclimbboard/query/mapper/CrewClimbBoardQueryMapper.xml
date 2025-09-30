@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bughunters.mountainspirit.crewclimbboard.query.mapper.CrewClimbBoardQueryMapper">
+    <resultMap id="crewClimbBoardResultMap" type="com.bughunters.mountainspirit.crewclimbboard.query.dto.CrewClimbBoardDTO">
+        <id property="id" column="id"/>
+        <result property="crewClimbStartDate" column="crewClimbStartDate"/>
+        <result property="crewClimbRecruitStartDate" column="crewClimbRecruitStartDate"/>
+        <result property="crewClimbRecruitEndDate" column="crewClimbRecruitEndDate"/>
+        <result property="crewClimbContent" column="crewClimbContent"/>
+        <result property="crewClimbIsDeleted" column="crewClimbIsDeleted"/>
+        <result property="crewClimbAmountOfPeople" column="crewClimbAmountOfPeople"/>
+        <result property="crewClimbIsEnded" column="crewClimbIsEnded"/>
+        <result property="crewId" column="crewId"/>
+        <result property="frtrlId" column="frtrlId"/>
+        <result property="crewMemberId" column="crewMemberId"/>
+    </resultMap>
+    <resultMap id="findOneCrewClimbBoardByCrewClimbBoardIdResultMap" type="com.bughunters.mountainspirit.crewclimbboard.query.dto.CrewClimbBoardAndMountainAndCrewMemberDTO">
+        <id property="id" column="id"/>
+        <result property="crewClimbStartDate" column="crewClimbStartDate"/>
+        <result property="crewClimbRecruitStartDate" column="crewClimbRecruitStartDate"/>
+        <result property="crewClimbRecruitEndDate" column="crewClimbRecruitEndDate"/>
+        <result property="crewClimbContent" column="crewClimbContent"/>
+        <result property="crewClimbIsDeleted" column="crewClimbIsDeleted"/>
+        <result property="crewClimbAmountOfPeople" column="crewClimbAmountOfPeople"/>
+        <result property="crewClimbIsEnded" column="crewClimbIsEnded"/>
+        <result property="crewId" column="crewId"/>
+        <association property="mountain" javaType="com.bughunters.mountainspirit.crewclimbboard.query.dto.MountainDTO">
+            <id property="frtrlId" column="frtrlId"/>
+            <result property="frtrlNm" column="frtrlNm"/>
+        </association>
+        <association property="member" javaType="com.bughunters.mountainspirit.crewclimbboard.query.dto.MemberDTO">
+            <id property="id" column="id"/>
+            <result property="nickName" column="nickName"/>
+        </association>
+    </resultMap>
+    <select id="findAllCrewClimbBoardByCrewId" parameterType="_long" resultMap="crewClimbBoardResultMap">
+        SELECT
+               a.id
+             , a.crewClimbStartDate
+             , a.crewClimbRecruitStartDate
+             , a.crewClimbRecruitEndDate
+             , a.crewClimbContent
+             , a.crewClimbIsDeleted
+             , a.crewClimbAmountOfPeople
+             , a.crewClimbIsEnded
+             , a.crewId
+             , a.frtrlId
+             , a.crewMemberId
+          FROM CrewClimbBoard a
+         WHERE crewId = #{crewId}
+           AND crewClimbIsDeleted = 'N'
+    </select>
+    <select id="findOneCrewClimbBoardByCrewClimbBoardId" parameterType="_long" resultMap="findOneCrewClimbBoardByCrewClimbBoardIdResultMap">
+        SELECT
+               a.id
+             , a.crewClimbStartDate
+             , a.crewClimbRecruitStartDate
+             , a.crewClimbRecruitEndDate
+             , a.crewClimbContent
+             , a.crewClimbIsDeleted
+             , a.crewClimbAmountOfPeople
+             , a.crewClimbIsEnded
+             , a.crewId
+             , b.frtrlId
+             , b.frtrlNm
+             , d.id
+             , d.nickName
+        FROM CrewClimbBoard a JOIN Mountain b ON a.frtrlId = b.frtrlId
+                              JOIN CrewMember c ON a.crewMemberId = c.id
+                              JOIN Member d ON c.cumId = d.id
+        WHERE a.id = #{crewClimbBoardId}
+          AND a.crewClimbIsDeleted = 'N'
+    </select>
+
+</mapper>

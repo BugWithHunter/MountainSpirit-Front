@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bughunters.mountainspirit.member.query.mapper.MemberQueryRepository">
+    <resultMap id="blackListResultMap" type="com.bughunters.mountainspirit.member.query.dto.BlackListDTO">
+        <id property="id" column="id"/>
+        <result property="createDate" column="createDate"/>
+        <result property="adminId" column="adminId"/>
+        <result property="memberId" column="memberId"/>
+    </resultMap>
+
+    <select id="selectBlackListByMember" parameterType="_long" resultMap="blackListResultMap">
+        SELECT
+               a.id
+             , a.createDate
+             , a.adminId
+             , a.memberId
+          FROM Blacklist a
+         WHERE a.memberId = #{id}
+    </select>
+</mapper>

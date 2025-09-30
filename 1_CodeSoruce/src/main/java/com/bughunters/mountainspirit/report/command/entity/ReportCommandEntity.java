@@ -1,5 +1,6 @@
 package com.bughunters.mountainspirit.report.command.entity;
 
+import com.bughunters.mountainspirit.report.command.dto.ReportIsAccepted;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -30,8 +31,9 @@ public class ReportCommandEntity {
     @Column(name = "reason")
     private String reason;
 
+    @Enumerated(EnumType.STRING)
     @Column(length = 1, name = "isAccepted")
-    private String isAccepted = "N";
+    private ReportIsAccepted isAccepted = ReportIsAccepted.N;
 
     @Column(name = "reportedId")
     private Long reportedId;

@@ -155,7 +155,8 @@ public class MemberRankServiceImpl implements MemberRankService {
                     memberRankQueryService.selectLotsOfClimbingByMountain(requestRankDTO.getFrtrlId());
 
             // 산 도장이 있고 내가 가장 많은 등산 횟수 보유자
-            if (higherClimbers.get(0).getCumId().equals(requestRankDTO.getCumId())) {
+            if (higherClimbers.get(0).getCumId().equals(requestRankDTO.getCumId())
+            && myRank.getMtRankId() != maxRank) {
 
                 myRank.setMtRankId(maxRank);
                 //산신령 등급으로 등급 업

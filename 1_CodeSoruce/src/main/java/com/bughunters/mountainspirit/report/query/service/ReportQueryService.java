@@ -7,4 +7,5 @@ import java.util.List;
 public interface ReportQueryService {
     List<ReportQueryDTO> selectAllReport();
     List<ReportQueryDTO> selectReportsByTypeAndStatus(String reportType, String isAccepted);
+    List<ReportQueryDTO> selectReportsByMemberId(Long memberId);
 }

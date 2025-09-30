@@ -1,6 +1,7 @@
 package com.bughunters.mountainspirit.report.command.service;
 
 import com.bughunters.mountainspirit.member.command.entity.Member;
+import com.bughunters.mountainspirit.report.command.dto.ReportIsAccepted;
 import com.bughunters.mountainspirit.report.command.dto.ReportRequestCommandDTO;
 import com.bughunters.mountainspirit.report.command.dto.ReportResponseCommandDTO;
 import com.bughunters.mountainspirit.report.command.entity.*;
@@ -48,7 +49,7 @@ public class ReportCommandServiceImpl implements ReportCommandService {
 
         Member member = reportMemberCommandRepository
                 .findById(reportRequestCommandDTO.getReportedId())
-                .orElseThrow(() -> new RuntimeException("Member not found"));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "회원을 찾을 수 없습니다"));
 
         // 회원 상태 체크: 정지(3), 블랙리스트(5)면 신고 불가
         if (member.getMemStsId() != null && (member.getMemStsId() == 3L || member.getMemStsId() == 5L)) {
@@ -62,55 +63,75 @@ public class ReportCommandServiceImpl implements ReportCommandService {
         ReportCommandEntity rce = modelMapper.map(reportRequestCommandDTO, ReportCommandEntity.class);
         rce.setReportDate(LocalDateTime.now());
         rce.setSuspensionCycle(suspensionCycle);
-        rce.setIsAccepted("N");
+        rce.setIsAccepted(ReportIsAccepted.N);
 
         // 현재 코드는 생성되는 기준에서 다른 테이블의 생성에 코드가 작성되었는데
         // 추후에 상태가 변경되었을 때를 기준으로 정지테이블과 블랙리스트 테이블 생성 예정
 
         reportCommandRepository.save(rce);
 
-        // ReportCategory 가져오기
-        ReportCategoryCommandEntity rcce = reportCategoryCommandRepository
-                .findById(reportRequestCommandDTO.getCategoryId())
-                .orElseThrow(() -> new RuntimeException("Category not found"));
+        //응답
+        ReportResponseCommandDTO rrcdto = modelMapper.map(rce, ReportResponseCommandDTO.class);
+        rrcdto.setResult("PENDING");
+        return rrcdto;
+    }
 
-        String result = "NORMAL";
-        
-        if(rcce.getCountStandard() == 0) {
-            // 블랙리스트 처리
-            BlacklistCommandEntity bce =
-                    BlacklistCommandEntity.builder()
-                            .createDate(LocalDateTime.now())
-                            .memberId(reportRequestCommandDTO.getReportedId())
-                            .build();
-            blacklistCommandRepository.save(bce);
+    @Override
+    @Transactional
+    public ReportResponseCommandDTO updateReportStatus(Long reportedId, ReportIsAccepted status) {
+        // report 조회
+        ReportCommandEntity report = reportCommandRepository.findById(reportedId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "신고를 찾을 수 없습니다"));
+
+        // 상태 업데이트
+        report.setIsAccepted(status);
+        reportCommandRepository.save(report);
+
+        String result = "UPDATED";
+
+        if (status == ReportIsAccepted.Y) {
+            // 신고 승인일 때만 제재 처리
+            Member member = reportMemberCommandRepository.findById(report.getReportedId())
+                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "회원을 찾을 수 없습니다"));
+
+            ReportCategoryCommandEntity rcce = reportCategoryCommandRepository
+                    .findById(report.getCategoryId())
+                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "카테고리를 찾을 수 없습니다"));
+
+            long instanceCntNum = reportCommandRepository.countByReportedIdAndSuspensionCycleAndCategoryIdAndIsAccepted(
+                    report.getReportedId(),
+                    report.getSuspensionCycle(),
+                    report.getCategoryId(),
+                    ReportIsAccepted.Y
+        );
+
+        // 블랙리스트 조건 확인
+        if (rcce.getCountStandard() == 0) {
+            createBlacklist(member, report);
+            result = "BLACKLIST";
+        } else if (rcce.getCountStandard() == 1 && instanceCntNum >= 2) {
+            createBlacklist(member, report);
+            result = "BLACKLIST";
+        } else if (rcce.getCountStandard() == 2 && instanceCntNum >= 3) {
+            createBlacklist(member, report);
             result = "BLACKLIST";
         }
 
-        long instanceCntNum = reportCommandRepository.countByReportedIdAndSuspensionCycleAndCategoryId(
-                reportRequestCommandDTO.getReportedId(), suspensionCycle, reportRequestCommandDTO.getCategoryId()
-        );
-
-        if (instanceCntNum >= rcce.getCountStandard()) {
-            createBan(member ,reportRequestCommandDTO);
-            result = "BAN";
-        }
-                
-        List<ReportCommandEntity> rcelist = reportCommandRepository
-                .findByReportedIdAndSuspensionCycle(
-                        reportRequestCommandDTO.getReportedId(), suspensionCycle
-                );
-
-        if (rcelist.size() == 10) {
-            createBan(member, reportRequestCommandDTO);
-            result = "BAN";
+        // 블랙리스트가 아닌 경우 항상 BAN 적용
+        if (member.getMemStsId() == null || member.getMemStsId() != 5L) {
+            createBan(member, modelMapper.map(report, ReportRequestCommandDTO.class));
+            if (!"BLACKLIST".equals(result)) {
+                result = "BAN";
+                }
+            }
         }
 
-        ReportResponseCommandDTO rrcdto = modelMapper.map(rce, ReportResponseCommandDTO.class);
+        ReportResponseCommandDTO rrcdto = modelMapper.map(report, ReportResponseCommandDTO.class);
         rrcdto.setResult(result);
-
         return rrcdto;
     }
+
+
 
     private void createBan(Member member, ReportRequestCommandDTO rrdto) {
         int banCount = banCommandRepository.countByUserId(rrdto.getReportedId()) + 1;
@@ -131,17 +152,7 @@ public class ReportCommandServiceImpl implements ReportCommandService {
             endDate = startDate.plusDays(30);
         }  else if (banCount >= 4) {
             // 밴 인스턴스 횟수가 4회 이상일 때 블랙리스트 테이블 생성
-            BlacklistCommandEntity blcEntity = BlacklistCommandEntity.builder()
-                    .createDate(LocalDateTime.now())
-                    .memberId(rrdto.getReportedId())
-                    .build();
-            blacklistCommandRepository.save(blcEntity);
-
-            // 회원 banCnt도 증가
-            member.setBanCnt(member.getBanCnt() + 1);
-            // 회원 블랙리스트 상태로 변경 (ReportCategory 적용은 추후개선)
-            member.setMemStsId(5L);
-            reportMemberCommandRepository.save(member);
+            createBlacklist(member, modelMapper.map(rrdto, ReportCommandEntity.class));
             return;
         }
 
@@ -155,6 +166,21 @@ public class ReportCommandServiceImpl implements ReportCommandService {
         // 회원 banCnt도 증가
         member.setBanCnt(member.getBanCnt() + 1);
         member.setMemStsId(3L);
+        reportMemberCommandRepository.save(member);
+    }
+
+    private void createBlacklist(Member member, ReportCommandEntity report) {
+        if (member.getMemStsId() != null && member.getMemStsId() == 5L) {
+            return; // 이미 블랙리스트 상태면 중복 방지
+        }
+
+        BlacklistCommandEntity bce = BlacklistCommandEntity.builder()
+                .createDate(LocalDateTime.now())
+                .memberId(report.getReportedId())
+                .build();
+        blacklistCommandRepository.save(bce);
+
+        member.setMemStsId(5L);
         reportMemberCommandRepository.save(member);
     }
 }
