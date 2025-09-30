@@ -71,6 +71,49 @@
   
 <details>
   <summary>산, 코스 테스트</summary>
+ <details>
+  <summary>🐢산 & 코스 전체 조회, 검색 조회</summary>
+  - 산 전체 조회
+  - 산 검색 조회
+  - 코스 전체 조회
+  - 코스 검색 조회
+ </details>
+ <details>
+  <summary>🐢산 후기 조회/등록/수정/삭제</summary>
+  - 산 후기 조회
+  - 산 후기 등록
+  - 산 후기 수정
+  - 산 후기 삭제
+ </details>
+ <details>
+  <summary>🐢코스 후기 조회/등록/수정/삭제</summary>
+  - 코스 후기 조회
+  - 코스 후기 등록
+  - 코스 후기 수정
+  - 코스 후기 삭제
+ </details>
+ <details>
+  <summary>🐢산 북마크 조회/등록/삭제</summary>
+  - 산 북마크 조회
+  - 산 북마크 등록
+  - 산 북마크 삭제
+ </details>
+ <details>
+  <summary>🐢코스 북마크 조회/등록/삭제</summary>
+  - 코스 북마크 조회
+  
+  - 코스 북마크 등록
+   
+  - 코스 북마크 삭제
+
+ </details>
+ <details>
+  <summary>🐢산 & 코스 도장 조회</summary>
+  - 산 도장 조회
+  
+  - 코스 도장 조회
+
+ </details>
 </details>
 
 <details>
