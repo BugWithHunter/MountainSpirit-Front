@@ -101,10 +101,13 @@ public class MemberController {
                 .body(responseMessage);
     }
 
-    @PutMapping("member/memberStatus")
+    @PutMapping("memberStatus")
     ResponseStatusDTO modifyStatusAfterClimbMountian(
             @RequestBody RequestModifyStatusOfMemberDTO modifyStatusOfMemberDTO) {
+        System.out.println("modifyStatusOfMemberDTO = " + modifyStatusOfMemberDTO);
+        System.out.println("modifyStatusAfterClimbMountian 들어옴 ");
         ResponseStatusDTO responseStatusDTO = memberService.modifyStatusAfterClimbMountian(modifyStatusOfMemberDTO);
+        System.out.println("modifyStatusAfterClimbMountian 서비스까지 실행함 ");
         return responseStatusDTO;
     }
 
