@@ -35,42 +35,42 @@ public class JwtTokenFilter extends AbstractGatewayFilterFactory<JwtTokenFilter.
     @Override
     public GatewayFilter apply(Config config) {
         return ((exchange, chain) -> {
-
-
             // 헤더 추출
             ServerHttpRequest request = exchange.getRequest();
+            String path = request.getURI().getPath();
 
-            if (!request.getHeaders().containsKey(HttpHeaders.AUTHORIZATION)) {
-                return onError(exchange, "No authorization header", HttpStatus.UNAUTHORIZED);    // HttpStatus.UNAUTHORIZED = 401에러
+            if (!path.equals("/login")) {
+                if (!request.getHeaders().containsKey(HttpHeaders.AUTHORIZATION)) {
+                    return onError(exchange, "No authorization header", HttpStatus.UNAUTHORIZED);    // HttpStatus.UNAUTHORIZED = 401에러
+                }
+                log.info("넘어온 auth 값 : {}", request.getHeaders().get(HttpHeaders.AUTHORIZATION));
+
+                // 토큰 추출
+                String bearerToken = request.getHeaders().get(HttpHeaders.AUTHORIZATION).get(0);
+                String jwt = bearerToken.substring(7);
+                String subject = null;
+
+                // sub 클레임 추출
+                /* 설명. 기본적으로 우리 서버에서 만들었고, 만료기간이 지나지 않았으며,
+                 *      토큰 안에 'sub'라는 등록된 클레임이 존재하는지 확인
+                 * */
+                try {
+                    subject = Jwts.parser()
+                            .setSigningKey(env.getProperty("token.secret"))
+                            .parseClaimsJws(jwt)
+                            .getBody()
+                            .getSubject();
+                } catch (Exception e) {
+                    return onError(exchange, "No authorization header", HttpStatus.UNAUTHORIZED);
+                }
+                log.info("sub 값 : {}", subject);
+
+                /* 설명. 토큰의 payload에 subject 클레임 자체가 없거나 내용물이 없는지 확인 */
+                if (subject == null || subject.isEmpty()) {
+                    return onError(exchange, "No authorization header", HttpStatus.UNAUTHORIZED);
+                }
+
             }
-            log.info("넘어온 auth 값 : {}", request.getHeaders().get(HttpHeaders.AUTHORIZATION));
-
-            // 토큰 추출
-            String bearerToken = request.getHeaders().get(HttpHeaders.AUTHORIZATION).get(0);
-            String jwt = bearerToken.substring(7);
-            String subject = null;
-
-            // sub 클레임 추출
-            /* 설명. 기본적으로 우리 서버에서 만들었고, 만료기간이 지나지 않았으며,
-             *      토큰 안에 'sub'라는 등록된 클레임이 존재하는지 확인
-             * */
-            try {
-                subject = Jwts.parser()
-                        .setSigningKey(env.getProperty("token.secret"))
-                        .parseClaimsJws(jwt)
-                        .getBody()
-                        .getSubject();
-            } catch (Exception e) {
-                return onError(exchange, "No authorization header", HttpStatus.UNAUTHORIZED);
-            }
-            log.info("sub 값 : {}", subject);
-
-            /* 설명. 토큰의 payload에 subject 클레임 자체가 없거나 내용물이 없는지 확인 */
-            if (subject == null || subject.isEmpty()) {
-                return onError(exchange, "No authorization header", HttpStatus.UNAUTHORIZED);
-            }
-
-
             return chain.filter(exchange);
         });
     }
