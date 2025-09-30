@@ -18,6 +18,7 @@ spring:
             - Path=/main-client/**
           filters:
             - RewritePath=/main-client/(?<segment>.*), /$\{segment}
+            - JwtTokenFilter
 
         - id: member-client
           uri: lb://MEMBER-CLIENT
@@ -25,10 +26,16 @@ spring:
             - Path=/member-client/**
           filters:
             - RewritePath=/member-client/(?<segment>.*), /$\{segment}
+            - JwtTokenFilter
 
-        - id: test-client
-          uri: lb://TEST-CLIENT
-          predicates:
-            - Path=/test-client/**
-          filters:
-            - RewritePath=/test-client/(?<segment>.*), /$\{segment}
+#        - id: test-client
+#          uri: lb://TEST-CLIENT
+#          predicates:
+#            - Path=/test-client/**
+#          filters:
+#            - RewritePath=/test-client/(?<segment>.*), /$\{segment}
+
+
+token:
+  secret: v7o98gdK42iddFqTxH07Yjv18KbwIZWQZu7NRPeR9+ji9tOGDX2r8PO3mGptklEdEiIB0RMT066q3qb19YBfqQ==
+  expiration_time: 43200000 # 12시간

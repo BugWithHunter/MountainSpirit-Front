@@ -11,6 +11,7 @@ import com.bughunters.mountainspirit.member.command.repository.MemberRepository;
 import com.bughunters.mountainspirit.member.query.dto.BlackListDTO;
 import com.bughunters.mountainspirit.member.command.dto.RequestLoginwithAuthoritiesDTO;
 import com.bughunters.mountainspirit.member.query.service.MemberQueryService;
+import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -25,6 +26,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@Slf4j
 public class MemberServiceImpl implements MemberService {
 
     private final MemberRepository memberRepository;
@@ -219,9 +221,13 @@ public class MemberServiceImpl implements MemberService {
     @Transactional
     public void registCrewId(long crewId, long cumId) {
         Member member = memberRepository.findById(cumId).orElse(null);
+        log.info("service member 정보 : {}",member);
         if(member == null)
             return;
         member.setCrewId(crewId);
+        log.info("feign 통신 받는쪽 끝났어요");
+        memberRepository.flush();
+        log.info("flust 실행");
     }
 
 
