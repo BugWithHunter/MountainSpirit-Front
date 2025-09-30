@@ -72,6 +72,8 @@
 ### 4-1. 단위 테스트
 <details>
   <summary>단위 테스트 결과</summary>
+  <img width="1649" height="539" alt="image" src="https://github.com/user-attachments/assets/a373cd72-7ca9-4c5a-ac62-85aeb66b951c" />
+
 </details>
 
 ### 4-2. API 테스트
