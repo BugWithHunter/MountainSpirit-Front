@@ -140,11 +140,14 @@ public class ReportCommandServiceImpl implements ReportCommandService {
 //            );
 
             BanCommandEntity ban =  banCommandRepository.findTopByUserIdOrderByEndDateDesc(member.getId());
+            LocalDateTime baseTime = ban == null ? member.getSignInDate() : ban.getEndDate();
+
+
 
             requestForReportDTO.setInstanceCntNum( reportCommandRepository.countByReportedIdAndCategoryIdAndReportDateGreaterThanAndIsAccepted(
                     report.getReportedId(),
                     report.getCategoryId(),
-                    ban.getEndDate(),
+                    baseTime,
                     ReportIsAccepted.Y
             ));
 

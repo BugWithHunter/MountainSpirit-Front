@@ -16,6 +16,7 @@
         <result property="endDate" column="endDate"/>
         <result property="userId" column="userId"/>
         <result property="adminId" column="adminId"/>
+        <result property="signInDate" column="signInDate"/>
     </resultMap>
     <select id="selectAllBan" resultMap="banQueryResultMap">
         SELECT
@@ -33,6 +34,7 @@
              , email
              , memStsId
              , banCnt
+             , signInDate
           FROM Member
          WHERE id = #{reportedId}
     </select>
