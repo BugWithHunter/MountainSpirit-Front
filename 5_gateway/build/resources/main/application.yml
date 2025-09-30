@@ -15,10 +15,24 @@ spring:
         - id: main-client
           uri: lb://MAIN-CLIENT
           predicates:
+            - Path=/main-client/swagger-ui/index.html
+          filters:
+            - RewritePath=/main-client/(?<segment>.*), /$\{segment}
+
+        - id: main-client
+          uri: lb://MAIN-CLIENT
+          predicates:
             - Path=/main-client/**
           filters:
             - RewritePath=/main-client/(?<segment>.*), /$\{segment}
             - JwtTokenFilter
+
+        - id: member-client
+          uri: lb://MEMBER-CLIENT
+          predicates:
+            - Path=/member-client/swagger-ui/index.html
+          filters:
+            - RewritePath=/member-client/(?<segment>.*), /$\{segment}
 
         - id: member-client
           uri: lb://MEMBER-CLIENT

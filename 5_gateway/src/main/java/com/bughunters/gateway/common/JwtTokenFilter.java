@@ -11,8 +11,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.http.server.reactive.ServerHttpResponse;
 import org.springframework.stereotype.Component;
+import org.springframework.util.AntPathMatcher;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
+
+import java.util.List;
 
 @Component
 @Slf4j
@@ -24,17 +27,21 @@ public class JwtTokenFilter extends AbstractGatewayFilterFactory<JwtTokenFilter.
         super(Config.class);
         this.env = env;
     }
-    public static class Config{}
+
+    public static class Config {
+    }
 
 
     @Override
     public GatewayFilter apply(Config config) {
         return ((exchange, chain) -> {
+
+
             // 헤더 추출
             ServerHttpRequest request = exchange.getRequest();
 
             if (!request.getHeaders().containsKey(HttpHeaders.AUTHORIZATION)) {
-                return onError(exchange,"No authorization header", HttpStatus.UNAUTHORIZED);    // HttpStatus.UNAUTHORIZED = 401에러
+                return onError(exchange, "No authorization header", HttpStatus.UNAUTHORIZED);    // HttpStatus.UNAUTHORIZED = 401에러
             }
             log.info("넘어온 auth 값 : {}", request.getHeaders().get(HttpHeaders.AUTHORIZATION));
 
@@ -47,21 +54,22 @@ public class JwtTokenFilter extends AbstractGatewayFilterFactory<JwtTokenFilter.
             /* 설명. 기본적으로 우리 서버에서 만들었고, 만료기간이 지나지 않았으며,
              *      토큰 안에 'sub'라는 등록된 클레임이 존재하는지 확인
              * */
-            try{
+            try {
                 subject = Jwts.parser()
                         .setSigningKey(env.getProperty("token.secret"))
                         .parseClaimsJws(jwt)
                         .getBody()
                         .getSubject();
-            }catch(Exception e){
-                return onError(exchange,"No authorization header", HttpStatus.UNAUTHORIZED);
+            } catch (Exception e) {
+                return onError(exchange, "No authorization header", HttpStatus.UNAUTHORIZED);
             }
             log.info("sub 값 : {}", subject);
 
             /* 설명. 토큰의 payload에 subject 클레임 자체가 없거나 내용물이 없는지 확인 */
-            if(subject == null || subject.isEmpty()){
-                return onError(exchange,"No authorization header", HttpStatus.UNAUTHORIZED);
+            if (subject == null || subject.isEmpty()) {
+                return onError(exchange, "No authorization header", HttpStatus.UNAUTHORIZED);
             }
+
 
             return chain.filter(exchange);
         });
@@ -71,7 +79,7 @@ public class JwtTokenFilter extends AbstractGatewayFilterFactory<JwtTokenFilter.
     private Mono<Void> onError(ServerWebExchange exchange, String errorMessage, HttpStatus httpStatus) {
         ServerHttpResponse response = exchange.getResponse();
         response.setStatusCode(httpStatus);
-        log.info("에러 메세지 : {}",errorMessage);
+        log.info("에러 메세지 : {}", errorMessage);
         return response.setComplete();
     }
 
