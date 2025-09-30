@@ -1,10 +1,10 @@
 package com.bughunters.mountainspirit.crewboard.query.controller;
 
-import com.bughunters.mountainspirit.board.query.dto.PageBoardDTO;
 import com.bughunters.mountainspirit.common.Pagination;
 import com.bughunters.mountainspirit.common.PagingButtonInfo;
 import com.bughunters.mountainspirit.crewboard.query.dto.CrewBoardDTO;
 import com.bughunters.mountainspirit.crewboard.query.dto.CrewBoardNameDTO;
+import com.bughunters.mountainspirit.crewboard.query.dto.PageBoardDTO;
 import com.bughunters.mountainspirit.crewboard.query.service.CrewBoardReadService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;

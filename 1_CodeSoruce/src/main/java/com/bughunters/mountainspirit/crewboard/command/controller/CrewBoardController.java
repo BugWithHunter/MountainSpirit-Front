@@ -55,7 +55,7 @@ public class CrewBoardController {
     }
 
     @DeleteMapping("/modify-boardimg/{id}/delete")
-    public void deletePostById(@PathVariable long id) {
+    public void deleteBoardImage(@PathVariable long id) {
         crewBoardService.deleteBoardImage(id);   // id는 이미지id임
     }
 
