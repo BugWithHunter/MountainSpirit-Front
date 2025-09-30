@@ -58,12 +58,26 @@
 ## 5. 문서
 
 ### 5-1. 요구사항 명세서
-<a href="https://docs.google.com/spreadsheets/d/e/2PACX-1vRim6dnVZPyaGgB2uGk8hg06A8HR3DnL-rhE6VLd7hvg0zyZGiFPFHGBKt8IYcWULlb7GyAIB9i0mSf/pubhtml?gid=0&single=true" target="_blank">🪝요구사항 명세서</a>
+<a href="https://docs.google.com/spreadsheets/d/1VBYRhzfoiGNax0MA7ngQUardj3lY4btuP-MUCo3M21k/edit?usp=sharing" target="_blank">🪝요구사항 명세서</a>
+
 
 ### 5-2. WBS
-<a href="https://docs.google.com/spreadsheets/d/e/2PACX-1vRim6dnVZPyaGgB2uGk8hg06A8HR3DnL-rhE6VLd7hvg0zyZGiFPFHGBKt8IYcWULlb7GyAIB9i0mSf/pubhtml?gid=1148621166&single=true" target="_blank">📆WBS</a>
+<a href="https://docs.google.com/spreadsheets/d/1VBYRhzfoiGNax0MA7ngQUardj3lY4btuP-MUCo3M21k/edit?usp=sharing" target="_blank">📆WBS</a>
 
 ## 6. 기술 스택
+- DB
+
+![MariaDB](https://img.shields.io/badge/MariaDB-003545?style=for-the-badge&logo=mariadb&logoColor=white)
+- 프레임워크
+
+![Spring](https://img.shields.io/badge/spring-%236DB33F.svg?style=for-the-badge&logo=spring&logoColor=white)
+- 버전 관리
+
+![Git](https://img.shields.io/badge/git-%23F05033.svg?style=for-the-badge&logo=git&logoColor=white)
+![GitHub](https://img.shields.io/badge/github-%23121011.svg?style=for-the-badge&logo=github&logoColor=white)
+- 테스트
+
+![Postman](https://img.shields.io/badge/Postman-FF6C37?style=for-the-badge&logo=postman&logoColor=white)
 
 ## 7. 동료 평가
 - 강형규
