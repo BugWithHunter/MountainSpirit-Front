@@ -33,20 +33,35 @@
 <img width="5800" height="2842" alt="Image" src="https://github.com/user-attachments/assets/355e9759-ce68-4b22-8df7-ee1539663bb7" />
 
 ### 3-3. API 명세
+<details>
+  <summary>user service</summary>
+</details>
+<details>
+  <summary>core service</summary>
+</details>
 
 ### 3-4. 로그인 토큰
+
 
 ## 4. 테스트
 
 ### 4-1. 단위 테스트
+<details>
+  <summary>단위 테스트 결과</summary>
+</details>
 
 ### 4-2. API 테스트
+<details>
+  <summary>API 테스트</summary>
+</details>
 
 ## 5. 문서
 
 ### 5-1. 요구사항 명세서
+<a href="https://docs.google.com/spreadsheets/d/1VBYRhzfoiGNax0MA7ngQUardj3lY4btuP-MUCo3M21k/edit?usp=sharing" target="_blank">🪝요구사항 명세서</a>
 
 ### 5-2. WBS
+<a href="https://docs.google.com/spreadsheets/d/1VBYRhzfoiGNax0MA7ngQUardj3lY4btuP-MUCo3M21k/edit?usp=sharing">📆WBS</a>
 
 ## 6. 기술 스택
 
