@@ -85,6 +85,53 @@
 
 <details>
   <summary>회원 테스트</summary>
+    <details>
+      <summary>회원 가입</summary>
+  - 이미 가입된 회원
+  <img width="884" height="272" alt="Image" src="https://github.com/user-attachments/assets/61251d57-bf54-4ee8-8c68-c82c878a718e" /><br>
+
+  - 필수 입력 정보 누락
+  <img width="829" height="247" alt="Image" src="https://github.com/user-attachments/assets/49ba5eb0-3a33-4246-9826-aaf74df3a7d7" /><br>
+
+  - 블랙리스트로 접근 제한 회원 재가입을 하려고 했지만 가입거절
+  <img width="772" height="288" alt="Image" src="https://github.com/user-attachments/assets/6da7b70b-9050-46da-af25-61b3127a84e6" /><br>
+
+  - 회원 가입 완료
+  <img width="821" height="366" alt="Image" src="https://github.com/user-attachments/assets/05598a2a-d59a-4463-9933-5594f18a1a7c" /><br>
+    </details>
+
+    
+    <details>
+      <summary>로그인(인증 완료시 JWT 토큰 발행)</summary>
+  - 비밀번호 or 아이디 오 입력 
+  <img width="835" height="192" alt="Image" src="https://github.com/user-attachments/assets/da4068d5-a343-469f-8c02-0f452a338595" /><br>
+
+  - 탈퇴한 회원
+  <img width="327" height="182" alt="Image" src="https://github.com/user-attachments/assets/0979a970-0231-43e9-967a-883f43c3b359" /><br>
+
+  - 신고가 승인되어 접속 제한이 걸린 회원
+  <img width="524" height="240" alt="Image" src="https://github.com/user-attachments/assets/7b473a5c-1db9-4901-a0f8-2b813d285df9" /><br>
+
+  - 휴먼 상태 회원
+  <img width="359" height="194" alt="Image" src="https://github.com/user-attachments/assets/5b3cdc73-da9d-4cad-8e1f-26ab47045574" /><br>
+
+  - 블랙리스트 회원
+  <img width="402" height="184" alt="Image" src="https://github.com/user-attachments/assets/6db12f36-01b1-4815-b529-9deeb91b1b78" /><br>
+
+  - 연속적으로 일정 횟수 암호 오 입력으로 접속제한
+  <img width="572" height="152" alt="Image" src="https://github.com/user-attachments/assets/47c298cf-5b21-4c6d-8897-0af7ec032c39" /><br>
+
+  - 로그인 성공
+  <img width="631" height="376" alt="Image" src="https://github.com/user-attachments/assets/2bd52ec0-beff-45c2-a33f-6efece4b23a6" /><br>
+    </details>
+
+    <details>
+      <summary>등산 인증</summary>
+      - 등산 시작
+      <img width="1014" height="250" alt="Image" src="https://github.com/user-attachments/assets/bae03c4f-8ca9-490e-a0d9-026127af8fc5" />
+      - 등산 완료
+      <img width="385" height="638" alt="Image" src="https://github.com/user-attachments/assets/e49ecabe-f3ea-4ad1-b7f4-49adcaacaf96" />
+    </details>
 </details>
   
 <details>
