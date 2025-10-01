@@ -37,7 +37,7 @@
 - 크루 게시판을 통해 같은 크루에 소속된 사람들과 소통
 
 ## 2. 📄DDD
-![산신령 (2)](https://github.com/user-attachments/assets/4f74f7ce-a075-4a3a-a715-c9f735529783)
+![산신령 (3)](https://github.com/user-attachments/assets/067d9ec8-3c31-45d4-b471-b18c7a66eaea)
 
 ## 3. 🔧설계
 ### 3-1. MSA 시퀀스 다이어그램
