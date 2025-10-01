@@ -8,9 +8,11 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
+import org.springframework.util.AntPathMatcher;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.util.List;
 
 @Component
 @Slf4j
@@ -19,6 +21,26 @@ public class JwtFilter extends OncePerRequestFilter {
 
     public JwtFilter(Environment env) {
         this.env = env;
+    }
+
+    private static final List<String> WHITELIST = List.of(
+            // SpringDoc(OpenAPI 3)
+            "/v3/api-docs/**",
+            "/swagger-ui/**",
+            "/swagger-ui.html",
+            // (구) Swagger 2 쓰면 필요
+            "/swagger-resources/**",
+            "/webjars/**",
+            // 선택
+            "/actuator/health", "/error"
+    );
+
+    private final AntPathMatcher matcher = new AntPathMatcher();
+
+    @Override
+    protected boolean shouldNotFilter(HttpServletRequest request) {
+        String uri = request.getRequestURI();
+        return WHITELIST.stream().anyMatch(p -> matcher.match(p, uri));
     }
 
     @Override

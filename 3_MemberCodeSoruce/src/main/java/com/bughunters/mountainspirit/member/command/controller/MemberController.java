@@ -7,11 +7,8 @@ import com.bughunters.mountainspirit.member.command.service.MemberService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
@@ -40,8 +37,8 @@ public class MemberController {
     }
 
     @GetMapping("/member-info/{id}")
-    public Member memberTest(@PathVariable Long id) {
-        Member member = memberService.getTest(id);
+    public Member findMember(@PathVariable Long id) {
+        Member member = memberService.findMember(id);
         return member;
     }
 
@@ -84,6 +81,8 @@ public class MemberController {
 
     @DeleteMapping("/member")
     public ResponseEntity<ResponseMessage> deleteMember(@RequestBody RequestQuitMemberDTO member) {
+        member.setMemPwd(bCryptPasswordEncoder.encode(member.getMemPwd()));
+
         ResponseQuitDTO responseQuitDTO = memberService.memberQuit(member);
         ResponseMessage responseMessage = new ResponseMessage();
 
@@ -126,7 +125,7 @@ public class MemberController {
 
     @GetMapping("/report/member-info/{id}")
     public ResponseEntity<ReportMemberDTO> getMemberInfo(@PathVariable Long id) {
-        Member member = memberService.getTest(id);
+        Member member = memberService.findMember(id);
         if (member == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }

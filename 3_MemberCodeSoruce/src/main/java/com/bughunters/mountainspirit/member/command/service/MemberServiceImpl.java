@@ -2,12 +2,8 @@ package com.bughunters.mountainspirit.member.command.service;
 
 
 import com.bughunters.mountainspirit.member.command.dto.*;
-import com.bughunters.mountainspirit.member.command.entity.LoginFailureRecord;
-import com.bughunters.mountainspirit.member.command.entity.LoginRecord;
-import com.bughunters.mountainspirit.member.command.entity.Member;
-import com.bughunters.mountainspirit.member.command.repository.LoginFailureRecordRepository;
-import com.bughunters.mountainspirit.member.command.repository.LoginRecordRepository;
-import com.bughunters.mountainspirit.member.command.repository.MemberRepository;
+import com.bughunters.mountainspirit.member.command.entity.*;
+import com.bughunters.mountainspirit.member.command.repository.*;
 import com.bughunters.mountainspirit.member.query.dto.BlackListDTO;
 import com.bughunters.mountainspirit.member.command.dto.RequestLoginwithAuthoritiesDTO;
 import com.bughunters.mountainspirit.member.query.service.MemberQueryService;
@@ -23,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -36,18 +33,26 @@ public class MemberServiceImpl implements MemberService {
     private final ModelMapper modelMapper;
     private final LoginFailureRecordRepository loginFailureRecordRepository;
     private final LoginRecordRepository loginRecordRepository;
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
+    private final AuthorityRepository authorityRepository;
+    private final MemberAuthorityRepository memberAuthorityRepository;
 
     public MemberServiceImpl(MemberRepository memberRepository
             , MemberQueryService memberQueryService
             , ModelMapper modelMapper
             , BCryptPasswordEncoder bCryptPasswordEncoder
             , LoginFailureRecordRepository loginFailureRecordRepository
-            , LoginRecordRepository loginRecordRepository) {
+            , LoginRecordRepository loginRecordRepository
+            , AuthorityRepository authorityRepository
+            , MemberAuthorityRepository memberAuthorityRepository) {
         this.memberRepository = memberRepository;
         this.memberQueryService = memberQueryService;
         this.modelMapper = modelMapper;
         this.loginFailureRecordRepository = loginFailureRecordRepository;
         this.loginRecordRepository = loginRecordRepository;
+        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
+        this.authorityRepository = authorityRepository;
+        this.memberAuthorityRepository = memberAuthorityRepository;
     }
 
     //등산 이후 회원 정보 변경
@@ -67,8 +72,8 @@ public class MemberServiceImpl implements MemberService {
         int findKey = modifyStatusOfMemberDTO.getBaseMemberRanks()
                 .keySet()
                 .stream()
-                .sorted(Integer::compareTo) // 오름순 정렬
-                .filter(x -> x >= score)
+                .sorted(Comparator.reverseOrder()) // 내림차순 정렬
+                .filter(x -> x <= score)
                 .findFirst()
                 .orElse(//해당 되는게 없으면 최대등급을 초과하는 점수로 최고 등급으로 update
                         modifyStatusOfMemberDTO
@@ -95,7 +100,7 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
-    public Member getTest(Long id) {
+    public Member findMember(Long id) {
         return memberRepository.findById(id).orElse(null);
     }
 
@@ -129,7 +134,7 @@ public class MemberServiceImpl implements MemberService {
         }
 
         //암호가 틀렸을 때
-        if (!member.getMemPwd().equals(memberDTO.getMemPwd())) {
+        if (bCryptPasswordEncoder.matches(member.getMemPwd(), memberDTO.getMemPwd())) {
             responseQuitDTO.setInvalidPwd(true);
             return responseQuitDTO;
         }
@@ -147,7 +152,7 @@ public class MemberServiceImpl implements MemberService {
         com.bughunters.mountainspirit.member.query.dto.RequestLoginwithAuthoritiesDTO loginDTO =
                 memberQueryService.findMemberWithAuthoriesByEmail(email);
 
-        if(loginDTO == null)
+        if (loginDTO == null)
             return null;
 
         //계정 권한
@@ -172,28 +177,28 @@ public class MemberServiceImpl implements MemberService {
     @Transactional
     public void updateInvlidPassword(RequsetloginHisotry requestLoginHisotry) {
         Member member = memberRepository.findById(requestLoginHisotry.getCumId()).orElse(null);
-        if(member == null)
+        if (member == null)
             return;
 
         LoginFailureRecord loginFailureRecord = new LoginFailureRecord(
                 null
-                ,requestLoginHisotry.getDateTime()
-                ,requestLoginHisotry.getClientIp()
-                ,requestLoginHisotry.getReason()
-                ,member.getId()
+                , requestLoginHisotry.getDateTime()
+                , requestLoginHisotry.getClientIp()
+                , requestLoginHisotry.getReason()
+                , member.getId()
         );
 
         int failCount = member.getLoginFailCnt() == null
-                ? 1 : member.getLoginFailCnt()+ 1;
+                ? 1 : member.getLoginFailCnt() + 1;
 
         //연속 오 입력이 6이 됐다는건 15분 지나고 또 틀렸기 때문 .
         // 1로 바꾸지 않으면 바로 접속 제한 걸려서 1부터 다시 카운트 시작
         failCount = failCount >= 6 ? 1 : failCount;
-        
+
         member.setLoginFailCnt(failCount);
 
 
-        if (failCount >= 5){
+        if (failCount >= 5) {
             LocalDateTime loginLockUnitlby = LocalDateTime.now().plusMinutes(15);
             member.setLoginLockUntil(loginLockUnitlby); // 15분간 접속 불가
         }
@@ -213,8 +218,9 @@ public class MemberServiceImpl implements MemberService {
                 loginHistory.getCumId()
         );
 
-        Member member =  memberRepository.findById(loginHistory.getCumId()).orElse(null);
+        Member member = memberRepository.findById(loginHistory.getCumId()).orElse(null);
         member.setLoginFailCnt(0);
+        member.setLastLogin(loginRecord.getDate());
         memberRepository.save(member);
         loginRecordRepository.save(loginRecord);
     }
@@ -224,8 +230,8 @@ public class MemberServiceImpl implements MemberService {
     @Transactional
     public void registCrewId(long crewId, long cumId) {
         Member member = memberRepository.findById(cumId).orElse(null);
-        log.info("service member 정보 : {}",member);
-        if(member == null)
+        log.info("service member 정보 : {}", member);
+        if (member == null)
             return;
         member.setCrewId(crewId);
         log.info("feign 통신 받는쪽 끝났어요");
@@ -260,6 +266,11 @@ public class MemberServiceImpl implements MemberService {
         Member findMember
                 = memberRepository.findByEmailOrMemNameAndBirth(memberDTO.getEmail(), memberDTO.getMemName(), memberDTO.getBirth());
 
+        List<AuthorityList> authorityList
+                = authorityRepository.findAll().stream()
+                .sorted(Comparator.comparing(AuthorityList::getId))
+                .toList();
+
         if (findMember != null) {
             //중복 이메일이 있는지 확인
             if (findMember.getEmail().equals(memberDTO.getEmail())) {
@@ -288,6 +299,9 @@ public class MemberServiceImpl implements MemberService {
                 member.setSignInDate(LocalDate.now());
                 member = memberRepository.save(member);
                 responseSignUpDTO.setMemberDTO(modelMapper.map(member, ResponseMemberDTO.class));
+
+                //기본 Member 권한 부여
+                memberAuthorityRepository.save(new MemberAuthority(null,member.getId(),authorityList.get(0).getId()));
             } catch (Exception e) {
                 throw new IllegalArgumentException("Member not Exception");
             }

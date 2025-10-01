@@ -7,7 +7,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 public interface MemberService {
     ResponseStatusDTO modifyStatusAfterClimbMountian(RequestModifyStatusOfMemberDTO modifyStatusOfMemberDTO);
 
-    Member getTest(Long id);
+    Member findMember(Long id);
 
     void setMemberCrewId(Long cumId, Long crewId);
 

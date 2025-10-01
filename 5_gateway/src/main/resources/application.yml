@@ -20,6 +20,14 @@ spring:
             - RewritePath=/main-client/(?<segment>.*), /$\{segment}
             - JwtTokenFilter
 
+        - id: member-client2
+          uri: lb://MEMBER-CLIENT
+          predicates:
+            - Path=/member-client/member/member,/member-client/login
+            - Method=POST
+          filters:
+            - RewritePath=/member-client/(?<segment>.*), /$\{segment}
+
         - id: member-client
           uri: lb://MEMBER-CLIENT
           predicates:
