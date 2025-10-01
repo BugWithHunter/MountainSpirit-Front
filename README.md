@@ -238,6 +238,12 @@
 
 <details>
   <summary>신고 테스트</summary>
+  - 댓글 생성후
+  <img width="1920" height="1080" alt="55" src="https://github.com/user-attachments/assets/f8665cf7-9772-48a2-9e35-2e9b05aa254e" />
+
+  - 조건 만족시
+<img width="1920" height="1080" alt="56" src="https://github.com/user-attachments/assets/4afd0fed-e1eb-4564-90ff-c17c946e3a5b" />
+
 </details>
 
 
