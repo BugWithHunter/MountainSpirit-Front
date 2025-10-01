@@ -87,6 +87,7 @@
   <summary>회원 테스트</summary>
     <details>
       <summary>회원 가입</summary>
+      
   - 이미 가입된 회원
   <img width="884" height="272" alt="Image" src="https://github.com/user-attachments/assets/61251d57-bf54-4ee8-8c68-c82c878a718e" /><br>
 
@@ -103,6 +104,7 @@
     
     <details>
       <summary>로그인(인증 완료시 JWT 토큰 발행)</summary>
+      
   - 비밀번호 or 아이디 오 입력 
   <img width="835" height="192" alt="Image" src="https://github.com/user-attachments/assets/da4068d5-a343-469f-8c02-0f452a338595" /><br>
 
@@ -127,8 +129,10 @@
 
     <details>
       <summary>등산 인증</summary>
+      
       - 등산 시작
       <img width="1014" height="250" alt="Image" src="https://github.com/user-attachments/assets/bae03c4f-8ca9-490e-a0d9-026127af8fc5" /><br>
+      
       - 등산 완료
       <img width="385" height="638" alt="Image" src="https://github.com/user-attachments/assets/e49ecabe-f3ea-4ad1-b7f4-49adcaacaf96" /><br>
     </details>
@@ -361,6 +365,7 @@
 
 <details>
   <summary>신고 테스트</summary>
+  
   - 댓글 생성후
   <img width="1920" height="1080" alt="55" src="https://github.com/user-attachments/assets/f8665cf7-9772-48a2-9e35-2e9b05aa254e" />
 
