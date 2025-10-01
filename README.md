@@ -69,7 +69,6 @@
 <img width="2670" height="1054" alt="image" src="https://github.com/user-attachments/assets/5a3bc476-6fcd-4df2-a2bc-e943cba7821f" />
 
 - 산 DB - 한국등산트레킹지원센터_100대명산 목록정보 서비스
-
 - 코스 DB - 한국등산트레킹지원센터_100대명산 봉우리POI정보 서비스
 
 
