@@ -128,9 +128,9 @@
     <details>
       <summary>등산 인증</summary>
       - 등산 시작
-      <img width="1014" height="250" alt="Image" src="https://github.com/user-attachments/assets/bae03c4f-8ca9-490e-a0d9-026127af8fc5" />
+      <img width="1014" height="250" alt="Image" src="https://github.com/user-attachments/assets/bae03c4f-8ca9-490e-a0d9-026127af8fc5" /><br>
       - 등산 완료
-      <img width="385" height="638" alt="Image" src="https://github.com/user-attachments/assets/e49ecabe-f3ea-4ad1-b7f4-49adcaacaf96" />
+      <img width="385" height="638" alt="Image" src="https://github.com/user-attachments/assets/e49ecabe-f3ea-4ad1-b7f4-49adcaacaf96" /><br>
     </details>
 </details>
   
