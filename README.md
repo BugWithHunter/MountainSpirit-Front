@@ -170,48 +170,56 @@
 
   - 코스 도장 조회
 <img width="1753" height="879" alt="image" src="https://github.com/user-attachments/assets/ae14d49a-a77c-407e-9c82-011822d61400" /><br>
-
  </details>
+ 
 </details>
 
 <details>
   <summary>게시판 테스트</summary>
   <details>
-    <summary>게시판 CRUD</summary><br>
-    - 게시판 목록 조회<br>
+    <summary>게시판 CRUD</summary>
+    
+  - 게시판 목록 조회
+
   <img width="500" height="530" alt="Image" src="https://github.com/user-attachments/assets/3f8c4103-b0d0-4007-ab90-f6e22c2f415d" /><br>
-    - 게시글 상세 조회<br>
-   <img width="1689" height="778" alt="Image" src="https://github.com/user-attachments/assets/3d5fd86e-e837-484e-b582-87214d5e903e" /><br>
-    - 게시글 검색<br>
+  
+  - 게시글 상세 조회
+  <img width="1689" height="778" alt="Image" src="https://github.com/user-attachments/assets/3d5fd86e-e837-484e-b582-87214d5e903e" /><br>
+    
+  - 게시글 검색
+
   <img width="570" height="442" alt="Image" src="https://github.com/user-attachments/assets/0ddf4afa-7f57-46f2-9447-987781fa0c14" /><br>
-    - 게시글 작성<br>
+  
+  - 게시글 작성
   <img width="1188" height="722" alt="Image" src="https://github.com/user-attachments/assets/a07bd7b3-b49f-402c-b251-dbbacd9a39e3" /><br>
-    <img width="1344" height="778" alt="Image" src="https://github.com/user-attachments/assets/f77819d7-29a9-4ab4-b825-9cf78bebc6ca" /><br>
-    - 게시글 수정<br>
+  <img width="1344" height="778" alt="Image" src="https://github.com/user-attachments/assets/f77819d7-29a9-4ab4-b825-9cf78bebc6ca" /><br>
+    
+  - 게시글 수정
 
-    - 게시글 이미지 추가<br>
+  - 게시글 이미지 추가
+    
+  - 게시글 이미지 삭제
+  <img width="1709" height="825" alt="Image" src="https://github.com/user-attachments/assets/5391f7e3-f500-4fc3-820a-f8073e4beea4" /><br>
 
-    - 게시글 이미지 삭제<br>
-   <img width="1709" height="825" alt="Image" src="https://github.com/user-attachments/assets/5391f7e3-f500-4fc3-820a-f8073e4beea4" /><br>
-
-    - 게시글 삭제<br>
+  - 게시글 삭제
   <img width="1594" height="656" alt="Image" src="https://github.com/user-attachments/assets/796e5f35-0ae4-4b71-a223-12c22a11755a" /><br>
     
   </details>
 
   <details>
     <summary>좋아요, 댓글 테스트</summary><br>
-    - 좋아요 등록/삭제<br>
+    
+    - 좋아요 등록/삭제
     <img width="1696" height="833" alt="Image" src="https://github.com/user-attachments/assets/6bd49951-1d1f-4da3-b1ba-67379419e070" /><br>
 
-    - 댓글 조회<br>
+    - 댓글 조회
 
-    - 댓글 작성<br>
-  <img width="1690" height="826" alt="Image" src="https://github.com/user-attachments/assets/8ec361f4-b854-46f0-b171-4cb8231d8255" /><br>
+    - 댓글 작성
+    <img width="1690" height="826" alt="Image" src="https://github.com/user-attachments/assets/8ec361f4-b854-46f0-b171-4cb8231d8255" /><br>
 
-    - 댓글 수정<br>
+    - 댓글 수정
 
-    - 댓글 삭제<br>
+    - 댓글 삭제
     
   </details>
 </details>
