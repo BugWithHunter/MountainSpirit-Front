@@ -195,8 +195,10 @@
   <img width="1344" height="778" alt="Image" src="https://github.com/user-attachments/assets/f77819d7-29a9-4ab4-b825-9cf78bebc6ca" /><br>
     
   - 게시글 수정
+  <img width="1705" height="812" alt="Image" src="https://github.com/user-attachments/assets/dc815581-5160-451e-a728-568589fb07dc" /><br>
 
   - 게시글 이미지 추가
+  <img width="1720" height="832" alt="Image" src="https://github.com/user-attachments/assets/7bc08a7f-085e-4af8-b88e-3ab5bb3de223" /><br>
     
   - 게시글 이미지 삭제
   <img width="1709" height="825" alt="Image" src="https://github.com/user-attachments/assets/5391f7e3-f500-4fc3-820a-f8073e4beea4" /><br>
@@ -209,17 +211,18 @@
   <details>
     <summary>좋아요, 댓글 테스트</summary><br>
     
-    - 좋아요 등록/삭제
-    <img width="1696" height="833" alt="Image" src="https://github.com/user-attachments/assets/6bd49951-1d1f-4da3-b1ba-67379419e070" /><br>
+  - 좋아요 등록/삭제
+  <img width="1696" height="833" alt="Image" src="https://github.com/user-attachments/assets/6bd49951-1d1f-4da3-b1ba-67379419e070" /><br>
 
-    - 댓글 조회
+  - 댓글 조회
 
-    - 댓글 작성
-    <img width="1690" height="826" alt="Image" src="https://github.com/user-attachments/assets/8ec361f4-b854-46f0-b171-4cb8231d8255" /><br>
+  - 댓글 작성
+  <img width="1690" height="826" alt="Image" src="https://github.com/user-attachments/assets/8ec361f4-b854-46f0-b171-4cb8231d8255" /><br>
 
-    - 댓글 수정
+  - 댓글 수정
+   <img width="1712" height="817" alt="Image" src="https://github.com/user-attachments/assets/22eee574-78a0-413d-a97f-eb564c229852" /><br>
 
-    - 댓글 삭제
+  - 댓글 삭제
     
   </details>
 </details>
