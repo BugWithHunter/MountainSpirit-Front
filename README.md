@@ -267,6 +267,7 @@
   <img width="1696" height="833" alt="Image" src="https://github.com/user-attachments/assets/6bd49951-1d1f-4da3-b1ba-67379419e070" /><br>
 
   - 댓글 조회
+  <img width="1691" height="823" alt="Image" src="https://github.com/user-attachments/assets/8e1fd1c3-d7bc-44d1-b0be-5645d91abf94" />
 
   - 댓글 작성
   <img width="1690" height="826" alt="Image" src="https://github.com/user-attachments/assets/8ec361f4-b854-46f0-b171-4cb8231d8255" /><br>
@@ -275,6 +276,7 @@
    <img width="1712" height="817" alt="Image" src="https://github.com/user-attachments/assets/22eee574-78a0-413d-a97f-eb564c229852" /><br>
 
   - 댓글 삭제
+  <img width="1681" height="832" alt="Image" src="https://github.com/user-attachments/assets/8f1cf74f-7447-4fea-85ee-82b898a3d3cb" />
     
   </details>
 </details>
