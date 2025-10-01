@@ -281,6 +281,80 @@
 
 <details>
   <summary>크루 테스트</summary>
+  <details>
+  
+  <summary>크루</summary>
+  
+  - 전체 크루 목록 조회
+  <img width="718" height="908" alt="스크린샷 2025-09-30 183905" src="https://github.com/user-attachments/assets/3fcb9f50-f95c-49e6-91a0-b0b2ed573b96" />
+
+  - 특정 크루 목록 조회
+  <img width="696" height="906" alt="스크린샷 2025-09-30 183935" src="https://github.com/user-attachments/assets/40ca098c-3796-41e4-accd-73c4743b4f55" />
+
+  - 크루 생성
+  <img width="1860" height="895" alt="스크린샷 2025-09-30 184252" src="https://github.com/user-attachments/assets/d470e8c8-1676-4cf4-826c-e8783fb7a85c" />
+
+  - 크루 수정
+  <img width="1861" height="872" alt="스크린샷 2025-09-30 184443" src="https://github.com/user-attachments/assets/58170305-f912-448c-8b86-f7a38cdce37b" />
+
+  - 크루 삭제
+  <img width="1864" height="854" alt="스크린샷 2025-09-30 184458" src="https://github.com/user-attachments/assets/5c5e92c6-e1f4-4f40-bcbd-bf04d3892b9f" />
+
+</details>
+  <details>
+  <summary>크루 구성원</summary>
+
+  - 크루 가입 신청
+  <img width="1864" height="882" alt="스크린샷 2025-09-30 184814" src="https://github.com/user-attachments/assets/9721988b-868f-43d5-a324-9cff62eb519d" />
+
+  - 크루 가입 신청 목록
+  <img width="703" height="910" alt="스크린샷 2025-09-30 184830" src="https://github.com/user-attachments/assets/8becda4f-69ec-4bb9-a851-6de10cb8d772" />
+
+  - 크루 가입 신청 취소
+  <img width="1853" height="904" alt="스크린샷 2025-09-30 184859" src="https://github.com/user-attachments/assets/20914b0d-fb37-40d5-ba85-900cf2ad7e42" />
+
+  - 크루 가입 신청 승인
+  <img width="706" height="904" alt="스크린샷 2025-09-30 185343" src="https://github.com/user-attachments/assets/627e900b-e9cb-488a-b468-747f4edb2f9a" />
+  <img width="641" height="578" alt="스크린샷 2025-09-30 185215" src="https://github.com/user-attachments/assets/884d28aa-0e5e-412b-a2c7-16afe9182186" />
+
+  - 크루 가입 신청 거절
+  <img width="699" height="895" alt="스크린샷 2025-09-30 185451" src="https://github.com/user-attachments/assets/a0e10d81-65e6-48dc-a3d4-ec9a223ebd70" />
+  <img width="700" height="588" alt="스크린샷 2025-09-30 185500" src="https://github.com/user-attachments/assets/58be6d37-9cb7-4e5c-99c0-9516aea3643a" />
+
+  - 크루원 목록 조회
+  <img width="701" height="860" alt="스크린샷 2025-09-30 190003" src="https://github.com/user-attachments/assets/9edbbe5a-88fa-4313-95a6-2c3250ed12cb" />
+
+  - 크루 탈퇴
+  <img width="1867" height="866" alt="스크린샷 2025-09-30 190747" src="https://github.com/user-attachments/assets/7fc17dcf-5dbb-4cec-b3a4-91f90d61a1de" />
+
+  - 크루원 등급 수정
+  <img width="1866" height="891" alt="스크린샷 2025-09-30 190901" src="https://github.com/user-attachments/assets/0ef04b71-90d3-4aae-bbb5-2b04995fe4f3" />
+
+  - 크루원 추방
+  <img width="1860" height="875" alt="스크린샷 2025-09-30 191009" src="https://github.com/user-attachments/assets/9e275858-d531-4276-a540-816960d39ae5" />
+  <img width="1027" height="618" alt="스크린샷 2025-09-30 191039" src="https://github.com/user-attachments/assets/b30f9b04-679d-4506-877e-b129ca9564df" />
+  
+</details>
+  <details>
+  <summary>크루 등산</summary>
+  
+  - 전체 크루 등산 일정 목록 조회
+  <img width="708" height="893" alt="스크린샷 2025-09-30 185554" src="https://github.com/user-attachments/assets/ab4ee968-3a1b-4a4a-a3ba-e0793c233e1e" />
+
+  - 특정 크루 등산 일정 조회
+  <img width="707" height="795" alt="스크린샷 2025-09-30 185608" src="https://github.com/user-attachments/assets/7a2674e9-3a46-4585-88bb-9f325c088c84" />
+
+  - 크루 등산 일정 등록
+  <img width="1862" height="858" alt="스크린샷 2025-09-30 185733" src="https://github.com/user-attachments/assets/9a741e34-ac8a-48b0-b482-c01ef28a2759" />
+
+  - 크루 등산 일정 수정
+  <img width="1859" height="887" alt="스크린샷 2025-09-30 185841" src="https://github.com/user-attachments/assets/7c9d5723-270a-4fea-ae00-365a68ffd210" />
+
+  - 크루 등산 일정 삭제
+  <img width="1860" height="862" alt="스크린샷 2025-09-30 185914" src="https://github.com/user-attachments/assets/890a24cb-1159-474f-ad38-e974a4de3295" />
+  
+  
+</details>
 </details>
 
 <details>
