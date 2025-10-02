@@ -50,6 +50,8 @@
 <img width="5800" height="2842" alt="Image" src="https://github.com/user-attachments/assets/355e9759-ce68-4b22-8df7-ee1539663bb7" />
 
 ### 3-4. MSA 아키텍처
+<img width="1283" height="625" alt="image" src="https://github.com/user-attachments/assets/4b5cbb70-7b2f-4119-bb90-3f2252f568a1" />
+
 <img width="1919" height="1006" alt="image" src="https://github.com/user-attachments/assets/f4e0ef09-9a58-4e5d-8c98-7d755f2f277b" />
 
 
