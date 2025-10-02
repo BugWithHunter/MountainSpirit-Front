@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bughunters.mountainspirit.mountain.query.mapper.MountainGetMapper">
+    <resultMap type="com.bughunters.mountainspirit.mountain.query.dto.MountainDTO" id="mountainResultMap">
+        <id property="frtrlId" column="frtrlId"/>
+        <result property="frtrlNm" column="frtrlNm"/>
+        <result property="ctpvNm" column="ctpvNm"/>
+        <result property="addrNm" column="addrNm"/>
+        <result property="lat" column="lat"/>
+        <result property="lot" column="lot"/>
+        <result property="crtrDt" column="crtrDt"/>
+        <result property="mtnCd" column="mtnCd"/>
+        <result property="stampPath" column="stampPath"/>
+        <result property="stampUpdateDate" column="stampUpdateDate"/>
+    </resultMap>
+    <select id="selectAllMountain" resultMap="mountainResultMap">
+        select
+              frtrlId
+            , frtrlNm
+            , ctpvNm
+            , addrNm
+            , lat
+            , lot
+            , aslAltide
+            , crtrDt
+            , mtnCd
+            , stampPath
+            , stampUpdateDate
+          from Mountain
+    </select>
+    <select id="selectMountainByName" resultMap="mountainResultMap" parameterType="string">
+        select
+               frtrlId
+             , frtrlNm
+             , ctpvNm
+             , addrNm
+             , lat
+             , lot
+             , aslAltide
+             , crtrDt
+             , mtnCd
+             , stampPath
+             , stampUpdateDate
+          from Mountain
+         where frtrlNm LIKE concat('%', #{mountainName}, '%')
+    </select>
+</mapper>
