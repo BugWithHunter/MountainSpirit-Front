@@ -78,6 +78,7 @@
 <details>
   <summary>단위 테스트 결과</summary>
   <img width="1649" height="539" alt="image" src="https://github.com/user-attachments/assets/a373cd72-7ca9-4c5a-ac62-85aeb66b951c" />
+  <img width="2483" height="1074" alt="스크린샷 2025-10-01 154804" src="https://github.com/user-attachments/assets/92454dfc-3553-4415-b298-75d870328be1" />
 
 </details>
 
