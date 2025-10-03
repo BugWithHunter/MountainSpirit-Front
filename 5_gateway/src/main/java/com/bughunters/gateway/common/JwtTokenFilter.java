@@ -1,5 +1,6 @@
 package com.bughunters.gateway.common;
 
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +18,7 @@ import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
 import java.util.List;
+import java.util.Map;
 
 @Component
 @Slf4j
@@ -51,17 +53,22 @@ public class JwtTokenFilter extends AbstractGatewayFilterFactory<JwtTokenFilter.
                 String bearerToken = request.getHeaders().get(HttpHeaders.AUTHORIZATION).get(0);
                 String jwt = bearerToken.substring(7);
                 String subject = null;
-
+                Claims claims = null;
+                List<String> auths = null;
                 // sub 클레임 추출
                 /* 설명. 기본적으로 우리 서버에서 만들었고, 만료기간이 지나지 않았으며,
                  *      토큰 안에 'sub'라는 등록된 클레임이 존재하는지 확인
                  * */
                 try {
-                    subject = Jwts.parser()
+
+                    claims = Jwts.parser()
                             .setSigningKey(tokenSecret)
                             .parseClaimsJws(jwt)
-                            .getBody()
-                            .getSubject();
+                            .getBody();
+
+                    auths = (List<String>) claims.get("auth");
+
+                    subject = claims.getSubject();
                 } catch (Exception e) {
                     return onError(exchange, "No authorization header", HttpStatus.UNAUTHORIZED);
                 }
@@ -71,6 +78,12 @@ public class JwtTokenFilter extends AbstractGatewayFilterFactory<JwtTokenFilter.
                 if (subject == null || subject.isEmpty()) {
                     return onError(exchange, "No authorization header", HttpStatus.UNAUTHORIZED);
                 }
+
+                if(auths.contains("ROLE_ADMIN")){
+                    log.info("ADMIN 계정");
+                }
+
+//                List<String> auths =
 
             }
             return chain.filter(exchange);
