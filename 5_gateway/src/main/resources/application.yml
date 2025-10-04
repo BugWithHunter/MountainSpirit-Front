@@ -47,3 +47,30 @@ spring:
 token:
   secret: v7o98gdK42iddFqTxH07Yjv18KbwIZWQZu7NRPeR9+ji9tOGDX2r8PO3mGptklEdEiIB0RMT066q3qb19YBfqQ==
   expiration_time: 43200000 # 12시간
+
+
+
+# 권한별 설정
+security:
+  authz:
+    rules:
+      # 누구나 접근 허용
+      - pattern: /public/**
+        permitAll: true
+
+      # 읽기는 USER/ADMIN, 쓰기는 ADMIN만
+      - pattern: /member/**
+        methods: [GET]
+        anyRole: [USER, ADMIN]
+
+      - pattern: /member/**
+        methods: [POST, PUT, PATCH, DELETE]
+        anyRole: [ADMIN]
+
+      # 관리자 전용
+      - pattern: /admin/**
+        anyRole: [ADMIN]
+
+      # 정밀 라우트 우선 적용(위에서 아래 순서대로 매칭됨)
+      - pattern: /health
+        permitAll: true
