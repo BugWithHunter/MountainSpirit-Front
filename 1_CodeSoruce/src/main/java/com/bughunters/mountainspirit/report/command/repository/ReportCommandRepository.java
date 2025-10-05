@@ -1,5 +1,8 @@
 package com.bughunters.mountainspirit.report.command.repository;
 
+import com.bughunters.mountainspirit.board.command.entity.Board;
+import com.bughunters.mountainspirit.crewboard.command.entity.CrewBoard;
+import com.bughunters.mountainspirit.postcomment.command.entity.Comment;
 import com.bughunters.mountainspirit.report.command.dto.ReportIsAccepted;
 import com.bughunters.mountainspirit.report.command.entity.ReportCommandEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -27,4 +30,10 @@ public interface ReportCommandRepository extends JpaRepository<ReportCommandEnti
 
 
     long countByReportedIdAndCategoryIdAndReportDateGreaterThanAndIsAccepted(Long reportedId, Long categoryId, LocalDateTime endDate, ReportIsAccepted reportIsAccepted);
+    
+    boolean existsByPostIdAndIsAcceptedNot(Board board, ReportIsAccepted reportIsAccepted);
+
+    boolean existsByPostIdAndIsAcceptedNot(CrewBoard crewBoard, ReportIsAccepted reportIsAccepted);
+
+    boolean existsByPostIdAndIsAcceptedNot(Comment comment, ReportIsAccepted reportIsAccepted);
 }

@@ -1,8 +1,10 @@
 package com.bughunters.mountainspirit.report.command.controller;
 
+
 import com.bughunters.mountainspirit.report.command.dto.ReportIsAccepted;
 import com.bughunters.mountainspirit.report.command.dto.ReportRequestCommandDTO;
 import com.bughunters.mountainspirit.report.command.dto.ReportResponseCommandDTO;
+import com.bughunters.mountainspirit.report.command.dto.ReportStatusDTO;
 import com.bughunters.mountainspirit.report.command.service.ReportCommandService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -30,10 +32,12 @@ public class ReportCommandController {
     @PatchMapping("/{id}")
     public ResponseEntity<ReportResponseCommandDTO> updateReportStatus(
             @PathVariable Long id,
-            @RequestBody ReportIsAccepted status) {
+            @RequestBody ReportStatusDTO statusDTO) {
 
         // 서비스 호출
-        ReportResponseCommandDTO updatedReport = reportCommandService.updateReportStatus(id, status);
+        ReportResponseCommandDTO updatedReport =
+                reportCommandService.updateReportStatus(id, ReportIsAccepted.valueOf(statusDTO.getStatus()));
+
         return ResponseEntity.ok().body(updatedReport);
     }
 }
