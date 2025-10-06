@@ -123,6 +123,17 @@ public class MemberController {
                 .body(responseMessage);
     }
 
+    @GetMapping("/crew-quit")
+    public ResponseEntity<ResponseMessage> crewQuit(long crewId,long cumId) {
+        ResponseMessage responseMessage = new ResponseMessage();
+        log.info("넘어온 크루,유저 아이디 : {}, {}",crewId,cumId);
+        memberService.deleteCrewId(crewId,cumId);
+
+        responseMessage.setHttpStatus(HttpStatus.OK.value());
+        return ResponseEntity.ok()
+                .body(responseMessage);
+    }
+
     @GetMapping("/report/member-info/{id}")
     public ResponseEntity<ReportMemberDTO> getMemberInfo(@PathVariable Long id) {
         Member member = memberService.findMember(id);

@@ -149,8 +149,18 @@ public class CrewMemberCommendServiceImpl implements CrewMemberCommendService {
     }
 
     @Override
+    public void leaveCrew(CrewIdentifyMemberDTO crewIdentifyMemberDTO){
+        try{
+            leaveCrewTransaction(crewIdentifyMemberDTO);
+
+            memberServiceClient.deleteMemberCrewInfo(crewIdentifyMemberDTO.getCrewId(),crewIdentifyMemberDTO.getCumId());
+        }catch (Exception e){
+
+        }
+    }
+
     @Transactional
-    public void leaveCrew(CrewIdentifyMemberDTO crewIdentifyMemberDTO) {
+    public void leaveCrewTransaction(CrewIdentifyMemberDTO crewIdentifyMemberDTO) {
         // 크루원 select
         CrewMember crewMember = crewMemberCommendRepository.findByCrewIdAndCumId(crewIdentifyMemberDTO.getCrewId(), crewIdentifyMemberDTO.getCumId());
 
