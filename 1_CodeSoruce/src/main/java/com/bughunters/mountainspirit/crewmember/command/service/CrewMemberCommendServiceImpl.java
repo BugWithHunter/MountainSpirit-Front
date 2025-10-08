@@ -214,8 +214,18 @@ public class CrewMemberCommendServiceImpl implements CrewMemberCommendService {
     }
 
     @Override
+    public void banCrewMember(CrewMemberBanDTO crewMemberBanDTO){
+        try{
+            banCrewMemberTransaction(crewMemberBanDTO);
+
+            memberServiceClient.deleteMemberCrewInfo(crewMemberBanDTO.getCrewId(),crewMemberBanDTO.getCumId());
+        }catch (Exception e){
+
+        }
+
+    }
     @Transactional
-    public void banCrewMember(CrewMemberBanDTO crewMemberBanDTO) {
+    public void banCrewMemberTransaction(CrewMemberBanDTO crewMemberBanDTO) {
         // 크루원 정보 select
         CrewMember crewMember = crewMemberCommendRepository.findById(crewMemberBanDTO.getId()).orElse(null);
 
