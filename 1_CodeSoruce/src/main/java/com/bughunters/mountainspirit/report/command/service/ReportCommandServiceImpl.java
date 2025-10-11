@@ -10,7 +10,6 @@ import com.bughunters.mountainspirit.report.command.dto.*;
 import com.bughunters.mountainspirit.report.command.entity.*;
 import com.bughunters.mountainspirit.report.command.infrastructure.MemberFeignClient;
 import com.bughunters.mountainspirit.report.command.repository.*;
-import com.bughunters.mountainspirit.report.query.service.BanQueryService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
@@ -20,7 +19,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDateTime;
-import java.util.List;
+import java.time.ZoneId;
+
 
 @Service
 public class ReportCommandServiceImpl implements ReportCommandService {
@@ -34,7 +34,6 @@ public class ReportCommandServiceImpl implements ReportCommandService {
     private final BoardRepository boardRepository;
     private final CrewBoardRepository crewBoardRepository;
     private final CommentRepository commentRepository;
-    private final BanQueryService banQueryService;
     private final ApplicationEventPublisher eventPublisher;
 
     @Autowired
@@ -44,7 +43,6 @@ public class ReportCommandServiceImpl implements ReportCommandService {
                                     BlacklistCommandRepository blacklistCommandRepository,
                                     MemberFeignClient memberFeignClient,
                                     ModelMapper modelMapper,
-                                    BanQueryService banQueryService,
                                     BoardRepository boardRepository,
                                     CrewBoardRepository crewBoardRepository,
                                     CommentRepository commentRepository,
@@ -55,7 +53,6 @@ public class ReportCommandServiceImpl implements ReportCommandService {
         this.blacklistCommandRepository = blacklistCommandRepository;
         this.memberFeignClient = memberFeignClient;
         this.modelMapper = modelMapper;
-        this.banQueryService = banQueryService;
         this.boardRepository = boardRepository;
         this.commentRepository = commentRepository;
         this.crewBoardRepository = crewBoardRepository;
@@ -75,9 +72,18 @@ public class ReportCommandServiceImpl implements ReportCommandService {
         ReportCommandEntity rce = modelMapper.map(reportRequestCommandDTO, ReportCommandEntity.class);
         rce.setId(null);
 
+
+        if(member.getMemStsId() == null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "현재 회원은 회원상태가 없습니다");
+        }
+
         // 회원 상태 체크: 정지(3), 블랙리스트(5)면 신고 불가
-        if (member.getMemStsId() != null && (member.getMemStsId() == 3L || member.getMemStsId() == 5L)) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "현재 상태에서는 신고가 불가능합니다.");
+        if (member.getMemStsId() == 3L) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "현재 회원은 회원정지 상태입니다");
+        }
+
+        if (member.getMemStsId() == 5L) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "현재 회원은 블랙리스트 상태입니다");
         }
 
         switch(reportRequestCommandDTO.getReportType().toUpperCase()) {
@@ -98,7 +104,7 @@ public class ReportCommandServiceImpl implements ReportCommandService {
                 if(crew.getCrewId() != reportRequestCommandDTO.getReportedId()) {
                     throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "신고 대상자와 게시글 작성자가 일치하지 않습니다.");
                 }
-                if (reportCommandRepository.existsByPostIdAndIsAcceptedNot(crew, ReportIsAccepted.U)) {
+                if (reportCommandRepository.existsByCrewPostIdAndIsAcceptedNot(crew, ReportIsAccepted.U)) {
                     throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "이미 신고된 크루 게시글입니다.");
                 }
                 rce.setCrewPostId(crew);
@@ -109,7 +115,7 @@ public class ReportCommandServiceImpl implements ReportCommandService {
                 if(comment.getCumId() != reportRequestCommandDTO.getReportedId()) {
                     throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "신고 대상자와 게시글 작성자가 일치하지 않습니다.");
                 }
-                if (reportCommandRepository.existsByPostIdAndIsAcceptedNot(comment, ReportIsAccepted.U)) {
+                if (reportCommandRepository.existsByReplyIdAndIsAcceptedNot(comment, ReportIsAccepted.U)) {
                     throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "이미 신고된 댓글입니다.");
                 }
                 rce.setReplyId(comment);
@@ -162,7 +168,7 @@ public class ReportCommandServiceImpl implements ReportCommandService {
             // member.getBanCnt()와 report.suspensionCycle이 같은 인스턴스 갯수(승인된것만)
             long instanceCntNum = reportCommandRepository.countByReportedIdAndSuspensionCycleAndCategoryIdAndIsAccepted(
                    report.getReportedId(),
-                   report.getSuspensionCycle(),
+                   member.getBanCnt(),
                    report.getCategoryId(),
                    ReportIsAccepted.Y
            );
@@ -194,13 +200,14 @@ public class ReportCommandServiceImpl implements ReportCommandService {
     // 회원정지(Ban) 생성 및 commit 이후 회원 테이블 업데이트 이벤트 발행
     private void createBanAndMemberUpdate(ReportMemberDTO member, ReportCommandEntity report) {
         // 이미 블랙리스트면 무시
-        if (member.getMemStsId() != null && member.getMemStsId() != 5L) {
+        if (member.getMemStsId() == 5L) {
             return;
         }
 
         int newBanCnt = member.getBanCnt() + 1;
         LocalDateTime startDate = LocalDateTime.now();
         LocalDateTime endDate = null;
+        Long nextstatus = 3L;
 
         // newBanCnt 기준으로 기간 설정
         if (newBanCnt == 1) {
@@ -211,6 +218,7 @@ public class ReportCommandServiceImpl implements ReportCommandService {
             endDate = startDate.plusDays(30);
         } else if (newBanCnt == 4) {
             endDate = startDate;
+            nextstatus = 5L;
             createBlacklistAndMemberUpdate(member, report);
         } else if (newBanCnt >= 5) {
             return;
@@ -224,12 +232,12 @@ public class ReportCommandServiceImpl implements ReportCommandService {
         banCommandRepository.save(bcEntity);
 
         // DB 커밋 후 외부 회원서비스로 상태(정지, banCnt) 업데이트 -> 이벤트 발행 (AFTER_COMMIT 리스너에서 Feign 호출)
-        eventPublisher.publishEvent(new MemberStatusUpdateEvent(member.getId(), 3L, newBanCnt));
+        eventPublisher.publishEvent(new MemberStatusUpdateEvent(member.getId(), nextstatus, newBanCnt));
     }
 
     // 블랙리스트 생성 및 commit 후 회원 테이블 업데이트 이벤트 발행
     private void createBlacklistAndMemberUpdate(ReportMemberDTO member, ReportCommandEntity report) {
-        if(member.getMemStsId() != null && member.getMemStsId() == 5L) {
+        if(member.getMemStsId() == 5L) {
             return;
         }
 
