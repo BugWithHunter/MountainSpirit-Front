@@ -89,7 +89,8 @@ public class CrewMemberCommendServiceImpl implements CrewMemberCommendService {
             log.info("크루 맴버 등록 transaction 작업 끝");
 
             // feign client 통신
-            if(memberServiceClient.updateMemberCrewInfo(crewApplyDTO.getCrewId(), crewApplyDTO.getCumId())==null) throw new Exception("feign client 통신 실패");
+            if (memberServiceClient.updateMemberCrewInfo(crewApplyDTO.getCrewId(), crewApplyDTO.getCumId()) == null)
+                throw new Exception("feign client 통신 실패");
             log.info("feign client 통신 끝");
         } catch (Exception e) {
             // 만약 crewMemberRegistTransaction에서 트랜잭션 롤백이 일어나면 crewApply가 null로 넘어오게 되어 아래 롤백 트랜잭션 메소드가 실행되지 않음
@@ -105,9 +106,6 @@ public class CrewMemberCommendServiceImpl implements CrewMemberCommendService {
 
     @Transactional
     public CrewApply crewMemberRegistTransaction(CrewApplyDTO crewApplyDTO) {
-        // 넘어온 데이터에 값이 없으면 리턴
-        if (crewApplyDTO.getCrewId() == null || crewApplyDTO.getCumId() == null) return null;
-
         CrewApply crewApply = null;
 
         try {
@@ -156,25 +154,23 @@ public class CrewMemberCommendServiceImpl implements CrewMemberCommendService {
         CrewApplyDTO crewApplyDTO = modelMapper.map(crewApply, CrewApplyDTO.class);
 
         // 크루구성원(CrewMember) 테이블에서 데이터 delete
-        CrewMember crewMember = crewMemberCommendRepository.findByCrewIdAndCumId(crewApplyDTO.getCrewId(),crewApplyDTO.getCumId());
+        CrewMember crewMember = crewMemberCommendRepository.findByCrewIdAndCumId(crewApplyDTO.getCrewId(), crewApplyDTO.getCumId());
         crewMemberCommendRepository.delete(crewMember);
         log.info("service 크루 구성원 데이터 삭제");
 
         // 크루 가입 신청 히스토리(CrewApplyHistory)에서 데이터 delete
-        CrewApplyHistory crewApplyHistory = crewApplyHistoryCommendRepository.findCrewApplyHistoriesByCrewIdAndCumId(crewApplyDTO.getCrewId(),crewApplyDTO.getCumId());
+        CrewApplyHistory crewApplyHistory = crewApplyHistoryCommendRepository.findCrewApplyHistoriesByCrewIdAndCumId(crewApplyDTO.getCrewId(), crewApplyDTO.getCumId());
         crewApplyHistoryCommendRepository.delete(crewApplyHistory);
         log.info("service 크루 가입 신청 히스토리 삭제");
 
         // 크루 구성원 히스토리(CrewMemberHistory) 테이블에서 데이터 delete
-        CrewMemberHistory crewMemberHistory = crewMemberHistoryCommendRepository.findTopByCrewIdAndCumIdOrderByCrewMemberHistoryJoinDate(crewApplyDTO.getCrewId(),crewApplyDTO.getCumId());
+        CrewMemberHistory crewMemberHistory = crewMemberHistoryCommendRepository.findTopByCrewIdAndCumIdOrderByCrewMemberHistoryJoinDate(crewApplyDTO.getCrewId(), crewApplyDTO.getCumId());
         crewMemberHistoryCommendRepository.delete(crewMemberHistory);
         log.info("service 크루 구성원 히스토리 삭제");
 
         // 크루 가입 신청(CrewApply) 테이블에서 신청 데이터 다시 insert
-        CrewApply reRegist = modelMapper.map(crewApplyDTO, CrewApply.class);
-        log.info("service reRegist 엔티티 : {}",reRegist.toString());
-        reRegist.setId(null);
-        crewApplyCommendRepository.save(reRegist);
+        crewApply.setId(null);
+        crewApplyCommendRepository.save(crewApply);
         log.info("service 가입신청 재삽입 완료");
 
     }
@@ -196,26 +192,53 @@ public class CrewMemberCommendServiceImpl implements CrewMemberCommendService {
 
     @Override
     public void leaveCrew(CrewIdentifyMemberDTO crewIdentifyMemberDTO) {
+        CrewMember crewMember = null;
         try {
-            leaveCrewTransaction(crewIdentifyMemberDTO);
+            crewMember = leaveCrewTransaction(crewIdentifyMemberDTO);
 
             memberServiceClient.deleteMemberCrewInfo(crewIdentifyMemberDTO.getCrewId(), crewIdentifyMemberDTO.getCumId());
         } catch (Exception e) {
+            if (crewMember == null) {
+                log.info("service 크루 탈퇴 롤백 내용 없음");
+                return;
+            }
 
+            leaveCrewRollBackTransaction(crewMember);
+            log.info("크루 맴버 탈퇴 롤백 transaction 끝");
         }
     }
 
     @Transactional
-    public void leaveCrewTransaction(CrewIdentifyMemberDTO crewIdentifyMemberDTO) {
-        // 크루원 select
-        CrewMember crewMember = crewMemberCommendRepository.findByCrewIdAndCumId(crewIdentifyMemberDTO.getCrewId(), crewIdentifyMemberDTO.getCumId());
+    public CrewMember leaveCrewTransaction(CrewIdentifyMemberDTO crewIdentifyMemberDTO) {
+        CrewMember crewMember = null;
+        try {
+            // 크루원 select
+            crewMember = crewMemberCommendRepository.findByCrewIdAndCumId(crewIdentifyMemberDTO.getCrewId(), crewIdentifyMemberDTO.getCumId());
 
-        // 크루원 히스토리 insert
-        CrewMemberHistory crewMemberHistory = setCrewMemberQuitHistoryInfo(crewMember);
-        crewMemberHistoryCommendRepository.save(crewMemberHistory);
+            // 크루원 히스토리 insert
+            CrewMemberHistory crewMemberHistory = setCrewMemberQuitHistoryInfo(crewMember);
+            crewMemberHistoryCommendRepository.save(crewMemberHistory);
 
-        // 크루원 delete
-        crewMemberCommendRepository.delete(crewMember);
+            // 크루원 delete
+            crewMemberCommendRepository.delete(crewMember);
+        } catch (Exception e) {
+            log.info("크루 탈퇴 transaction 예외 발생");
+            crewMember = null;
+        }
+        return crewMember;
+    }
+
+    @Transactional
+    public void leaveCrewRollBackTransaction(CrewMember crewMember) {
+        // 크루원 히스토리 delete
+        CrewMemberHistory crewMemberHistory = crewMemberHistoryCommendRepository.findTopByCrewIdAndCumIdOrderByCrewMemberHistoryStateUpdateDate(crewMember.getCrewId(), crewMember.getCumId());
+        crewMemberHistoryCommendRepository.delete(crewMemberHistory);
+        log.info("service 크루 탈퇴 기록 삭제");
+
+        // 크루원 다시 insert
+        crewMember.setId(null);
+        crewMemberCommendRepository.save(crewMember);
+        log.info("service 크루구성원 데이터 다시 삽입");
     }
 
     @Override
@@ -261,27 +284,57 @@ public class CrewMemberCommendServiceImpl implements CrewMemberCommendService {
 
     @Override
     public void banCrewMember(CrewMemberBanDTO crewMemberBanDTO) {
+        CrewMember crewMember = null;
+
         try {
-            banCrewMemberTransaction(crewMemberBanDTO);
+            crewMember = banCrewMemberTransaction(crewMemberBanDTO);
 
             memberServiceClient.deleteMemberCrewInfo(crewMemberBanDTO.getCrewId(), crewMemberBanDTO.getCumId());
         } catch (Exception e) {
+            if (crewMember == null) {
+                log.info("service 크루 강퇴 롤백 내용 없음");
+                return;
+            }
 
+            banCrewMemberRollBackTransaction(crewMember);
+            log.info("크루 맴버 강퇴 롤백 transaction 끝");
         }
 
     }
 
     @Transactional
-    public void banCrewMemberTransaction(CrewMemberBanDTO crewMemberBanDTO) {
-        // 크루원 정보 select
-        CrewMember crewMember = crewMemberCommendRepository.findById(crewMemberBanDTO.getId()).orElse(null);
+    public CrewMember banCrewMemberTransaction(CrewMemberBanDTO crewMemberBanDTO) {
+        CrewMember crewMember = null;
+        try {
+            // 크루원 정보 select
+            crewMember = crewMemberCommendRepository.findById(crewMemberBanDTO.getId()).orElse(null);
 
-        // 크루 구성원 히스토리에 insert
-        CrewMemberHistory crewMemberHistory = setCrewMemberBanHistoryInfo(crewMember, crewMemberBanDTO.getBanReason());
-        crewMemberHistoryCommendRepository.save(crewMemberHistory);
+            // 크루 구성원 히스토리에 insert
+            CrewMemberHistory crewMemberHistory = setCrewMemberBanHistoryInfo(crewMember, crewMemberBanDTO.getBanReason());
+            crewMemberHistoryCommendRepository.save(crewMemberHistory);
 
-        // 크루 구성원 테이블에서 delete
-        crewMemberCommendRepository.delete(crewMember);
+            // 크루 구성원 테이블에서 delete
+            crewMemberCommendRepository.delete(crewMember);
+        } catch (Exception e) {
+            log.info("크루 강퇴 transaction 예외 발생");
+            crewMember = null;
+        }
+        return crewMember;
+    }
+
+    @Transactional
+    public void banCrewMemberRollBackTransaction(CrewMember crewMember) {
+        // 크루원 히스토리 delete
+        CrewMemberHistory crewMemberHistory = crewMemberHistoryCommendRepository.findTopByCrewIdAndCumIdOrderByCrewMemberHistoryStateUpdateDate(crewMember.getCrewId(), crewMember.getCumId());
+        crewMemberHistoryCommendRepository.delete(crewMemberHistory);
+        log.info("service 크루 강퇴 기록 삭제");
+
+        // 크루원 다시 insert
+        crewMember.setId(null);
+        crewMemberCommendRepository.save(crewMember);
+        log.info("service 크루구성원 데이터 다시 삽입");
+
+
     }
 
 

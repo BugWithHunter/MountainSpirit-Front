@@ -11,4 +11,6 @@ public interface CrewMemberHistoryCommendRepository extends JpaRepository<CrewMe
     void deleteByCrewIdAndCumId(Long crewId, Long cumId);
 
     CrewMemberHistory findTopByCrewIdAndCumIdOrderByCrewMemberHistoryJoinDate(Long crewId, Long cumId);
+
+    CrewMemberHistory findTopByCrewIdAndCumIdOrderByCrewMemberHistoryStateUpdateDate(Long crewId, Long cumId);
 }
