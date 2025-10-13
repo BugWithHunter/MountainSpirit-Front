@@ -51,6 +51,7 @@
           FROM CrewClimbBoard a
          WHERE crewId = #{crewId}
            AND crewClimbIsDeleted = 'N'
+           AND crewMemberId IS NOT NULL
     </select>
     <select id="findOneCrewClimbBoardByCrewClimbBoardId" parameterType="_long" resultMap="findOneCrewClimbBoardByCrewClimbBoardIdResultMap">
         SELECT
