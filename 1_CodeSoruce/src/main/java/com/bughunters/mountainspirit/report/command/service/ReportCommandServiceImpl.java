@@ -10,6 +10,7 @@ import com.bughunters.mountainspirit.report.command.dto.*;
 import com.bughunters.mountainspirit.report.command.entity.*;
 import com.bughunters.mountainspirit.report.command.infrastructure.MemberFeignClient;
 import com.bughunters.mountainspirit.report.command.repository.*;
+import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
@@ -21,7 +22,7 @@ import org.springframework.web.server.ResponseStatusException;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 
-
+@Slf4j
 @Service
 public class ReportCommandServiceImpl implements ReportCommandService {
 
@@ -120,6 +121,8 @@ public class ReportCommandServiceImpl implements ReportCommandService {
                 }
                 rce.setReplyId(comment);
                 break;
+            case "MEMBER":
+                break;
             default:
                 throw new IllegalArgumentException("잘못된 신고 타입입니다.");
         }
@@ -160,6 +163,24 @@ public class ReportCommandServiceImpl implements ReportCommandService {
             // 외부 회원정보는 Feign으로 조회(후에 회원 업데이트는 트랜잭션 후로 분리)
             ReportMemberDTO member = memberFeignClient.getMemberInfo(report.getReportedId());
 
+            if (report.getPostId() != null) {
+                 Board board = report.getPostId();
+                 board.setIsDeleted("Y");
+                 boardRepository.save(board);
+            }
+            else if (report.getReplyId() != null) {
+                 Comment comment = report.getReplyId();
+                 try {
+                     commentRepository.delete(comment);
+                 } catch (Exception e) {
+                     log.warn("댓글 삭제 중 예외 발생 (무시됨): {}", e.getMessage());
+                 }
+            }
+            else if (report.getCrewPostId() != null) {
+                 CrewBoard crew = report.getCrewPostId();
+                 crew.setIsDeleted("Y");
+                 crewBoardRepository.save(crew);
+            }
             // 카테고리 정보
             ReportCategoryCommandEntity rcce = reportCategoryCommandRepository
                     .findById(report.getCategoryId())
@@ -180,15 +201,18 @@ public class ReportCommandServiceImpl implements ReportCommandService {
             }
             // countStandard 도달 또는 10개 누적이면 BAN(회원정지 테이블 insert + 회원 banCnt 증가)
             else if (instanceCntNum == rcce.getCountStandard() || instanceCntNum == 10) {
-                createBanAndMemberUpdate(member, report);
-                result = "BAN";
-            }
-            // 초과시 블랙리스트 처리에 대한 안전장치
-            else if (instanceCntNum > rcce.getCountStandard() && rcce.getCountStandard() > 0) {
-                createBlacklistAndMemberUpdate(member, report);
-                result = "BLACKLIST";
+                boolean isBlacklist = createBanAndMemberUpdate(member, report);
+                result = isBlacklist? "BLACKLIST" : "BAN";
             }
         } else if (status == ReportIsAccepted.U) {
+            if (report.getPostId() != null) {
+                Board board = report.getPostId();
+                board.setIsDeleted("N");
+                boardRepository.save(board);
+            } else if (report.getCrewPostId() != null) {
+                CrewBoard crew = report.getCrewPostId();
+                crew.setIsDeleted("N");
+                crewBoardRepository.save(crew); }
             result = "UNLOCKED";
         }
 
@@ -198,10 +222,10 @@ public class ReportCommandServiceImpl implements ReportCommandService {
     }
 
     // 회원정지(Ban) 생성 및 commit 이후 회원 테이블 업데이트 이벤트 발행
-    private void createBanAndMemberUpdate(ReportMemberDTO member, ReportCommandEntity report) {
+    private boolean createBanAndMemberUpdate(ReportMemberDTO member, ReportCommandEntity report) {
         // 이미 블랙리스트면 무시
         if (member.getMemStsId() == 5L) {
-            return;
+            return false;
         }
 
         int newBanCnt = member.getBanCnt() + 1;
@@ -217,11 +241,11 @@ public class ReportCommandServiceImpl implements ReportCommandService {
         } else if (newBanCnt == 3) {
             endDate = startDate.plusDays(30);
         } else if (newBanCnt == 4) {
-            endDate = startDate;
             nextstatus = 5L;
             createBlacklistAndMemberUpdate(member, report);
+            return true;
         } else if (newBanCnt >= 5) {
-            return;
+            return false;
         }
 
         BanCommandEntity bcEntity = BanCommandEntity.builder()
@@ -233,6 +257,7 @@ public class ReportCommandServiceImpl implements ReportCommandService {
 
         // DB 커밋 후 외부 회원서비스로 상태(정지, banCnt) 업데이트 -> 이벤트 발행 (AFTER_COMMIT 리스너에서 Feign 호출)
         eventPublisher.publishEvent(new MemberStatusUpdateEvent(member.getId(), nextstatus, newBanCnt));
+        return false;
     }
 
     // 블랙리스트 생성 및 commit 후 회원 테이블 업데이트 이벤트 발행
