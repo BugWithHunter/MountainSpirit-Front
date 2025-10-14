@@ -102,9 +102,6 @@ public class ReportCommandServiceImpl implements ReportCommandService {
             case "CREW":
                 CrewBoard crew = crewBoardRepository.findById(Math.toIntExact(reportRequestCommandDTO.getId()))
                         .orElseThrow(() -> new IllegalArgumentException("크루 게시글이 존재하지 않습니다"));
-                if(crew.getCrewId() != reportRequestCommandDTO.getReportedId()) {
-                    throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "신고 대상자와 게시글 작성자가 일치하지 않습니다.");
-                }
                 if (reportCommandRepository.existsByCrewPostIdAndIsAcceptedNot(crew, ReportIsAccepted.U)) {
                     throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "이미 신고된 크루 게시글입니다.");
                 }
@@ -241,7 +238,6 @@ public class ReportCommandServiceImpl implements ReportCommandService {
         } else if (newBanCnt == 3) {
             endDate = startDate.plusDays(30);
         } else if (newBanCnt == 4) {
-            nextstatus = 5L;
             createBlacklistAndMemberUpdate(member, report);
             return true;
         } else if (newBanCnt >= 5) {
