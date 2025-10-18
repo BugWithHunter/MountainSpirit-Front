@@ -35,6 +35,7 @@ public class CrewClimbBoardCommendServiceImpl implements CrewClimbBoardCommendSe
     @Override
     @Transactional
     public void registCrewClimbBoard(CrewClimbBoardDTO crewClimbBoardDTO) {
+
         // 넘어온 DTO값 맵핑 + default값 세팅
         CrewClimbBoard crewClimbBoard = modelMapper.map(crewClimbBoardDTO, CrewClimbBoard.class);
         log.info("Service 크루 모집 일정 넘어온거 맵핑 값 : {}", crewClimbBoard);
@@ -132,6 +133,7 @@ public class CrewClimbBoardCommendServiceImpl implements CrewClimbBoardCommendSe
     }
 
     @Override
+    @Transactional
     public void cancelCrewClimb(CrewClimbBoardCancelDTO crewClimbBoardCancelDTO) {
         CrewClimbRecord crewClimbRecord = crewClimbRecordCommendRepository.findByCrewClimbIdAndCrewMemberId(crewClimbBoardCancelDTO.getCrewClimbId(),crewClimbBoardCancelDTO.getCrewMemberId());
         if(crewClimbRecord==null){
