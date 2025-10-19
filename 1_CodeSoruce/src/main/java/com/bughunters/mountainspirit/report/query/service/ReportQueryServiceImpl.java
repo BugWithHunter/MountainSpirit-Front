@@ -18,13 +18,15 @@ public class ReportQueryServiceImpl implements ReportQueryService {
     }
 
     @Override
-    public List<ReportQueryDTO> selectAllReport() {
-        return reportQueryMapper.reportAll();
+    public List<ReportQueryDTO> selectAllReport(int page, int size) {
+        int offset = (page - 1) * size;
+        return reportQueryMapper.reportAll(size, offset);
     }
 
     @Override
-    public List<ReportQueryDTO> searchReportsByType(String reportType) {
-        return reportQueryMapper.findReportsByType(reportType);
+    public List<ReportQueryDTO> searchReportsByType(String reportType, int page, int size) {
+        int offset = (page - 1) * size;
+        return reportQueryMapper.findReportsByType(reportType, size, offset);
     }
 
     @Override
@@ -34,7 +36,8 @@ public class ReportQueryServiceImpl implements ReportQueryService {
     }
 
     @Override
-    public List<ReportQueryDTO> selectReportsByMemberId(Long memberId) {
-        return reportQueryMapper.findReportsByMemberId(memberId);
+    public List<ReportQueryDTO> selectReportsByMemberId(Long memberId, int page, int size) {
+        int offset = (page - 1) * size;
+        return reportQueryMapper.findReportsByMemberId(memberId, size, offset);
     }
 }

@@ -36,6 +36,9 @@
             , suspension_cycle
         from Report
         ORDER BY reportDate DESC
+        <if test="limit != null and offset != null">
+            LIMIT #{limit} OFFSET #{offset}
+        </if>
     </select>
 
     <!-- 타입별 조회 -->
@@ -57,6 +60,9 @@
         FROM Report
         WHERE reportType = #{reportType}
         ORDER BY reportDate DESC
+        <if test="limit != null and offset != null">
+            LIMIT #{limit} OFFSET #{offset}
+        </if>
     </select>
 
     <!-- 타입에 맞는 조건별 페이징 조회 -->
@@ -108,5 +114,8 @@
         WHERE reportedId = #{memberId}
           AND isAccepted = 'Y'
         ORDER BY reportDate DESC
+        <if test="limit != null and offset != null">
+            LIMIT #{limit} OFFSET #{offset}
+        </if>
     </select>
 </mapper>

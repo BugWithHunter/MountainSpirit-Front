@@ -24,6 +24,9 @@ public class BanCommandEntity {
     @Column(name = "endDate")
     private LocalDateTime endDate;
 
+    @Column(name = "annotation")
+    private String annotation;
+
     @Column(name = "userId")
     private Long userId;
 

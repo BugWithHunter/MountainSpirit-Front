@@ -18,12 +18,14 @@ public class ReportProtestQueryServiceImpl implements ReportProtestQueryService 
     }
 
     @Override
-    public List<ReportProtestQueryDTO> selectAllReportProtest() {
-        return reportProtestQueryMapper.selectAllReportProtest();
+    public List<ReportProtestQueryDTO> selectAllReportProtest(int page, int size) {
+        int offset = (page - 1) * size;
+        return reportProtestQueryMapper.selectAllReportProtest(size, offset);
     }
 
     @Override
-    public List<ReportProtestQueryDTO> selectReportProtestByReportedId(Long reportedId) {
-        return reportProtestQueryMapper.selectReportProtestByReportedId(reportedId);
+    public List<ReportProtestQueryDTO> selectReportProtestByReportedId(Long reportedId, int page, int size) {
+        int offset = (page - 1) * size;
+        return reportProtestQueryMapper.selectReportProtestByReportedId(reportedId, size , offset);
     }
 }

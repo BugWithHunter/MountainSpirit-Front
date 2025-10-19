@@ -18,7 +18,8 @@ public class BlacklistQueryServiceImpl implements BlacklistQueryService {
     }
 
     @Override
-    public List<BlacklistQueryDTO> getAllBlacklist() {
-        return blacklistQueryMapper.selectAllBlacklist();
+    public List<BlacklistQueryDTO> getAllBlacklist(int page, int size) {
+        int offset = (page - 1) * size;
+        return blacklistQueryMapper.selectAllBlacklist(size, offset);
     }
 }

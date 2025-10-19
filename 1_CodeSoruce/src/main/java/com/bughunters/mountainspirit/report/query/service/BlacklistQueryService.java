@@ -5,5 +5,5 @@ import com.bughunters.mountainspirit.report.query.dto.BlacklistQueryDTO;
 import java.util.List;
 
 public interface BlacklistQueryService {
-    List<BlacklistQueryDTO> getAllBlacklist();
+    List<BlacklistQueryDTO> getAllBlacklist(int page, int size);
 }

@@ -25,10 +25,11 @@
             reportId
         FROM ReportProtest
         ORDER BY appealDate DESC
+        <if test="limit != null and offset != null">
+            LIMIT #{limit} OFFSET #{offset}
+        </if>
     </select>
-    <select id="selectReportProtestByReportedId"
-            parameterType="long"
-            resultMap="ReportProtestResultMap">
+    <select id="selectReportProtestByReportedId" resultMap="ReportProtestResultMap">
         SELECT
             id,
             appealDate,
@@ -41,5 +42,8 @@
         FROM ReportProtest
         WHERE reportedId = #{reportedId}
         ORDER BY appealDate DESC
+        <if test="limit != null and offset != null">
+            LIMIT #{limit} OFFSET #{offset}
+        </if>
     </select>
 </mapper>

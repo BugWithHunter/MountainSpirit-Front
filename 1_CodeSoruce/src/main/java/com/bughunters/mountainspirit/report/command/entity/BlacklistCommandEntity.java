@@ -21,6 +21,9 @@ public class BlacklistCommandEntity {
     @Column(name = "createDate")
     private LocalDateTime createDate;
 
+    @Column(name = "annotation")
+    private String annotation;
+
     @Column(name = "adminId")
     private Long adminId;
 

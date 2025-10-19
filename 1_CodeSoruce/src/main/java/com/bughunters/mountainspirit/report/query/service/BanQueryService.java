@@ -6,7 +6,6 @@ import com.bughunters.mountainspirit.report.query.dto.BanQueryDTO;
 import java.util.List;
 
 public interface BanQueryService {
-    List<BanQueryDTO> selectAllBan();
+    List<BanQueryDTO> selectAllBan(int page, int size);
 
-    ReportMemberDTO findReportedMember(Long reportedId);
 }

@@ -8,9 +8,15 @@ import java.util.List;
 
 @Mapper
 public interface ReportQueryMapper {
-    List<ReportQueryDTO> reportAll();
+    List<ReportQueryDTO> reportAll(
+            @Param("limit") Integer limit,
+            @Param("offset") Integer offset
+    );
 
-    List<ReportQueryDTO> findReportsByType(@Param("reportType") String reportType);
+    List<ReportQueryDTO> findReportsByType(
+            @Param("reportType") String reportType,
+            @Param("limit") Integer limit,
+            @Param("offset") Integer offset);
 
 
     // 신고 타입과 신고 상태에 따른 페이징 조회
@@ -22,5 +28,8 @@ public interface ReportQueryMapper {
     );
 
     // 회원 단건 신고 조회
-    List<ReportQueryDTO> findReportsByMemberId(@Param("memberId") Long memberId);
+    List<ReportQueryDTO> findReportsByMemberId(
+            @Param("memberId") Long memberId,
+            @Param("limit") Integer limit,
+            @Param("offset") Integer offset);
 }

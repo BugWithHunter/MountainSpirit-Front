@@ -26,17 +26,8 @@
             , adminId
         FROM Ban
         ORDER BY id DESC
-    </select>
-
-    <select id="selectMemberByReportedId" parameterType="_long" resultMap="reportedMemberResultMap">
-        SELECT
-               id
-             , memName
-             , email
-             , memStsId
-             , banCnt
-             , signInDate
-          FROM Member
-         WHERE id = #{reportedId}
+        <if test="limit != null and offset != null">
+            LIMIT #{limit} OFFSET #{offset}
+        </if>
     </select>
 </mapper>

@@ -19,14 +19,10 @@ public class BanQueryServiceImpl implements BanQueryService {
     }
 
     @Override
-    public List<BanQueryDTO> selectAllBan() {
-        return banQueryMapper.selectAllBan();
+    public List<BanQueryDTO> selectAllBan(int page, int size) {
+        int offset = (page - 1) * size;
+        return banQueryMapper.selectAllBan(size, offset);
     }
 
-    @Override
-    public ReportMemberDTO findReportedMember(Long reportedId) {
-        ReportMemberDTO reportMemberDTO = banQueryMapper.selectMemberByReportedId(reportedId);
 
-        return reportMemberDTO;
-    }
 }
