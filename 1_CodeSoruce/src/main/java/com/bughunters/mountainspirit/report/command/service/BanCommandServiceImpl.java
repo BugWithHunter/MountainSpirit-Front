@@ -17,12 +17,19 @@ public class BanCommandServiceImpl implements BanCommandService {
 
 
     @Override
-    public void addAnnotation(BanAnnotationRequestDTO dto, Long adminId) {
-        BanCommandEntity ban = banCommandRepository.findById(dto.getBanId())
+    public void addAnnotation(Long banId, String annotation, Long adminId) {
+
+        BanCommandEntity ban = banCommandRepository.findById(banId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원 정지 ID입니다."));
 
-        ban.setAnnotation(dto.getAnnotation()); // annotation 값 업데이트
+        ban.setAnnotation(annotation); // annotation 값 업데이트
         ban.setAdminId(adminId);               // 수정한 관리자 ID 기록
         banCommandRepository.save(ban);
+    }
+
+    @Override
+    public BanCommandEntity getBanById(Long banId) {
+        return banCommandRepository.findById(banId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원 정지 ID입니다."));
     }
 }

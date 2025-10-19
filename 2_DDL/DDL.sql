@@ -1,4 +1,4 @@
-/* ==================== 테이블 삭제 ============================= */
+`Member`/* ==================== 테이블 삭제 ============================= */
 DROP TABLE IF EXISTS Member;
 DROP TABLE IF EXISTS ScoreStandard;
 DROP TABLE IF EXISTS MountainRank;

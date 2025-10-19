@@ -10,19 +10,18 @@ import org.springframework.stereotype.Service;
 @Service
 public class BlacklistCommandServiceImpl implements BlacklistCommandService{
     private final BlacklistCommandRepository blacklistCommandRepository;
-    private final ModelMapper modelMapper;
+
 
     @Autowired
-    public BlacklistCommandServiceImpl(BlacklistCommandRepository blacklistCommandRepository,
-                                       ModelMapper modelMapper) {
+    public BlacklistCommandServiceImpl(BlacklistCommandRepository blacklistCommandRepository) {
         this.blacklistCommandRepository = blacklistCommandRepository;
-        this.modelMapper = modelMapper;
+
     }
 
     @Override
-    public void addComment(BlacklistRequestDTO dto, Long adminId) {
+    public void addComment(Long blacklistId, BlacklistRequestDTO dto, Long adminId) {
 
-        BlacklistCommandEntity entity = blacklistCommandRepository.findById(dto.getBlacklistId())
+        BlacklistCommandEntity entity = blacklistCommandRepository.findById(blacklistId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 블랙리스트 ID입니다."));
 
 

@@ -3,17 +3,17 @@ package com.bughunters.mountainspirit.report.command.controller;
 import com.bughunters.mountainspirit.common.ResponseMessage;
 import com.bughunters.mountainspirit.common.UserInfo;
 import com.bughunters.mountainspirit.report.command.dto.BanAnnotationRequestDTO;
+import com.bughunters.mountainspirit.report.command.entity.BanCommandEntity;
 import com.bughunters.mountainspirit.report.command.service.BanCommandService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/ban")
@@ -25,8 +25,9 @@ public class BanCommandController {
         this.banCommandService = banCommandService;
     }
 
-    @PostMapping("/comment")
+    @PostMapping("/{banId}")
     public ResponseEntity<ResponseMessage> addAnnotation(
+            @PathVariable Long banId,
             @RequestBody BanAnnotationRequestDTO dto,
             HttpServletRequest request
             ) {
@@ -41,15 +42,22 @@ public class BanCommandController {
         }
 
         Long adminId = userInfo.getId();
-        banCommandService.addAnnotation(dto, adminId);
+        banCommandService.addAnnotation(banId, dto.getAnnotation(), adminId);
+
+        BanCommandEntity updatedBan = banCommandService.getBanById(banId);
+
+        Map<String, Object> data = new HashMap<>();
+        data.put("banId", updatedBan.getId());
+        data.put("annotation", updatedBan.getAnnotation());
+        data.put("adminId", updatedBan.getAdminId());
 
         ResponseMessage response = new ResponseMessage(
                 HttpStatus.OK.value(),
                 "주석이 추가되었습니다.",
-                Collections.emptyMap()
+                data
         );
 
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok().body(response);
 
     }
 }

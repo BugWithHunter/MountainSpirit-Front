@@ -36,7 +36,7 @@ public class ReportCommandEntity {
 
     @Enumerated(EnumType.STRING)
     @Column(length = 1, name = "isAccepted")
-    private ReportIsAccepted isAccepted = ReportIsAccepted.N;
+    private ReportIsAccepted isAccepted = ReportIsAccepted.U;
 
     @Column(name = "reportedId")
     private Long reportedId;

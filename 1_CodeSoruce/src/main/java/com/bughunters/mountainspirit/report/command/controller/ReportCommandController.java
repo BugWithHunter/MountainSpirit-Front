@@ -37,7 +37,10 @@ public class ReportCommandController {
         Map<String, Object> responseMap = new HashMap<>();
         responseMap.put("report", reportResponseCommandDTO);
 
-        ResponseMessage response = new ResponseMessage(HttpStatus.OK.value(), "신고가 정상적으로 접수되었습니다.", responseMap);
+        ResponseMessage response = new ResponseMessage(
+                HttpStatus.OK.value(),
+                "신고가 정상적으로 접수되었습니다.",
+                responseMap);
         return ResponseEntity.ok(response);
     }
 
@@ -45,7 +48,7 @@ public class ReportCommandController {
     // report테이블 update, id는 report테이블의 pk
     // 관리자만 가능
     @PatchMapping("/{id}")
-    public ResponseEntity<ReportResponseCommandDTO> updateReportStatus(
+    public ResponseEntity<ResponseMessage> updateReportStatus(
             @PathVariable Long id,
             @RequestBody ReportStatusDTO statusDTO,
             HttpServletRequest request) {
@@ -53,7 +56,13 @@ public class ReportCommandController {
         UserInfo userInfo = (UserInfo) request.getAttribute("userInfo");
 
         if (userInfo == null) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(
+                    new ResponseMessage(
+                            HttpStatus.FORBIDDEN.value(),
+                            "관리자 인증정보가 없습니다",
+                            null
+                    )
+            );
         }
 
         Long adminId = userInfo.getId();
@@ -64,6 +73,15 @@ public class ReportCommandController {
                         adminId
                         );
 
-        return ResponseEntity.ok().body(updatedReport);
+        Map<String, Object> responseMap = new HashMap<>();
+        responseMap.put("report", updatedReport);
+
+        ResponseMessage response = new ResponseMessage(
+                HttpStatus.OK.value(),
+                "신고 상태를 변경했습니다",
+                responseMap
+        );
+
+        return ResponseEntity.ok().body(response);
     }
 }

@@ -14,7 +14,8 @@ public class ReportProtestResponseDTO {
     private Long id;
     private LocalDateTime appealDate;
     private String adminId;
-    private String reason;
+    private String appealReason;
+    private String changeStatusReason;
     private String isAccepted;
     private Long reportedId;
     private Long reportId;
