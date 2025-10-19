@@ -163,6 +163,9 @@ public class CrewClimbBoardCommendServiceImpl implements CrewClimbBoardCommendSe
         if (crewClimbBoard.getCrewClimbAmountOfPeople().equals(originalCrewClimbBoard.getCrewClimbAmountOfPeople())) {
             originalCrewClimbBoard.setCrewClimbAmountOfPeople(crewClimbBoard.getCrewClimbAmountOfPeople());
         }
+        if (crewClimbBoard.getCrewClimbIsEnded() != originalCrewClimbBoard.getCrewClimbIsEnded()) {
+            originalCrewClimbBoard.setCrewClimbIsEnded(crewClimbBoard.getCrewClimbIsEnded());
+        }
     }
 
     private static CrewClimbRecord setCrewClimbRecordRegistInfo(CrewClimbBoardApplyDTO crewClimbBoardApplyDTO) {
