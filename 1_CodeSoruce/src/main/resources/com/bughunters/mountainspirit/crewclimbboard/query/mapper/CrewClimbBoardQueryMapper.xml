@@ -31,10 +31,10 @@
             <id property="frtrlId" column="frtrlId"/>
             <result property="frtrlNm" column="frtrlNm"/>
         </association>
-        <association property="member" javaType="com.bughunters.mountainspirit.crewclimbboard.query.dto.MemberDTO">
-            <id property="id" column="id"/>
+        <collection property="member" ofType="com.bughunters.mountainspirit.crewclimbboard.query.dto.MemberDTO">
+            <id property="id" column="cid"/>
             <result property="nickName" column="nickName"/>
-        </association>
+        </collection>
     </resultMap>
     <resultMap id="MyCrewClimbBoardByCrewMemberIdResultMap" type="com.bughunters.mountainspirit.crewclimbboard.query.dto.MyCrewClimbBoardListDTO">
         <id property="id" column="id"/>
@@ -75,11 +75,12 @@
              , a.crewId
              , b.frtrlId
              , b.frtrlNm
-             , d.id
-             , d.nickName
+             , e.id as cid
+             , e.nickName
         FROM CrewClimbBoard a JOIN Mountain b ON a.frtrlId = b.frtrlId
-                              JOIN CrewMember c ON a.crewMemberId = c.id
-                              JOIN Member d ON c.cumId = d.id
+                              JOIN CrewClimbRecord c ON a.id = c.crewClimbId
+                              JOIN CrewMember d ON c.crewMemberId = d.id
+                              JOIN Member e ON d.cumId = e.id
         WHERE a.id = #{crewClimbBoardId}
           AND a.crewClimbIsDeleted = 'N'
           AND a.crewMemberId IS NOT NULL
