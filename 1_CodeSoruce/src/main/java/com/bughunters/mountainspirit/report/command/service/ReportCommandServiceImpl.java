@@ -127,7 +127,7 @@ public class ReportCommandServiceImpl implements ReportCommandService {
         // Report 엔티티 매핑
         rce.setReportDate(LocalDateTime.now());
         rce.setSuspensionCycle(suspensionCycle);
-        rce.setIsAccepted(ReportIsAccepted.N);
+        rce.setIsAccepted(ReportIsAccepted.U);
 
         reportCommandRepository.save(rce);
 
@@ -145,10 +145,12 @@ public class ReportCommandServiceImpl implements ReportCommandService {
 
     @Override
     @Transactional
-    public ReportResponseCommandDTO updateReportStatus(Long reportedId, ReportIsAccepted status) {
+    public ReportResponseCommandDTO updateReportStatus(Long reportedId, ReportIsAccepted status, Long adminId) {
         // report 조회
         ReportCommandEntity report = reportCommandRepository.findById(reportedId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "신고를 찾을 수 없습니다"));
+
+        report.setAdminId(adminId);
 
         // 상태 업데이트
         report.setIsAccepted(status);
@@ -201,7 +203,7 @@ public class ReportCommandServiceImpl implements ReportCommandService {
                 boolean isBlacklist = createBanAndMemberUpdate(member, report);
                 result = isBlacklist? "BLACKLIST" : "BAN";
             }
-        } else if (status == ReportIsAccepted.U) {
+        } else if (status == ReportIsAccepted.N) {
             if (report.getPostId() != null) {
                 Board board = report.getPostId();
                 board.setIsDeleted("N");

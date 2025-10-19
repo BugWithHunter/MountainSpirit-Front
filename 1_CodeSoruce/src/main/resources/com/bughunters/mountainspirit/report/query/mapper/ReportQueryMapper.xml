@@ -35,8 +35,31 @@
             , postId
             , suspension_cycle
         from Report
+        ORDER BY reportDate DESC
     </select>
-    <!-- 조건별 조회 -->
+
+    <!-- 타입별 조회 -->
+    <select id="findReportsByType" resultMap="reportResultMap">
+        SELECT
+            id
+             , reportDate
+             , reportType
+             , adminId
+             , reason
+             , isAccepted
+             , reportedId
+             , categoryId
+             , reportId
+             , crewPostId
+             , replyId
+             , postId
+             , suspension_cycle
+        FROM Report
+        WHERE reportType = #{reportType}
+        ORDER BY reportDate DESC
+    </select>
+
+    <!-- 타입에 맞는 조건별 페이징 조회 -->
     <select id="findReportsByTypeAndStatus" resultMap="reportResultMap">
         SELECT
               id
@@ -60,8 +83,12 @@
         <if test="isAccepted != null">
             AND isAccepted = #{isAccepted}
         </if>
+        ORDER BY reportDate DESC
+        <if test="limit != null and offset != null">
+            LIMIT #{limit} OFFSET #{offset}
+        </if>
     </select>
-    <!-- 회원 단건 신고 조회 -->
+    <!-- 신고가 승인된 회원 단건 신고 조회 -->
     <select id="findReportsByMemberId" resultMap="reportResultMap">
         SELECT
                id
@@ -79,5 +106,7 @@
              , suspension_cycle
         FROM Report
         WHERE reportedId = #{memberId}
+          AND isAccepted = 'Y'
+        ORDER BY reportDate DESC
     </select>
 </mapper>

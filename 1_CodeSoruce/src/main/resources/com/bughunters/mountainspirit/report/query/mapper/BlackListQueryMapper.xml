@@ -7,6 +7,7 @@
     <resultMap id="blacklistResultMap" type="com.bughunters.mountainspirit.report.query.dto.BlacklistQueryDTO">
         <id property="id" column="id"/>
         <result property="createDate" column="createDate"/>
+        <result property="annotation" column="annotation"/>
         <result property="adminId" column="adminId"/>
         <result property="memberId" column="memberId"/>
     </resultMap>
@@ -17,5 +18,6 @@
             , adminId
             , memberId
             FROM Blacklist
+            ORDER BY createDate DESC
     </select>
 </mapper>

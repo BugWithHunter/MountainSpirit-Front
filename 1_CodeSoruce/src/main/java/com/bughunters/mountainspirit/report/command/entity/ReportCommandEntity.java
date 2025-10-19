@@ -29,7 +29,7 @@ public class ReportCommandEntity {
     private String reportType;
 
     @Column(name = "adminId")
-    private String adminId;
+    private Long adminId;
 
     @Column(name = "reason")
     private String reason;

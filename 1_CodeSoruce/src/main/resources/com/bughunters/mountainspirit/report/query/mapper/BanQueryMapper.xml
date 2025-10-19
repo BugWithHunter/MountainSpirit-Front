@@ -25,6 +25,7 @@
             , userId
             , adminId
         FROM Ban
+        ORDER BY id DESC
     </select>
 
     <select id="selectMemberByReportedId" parameterType="_long" resultMap="reportedMemberResultMap">

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bughunters.mountainspirit.report.query.mapper.ReportProtestQueryMapper">
+    <resultMap id="ReportProtestResultMap" type="com.bughunters.mountainspirit.report.query.dto.ReportProtestQueryDTO">
+        <id property="id" column="id"/>
+        <result property="appealDate" column="appealDate"/>
+        <result property="adminId" column="adminId"/>
+        <result property="appealReason" column="appealReason"/>
+        <result property="changeStatusReason" column="changeStatusReason"/>
+        <result property="isAccepted" column="isAccepted"/>
+        <result property="reportedId" column="reportedId"/>
+        <result property="reportId" column="reportId"/>
+    </resultMap>
+    <select id="selectAllReportProtest" resultMap="ReportProtestResultMap">
+        SELECT
+            id,
+            appealDate,
+            adminId,
+            appealReason,
+            changeStatusReason,
+            isAccepted,
+            reportedId,
+            reportId
+        FROM ReportProtest
+        ORDER BY appealDate DESC
+    </select>
+    <select id="selectReportProtestByReportedId"
+            parameterType="long"
+            resultMap="ReportProtestResultMap">
+        SELECT
+            id,
+            appealDate,
+            adminId,
+            appealReason,
+            changeStatusReason,
+            isAccepted,
+            reportedId,
+            reportId
+        FROM ReportProtest
+        WHERE reportedId = #{reportedId}
+        ORDER BY appealDate DESC
+    </select>
+</mapper>

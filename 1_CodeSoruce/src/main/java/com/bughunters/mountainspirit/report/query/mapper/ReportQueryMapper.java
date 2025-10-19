@@ -10,10 +10,15 @@ import java.util.List;
 public interface ReportQueryMapper {
     List<ReportQueryDTO> reportAll();
 
-    // 동적 조건 조회
+    List<ReportQueryDTO> findReportsByType(@Param("reportType") String reportType);
+
+
+    // 신고 타입과 신고 상태에 따른 페이징 조회
     List<ReportQueryDTO> findReportsByTypeAndStatus(
             @Param("reportType") String reportType,
-            @Param("isAccepted") String isAccepted
+            @Param("isAccepted") String isAccepted,
+            @Param("limit") Integer limit,
+            @Param("offset") Integer offset
     );
 
     // 회원 단건 신고 조회

@@ -23,8 +23,14 @@ public class ReportQueryServiceImpl implements ReportQueryService {
     }
 
     @Override
-    public List<ReportQueryDTO> selectReportsByTypeAndStatus(String reportType, String isAccepted) {
-        return reportQueryMapper.findReportsByTypeAndStatus(reportType, isAccepted);
+    public List<ReportQueryDTO> searchReportsByType(String reportType) {
+        return reportQueryMapper.findReportsByType(reportType);
+    }
+
+    @Override
+    public List<ReportQueryDTO> selectReportsByTypeAndStatus(String reportType, String isAccepted, int page, int size) {
+        int offset = (page - 1) * size;
+        return reportQueryMapper.findReportsByTypeAndStatus(reportType, isAccepted, size, offset);
     }
 
     @Override

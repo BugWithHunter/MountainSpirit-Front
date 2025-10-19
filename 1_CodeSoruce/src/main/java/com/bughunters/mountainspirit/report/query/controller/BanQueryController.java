@@ -23,6 +23,8 @@ import java.util.List;
             this.banQueryService = banQueryService;
         }
 
+        // 회원정지 전체조회
+        // 관리자만 가능
         @GetMapping("")
         public ResponseEntity<List<BanQueryDTO>> getAllBan() {
             List<BanQueryDTO> selectAllBan = banQueryService.selectAllBan();

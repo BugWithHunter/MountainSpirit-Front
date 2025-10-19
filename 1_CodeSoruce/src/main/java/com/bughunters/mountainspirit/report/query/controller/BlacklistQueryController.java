@@ -23,6 +23,8 @@ public class BlacklistQueryController {
         this.blacklistQueryService = blacklistQueryService;
     }
 
+    // 블랙리스트 전체 조회
+    // 관리자만 허용
     @GetMapping("")
     public ResponseEntity<List<BlacklistQueryDTO>> getAllBlacklist() {
         List<BlacklistQueryDTO> getAllBlacklist = blacklistQueryService.getAllBlacklist();
