@@ -2,6 +2,7 @@ package com.bughunters.mountainspirit.security;
 
 import jakarta.servlet.Filter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
@@ -41,7 +42,6 @@ public class WebSecurity {
                                                       JwtUtil jwtUtil,
                                                       JsonAuthFailureHandler failure,
                                                       JsonAuthSuccessHandler success) throws Exception {
-
         http.csrf(csrf -> csrf.disable())
                 // 기본 formLogin 필터 비활성화 (중복 방지)
                 .formLogin(AbstractHttpConfigurer::disable);

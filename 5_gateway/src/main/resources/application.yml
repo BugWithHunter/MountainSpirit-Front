@@ -20,13 +20,13 @@ spring:
             - RewritePath=/main-client/(?<segment>.*), /$\{segment}
             - JwtTokenFilter
 
-        - id: member-client2
-          uri: lb://MEMBER-CLIENT
-          predicates:
-            - Path=/member-client/member/member,/member-client/login
-            - Method=POST
-          filters:
-            - RewritePath=/member-client/(?<segment>.*), /$\{segment}
+#        - id: member-client2
+#          uri: lb://MEMBER-CLIENT
+#          predicates:
+#            - Path=/member-client/member/member,/member-client/login
+#            - Method=POST
+#          filters:
+#            - RewritePath=/member-client/(?<segment>.*), /$\{segment}
 
         - id: member-client
           uri: lb://MEMBER-CLIENT
@@ -54,23 +54,27 @@ token:
 security:
   authz:
     rules:
-      # 누구나 접근 허용
-      - pattern: /public/**
+      # 공개 (로그인)
+      - pattern: /member-client/login
+        methods: [ POST ]
         permitAll: true
 
-      # 읽기는 USER/ADMIN, 쓰기는 ADMIN만
-      - pattern: /member/**
-        methods: [GET]
-        anyRole: [USER, ADMIN]
+      # 공개 (회원 가입)
+      - pattern: /member-client/member/member
+        methods: [ POST ]
+        permitAll: true
 
-      - pattern: /member/**
-        methods: [POST, PUT, PATCH, DELETE]
-        anyRole: [ADMIN]
 
-      # 관리자 전용
-      - pattern: /admin/**
-        anyRole: [ADMIN]
+      # 멤버 읽기: USER 또는 ADMIN
+      - pattern: /main-client/**
+        methods: [ GET, PUT, PATCH, DELETE  ]
+        anyRole: [ ROLE_ADMIN ]   # 토큰은 ROLE_USER/ROLE_ADMIN 이고, 필터에서 ROLE_ 제거 정규화
 
-      # 정밀 라우트 우선 적용(위에서 아래 순서대로 매칭됨)
-      - pattern: /health
+      # 멤버 쓰기: ADMIN만
+      - pattern: /member-client/member/**
+        methods: [ POST, PUT, PATCH, DELETE , GET]
+        anyRole: [ ROLE_ADMIN ]
+
+      # 헬스체크 공개
+      - pattern: /main-client/health
         permitAll: true
