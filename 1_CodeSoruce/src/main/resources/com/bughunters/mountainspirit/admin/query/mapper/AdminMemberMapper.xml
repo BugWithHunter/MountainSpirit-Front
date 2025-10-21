@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bughunters.mountainspirit.admin.query.mapper.AdminMemberMapper">
+    <!-- 역할별 회원 조회: 회원 기본정보 -->
+    <select id="selectAllMembers" resultType="map">
+        SELECT
+        id,
+        memId,
+        email,
+        memName,
+        nickname,
+        birth,
+        gender,
+        signInDate
+        FROM Member
+        ORDER BY id DESC
+        <if test="limit != null and offset != null">
+            LIMIT #{limit} OFFSET #{offset}
+        </if>
+    </select>
+
+    <!-- 전체 회원 수 -->
+    <select id="selectTotalMembers" resultType="int">
+        SELECT COUNT(*) AS total_members
+        FROM Member
+    </select>
+
+    <!-- 성별 비율 -->
+    <select id="selectGenderRatio" resultType="map">
+        SELECT
+        gender,
+        COUNT(*) AS count,
+        ROUND(COUNT(*) * 100 / (SELECT COUNT(*) FROM Member), 2) AS ratio
+        FROM Member
+        GROUP BY gender
+    </select>
+
+    <!-- 연령별 회원 분포 -->
+    <select id="selectAgeDistribution" resultType="map">
+        SELECT
+        CASE
+        WHEN FLOOR(TIMESTAMPDIFF(MONTH, birth, CURDATE()) / 12) BETWEEN 0 AND 10 THEN '10대 이하'
+        WHEN FLOOR(TIMESTAMPDIFF(MONTH, birth, CURDATE()) / 12) BETWEEN 11 AND 19 THEN '10대'
+        WHEN FLOOR(TIMESTAMPDIFF(MONTH, birth, CURDATE()) / 12) BETWEEN 20 AND 29 THEN '20대'
+        WHEN FLOOR(TIMESTAMPDIFF(MONTH, birth, CURDATE()) / 12) BETWEEN 30 AND 39 THEN '30대'
+        WHEN FLOOR(TIMESTAMPDIFF(MONTH, birth, CURDATE()) / 12) BETWEEN 40 AND 49 THEN '40대'
+        WHEN FLOOR(TIMESTAMPDIFF(MONTH, birth, CURDATE()) / 12) BETWEEN 50 AND 59 THEN '50대'
+        ELSE '60대 이상'
+        END AS age_group,
+        COUNT(*) AS count
+        FROM Member
+        GROUP BY age_group
+        ORDER BY age_group
+    </select>
+
+    <!-- 신규 가입 추이: 최근 1년간 월별 신규 가입자 수 -->
+    <select id="selectMonthlyNewMembers" resultType="map">
+        SELECT
+        YEAR(signInDate) AS year,
+        MONTH(signInDate) AS month,
+        COUNT(*) AS new_members
+        FROM Member
+        WHERE signInDate >= DATE_SUB(CURDATE(), INTERVAL 1 YEAR)
+        GROUP BY YEAR(signInDate), MONTH(signInDate)
+        ORDER BY YEAR(signInDate), MONTH(signInDate)
+    </select>
+
+</mapper>
