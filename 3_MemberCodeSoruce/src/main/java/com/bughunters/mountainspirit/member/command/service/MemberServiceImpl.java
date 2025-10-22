@@ -14,7 +14,6 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -106,8 +105,18 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
-    public Member findMember(Long id) {
-        return memberRepository.findById(id).orElse(null);
+    public ResponseMemberDTO findMember(Long id) {
+
+        Member member = memberRepository.findById(id).orElse(null);
+        ResponseMemberDTO responseMemberDTO = member != null ?
+                modelMapper.map(member, ResponseMemberDTO.class) : null;
+
+        if(responseMemberDTO != null){
+            ProfileOfMember profile = profileImageRepository.findByCumId(responseMemberDTO.getId());
+            String profilePath = profile != null ? profile.getFilePath() : null;
+            responseMemberDTO.setProfilePath(profilePath);
+        }
+        return responseMemberDTO;
     }
 
     @Override
@@ -277,7 +286,7 @@ public class MemberServiceImpl implements MemberService {
             if (responseProfileImageDTO == null) {
                 responseProfileImageDTO = new ResponseProfileImageDTO();
                 responseProfileImageDTO.setSuccessUpload(false);
-                responseProfileImageDTO.setExceptionMessage("파일 저장 실패");
+                responseProfileImageDTO.setExceptionMessage("프로필 변경 실패");
                 log.info(e.getMessage());
             }
         }

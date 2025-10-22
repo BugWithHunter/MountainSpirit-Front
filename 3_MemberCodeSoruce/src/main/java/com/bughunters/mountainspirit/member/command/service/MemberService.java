@@ -8,7 +8,7 @@ import org.springframework.web.multipart.MultipartFile;
 public interface MemberService {
     ResponseStatusDTO modifyStatusAfterClimbMountian(RequestModifyStatusOfMemberDTO modifyStatusOfMemberDTO);
 
-    Member findMember(Long id);
+    ResponseMemberDTO findMember(Long id);
 
     void setMemberCrewId(Long cumId, Long crewId);
 

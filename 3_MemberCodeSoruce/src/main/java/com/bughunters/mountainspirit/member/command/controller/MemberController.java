@@ -39,8 +39,8 @@ public class MemberController {
     }
 
     @GetMapping("/member-info/{id}")
-    public Member findMember(@PathVariable Long id) {
-        Member member = memberService.findMember(id);
+    public ResponseMemberDTO findMember(@PathVariable Long id) {
+        ResponseMemberDTO member = memberService.findMember(id);
         return member;
     }
 
@@ -127,7 +127,7 @@ public class MemberController {
 
     @GetMapping("/report/member-info/{id}")
     public ResponseEntity<ReportMemberDTO> getMemberInfo(@PathVariable Long id) {
-        Member member = memberService.findMember(id);
+        ResponseMemberDTO member = memberService.findMember(id);
         if (member == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
