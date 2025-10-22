@@ -46,12 +46,13 @@ public class WebSecurity {
                 // 기본 formLogin 필터 비활성화 (중복 방지)
                 .formLogin(AbstractHttpConfigurer::disable);
         http.authorizeHttpRequests(authz ->
-                                authz.requestMatchers("/**").permitAll()
+                                authz
+                                        .requestMatchers("/**").permitAll()     // 테스트를 위해 모든 권한 오픈
 //                                authz.requestMatchers(HttpMethod.GET, "/member/**").permitAll()
 //                                        .requestMatchers(HttpMethod.POST, "/users/**").permitAll()
 //                                        .requestMatchers(HttpMethod.GET, "/test").permitAll()
 //                                        .requestMatchers("/actuator/**").permitAll()
-////                                        .requestMatchers(HttpMethod.GET, "/users/**").hasRole("ENTERPRISE")
+//                                        .requestMatchers(HttpMethod.GET, "/member/**").hasRole("ADMIN")
 //                                        .requestMatchers(HttpMethod.GET, "/users/**").hasAnyRole("ENTERPRISE","ADMIN")
 //                                        .requestMatchers(HttpMethod.GET, "/test1/**", "/test2/**").hasAnyRole("ENTERPRISE","ADMIN")
                                         .anyRequest().authenticated()

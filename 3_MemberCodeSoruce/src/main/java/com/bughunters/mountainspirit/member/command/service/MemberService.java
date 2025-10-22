@@ -3,6 +3,7 @@ package com.bughunters.mountainspirit.member.command.service;
 import com.bughunters.mountainspirit.member.command.dto.*;
 import com.bughunters.mountainspirit.member.command.entity.Member;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.web.multipart.MultipartFile;
 
 public interface MemberService {
     ResponseStatusDTO modifyStatusAfterClimbMountian(RequestModifyStatusOfMemberDTO modifyStatusOfMemberDTO);
@@ -24,4 +25,6 @@ public interface MemberService {
     void registCrewId(long crewId, long cumId);
 
     boolean updateStatus(Long id, ReportMemberUpdateDTO dto);
+
+    ResponseProfileImageDTO updateProfileImage(MultipartFile singleFile, Long id);
 }

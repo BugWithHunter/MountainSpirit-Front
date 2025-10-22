@@ -12,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -157,6 +158,32 @@ public class MemberController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
         return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/Profile/{id}")
+    public ResponseEntity<ResponseMessage> updateProfileImage(@RequestParam MultipartFile singleFile,
+                                   @PathVariable Long id) {
+        ResponseProfileImageDTO success = memberService.updateProfileImage(singleFile, id);
+
+
+        Map<String, Object> responseMap = new HashMap<>();
+        ResponseMessage responseMessage = new ResponseMessage();
+
+        if (success.isSuccessUpload() == true) {
+            responseMessage.setMessage("프로필 변경 완료");
+            responseMap.put("responseData", success);
+            responseMessage.setHttpStatus(HttpStatus.OK.value());
+        } else {
+            responseMessage.setMessage("프로필 변경 실패");
+            responseMessage.setHttpStatus(HttpStatus.EXPECTATION_FAILED.value());
+        }
+
+        if (!responseMap.isEmpty())
+            responseMessage.setResult(responseMap);
+
+
+        return ResponseEntity.ok()
+                .body(responseMessage);
     }
 
 
