@@ -9,4 +9,6 @@ public interface MemberServiceClient {
     @GetMapping("/member/crew-insertion")
     String updateMemberCrewInfo(@RequestParam("crewId") long crewId,@RequestParam("cumId") long cumId);
 
+    @GetMapping("/member/crew-quit")
+    String deleteMemberCrewInfo(@RequestParam("crewId") long crewId,@RequestParam("cumId") long cumId);
 }
