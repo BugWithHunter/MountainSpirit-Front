@@ -24,4 +24,6 @@ public interface MemberService {
     void registCrewId(long crewId, long cumId);
 
     boolean updateStatus(Long id, ReportMemberUpdateDTO dto);
+
+    void deleteCrewId(long crewId, long cumId);
 }

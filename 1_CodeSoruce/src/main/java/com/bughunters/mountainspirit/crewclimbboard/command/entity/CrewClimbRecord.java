@@ -16,7 +16,7 @@ public class CrewClimbRecord {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Column
-    private Character crewClimbHistoryIsSucceed = 'N';
+    private Character crewClimbHistoryIsSucceed = null;
     @Column
     private Long crewClimbId;
     @Column

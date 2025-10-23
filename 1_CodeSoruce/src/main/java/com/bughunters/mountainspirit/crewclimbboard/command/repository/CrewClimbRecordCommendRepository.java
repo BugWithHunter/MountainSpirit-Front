@@ -10,4 +10,6 @@ public interface CrewClimbRecordCommendRepository extends JpaRepository<CrewClim
     CrewClimbRecord findByCrewClimbIdAndCrewMemberId(Long crewClimbId, Long crewMemberId);
 
     void deleteByCrewClimbId(Long crewClimbId);
+
+    void deleteAllByCrewClimbId(Long crewClimbId);
 }

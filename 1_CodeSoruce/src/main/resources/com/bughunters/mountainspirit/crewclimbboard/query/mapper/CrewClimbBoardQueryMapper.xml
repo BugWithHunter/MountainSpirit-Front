@@ -15,6 +15,7 @@
         <result property="crewId" column="crewId"/>
         <result property="frtrlId" column="frtrlId"/>
         <result property="crewMemberId" column="crewMemberId"/>
+        <result property="amountOfPeople" column="amountOfPeople"/>
     </resultMap>
     <resultMap id="findOneCrewClimbBoardByCrewClimbBoardIdResultMap" type="com.bughunters.mountainspirit.crewclimbboard.query.dto.CrewClimbBoardAndMountainAndCrewMemberDTO">
         <id property="id" column="id"/>
@@ -30,10 +31,17 @@
             <id property="frtrlId" column="frtrlId"/>
             <result property="frtrlNm" column="frtrlNm"/>
         </association>
-        <association property="member" javaType="com.bughunters.mountainspirit.crewclimbboard.query.dto.MemberDTO">
-            <id property="id" column="id"/>
+        <collection property="member" ofType="com.bughunters.mountainspirit.crewclimbboard.query.dto.MemberDTO">
+            <id property="id" column="cid"/>
             <result property="nickName" column="nickName"/>
-        </association>
+        </collection>
+    </resultMap>
+    <resultMap id="MyCrewClimbBoardByCrewMemberIdResultMap" type="com.bughunters.mountainspirit.crewclimbboard.query.dto.MyCrewClimbBoardListDTO">
+        <id property="id" column="id"/>
+        <result property="crewClimbHistoryIsSucceed" column="crewClimbHistoryIsSucceed"/>
+        <result property="crewClimbId" column="crewClimbId"/>
+        <result property="crewMemberId" column="crewMemberId"/>
+        <result property="frtrlId" column="frtrlId"/>
     </resultMap>
     <select id="findAllCrewClimbBoardByCrewId" parameterType="_long" resultMap="crewClimbBoardResultMap">
         SELECT
@@ -48,9 +56,11 @@
              , a.crewId
              , a.frtrlId
              , a.crewMemberId
+             , (SELECT COUNT(*) FROM CrewClimbRecord WHERE crewClimbId = a.id) as amountOfPeople
           FROM CrewClimbBoard a
          WHERE crewId = #{crewId}
            AND crewClimbIsDeleted = 'N'
+           AND crewMemberId IS NOT NULL
     </select>
     <select id="findOneCrewClimbBoardByCrewClimbBoardId" parameterType="_long" resultMap="findOneCrewClimbBoardByCrewClimbBoardIdResultMap">
         SELECT
@@ -65,13 +75,25 @@
              , a.crewId
              , b.frtrlId
              , b.frtrlNm
-             , d.id
-             , d.nickName
+             , e.id as cid
+             , e.nickName
         FROM CrewClimbBoard a JOIN Mountain b ON a.frtrlId = b.frtrlId
-                              JOIN CrewMember c ON a.crewMemberId = c.id
-                              JOIN Member d ON c.cumId = d.id
+                              JOIN CrewClimbRecord c ON a.id = c.crewClimbId
+                              JOIN CrewMember d ON c.crewMemberId = d.id
+                              JOIN Member e ON d.cumId = e.id
         WHERE a.id = #{crewClimbBoardId}
           AND a.crewClimbIsDeleted = 'N'
+          AND a.crewMemberId IS NOT NULL
+    </select>
+    <select id="findMyCrewClimbBoardByCrewMemberId" parameterType="_long" resultMap="MyCrewClimbBoardByCrewMemberIdResultMap">
+        SELECT
+               a.id
+             , a.crewClimbHistoryIsSucceed
+             , a.crewClimbId
+             , a.crewMemberId
+             , a.frtrlId
+          FROM CrewClimbRecord a
+         WHERE a.crewMemberId = #{crewMemberId}
     </select>
 
 </mapper>
