@@ -1,5 +1,6 @@
 package com.bughunters.mountainspirit.report.query.mapper;
 
+import com.bughunters.mountainspirit.report.query.dto.AppealDetailByIdDTO;
 import com.bughunters.mountainspirit.report.query.dto.ReportProtestQueryDTO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -15,5 +16,9 @@ public interface ReportProtestQueryMapper {
     List<ReportProtestQueryDTO> selectReportProtestByReportedId(
             Long reportedId,
             @Param("limit") Integer limit,
-            @Param("offset") Integer offset);
+            @Param("offset") Integer offset
+    );
+    List<AppealDetailByIdDTO> findAppealDetailById(
+            @Param("appealId") Long appealId
+    );
 }

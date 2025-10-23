@@ -3,6 +3,8 @@ package com.bughunters.mountainspirit.report.query.controller;
 
 import com.bughunters.mountainspirit.common.ResponseMessage;
 import com.bughunters.mountainspirit.common.UserInfo;
+import com.bughunters.mountainspirit.report.query.dto.ReportCheckDTO;
+import com.bughunters.mountainspirit.report.query.dto.ReportDetailDTO;
 import com.bughunters.mountainspirit.report.query.dto.ReportQueryDTO;
 import com.bughunters.mountainspirit.report.query.service.ReportQueryService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -35,7 +37,7 @@ public class ReportQueryController {
             @RequestParam(value = "page", defaultValue = "1") int page,
             @RequestParam(value = "size", defaultValue = "10") int size
     ) {
-        List<ReportQueryDTO> reports = reportQueryService.searchReportsByType(type,page,size);
+        List<ReportCheckDTO> reports = reportQueryService.searchReportsByType(type,page,size);
 
         Map<String, Object> result = new HashMap<>();
         result.put("reports", reports);
@@ -58,7 +60,7 @@ public class ReportQueryController {
             @RequestParam(value = "page", defaultValue = "1") int page,
             @RequestParam(value = "size", defaultValue = "10") int size
     ){
-        List<ReportQueryDTO> reports = reportQueryService.selectReportsByTypeAndStatus(type, status, page, size);
+        List<ReportCheckDTO> reports = reportQueryService.selectReportsByTypeAndStatus(type, status, page, size);
 
         Map<String, Object> result = new HashMap<>();
         result.put("reports", reports);
@@ -70,6 +72,11 @@ public class ReportQueryController {
         );
 
         return ResponseEntity.ok().body(responseMessage);
+    }
+
+    @GetMapping("/{id}")
+    public List<ReportDetailDTO> getReportDetail(@PathVariable Long id) {
+        return reportQueryService.selectReportDetailById(id);
     }
 
     // 로그인 된 회원 신고 조회: /reports/my

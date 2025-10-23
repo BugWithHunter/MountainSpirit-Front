@@ -46,4 +46,29 @@
             LIMIT #{limit} OFFSET #{offset}
         </if>
     </select>
+    <select id="findAppealDetailById" resultType="com.bughunters.mountainspirit.report.query.dto.AppealDetailByIdDTO">
+        SELECT
+            a.appealReason AS appealReason,
+            -- 제목 (크루/자유게시판만)
+            CASE
+                WHEN r.crewPostId IS NOT NULL THEN c.title
+                WHEN r.postId IS NOT NULL THEN b.title
+                ELSE NULL
+                END AS title,
+
+            -- 내용 (크루/자유게시판/댓글)
+            CASE
+                WHEN r.crewPostId IS NOT NULL THEN c.content
+                WHEN r.postId IS NOT NULL THEN b.content
+                WHEN r.replyId IS NOT NULL THEN cm.content
+                ELSE NULL
+                END AS content
+
+        FROM ReportProtest a
+                 LEFT JOIN Report r ON a.reportId = r.id
+                 LEFT JOIN CrewBoard c ON r.crewPostId = c.id
+                 LEFT JOIN Board b ON r.postId = b.id
+                 LEFT JOIN Comment cm ON r.replyId = cm.id
+        WHERE a.id = #{appealId}
+    </select>
 </mapper>
