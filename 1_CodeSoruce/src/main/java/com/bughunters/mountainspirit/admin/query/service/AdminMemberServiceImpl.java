@@ -1,13 +1,12 @@
 package com.bughunters.mountainspirit.admin.query.service;
 
-import com.bughunters.mountainspirit.admin.query.dto.MemberInfoDTO;
-import com.bughunters.mountainspirit.admin.query.dto.MemberInfoStatsDTO;
+import com.bughunters.mountainspirit.admin.query.dto.*;
 import com.bughunters.mountainspirit.admin.query.mapper.AdminMemberMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Map;
+
 
 @Service
 public class AdminMemberServiceImpl implements AdminMemberService {
@@ -20,19 +19,46 @@ public class AdminMemberServiceImpl implements AdminMemberService {
 
 
     @Override
-    public MemberInfoDTO getAllMembers(Integer page, Integer size) {
+    public List<MemberInfoDTO> getAllMembers(Integer page, Integer size) {
         int offset = (page - 1) * size;  // offset 계산
-        List<Map<String, Object>> members = adminMemberMapper.selectAllMembers(size, offset);
-        return new MemberInfoDTO(members);
+        return adminMemberMapper.selectAllMembers(size, offset);
+
+
     }
 
     @Override
     public MemberInfoStatsDTO getMemberStats() {
         int totalMembers = adminMemberMapper.selectTotalMembers();
-        List<Map<String, Object>> genderRatio = adminMemberMapper.selectGenderRatio();
-        List<Map<String, Object>> ageDistribution = adminMemberMapper.selectAgeDistribution();
-        List<Map<String, Object>> monthlyNewMembers = adminMemberMapper.selectMonthlyNewMembers();
+        List<GenderRatioDTO> genderRatio = adminMemberMapper.selectGenderRatio();
+        List<AgeDistributionDTO> ageDistribution = adminMemberMapper.selectAgeDistribution();
+        List<MonthlyNewMemberDTO> monthlyNewMembers = adminMemberMapper.selectMonthlyNewMembers();
 
         return new MemberInfoStatsDTO(totalMembers, genderRatio, ageDistribution, monthlyNewMembers);
+    }
+
+    @Override
+    public List<MemberLoginInfoDTO> getMemberLoginInfo(Integer page, Integer size) {
+        int offset = (page - 1) * size;
+        return adminMemberMapper.selectMemberLoginInfo(size, offset);
+
+    }
+
+    @Override
+    public MemberLoginInfoStatsDTO getMemberLoginStats() {
+        List<LoginStatsDTO> loginStats = adminMemberMapper.selectLoginStats();
+        List<LoginTimeDistributionDTO> loginTimeDistribution = adminMemberMapper.selectLoginTimeDistribution();
+        List<MemberStatusRatioDTO>  memberStatusRatio = adminMemberMapper.selectMemberStatusRatio();
+        return new MemberLoginInfoStatsDTO(loginStats, loginTimeDistribution, memberStatusRatio);
+    }
+
+    @Override
+    public List<MemberRankInfoDTO> getMemberRankInfo(Integer page, Integer size) {
+        int offset = (page - 1) * size;
+        return adminMemberMapper.selectMemberRankInfo(size, offset);
+    }
+
+    @Override
+    public List<MemberRankStatsDTO> getMemberRankStats() {
+        return adminMemberMapper.selectMemberRankStats();
     }
 }

@@ -4,7 +4,7 @@
         "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.bughunters.mountainspirit.admin.query.mapper.AdminMemberMapper">
     <!-- 역할별 회원 조회: 회원 기본정보 -->
-    <select id="selectAllMembers" resultType="map">
+    <select id="selectAllMembers" resultType="com.bughunters.mountainspirit.admin.query.dto.MemberInfoDTO">
         SELECT
         id,
         memId,
@@ -28,7 +28,7 @@
     </select>
 
     <!-- 성별 비율 -->
-    <select id="selectGenderRatio" resultType="map">
+    <select id="selectGenderRatio" resultType="com.bughunters.mountainspirit.admin.query.dto.GenderRatioDTO">
         SELECT
         gender,
         COUNT(*) AS count,
@@ -38,7 +38,7 @@
     </select>
 
     <!-- 연령별 회원 분포 -->
-    <select id="selectAgeDistribution" resultType="map">
+    <select id="selectAgeDistribution" resultType="com.bughunters.mountainspirit.admin.query.dto.AgeDistributionDTO">
         SELECT
         CASE
         WHEN FLOOR(TIMESTAMPDIFF(MONTH, birth, CURDATE()) / 12) BETWEEN 0 AND 10 THEN '10대 이하'
@@ -48,23 +48,139 @@
         WHEN FLOOR(TIMESTAMPDIFF(MONTH, birth, CURDATE()) / 12) BETWEEN 40 AND 49 THEN '40대'
         WHEN FLOOR(TIMESTAMPDIFF(MONTH, birth, CURDATE()) / 12) BETWEEN 50 AND 59 THEN '50대'
         ELSE '60대 이상'
-        END AS age_group,
+        END AS ageGroup,
         COUNT(*) AS count
         FROM Member
-        GROUP BY age_group
-        ORDER BY age_group
+        GROUP BY ageGroup
+        ORDER BY ageGroup
     </select>
 
     <!-- 신규 가입 추이: 최근 1년간 월별 신규 가입자 수 -->
-    <select id="selectMonthlyNewMembers" resultType="map">
+    <select id="selectMonthlyNewMembers" resultType="com.bughunters.mountainspirit.admin.query.dto.MonthlyNewMemberDTO">
         SELECT
         YEAR(signInDate) AS year,
         MONTH(signInDate) AS month,
-        COUNT(*) AS new_members
+        COUNT(*) AS newMembers
         FROM Member
         WHERE signInDate >= DATE_SUB(CURDATE(), INTERVAL 1 YEAR)
         GROUP BY YEAR(signInDate), MONTH(signInDate)
         ORDER BY YEAR(signInDate), MONTH(signInDate)
+    </select>
+
+
+
+    <!-- 회원 로그인 정보 조회 -->
+    <select id="selectMemberLoginInfo" resultType="com.bughunters.mountainspirit.admin.query.dto.MemberLoginInfoDTO">
+        SELECT
+        m.id,
+        m.lastLogin,
+        m.quitDate,
+        m.loginLockUntil,
+        m.loginFailCnt,
+        s.status
+        FROM Member m
+        LEFT JOIN MemberStatus s ON m.memStsId = s.id
+        ORDER BY m.id DESC
+        <if test="limit != null and offset != null">
+            LIMIT #{limit} OFFSET #{offset}
+        </if>
+    </select>
+
+    <!-- 로그인한 회원 수 지표 (최근 7일 / 30일 / 재방문율 등) -->
+    <select id="selectLoginStats" resultType="com.bughunters.mountainspirit.admin.query.dto.LoginStatsDTO">
+        SELECT
+        COUNT(DISTINCT CASE WHEN m.lastLogin >= DATE_SUB(NOW(), INTERVAL 7 DAY) THEN m.id END) AS login7d,
+        COUNT(DISTINCT CASE WHEN m.lastLogin >= DATE_SUB(NOW(), INTERVAL 30 DAY) THEN m.id END) AS login30d,
+        ROUND(
+        COUNT(DISTINCT CASE WHEN m.lastLogin >= DATE_SUB(NOW(), INTERVAL 7 DAY) THEN m.id END)
+        / COUNT(*) * 100, 2
+        ) AS recent7Ratio,
+        ROUND(
+        COUNT(DISTINCT CASE WHEN m.lastLogin >= DATE_SUB(NOW(), INTERVAL 30 DAY) THEN m.id END)
+        / COUNT(*) * 100, 2
+        ) AS recent30Ratio,
+        ROUND(
+        (COUNT(DISTINCT CASE WHEN m.lastLogin >= DATE_SUB(NOW(), INTERVAL 7 DAY) THEN m.id END)
+        / COUNT(DISTINCT CASE WHEN m.lastLogin >= DATE_SUB(NOW(), INTERVAL 30 DAY) THEN m.id END)) * 100, 2
+        ) AS loyaltyRate
+        FROM Member m
+    </select>
+
+    <!-- 시간대별 로그인 분포 (라인차트용) -->
+    <select id="selectLoginTimeDistribution" resultType="com.bughunters.mountainspirit.admin.query.dto.LoginTimeDistributionDTO">
+        SELECT
+        CASE
+        WHEN HOUR(lastLogin) BETWEEN 5 AND 8 THEN '오전 5시~9시'
+        WHEN HOUR(lastLogin) BETWEEN 9 AND 11 THEN '오전 9시~12시'
+        WHEN HOUR(lastLogin) BETWEEN 12 AND 15 THEN '오후 12시~4시'
+        WHEN HOUR(lastLogin) BETWEEN 16 AND 18 THEN '오후 4시~7시'
+        WHEN HOUR(lastLogin) BETWEEN 19 AND 23 THEN '오후 7시~12시'
+        ELSE '기타'
+        END AS loginTimeRange,
+        COUNT(*) AS loginCount
+        FROM Member
+        WHERE lastLogin IS NOT NULL
+        GROUP BY loginTimeRange
+        ORDER BY FIELD(loginTimeRange,
+        '오전 5시~9시',
+        '오전 9시~12시',
+        '오후 12시~4시',
+        '오후 4시~7시',
+        '오후 7시~12시',
+        '기타')
+    </select>
+
+    <!-- 회원 상태별 수 및 비율 -->
+    <select id="selectMemberStatusRatio" resultType="com.bughunters.mountainspirit.admin.query.dto.MemberStatusRatioDTO">
+        SELECT
+        s.status,
+        COUNT(*) AS count,
+        ROUND(COUNT(*) / (SELECT COUNT(*) FROM Member) * 100, 2) AS ratio
+        FROM Member m
+        JOIN MemberStatus s ON m.memStsId = s.id
+        GROUP BY s.status
+    </select>
+
+    <!-- 회원 등급 및 상태 조회 -->
+    <select id="selectMemberRankInfo" resultType="com.bughunters.mountainspirit.admin.query.dto.MemberRankInfoDTO">
+        SELECT
+        m.id,
+        m.climbCnt,
+        m.score,
+        r.name AS rank,
+        m.crewId
+        FROM Member m
+        LEFT JOIN MemberRank r ON m.memRankId = r.id
+        ORDER BY m.id DESC
+        <if test="limit != null and offset != null">
+            LIMIT #{limit} OFFSET #{offset}
+        </if>
+    </select>
+
+    <!-- 2등급별 회원 통계 (회원수, 평균 점수, 평균 등산횟수) -->
+    <select id="selectMemberRankStats" resultType="com.bughunters.mountainspirit.admin.query.dto.MemberRankStatsDTO">
+        SELECT
+        CASE
+        WHEN m.score BETWEEN 0 AND 15 THEN '씨앗'
+        WHEN m.score BETWEEN 16 AND 49 THEN '새싹이'
+        WHEN m.score BETWEEN 50 AND 99 THEN '나뭇잎'
+        WHEN m.score BETWEEN 100 AND 179 THEN '꽃잎'
+        WHEN m.score BETWEEN 180 AND 399 THEN '열매'
+        WHEN m.score >= 400 THEN '황금씨앗'
+        END AS levelRange,
+        COUNT(*) AS memberCount,
+        ROUND(AVG(m.score), 2) AS avgScore,
+        ROUND(AVG(m.climbCnt), 2) AS avgClimbCnt
+        FROM Member m
+        GROUP BY levelRange
+        ORDER BY
+        FIELD(levelRange,
+        '씨앗',
+        '새싹이',
+        '나뭇잎',
+        '꽃잎',
+        '열매',
+        '황금씨앗')
     </select>
 
 </mapper>

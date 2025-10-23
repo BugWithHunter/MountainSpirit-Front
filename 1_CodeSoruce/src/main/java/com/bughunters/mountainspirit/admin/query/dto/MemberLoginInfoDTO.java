@@ -9,13 +9,11 @@ import java.time.LocalDateTime;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class MemberInfoDTO {
+public class MemberLoginInfoDTO {
     private Long id;
-    private String memId;
-    private String email;
-    private String memName;
-    private String nickname;
-    private LocalDateTime birth;
-    private String gender;
-    private LocalDateTime signInDate;
+    private LocalDateTime lastLogin;
+    private LocalDateTime quitDate;
+    private LocalDateTime loginLockUntil;
+    private Integer loginFailCnt;
+    private String status;
 }
