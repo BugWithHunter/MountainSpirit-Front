@@ -1,6 +1,6 @@
 import { createApp } from 'vue'
 import App from './App.vue'
-import router from './router/01_router.js'
+import router from './router/router.js'
 
 /* npm install vue-router@next로 dependency 추가 */
 const app = createApp(App);

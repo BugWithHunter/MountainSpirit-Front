@@ -1,16 +1,13 @@
 <script setup>
   import {RouterLink, RouterView} from 'vue-router';
+import MenuBar from './views/MenuBar.vue';
 </script>
 
 <template>
   <header>
-    <h2>basic router</h2>
-    <nav>
-      <RouterLink to="/">Home</RouterLink>
-      <RouterLink to="/pathvariable/1">PathVariable</RouterLink>
-      <RouterLink to="/querystring?name=홍길동$age=20">QueryString</RouterLink>
-    </nav>
+    <MenuBar/>
   </header>
+  
   <main>
     <RouterView/>
   </main>
