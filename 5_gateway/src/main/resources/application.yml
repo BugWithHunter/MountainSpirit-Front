@@ -68,12 +68,12 @@ security:
       # 멤버 읽기: USER 또는 ADMIN
       - pattern: /main-client/**
         methods: [ GET, PUT, PATCH, DELETE  ]
-        anyRole: [ ROLE_ADMIN ]   # 토큰은 ROLE_USER/ROLE_ADMIN 이고, 필터에서 ROLE_ 제거 정규화
+        anyRole: [ ROLE_ADMIN , ROLE_MEMBER]   # 토큰은 ROLE_USER/ROLE_ADMIN 이고, 필터에서 ROLE_ 제거 정규화
 
       # 멤버 쓰기: ADMIN만
       - pattern: /member-client/member/**
         methods: [ POST, PUT, PATCH, DELETE , GET]
-        anyRole: [ ROLE_ADMIN ]
+        anyRole: [ ROLE_ADMIN, ROLE_MEMBER ]
 
       # 헬스체크 공개
       - pattern: /main-client/health
