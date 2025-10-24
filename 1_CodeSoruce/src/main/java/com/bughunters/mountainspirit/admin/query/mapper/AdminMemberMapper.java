@@ -12,7 +12,7 @@ import java.util.Map;
 public interface AdminMemberMapper {
     List<MemberInfoDTO> selectAllMembers(@Param("limit") int limit, @Param("offset") int offset);
 
-    int selectTotalMembers();
+    Long selectTotalMembers();
     List<GenderRatioDTO> selectGenderRatio();
     List<AgeDistributionDTO> selectAgeDistribution();
     List<MonthlyNewMemberDTO> selectMonthlyNewMembers();
@@ -26,5 +26,31 @@ public interface AdminMemberMapper {
     List<MemberRankStatsDTO> selectMemberRankStats();
 
 
+    Long selectTotalMountain();
+    List<MountainAllNumberDTO> selectAllMountainNumber();
+    List<MountainTopDTO> selectNumberOfClimbsTop5();
+    List<ClimbAltitudeDTO> selectNumberOfClimbAltitude();
 
+    Long selectTotalCourse();
+    List<CourseDifficultyStateDTO> selectCourseDifficultyState();
+    List<CourseRegistMonthDTO> selectCourseRegistMonth();
+
+    List<TotalStampBookmarkDTO> selectTotalStampBookmark();
+    List<ClimbStartDTO> selectClimbStartState();
+    List<ClimbEndDTO>  selectClimbEndState();
+
+    // 전체 크루 수
+    CrewStatsDTO selectTotalCrewCount();
+    // 이번 달 새로 생성된 크루 수
+    CrewStatsDTO selectNewCrewThisMonth();
+    // 월별 생성 통계
+    List<CrewStatsDTO> selectMonthlyCrewStats();
+    // 활동 중인 크루 수
+    CrewStatsDTO selectActiveCrewCount();
+
+    CrewDetailSummaryDTO selectAllCountSummary();
+    AdminMemberAffiliationDTO selectMemberAffiliationStats();
+    AdminCrewMemberStateRateDTO selectCrewMemberStateRates();
+    AdminCrewClimbSuccessDTO selectCrewClimbSuccessRate();
 }
+

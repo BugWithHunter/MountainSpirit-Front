@@ -22,7 +22,7 @@
     </select>
 
     <!-- 전체 회원 수 -->
-    <select id="selectTotalMembers" resultType="int">
+    <select id="selectTotalMembers" resultType="Long">
         SELECT COUNT(*) AS total_members
         FROM Member
     </select>
@@ -157,7 +157,7 @@
         </if>
     </select>
 
-    <!-- 2등급별 회원 통계 (회원수, 평균 점수, 평균 등산횟수) -->
+    <!-- 등급별 회원 통계 (회원수, 평균 점수, 평균 등산횟수) -->
     <select id="selectMemberRankStats" resultType="com.bughunters.mountainspirit.admin.query.dto.MemberRankStatsDTO">
         SELECT
         CASE
@@ -183,4 +183,173 @@
         '황금씨앗')
     </select>
 
+
+
+    <select id="selectTotalMountain" resultType="Long">
+        SELECT COUNT(*) AS totalMountain
+        FROM Mountain;
+    </select>
+
+    <select id="selectAllMountainNumber" resultType="com.bughunters.mountainspirit.admin.query.dto.MountainAllNumberDTO">
+        SELECT ctpvNm AS regionName, COUNT(*) AS mountainCount
+        FROM Mountain
+        WHERE ctpvNm IN (
+        '서울특별시', '경기도', '강원특별자치도', '전북특별자치도', '인천광역시',
+        '충청북도', '충청남도', '경상북도', '경상남도', '전라북도', '전라남도',
+        '부산광역시', '울산광역시'
+        )
+        GROUP BY ctpvNm
+        ORDER BY ctpvNm
+    </select>
+
+    <select id="selectNumberOfClimbsTop5" resultType="com.bughunters.mountainspirit.admin.query.dto.MountainTopDTO">
+        SELECT
+        m.frtrlId AS mountainId,
+        m.frtrlNm AS mountainName,
+        COUNT(cr.frtrlId) AS climbCount
+        FROM ClimbRecord cr
+        JOIN Mountain m ON cr.frtrlId = m.frtrlId
+        GROUP BY m.frtrlId, m.frtrlNm
+        ORDER BY climbCount DESC
+        LIMIT 5
+    </select>
+
+    <select id="selectNumberOfClimbAltitude" resultType="com.bughunters.mountainspirit.admin.query.dto.ClimbAltitudeDTO">
+        <![CDATA[
+        SELECT
+        CASE
+        WHEN m.aslAltide  < 500  THEN '500m 미만'
+        WHEN m.aslAltide BETWEEN 500 AND 999 THEN '500~1000m'
+        WHEN m.aslAltide >= 1000 THEN '1000m 이상'
+        END AS heightRange,
+        COUNT(cr.id) AS climbCount
+        FROM ClimbRecord cr
+        JOIN Mountain m ON cr.frtrlId = m.frtrlId
+        GROUP BY heightRange;
+        ]]>
+    </select>
+
+    <select id="selectTotalCourse" resultType="Long">
+        SELECT COUNT(*)
+        FROM Course
+    </select>
+
+    <select id="selectCourseDifficultyState" resultType="com.bughunters.mountainspirit.admin.query.dto.CourseDifficultyStateDTO">
+        SELECT rankId AS difficulty, COUNT(*) AS courseCount,
+        ROUND(COUNT(*) * 100.0 / (SELECT COUNT(*) FROM Course), 2) AS percentage,
+        AVG(aslAltide) AS avgAsl
+        FROM Course
+        GROUP BY rankId;
+    </select>
+
+    <select id="selectCourseRegistMonth" resultType="com.bughunters.mountainspirit.admin.query.dto.CourseRegistMonthDTO">
+        SELECT
+        DATE_FORMAT(createDate, '%Y-%m') AS month,
+        COUNT(*) AS newCourseCount
+        FROM Course
+        GROUP BY month
+        ORDER BY month;
+    </select>
+
+    <select id="selectTotalStampBookmark" resultType="com.bughunters.mountainspirit.admin.query.dto.TotalStampBookmarkDTO">
+        SELECT
+        (SELECT COUNT(*) FROM MountainStamp) AS totalMountainStampCount,
+        (SELECT COUNT(*) FROM CourseStamp) AS totalCourseStampCount,
+        (SELECT COUNT(*) FROM MountainBookmark) AS totalMountainBookmarkCount,
+        (SELECT COUNT(*) FROM CourseBookmark) AS totalCourseBookmarkCount;
+    </select>
+
+    <select id="selectClimbStartState" resultType="com.bughunters.mountainspirit.admin.query.dto.ClimbStartDTO">
+        SELECT
+        CASE
+        WHEN HOUR(startTime) BETWEEN 4 AND 11 THEN '오전 (04~12시)'
+        WHEN HOUR(startTime) BETWEEN 12 AND 19 THEN '오후 (12~20시)'
+        ELSE '기타 시간대'
+        END AS timeRange,
+        COUNT(*) AS climbCount
+        FROM ClimbRecord
+        GROUP BY timeRange;
+    </select>
+
+    <select id="selectClimbEndState" resultType="com.bughunters.mountainspirit.admin.query.dto.ClimbEndDTO">
+        SELECT
+        CASE
+        WHEN HOUR(endTime) BETWEEN 4 AND 11 THEN '오전 (04~12시)'
+        WHEN HOUR(endTime) BETWEEN 12 AND 19 THEN '오후 (12~20시)'
+        ELSE '기타 시간대'
+        END AS timeRange,
+        COUNT(*) AS climbCount
+        FROM ClimbRecord
+        GROUP BY timeRange;
+    </select>
+
+    <!-- 전체 크루 수 -->
+    <select id="selectTotalCrewCount" resultType="com.bughunters.mountainspirit.admin.query.dto.CrewStatsDTO">
+        SELECT COUNT(*) AS totalCrewCount
+        FROM Crew
+    </select>
+
+    <!-- 이번 달 새로 생성된 크루 수 -->
+    <select id="selectNewCrewThisMonth" resultType="com.bughunters.mountainspirit.admin.query.dto.CrewStatsDTO">
+        SELECT COUNT(*) AS newCrewCount
+        FROM Crew
+        WHERE DATE_FORMAT(crewCreateDate, '%Y-%m') = DATE_FORMAT(CURDATE(), '%Y-%m')
+    </select>
+
+    <!-- 월별 크루 생성 통계 -->
+    <select id="selectMonthlyCrewStats" resultType="com.bughunters.mountainspirit.admin.query.dto.CrewStatsDTO">
+        SELECT
+        DATE_FORMAT(crewCreateDate, '%Y-%m') AS month,
+        COUNT(*) AS monthlyCrewCount
+        FROM Crew
+        GROUP BY DATE_FORMAT(crewCreateDate, '%Y-%m')
+        ORDER BY month DESC
+    </select>
+
+    <!-- 활동 중인 크루 수 -->
+    <select id="selectActiveCrewCount" resultType="com.bughunters.mountainspirit.admin.query.dto.CrewStatsDTO">
+        SELECT COUNT(*) AS activeCrewCount
+        FROM Crew
+        WHERE crewIsDeleted = 'N'
+    </select>
+
+    <select id="selectAllCountSummary" resultType="com.bughunters.mountainspirit.admin.query.dto.CrewDetailSummaryDTO">
+        SELECT
+        (SELECT COUNT(*) FROM CrewMember) AS totalCrewMemberCount,
+        (SELECT COUNT(*) FROM CrewMemberHistory WHERE crewMemberHistoryState = 'JOINED') AS activeCrewMemberCount,
+        (SELECT COUNT(*) FROM CrewClimbBoard) AS totalCrewClimbBoardCount,
+        (SELECT COUNT(*) FROM CrewApply) AS totalCrewApplyCount,
+        (SELECT COUNT(*) FROM CrewMemberHistory) AS totalCrewMemberHistoryCount
+    </select>
+
+    <!-- 전체 회원 중 크루 소속/미소속 수 및 비율 -->
+    <select id="selectMemberAffiliationStats" resultType="com.bughunters.mountainspirit.admin.query.dto.AdminMemberAffiliationDTO">
+        SELECT
+        SUM(CASE WHEN crewId IS NOT NULL THEN 1 ELSE 0 END) AS affiliatedCount,
+        SUM(CASE WHEN crewId IS NULL THEN 1 ELSE 0 END) AS unaffiliatedCount,
+        COUNT(*) AS totalMembers,
+        ROUND(SUM(CASE WHEN crewId IS NOT NULL THEN 1 ELSE 0 END) / COUNT(*) * 100, 2) AS affiliatedRate,
+        ROUND(SUM(CASE WHEN crewId IS NULL THEN 1 ELSE 0 END) / COUNT(*) * 100, 2) AS unaffiliatedRate
+        FROM Member
+    </select>
+
+    <!-- 크루 가입/탈퇴/강퇴 비율 -->
+    <select id="selectCrewMemberStateRates" resultType="com.bughunters.mountainspirit.admin.query.dto.AdminCrewMemberStateRateDTO">
+        SELECT
+        ROUND(SUM(CASE WHEN crewMemberHistoryState = 'JOINED' THEN 1 ELSE 0 END) / COUNT(*) * 100, 2) AS joinedRate,
+        ROUND(SUM(CASE WHEN crewMemberHistoryState = 'QUITED' THEN 1 ELSE 0 END) / COUNT(*) * 100, 2) AS quitedRate,
+        ROUND(SUM(CASE WHEN crewMemberHistoryState = 'BANNED' THEN 1 ELSE 0 END) / COUNT(*) * 100, 2) AS bannedRate,
+        COUNT(*) AS totalInstances
+        FROM CrewMemberHistory
+        WHERE crewMemberHistoryState IN ('JOINED','QUITED','BANNED')
+    </select>
+
+    <!-- 크루 등반 성공률 -->
+    <select id="selectCrewClimbSuccessRate" resultType="com.bughunters.mountainspirit.admin.query.dto.AdminCrewClimbSuccessDTO">
+        SELECT
+        ROUND(SUM(CASE WHEN crewClimbHistoryIsSucceed = 'Y' THEN 1 ELSE 0 END) / COUNT(*) * 100, 2) AS successRate,
+        COUNT(*) AS totalInstances,
+        SUM(CASE WHEN crewClimbHistoryIsSucceed = 'Y' THEN 1 ELSE 0 END) AS successCount
+        FROM CrewClimbRecord
+    </select>
 </mapper>

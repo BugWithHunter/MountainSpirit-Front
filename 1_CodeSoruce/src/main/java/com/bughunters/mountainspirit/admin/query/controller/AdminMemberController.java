@@ -100,5 +100,40 @@ public class AdminMemberController {
         return ResponseEntity.ok(result);
     }
 
+    @GetMapping("/mountainstats")
+    public ResponseEntity<MountainStatsDTO> getMountainStats(){
+        MountainStatsDTO result = adminMemberService.getMountainStats();
+        return ResponseEntity.ok(result);
+    }
+
+    @GetMapping("/coursestats")
+    public ResponseEntity<CourseStateDTO> getCourseStates(){
+        CourseStateDTO result = adminMemberService.getCourseState();
+        return ResponseEntity.ok(result);
+    }
+
+    @GetMapping("/climbstats")
+    public ResponseEntity<ClimbStateDTO> getClimbStates(){
+        ClimbStateDTO result = adminMemberService.getClimbState();
+        return ResponseEntity.ok(result);
+    }
+
+    @GetMapping("/crewstats")
+    public ResponseEntity<CrewStatsDTO> getCrewStats() {
+        CrewStatsDTO result = adminMemberService.getCrewStatsSummary();
+        return ResponseEntity.ok(result);
+    }
+
+    @GetMapping("/crewmonthlystats")
+    public ResponseEntity<List<CrewStatsDTO>> getCrewMonthlyStats() {
+        List<CrewStatsDTO> result = adminMemberService.getCrewMonthlyStats();
+        return ResponseEntity.ok(result);
+    }
+
+    @GetMapping("/crewdetailstats")
+    public AdminCrewStatsResponseDTO getCrewDetailStats() {
+        return adminMemberService.getAllCrewStats();
+    }
+
 
 }

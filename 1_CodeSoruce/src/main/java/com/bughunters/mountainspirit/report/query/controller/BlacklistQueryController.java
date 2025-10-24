@@ -1,16 +1,14 @@
 package com.bughunters.mountainspirit.report.query.controller;
 
 import com.bughunters.mountainspirit.common.ResponseMessage;
+import com.bughunters.mountainspirit.report.query.dto.BlacklistByIdDTO;
 import com.bughunters.mountainspirit.report.query.dto.BlacklistQueryDTO;
 import com.bughunters.mountainspirit.report.query.service.BlacklistQueryService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.List;
@@ -47,6 +45,23 @@ public class BlacklistQueryController {
         );
 
         log.debug("Blacklist size={}", getAllBlacklist.size());
+        return ResponseEntity.ok().body(responseMessage);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<ResponseMessage> getBlacklistById(
+        @PathVariable Long id
+    ){
+        List<BlacklistByIdDTO> getBlacklistById = blacklistQueryService.getBlacklistById(id);
+
+        Map<String, Object> result = new HashMap<>();
+        result.put("blacklistById", getBlacklistById);
+        ResponseMessage responseMessage = new ResponseMessage(
+                HttpStatus.OK.value(),
+                "블랙리스트 아이디 조회 성공",
+                result
+        );
+        log.debug("BlacklistById getBlacklistById={}", getBlacklistById);
         return ResponseEntity.ok().body(responseMessage);
     }
 

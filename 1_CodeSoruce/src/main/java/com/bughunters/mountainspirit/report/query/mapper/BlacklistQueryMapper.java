@@ -1,5 +1,6 @@
 package com.bughunters.mountainspirit.report.query.mapper;
 
+import com.bughunters.mountainspirit.report.query.dto.BlacklistByIdDTO;
 import com.bughunters.mountainspirit.report.query.dto.BlacklistQueryDTO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -10,5 +11,8 @@ public interface BlacklistQueryMapper {
     List<BlacklistQueryDTO> selectAllBlacklist(
             @Param("limit") Integer limit,
             @Param("offset") Integer offset
+    );
+    List<BlacklistByIdDTO> selectBlacklistById(
+            @Param("id") Long id
     );
 }

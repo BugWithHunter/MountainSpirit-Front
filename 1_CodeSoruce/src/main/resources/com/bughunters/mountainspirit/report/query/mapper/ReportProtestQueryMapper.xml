@@ -71,4 +71,5 @@
                  LEFT JOIN Comment cm ON r.replyId = cm.id
         WHERE a.id = #{appealId}
     </select>
+
 </mapper>

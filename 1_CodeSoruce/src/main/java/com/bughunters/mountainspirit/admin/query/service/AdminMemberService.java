@@ -19,4 +19,16 @@ public interface AdminMemberService {
     List<MemberRankInfoDTO> getMemberRankInfo(Integer page, Integer size);
 
     List<MemberRankStatsDTO> getMemberRankStats();
+
+    MountainStatsDTO getMountainStats();
+
+    CourseStateDTO getCourseState();
+
+    ClimbStateDTO getClimbState();
+
+    CrewStatsDTO getCrewStatsSummary();
+
+    List<CrewStatsDTO> getCrewMonthlyStats();
+
+    AdminCrewStatsResponseDTO getAllCrewStats();
 }

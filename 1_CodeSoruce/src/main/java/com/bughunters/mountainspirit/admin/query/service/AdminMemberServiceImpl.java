@@ -28,7 +28,7 @@ public class AdminMemberServiceImpl implements AdminMemberService {
 
     @Override
     public MemberInfoStatsDTO getMemberStats() {
-        int totalMembers = adminMemberMapper.selectTotalMembers();
+        Long totalMembers = adminMemberMapper.selectTotalMembers();
         List<GenderRatioDTO> genderRatio = adminMemberMapper.selectGenderRatio();
         List<AgeDistributionDTO> ageDistribution = adminMemberMapper.selectAgeDistribution();
         List<MonthlyNewMemberDTO> monthlyNewMembers = adminMemberMapper.selectMonthlyNewMembers();
@@ -61,4 +61,64 @@ public class AdminMemberServiceImpl implements AdminMemberService {
     public List<MemberRankStatsDTO> getMemberRankStats() {
         return adminMemberMapper.selectMemberRankStats();
     }
+
+    @Override
+    public MountainStatsDTO getMountainStats() {
+        Long totalMountain = adminMemberMapper.selectTotalMountain();
+        List<MountainAllNumberDTO> mountainAllNumber = adminMemberMapper.selectAllMountainNumber();
+        List<MountainTopDTO> mountainTop = adminMemberMapper.selectNumberOfClimbsTop5();
+        List<ClimbAltitudeDTO> climbAltitude = adminMemberMapper.selectNumberOfClimbAltitude();
+        return new MountainStatsDTO(totalMountain, mountainAllNumber,mountainTop, climbAltitude);
+    }
+
+    @Override
+    public CourseStateDTO getCourseState() {
+        Long totalCourse = adminMemberMapper.selectTotalCourse();
+        List<CourseDifficultyStateDTO>  courseDifficultyState = adminMemberMapper.selectCourseDifficultyState();
+        List<CourseRegistMonthDTO> courseRegistMonth = adminMemberMapper.selectCourseRegistMonth();
+        return new CourseStateDTO(totalCourse, courseDifficultyState, courseRegistMonth);
+    }
+
+    @Override
+    public ClimbStateDTO getClimbState() {
+        List<TotalStampBookmarkDTO> totalStampBookmark = adminMemberMapper.selectTotalStampBookmark();
+        List<ClimbStartDTO> climbStartState = adminMemberMapper.selectClimbStartState();
+        List<ClimbEndDTO> climbEndState = adminMemberMapper.selectClimbEndState();
+        return new ClimbStateDTO(totalStampBookmark, climbStartState, climbEndState);
+    }
+
+    @Override
+    public CrewStatsDTO getCrewStatsSummary() {
+        CrewStatsDTO stats = new CrewStatsDTO();
+        stats.setTotalCrewCount(adminMemberMapper.selectTotalCrewCount().getTotalCrewCount());
+        stats.setNewCrewCount(adminMemberMapper.selectNewCrewThisMonth().getNewCrewCount());
+        stats.setActiveCrewCount(adminMemberMapper.selectActiveCrewCount().getActiveCrewCount());
+        return stats;
+    }
+
+    @Override
+    public List<CrewStatsDTO> getCrewMonthlyStats() {
+        return adminMemberMapper.selectMonthlyCrewStats();
+    }
+
+    @Override
+    public AdminCrewStatsResponseDTO getAllCrewStats() {
+        AdminCrewStatsResponseDTO response = new AdminCrewStatsResponseDTO();
+
+        // 각각 Mapper 호출
+        CrewDetailSummaryDTO countSummary = adminMemberMapper.selectAllCountSummary();
+        AdminMemberAffiliationDTO memberAffiliation = adminMemberMapper.selectMemberAffiliationStats();
+        AdminCrewMemberStateRateDTO memberStateRates = adminMemberMapper.selectCrewMemberStateRates();
+        AdminCrewClimbSuccessDTO climbSuccessRate = adminMemberMapper.selectCrewClimbSuccessRate();
+
+        // DTO에 세팅
+        response.setCountSummary(countSummary);
+        response.setMemberAffiliation(memberAffiliation);
+        response.setMemberStateRates(memberStateRates);
+        response.setClimbSuccessRate(climbSuccessRate);
+
+        return response;
+    }
+
+
 }
