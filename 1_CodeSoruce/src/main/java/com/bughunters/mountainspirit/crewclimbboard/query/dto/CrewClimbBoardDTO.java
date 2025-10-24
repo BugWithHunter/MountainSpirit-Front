@@ -19,4 +19,5 @@ public class CrewClimbBoardDTO {
     private Long crewId;
     private String frtrlId;
     private Long crewMemberId;
+    private Long amountOfPeople;
 }

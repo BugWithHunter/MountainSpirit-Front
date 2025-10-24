@@ -5,9 +5,15 @@
 
 <template>
   <header>
+<<<<<<< HEAD
     <headerComponent></headerComponent>
   </header>
   <!-- 본문 -->
+=======
+    <MenuBar/>
+  </header>
+  
+>>>>>>> 24588987ae49cc71e0b4281134ca631c69ddd94f
   <main>
     <RouterView/>
   </main>

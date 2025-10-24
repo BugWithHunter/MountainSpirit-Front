@@ -2,6 +2,7 @@ package com.bughunters.mountainspirit.crewclimbboard.query.controller;
 
 import com.bughunters.mountainspirit.crewclimbboard.query.dto.CrewClimbBoardAndMountainAndCrewMemberDTO;
 import com.bughunters.mountainspirit.crewclimbboard.query.dto.CrewClimbBoardDTO;
+import com.bughunters.mountainspirit.crewclimbboard.query.dto.MyCrewClimbBoardListDTO;
 import com.bughunters.mountainspirit.crewclimbboard.query.service.CrewClimbBoardQueryService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +35,12 @@ public class CrewClimbBoardQueryController {
     public ResponseEntity<CrewClimbBoardAndMountainAndCrewMemberDTO> findOneCrewClimbBoardByCrewClimbBoardId(@PathVariable Long crewClimbBoardId){
         CrewClimbBoardAndMountainAndCrewMemberDTO crewClimbBoardAndMountainAndCrewMemberDTO = crewClimbBoardQueryService.findOneCrewClimbBoardByCrewClimbBoardId(crewClimbBoardId);
         return ResponseEntity.ok().body(crewClimbBoardAndMountainAndCrewMemberDTO);
+    }
+
+    @GetMapping("/climb-board-mylist/{crewMemberId}")
+    public ResponseEntity<List<MyCrewClimbBoardListDTO>> findCrewClimbBoardByCrewMemberId(@PathVariable Long crewMemberId){
+        List<MyCrewClimbBoardListDTO> myCrewClimbBoardListDTO = crewClimbBoardQueryService.findMyCrewClimbBoardByCrewMemberId(crewMemberId);
+        return ResponseEntity.ok().body(myCrewClimbBoardListDTO);
     }
 
 }

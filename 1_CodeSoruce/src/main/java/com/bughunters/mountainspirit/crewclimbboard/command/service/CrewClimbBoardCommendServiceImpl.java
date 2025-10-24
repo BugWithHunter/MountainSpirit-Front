@@ -35,6 +35,7 @@ public class CrewClimbBoardCommendServiceImpl implements CrewClimbBoardCommendSe
     @Override
     @Transactional
     public void registCrewClimbBoard(CrewClimbBoardDTO crewClimbBoardDTO) {
+
         // 넘어온 DTO값 맵핑 + default값 세팅
         CrewClimbBoard crewClimbBoard = modelMapper.map(crewClimbBoardDTO, CrewClimbBoard.class);
         log.info("Service 크루 모집 일정 넘어온거 맵핑 값 : {}", crewClimbBoard);
@@ -89,7 +90,7 @@ public class CrewClimbBoardCommendServiceImpl implements CrewClimbBoardCommendSe
             return;
         }
         crewClimbBoard.setCrewClimbIsDeleted('Y');
-        crewClimbRecordCommendRepository.deleteByCrewClimbId(id);
+        crewClimbRecordCommendRepository.deleteAllByCrewClimbId(id);
 
     }
 
@@ -132,6 +133,7 @@ public class CrewClimbBoardCommendServiceImpl implements CrewClimbBoardCommendSe
     }
 
     @Override
+    @Transactional
     public void cancelCrewClimb(CrewClimbBoardCancelDTO crewClimbBoardCancelDTO) {
         CrewClimbRecord crewClimbRecord = crewClimbRecordCommendRepository.findByCrewClimbIdAndCrewMemberId(crewClimbBoardCancelDTO.getCrewClimbId(),crewClimbBoardCancelDTO.getCrewMemberId());
         if(crewClimbRecord==null){
@@ -160,6 +162,9 @@ public class CrewClimbBoardCommendServiceImpl implements CrewClimbBoardCommendSe
         }
         if (crewClimbBoard.getCrewClimbAmountOfPeople().equals(originalCrewClimbBoard.getCrewClimbAmountOfPeople())) {
             originalCrewClimbBoard.setCrewClimbAmountOfPeople(crewClimbBoard.getCrewClimbAmountOfPeople());
+        }
+        if (crewClimbBoard.getCrewClimbIsEnded() != originalCrewClimbBoard.getCrewClimbIsEnded()) {
+            originalCrewClimbBoard.setCrewClimbIsEnded(crewClimbBoard.getCrewClimbIsEnded());
         }
     }
 
