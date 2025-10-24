@@ -1,29 +1,27 @@
 <script setup>
   import {RouterLink, RouterView} from 'vue-router';
+  import headerComponent from './components/Header.vue';
 </script>
 
 <template>
   <header>
-    <h2>sample</h2>
-    <nav>
-      <RouterLink to="/" active-class="active" replace>Home</RouterLink>
-      <!-- route설정시 name 속성을 주면 경로가 아닌 name 속성으로 routing 설정 가능 -->
-      <RouterLink :to="{ name: 'nestedHome' }" active-class="active" replace>중첩 home</RouterLink>
-      <RouterLink to="/nested/view" active-class="active" replace>중첩 view</RouterLink>
-    </nav>
+    <headerComponent></headerComponent>
   </header>
+  <!-- 본문 -->
   <main>
     <RouterView/>
   </main>
+
+  <!-- footer 하 -->
+  <footer>
+
+  </footer>
 </template>
 
 <style scoped>
-  nav {
-    width: 100%;
-    font-size: 12px;
-    text-align: center;
-    margin-top: 2rem;
-    font-size: 30px;
+
+  header {
+    width: 100%
   }
 
   a {
@@ -42,7 +40,7 @@
     align-items: center;
   }
 
-  header {
+  /* header {
     text-align: center;
-  }
+  } */
 </style>
