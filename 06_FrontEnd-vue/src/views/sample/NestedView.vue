@@ -1,6 +1,6 @@
 <template>
     <div>
-        <h1>PathVariable</h1>
+        <h3>NestedView</h3>
     </div>
 </template>
 
