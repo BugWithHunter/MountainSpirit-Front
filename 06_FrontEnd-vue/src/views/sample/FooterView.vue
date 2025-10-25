@@ -1,7 +1,5 @@
 <template>
-    <div>
-        <h1>Home</h1>
-    </div>
+    <p>footer</p>
 </template>
 
 <script setup>

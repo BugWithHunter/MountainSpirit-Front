@@ -1,8 +1,11 @@
 package com.bughunters.mountainspirit.security;
 
-import jakarta.servlet.http.Cookie;
+import com.bughunters.mountainspirit.member.command.dto.UserImpl;
+import com.bughunters.mountainspirit.member.command.entity.ProfileOfMember;
+import com.bughunters.mountainspirit.member.command.repository.ProfileImageRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
@@ -17,6 +20,12 @@ import java.util.stream.Collectors;
 
 @Component
 public class JsonAuthSuccessHandler implements AuthenticationSuccessHandler {
+    private final ProfileImageRepository profileImageRepository;
+
+    @Autowired
+    public JsonAuthSuccessHandler(ProfileImageRepository profileImageRepository){
+        this.profileImageRepository = profileImageRepository;
+    }
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest req,
@@ -30,9 +39,12 @@ public class JsonAuthSuccessHandler implements AuthenticationSuccessHandler {
 
         // 로그인 사용자 정보
         String username = authentication.getName();
+        UserImpl user = (UserImpl) authentication.getPrincipal();
+        Long id = user.getId();
+        ProfileOfMember profile = profileImageRepository.findByCumId(id);
+        String profilePath = profile != null ? profile.getFilePath() : null;
         List<String> authorities = toAuthorityList(authentication.getAuthorities());
-        // 필요시 Principal 캐스팅해서 추가 프로필 정보 뽑기
-        // var principal = (CustomUserPrincipal) authentication.getPrincipal();
+
 
         // 추가 필드 예시(원하면 req에 Attribute로 담아 오거나, DB 조회해서 채우기)
         Map<String, Object> extra = Map.of(
@@ -50,6 +62,7 @@ public class JsonAuthSuccessHandler implements AuthenticationSuccessHandler {
                 .append(",\"message\":\"").append(escapeJson(message)).append("\"")
                 .append(",\"user\":{")
                 .append("\"username\":\"").append(escapeJson(username)).append("\",")
+                .append("\"profilePath\":\"").append(escapeJson(profilePath)).append("\",")
                 .append("\"authorities\":").append(toJsonArray(authorities))
                 .append("}");
 

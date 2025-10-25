@@ -2,6 +2,7 @@ package com.bughunters.mountainspirit.security;
 
 import jakarta.servlet.Filter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
@@ -41,17 +42,17 @@ public class WebSecurity {
                                                       JwtUtil jwtUtil,
                                                       JsonAuthFailureHandler failure,
                                                       JsonAuthSuccessHandler success) throws Exception {
-
         http.csrf(csrf -> csrf.disable())
                 // 기본 formLogin 필터 비활성화 (중복 방지)
                 .formLogin(AbstractHttpConfigurer::disable);
         http.authorizeHttpRequests(authz ->
-                                authz.requestMatchers("/**").permitAll()
+                                authz
+                                        .requestMatchers("/**").permitAll()     // 테스트를 위해 모든 권한 오픈
 //                                authz.requestMatchers(HttpMethod.GET, "/member/**").permitAll()
 //                                        .requestMatchers(HttpMethod.POST, "/users/**").permitAll()
 //                                        .requestMatchers(HttpMethod.GET, "/test").permitAll()
 //                                        .requestMatchers("/actuator/**").permitAll()
-////                                        .requestMatchers(HttpMethod.GET, "/users/**").hasRole("ENTERPRISE")
+//                                        .requestMatchers(HttpMethod.GET, "/member/**").hasRole("ADMIN")
 //                                        .requestMatchers(HttpMethod.GET, "/users/**").hasAnyRole("ENTERPRISE","ADMIN")
 //                                        .requestMatchers(HttpMethod.GET, "/test1/**", "/test2/**").hasAnyRole("ENTERPRISE","ADMIN")
                                         .anyRequest().authenticated()
