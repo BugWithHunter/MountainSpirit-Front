@@ -14,14 +14,13 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -36,6 +35,8 @@ public class MemberServiceImpl implements MemberService {
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final AuthorityRepository authorityRepository;
     private final MemberAuthorityRepository memberAuthorityRepository;
+    private final ProfileImageService profileImageService;
+    private final ProfileImageRepository profileImageRepository;
 
     public MemberServiceImpl(MemberRepository memberRepository
             , MemberQueryService memberQueryService
@@ -44,7 +45,9 @@ public class MemberServiceImpl implements MemberService {
             , LoginFailureRecordRepository loginFailureRecordRepository
             , LoginRecordRepository loginRecordRepository
             , AuthorityRepository authorityRepository
-            , MemberAuthorityRepository memberAuthorityRepository) {
+            , MemberAuthorityRepository memberAuthorityRepository
+            , ProfileImageService profileImageService
+            , ProfileImageRepository profileImageRepository) {
         this.memberRepository = memberRepository;
         this.memberQueryService = memberQueryService;
         this.modelMapper = modelMapper;
@@ -53,6 +56,8 @@ public class MemberServiceImpl implements MemberService {
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
         this.authorityRepository = authorityRepository;
         this.memberAuthorityRepository = memberAuthorityRepository;
+        this.profileImageService = profileImageService;
+        this.profileImageRepository = profileImageRepository;
     }
 
     //등산 이후 회원 정보 변경
@@ -100,8 +105,18 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
-    public Member findMember(Long id) {
-        return memberRepository.findById(id).orElse(null);
+    public ResponseMemberDTO findMember(Long id) {
+
+        Member member = memberRepository.findById(id).orElse(null);
+        ResponseMemberDTO responseMemberDTO = member != null ?
+                modelMapper.map(member, ResponseMemberDTO.class) : null;
+
+        if(responseMemberDTO != null){
+            ProfileOfMember profile = profileImageRepository.findByCumId(responseMemberDTO.getId());
+            String profilePath = profile != null ? profile.getFilePath() : null;
+            responseMemberDTO.setProfilePath(profilePath);
+        }
+        return responseMemberDTO;
     }
 
     @Override
@@ -257,6 +272,32 @@ public class MemberServiceImpl implements MemberService {
         return true;
     }
 
+    @Override
+    @Transactional
+    public ResponseProfileImageDTO updateProfileImage(MultipartFile singleFile, Long id) {
+        ResponseProfileImageDTO responseProfileImageDTO = null;
+        try {
+            responseProfileImageDTO = profileImageService.updateProfileImage(singleFile, id);
+
+            ProfileOfMember proflie = modelMapper.map(responseProfileImageDTO, ProfileOfMember.class);
+            profileImageRepository.save(proflie);
+
+        } catch (IOException e) {
+            if (responseProfileImageDTO == null) {
+                responseProfileImageDTO = new ResponseProfileImageDTO();
+                responseProfileImageDTO.setSuccessUpload(false);
+                responseProfileImageDTO.setExceptionMessage("프로필 변경 실패");
+                log.info(e.getMessage());
+            }
+        }
+
+        return responseProfileImageDTO;
+    public void deleteCrewId(long crewId, long cumId) {
+        Member member = memberRepository.findById(cumId).get();
+        log.info("삭제할 회원 정보 : {}",member);
+        member.setCrewId(null);
+    }
+
 
     // 회원 가입 제한 사항 확인, 이메일 중복, 이미 가입한 회원, 블랙리스트 등등
     private ResponseSignUpDTO checkBeforeSignUp(RequestMemberDTO memberDTO) throws IllegalArgumentException {
@@ -301,7 +342,7 @@ public class MemberServiceImpl implements MemberService {
                 responseSignUpDTO.setMemberDTO(modelMapper.map(member, ResponseMemberDTO.class));
 
                 //기본 Member 권한 부여
-                memberAuthorityRepository.save(new MemberAuthority(null,member.getId(),authorityList.get(0).getId()));
+                memberAuthorityRepository.save(new MemberAuthority(null, member.getId(), authorityList.get(0).getId()));
             } catch (Exception e) {
                 throw new IllegalArgumentException("Member not Exception");
             }

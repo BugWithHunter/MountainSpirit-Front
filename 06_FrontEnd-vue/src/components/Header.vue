@@ -20,8 +20,8 @@
           @mouseleave="showLoginMenu = false">
             <img class="profile-image" src="/notLogin.png" alt="프로필" >
             <ul class="login-submenu" :class="{ visible: showLoginMenu }">
-                <li><RouterLink to="/">로그인</RouterLink></li>
-                <li><RouterLink to="/">회원 가입</RouterLink></li>
+                <li><RouterLink :to="{name : 'member-login'}">로그인</RouterLink></li>
+                <li><RouterLink to="/member/signUp">회원 가입</RouterLink></li>
                 <li><RouterLink to="/">비밀번호 찾기</RouterLink></li>
             </ul>
         </div>

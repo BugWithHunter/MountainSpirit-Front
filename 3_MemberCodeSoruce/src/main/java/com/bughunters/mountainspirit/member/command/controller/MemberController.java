@@ -7,10 +7,12 @@ import com.bughunters.mountainspirit.member.command.service.MemberService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -37,8 +39,8 @@ public class MemberController {
     }
 
     @GetMapping("/member-info/{id}")
-    public Member findMember(@PathVariable Long id) {
-        Member member = memberService.findMember(id);
+    public ResponseMemberDTO findMember(@PathVariable Long id) {
+        ResponseMemberDTO member = memberService.findMember(id);
         return member;
     }
 
@@ -123,9 +125,20 @@ public class MemberController {
                 .body(responseMessage);
     }
 
+    @GetMapping("/crew-quit")
+    public ResponseEntity<ResponseMessage> crewQuit(long crewId,long cumId) {
+        ResponseMessage responseMessage = new ResponseMessage();
+        log.info("넘어온 크루,유저 아이디 : {}, {}",crewId,cumId);
+        memberService.deleteCrewId(crewId,cumId);
+
+        responseMessage.setHttpStatus(HttpStatus.OK.value());
+        return ResponseEntity.ok()
+                .body(responseMessage);
+    }
+
     @GetMapping("/report/member-info/{id}")
     public ResponseEntity<ReportMemberDTO> getMemberInfo(@PathVariable Long id) {
-        Member member = memberService.findMember(id);
+        ResponseMemberDTO member = memberService.findMember(id);
         if (member == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
@@ -141,6 +154,10 @@ public class MemberController {
         return ResponseEntity.ok().body(dto);
     }
 
+
+    @GetMapping("/testConfigServer")
+    public String testConfigServer(@Value("${test.test1}") String test) {return test;}
+
     @PostMapping("/report/update-status/{memberId}")
     public ResponseEntity<Void> updateMemberStatus(@PathVariable Long memberId,
                                                    @RequestBody ReportMemberUpdateDTO dto) {
@@ -152,6 +169,32 @@ public class MemberController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
         return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/Profile/{id}")
+    public ResponseEntity<ResponseMessage> updateProfileImage(@RequestParam MultipartFile singleFile,
+                                   @PathVariable Long id) {
+        ResponseProfileImageDTO success = memberService.updateProfileImage(singleFile, id);
+
+
+        Map<String, Object> responseMap = new HashMap<>();
+        ResponseMessage responseMessage = new ResponseMessage();
+
+        if (success.isSuccessUpload() == true) {
+            responseMessage.setMessage("프로필 변경 완료");
+            responseMap.put("responseData", success);
+            responseMessage.setHttpStatus(HttpStatus.OK.value());
+        } else {
+            responseMessage.setMessage("프로필 변경 실패");
+            responseMessage.setHttpStatus(HttpStatus.EXPECTATION_FAILED.value());
+        }
+
+        if (!responseMap.isEmpty())
+            responseMessage.setResult(responseMap);
+
+
+        return ResponseEntity.ok()
+                .body(responseMessage);
     }
 
 

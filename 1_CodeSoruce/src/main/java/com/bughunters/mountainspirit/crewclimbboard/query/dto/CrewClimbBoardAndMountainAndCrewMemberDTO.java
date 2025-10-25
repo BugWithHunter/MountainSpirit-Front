@@ -2,6 +2,8 @@ package com.bughunters.mountainspirit.crewclimbboard.query.dto;
 
 import lombok.*;
 
+import java.util.List;
+
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
@@ -18,5 +20,5 @@ public class CrewClimbBoardAndMountainAndCrewMemberDTO {
     private char crewClimbIsEnded;
     private Long crewId;
     private MountainDTO mountain;
-    private MemberDTO member;
+    private List<MemberDTO> member;
 }
