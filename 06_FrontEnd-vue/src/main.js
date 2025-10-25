@@ -1,8 +1,7 @@
 import { createApp } from 'vue'
 import App from './App.vue'
-import router from './router/router.js'
+import indexRoutes from './router/index.routes.js'
 
-/* npm install vue-router@next로 dependency 추가 */
 const app = createApp(App);
-app.use(router);
+app.use(indexRoutes);
 app.mount('#app');

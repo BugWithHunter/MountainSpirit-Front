@@ -35,13 +35,13 @@ spring:
             - RewritePath=/main-client/(?<segment>.*), /$\{segment}
             - JwtTokenFilter
 
-        - id: member-client2
-          uri: lb://MEMBER-CLIENT
-          predicates:
-            - Path=/member-client/member/member,/member-client/login
-            - Method=POST
-          filters:
-            - RewritePath=/member-client/(?<segment>.*), /$\{segment}
+#        - id: member-client2
+#          uri: lb://MEMBER-CLIENT
+#          predicates:
+#            - Path=/member-client/member/member,/member-client/login
+#            - Method=POST
+#          filters:
+#            - RewritePath=/member-client/(?<segment>.*), /$\{segment}
 
         - id: member-client
           uri: lb://MEMBER-CLIENT
@@ -63,3 +63,37 @@ spring:
 token:
   secret: v7o98gdK42iddFqTxH07Yjv18KbwIZWQZu7NRPeR9+ji9tOGDX2r8PO3mGptklEdEiIB0RMT066q3qb19YBfqQ==
   expiration_time: 43200000 # 12시간
+<<<<<<< HEAD
+=======
+
+
+
+# 권한별 설정
+security:
+  authz:
+    rules:
+      # 공개 (로그인)
+      - pattern: /member-client/login
+        methods: [ POST ]
+        permitAll: true
+
+      # 공개 (회원 가입)
+      - pattern: /member-client/member/member
+        methods: [ POST ]
+        permitAll: true
+
+
+      # 멤버 읽기: USER 또는 ADMIN
+      - pattern: /main-client/**
+        methods: [ GET, PUT, PATCH, DELETE  ]
+        anyRole: [ ROLE_ADMIN , ROLE_MEMBER]   # 토큰은 ROLE_USER/ROLE_ADMIN 이고, 필터에서 ROLE_ 제거 정규화
+
+      # 멤버 쓰기: ADMIN만
+      - pattern: /member-client/member/**
+        methods: [ POST, PUT, PATCH, DELETE , GET]
+        anyRole: [ ROLE_ADMIN, ROLE_MEMBER ]
+
+      # 헬스체크 공개
+      - pattern: /main-client/health
+        permitAll: true
+>>>>>>> develop
