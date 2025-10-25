@@ -15,11 +15,11 @@
             <div class="modal-wrap" v-show="modalCheck">
             <div class="modal-container">
                 
-                ...  <!--  모달창 content  -->
+                <h1>크루 가입 신청 하시겠습니까?</h1>
                 
                 <div class="modal-btn">
-                <button @click.stop="modalOpen()">닫기</button>
-                <button @click.stop="crewApply()">확인</button>
+                <button @click.stop="modalOpen()">취소</button>
+                <button @click.stop="crewApply()">가입 신청</button>
                 </div>
             </div>
             </div>
@@ -40,8 +40,9 @@
             {
                 method: "GET",
                 headers:{
+                    /* 나중에 토큰 값 전역변수에서 불러올것 */
                     "Content-Type": "application/json",
-                    "Authorization":"Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJrYW5nOTk5OTk5QGV4YW1wbGUuY29tIiwiYXV0aCI6WyJST0xFX01FTUJFUiJdLCJ1c2VybmFtZSI6IuqwleyCsOyLoOuguSIsImlkIjoyMTcsImJpcnRoIjoiMTk4Ni0wMy0wOCIsIm1lbVN0c0lkIjoxLCJleHAiOjE3NjEzMjgwOTN9.9ubX49jU5_uVzuGtIotU9IWEAGWnOKqs9g4B-PZ_wMMs9N69C6cA4hs_sswkw07h6E24iUkoXFBhwojNcW5Q5g"
+                    "Authorization":"Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJrYW5nOTk5OTk5QGV4YW1wbGUuY29tIiwiYXV0aCI6WyJST0xFX01FTUJFUiJdLCJ1c2VybmFtZSI6IuqwleyCsOyLoOuguSIsImlkIjoyMTcsImJpcnRoIjoiMTk4Ni0wMy0wOCIsIm1lbVN0c0lkIjoxLCJleHAiOjE3NjE0MTU2NDB9.io_uCz0hTX6L3Pb7SkGhdtenGzj3neF7qui9oCPGEAAn0qbQMhonXaokkGyPkl0L2utg9FsGRGCHKdsudmyTlQ"
                 }
             });
         crewList.value = await response.json();
@@ -65,7 +66,7 @@
                 method: "POST",
                 headers:{
                     "Content-Type": "application/json",
-                    "Authorization":"Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJrYW5nOTk5OTk5QGV4YW1wbGUuY29tIiwiYXV0aCI6WyJST0xFX01FTUJFUiJdLCJ1c2VybmFtZSI6IuqwleyCsOyLoOuguSIsImlkIjoyMTcsImJpcnRoIjoiMTk4Ni0wMy0wOCIsIm1lbVN0c0lkIjoxLCJleHAiOjE3NjEzMjgwOTN9.9ubX49jU5_uVzuGtIotU9IWEAGWnOKqs9g4B-PZ_wMMs9N69C6cA4hs_sswkw07h6E24iUkoXFBhwojNcW5Q5g"
+                    "Authorization":"Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJrYW5nOTk5OTk5QGV4YW1wbGUuY29tIiwiYXV0aCI6WyJST0xFX01FTUJFUiJdLCJ1c2VybmFtZSI6IuqwleyCsOyLoOuguSIsImlkIjoyMTcsImJpcnRoIjoiMTk4Ni0wMy0wOCIsIm1lbVN0c0lkIjoxLCJleHAiOjE3NjE0MTU2NDB9.io_uCz0hTX6L3Pb7SkGhdtenGzj3neF7qui9oCPGEAAn0qbQMhonXaokkGyPkl0L2utg9FsGRGCHKdsudmyTlQ"
                 },
                 body: JSON.stringify(req)
             });
