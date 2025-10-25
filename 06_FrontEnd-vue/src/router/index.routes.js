@@ -1,12 +1,12 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import homeRoutes from './modules/home.routes';
 import nestedRoutes from './modules/nested.routes';
-import CrewJoinPageView from './modules/crew.routes';
+import CrewRoutes from './modules/crew.routes';
 
 const routes = [
   ...homeRoutes,
   ...nestedRoutes,
-  ...CrewJoinPageView,
+  ...CrewRoutes,
 ];
 
 const router = createRouter({
