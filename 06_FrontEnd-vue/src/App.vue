@@ -1,6 +1,7 @@
 <script setup>
   import {RouterLink, RouterView} from 'vue-router';
 import MenuBar from './views/MenuBar.vue';
+import MountainAll from './views/mountainall/MountainAll.vue';
 </script>
 
 <template>
@@ -10,6 +11,7 @@ import MenuBar from './views/MenuBar.vue';
   
   <main>
     <RouterView/>
+    <MountainAll/>
   </main>
 </template>
 
