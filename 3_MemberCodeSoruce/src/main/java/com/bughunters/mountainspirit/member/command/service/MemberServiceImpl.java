@@ -257,6 +257,14 @@ public class MemberServiceImpl implements MemberService {
         return true;
     }
 
+    @Override
+    @Transactional
+    public void deleteCrewId(long crewId, long cumId) {
+        Member member = memberRepository.findById(cumId).get();
+        log.info("삭제할 회원 정보 : {}",member);
+        member.setCrewId(null);
+    }
+
 
     // 회원 가입 제한 사항 확인, 이메일 중복, 이미 가입한 회원, 블랙리스트 등등
     private ResponseSignUpDTO checkBeforeSignUp(RequestMemberDTO memberDTO) throws IllegalArgumentException {
