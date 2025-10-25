@@ -26,9 +26,6 @@ public interface MemberService {
 
     boolean updateStatus(Long id, ReportMemberUpdateDTO dto);
 
-<<<<<<< HEAD
     ResponseProfileImageDTO updateProfileImage(MultipartFile singleFile, Long id);
-=======
     void deleteCrewId(long crewId, long cumId);
->>>>>>> 24588987ae49cc71e0b4281134ca631c69ddd94f
 }
