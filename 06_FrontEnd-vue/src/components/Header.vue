@@ -22,7 +22,7 @@
             <ul class="login-submenu" :class="{ visible: showLoginMenu }">
                 <li><RouterLink :to="{name : 'member-login'}">로그인</RouterLink></li>
                 <li><RouterLink to="/member/signUp">회원 가입</RouterLink></li>
-                <li><RouterLink to="/">비밀번호 찾기</RouterLink></li>
+                <li><RouterLink to="/member-view">마이페이지</RouterLink></li>
             </ul>
         </div>
 
@@ -60,7 +60,7 @@
   position: relative;
   flex: 1; /* 남은 공간을 전부 차지해서 중앙 정렬 쉽게 */
   display: flex;
-  justify-content: center; /* ✅ 메뉴 항목 중앙 */
+  justify-content: center; /* 메뉴 항목 중앙 */
 }
 
 
@@ -94,7 +94,7 @@
 }
 
 .nav.container {
-  position: relative;    /* ✅ 이걸 기준으로 하위 메뉴를 절대 배치 */
+  position: relative;    /*  이걸 기준으로 하위 메뉴를 절대 배치 */
   margin-left: 10rem;
 }
 
@@ -107,7 +107,7 @@
 
 .logo img,
 .profile img {
-  width: 60px;   /* ✅ 동일 크기 */
+  width: 60px;   /*  동일 크기 */
   height: auto;
 }
 
@@ -122,14 +122,14 @@
 .profile-image {
   width: 100%;
   height: 100%;
-  object-fit: cover;      /* ✅ 이미지가 꽉 차게 비율 유지하며 채움 */
+  object-fit: cover;      /*  이미지가 꽉 차게 비율 유지하며 채움 */
 }
 
 div.profile {
     width: 60px;          /* 원하는 크기로 설정 */
     height: 60px;
-    border-radius: 50%;     /* ✅ 정사각형을 완전한 원으로 만듦 */
-    overflow: hidden;       /* ✅ 이미지가 밖으로 삐져나오지 않게 자름 */
+    border-radius: 50%;     /*  정사각형을 완전한 원으로 만듦 */
+    overflow: hidden;       /*  이미지가 밖으로 삐져나오지 않게 자름 */
     display: flex;
     justify-content: center;
     align-items: center;
