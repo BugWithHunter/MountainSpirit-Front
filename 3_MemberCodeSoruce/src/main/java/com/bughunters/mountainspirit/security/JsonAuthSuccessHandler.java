@@ -45,12 +45,24 @@ public class JsonAuthSuccessHandler implements AuthenticationSuccessHandler {
         String profilePath = profile != null ? profile.getFilePath() : null;
         List<String> authorities = toAuthorityList(authentication.getAuthorities());
 
+        if(profilePath != null){
+            String scheme = req.getScheme();         // http / https
+            String serverName = req.getServerName(); // localhost
+            int port = req.getServerPort();          // 8000
+
+            String requestPath = scheme + "://" + serverName +  ":" + port;
+
+            int index = profilePath.indexOf("/img");
+            profilePath =  requestPath + profilePath.substring(index,profilePath.length());
+        }
+
 
         // 추가 필드 예시(원하면 req에 Attribute로 담아 오거나, DB 조회해서 채우기)
         Map<String, Object> extra = Map.of(
                 "loginAt", LocalDateTime.now().toString(),
                 "sessionId", req.getSession(false) != null ? req.getSession(false).getId() : ""
         );
+        String d = req.getRequestURL().toString();
 
         // JSON 응답
         res.setStatus(status);
