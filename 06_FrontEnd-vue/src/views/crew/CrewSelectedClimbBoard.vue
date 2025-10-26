@@ -40,7 +40,14 @@
     import { useRoute } from 'vue-router';
     
     const climbId = useRoute();
-    const climbBoardData = ref({});
+    const climbBoardData = ref({
+        imageUrl:'',
+        crewClimbStartDate:'',
+        mountain:{},
+        crewClimbContent:'',
+        member:{},
+        crewClimbAmountOfPeople:0
+    });
     onMounted(async ()=>{
         console.log('page mount,',`http://localhost:8000/main-client/crew-climb-board/climb-board/${climbId.params.climbId}`);
         const response = await axios.get(`http://localhost:8000/main-client/crew-climb-board/climb-board/${climbId.params.climbId}`,
@@ -48,6 +55,7 @@
             headers: {"Authorization":"Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJrYW5nOTk5OTk5QGV4YW1wbGUuY29tIiwiYXV0aCI6WyJST0xFX01FTUJFUiJdLCJ1c2VybmFtZSI6IuqwleyCsOyLoOuguSIsImlkIjoyMTcsImJpcnRoIjoiMTk4Ni0wMy0wOCIsIm1lbVN0c0lkIjoxLCJleHAiOjE3NjE1MDAyNzJ9.BcnZCjXGMGVYGCWphyvnbM-il3zQKFoSJuXVDSEyKWDfWAwplYReAT6LIpaYmrGnR3uDMIKDbmZywILkfQ07DQ"}
         });
         climbBoardData.value = response.data;
+        climbBoardData.value.imageUrl = 'https://placehold.co/300x200?text=Mountain';
         console.log(climbBoardData.value);
         climbBoardData.value = {
         imageUrl: data.imageUrl || 'https://placehold.co/300x200?text=Mountain'

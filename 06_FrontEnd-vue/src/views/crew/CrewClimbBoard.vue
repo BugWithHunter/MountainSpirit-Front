@@ -4,7 +4,7 @@
 
     <!-- 일정 리스트 -->
     <div class="board-list">
-      <div v-for="(item, index) in climbBoardData":key="index"class="board-item">
+      <div v-for="(item, index) in climbBoardData" :key="index"class="board-item">
         <div class="board-left">
           <div class="board-title">{{ item.title }}</div>
           <div class="board-info">
