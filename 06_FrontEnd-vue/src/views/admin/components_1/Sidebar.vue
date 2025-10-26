@@ -60,7 +60,7 @@
 
 .menu-item {
   display: block;
-  width: 100%;
+  width: 95%;
   margin-top: 10px;
   padding: 4px;
   text-align: center;

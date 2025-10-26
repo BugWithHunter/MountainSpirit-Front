@@ -26,7 +26,7 @@ export default {
   width: 20%; /* 전체 화면의 1/5 */
   min-width: 200px; /* 너무 작아지는 걸 방지 */
   max-width: 300px; /* 너무 커지는 걸 방지 */
-  background-color: #2f3b52;
+  background-color: #28344b;
   color: white;
   height: 100vh;
 }
