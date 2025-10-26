@@ -38,9 +38,10 @@ public class JsonAuthSuccessHandler implements AuthenticationSuccessHandler {
         String message = "로그인에 성공했습니다.";
 
         // 로그인 사용자 정보
-        String username = authentication.getName();
+        String userEmail = authentication.getName();
         UserImpl user = (UserImpl) authentication.getPrincipal();
         Long id = user.getId();
+        String userName = user.getMemberName();
         ProfileOfMember profile = profileImageRepository.findByCumId(id);
         String profilePath = profile != null ? profile.getFilePath() : null;
         List<String> authorities = toAuthorityList(authentication.getAuthorities());
@@ -73,7 +74,9 @@ public class JsonAuthSuccessHandler implements AuthenticationSuccessHandler {
                 .append(",\"code\":\"").append(code).append("\"")
                 .append(",\"message\":\"").append(escapeJson(message)).append("\"")
                 .append(",\"user\":{")
-                .append("\"username\":\"").append(escapeJson(username)).append("\",")
+                .append("\"userId\":\"").append(escapeJson(id.toString())).append("\",")
+                .append("\"userName\":\"").append(escapeJson(userName)).append("\",")
+                .append("\"userEmail\":\"").append(escapeJson(userEmail)).append("\",")
                 .append("\"profilePath\":\"").append(escapeJson(profilePath)).append("\",")
                 .append("\"authorities\":").append(toJsonArray(authorities))
                 .append("}");
