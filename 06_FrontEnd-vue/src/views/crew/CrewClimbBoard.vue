@@ -43,9 +43,8 @@
     import axios from 'axios';
     import { useRouter } from 'vue-router';
     const router = useRouter();
-    function climbBoardPage(id){
-        console.log(id);
-        router.push(`/crew/climb-board/${id}`);
+    function climbBoardPage(climbId){
+        router.push(`/crew/climb-board/${climbId}`);
     }
 
     const climbBoardData = ref({});
