@@ -28,7 +28,23 @@
             </div>
           </li>
         </ul>
-        <button class="apply-btn">등산 신청</button>
+
+          <button class="apply-btn" @click.stop="modalOpen()">등산 신청</button>
+
+            <div class="modal-wrap" v-show="modalCheck">
+            <div class="modal-container">
+                
+                <h1>등산 신청 하시겠습니까?</h1>
+                
+                <div class="modal-btn">
+                <button @click.stop="modalOpen()">취소</button>
+                <button @click.stop="climbApply(climbBoardData.id,
+                climbBoardData.crewClimbAmountOfPeople,
+                climbBoardData.mountain.frtrlId,
+                77)">신청</button>
+                </div>
+            </div>
+            </div>
       </div>
     </div>
   </div>
@@ -40,6 +56,9 @@
     import { useRoute } from 'vue-router';
     
     const climbId = useRoute();
+    const modalCheck = ref(false);
+    
+
     const climbBoardData = ref({
         imageUrl:'',
         crewClimbStartDate:'',
@@ -48,7 +67,7 @@
         member:{},
         crewClimbAmountOfPeople:0
     });
-    onMounted(async ()=>{
+    const getData = async ()=>{
         console.log('page mount,',`http://localhost:8000/main-client/crew-climb-board/climb-board/${climbId.params.climbId}`);
         const response = await axios.get(`http://localhost:8000/main-client/crew-climb-board/climb-board/${climbId.params.climbId}`,
         {
@@ -57,13 +76,37 @@
         climbBoardData.value = response.data;
         climbBoardData.value.imageUrl = 'https://placehold.co/300x200?text=Mountain';
         console.log(climbBoardData.value);
-        
-    })
+    };
+    onMounted(getData);
+
+    const modalOpen = ()=>{
+        modalCheck.value = !modalCheck.value;
+    }
+    const climbApply = async (crewClimbId,amountOfPeople,frtrlId,crewMemberId)=>{
+        console.log(crewClimbId,amountOfPeople,frtrlId,crewMemberId);
+        const response = await axios.post('http://localhost:8000/main-client/crew-climb-board/climb-apply',
+        {
+            crewClimbId:crewClimbId,
+            crewClimbAmountOfPeople:amountOfPeople,
+            frtrlId:frtrlId,
+            crewMemberId:crewMemberId
+        },
+        {
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization":"Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJrYW5nOTk5OTk5QGV4YW1wbGUuY29tIiwiYXV0aCI6WyJST0xFX01FTUJFUiJdLCJ1c2VybmFtZSI6IuqwleyCsOyLoOuguSIsImlkIjoyMTcsImJpcnRoIjoiMTk4Ni0wMy0wOCIsIm1lbVN0c0lkIjoxLCJleHAiOjE3NjE1MDAyNzJ9.BcnZCjXGMGVYGCWphyvnbM-il3zQKFoSJuXVDSEyKWDfWAwplYReAT6LIpaYmrGnR3uDMIKDbmZywILkfQ07DQ"
+            }
+        }
+    )
+    console.log('POST End')
+    modalCheck.value = !modalCheck.value;
+    getData();
+    }
 </script>
 
 <style scoped>
 .climb-detail-container {
-  width: 1000px;
+  width: 80%;
   margin: 40px auto;
   background: white;
   padding: 20px;
@@ -190,5 +233,25 @@
 
 .apply-btn:hover {
   background: #005fcc;
+}
+
+.modal-container {
+  position: relative;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 550px;
+  background: #fff;
+  border-radius: 10px;
+  padding: 20px;
+  box-sizing: border-box;
+}
+.modal-wrap {
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.1);
 }
 </style>
