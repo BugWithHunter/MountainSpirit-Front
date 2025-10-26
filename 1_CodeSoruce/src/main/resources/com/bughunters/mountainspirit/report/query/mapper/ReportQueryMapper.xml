@@ -147,4 +147,24 @@
             LIMIT #{limit} OFFSET #{offset}
         </if>
     </select>
+
+    <select id="selectReportMemberDetail" resultType="com.bughunters.mountainspirit.report.query.dto.ReportMemberDetailDTO">
+        SELECT
+            r.id AS reportId,
+            r.isAccepted,
+            r.reason,
+            r.reportedId,
+            m.memName,
+            m.crewId,
+            m.climbCnt,
+            m.score,
+            (
+                SELECT COUNT(*)
+                FROM Report r2
+                WHERE r2.reportedId = r.reportedId
+            ) AS reportCount
+        FROM Report r
+                 LEFT JOIN Member m ON r.reportedId = m.id
+        WHERE r.id = #{reportId}
+    </select>
 </mapper>

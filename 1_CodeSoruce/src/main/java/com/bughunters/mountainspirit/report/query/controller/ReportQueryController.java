@@ -5,6 +5,7 @@ import com.bughunters.mountainspirit.common.ResponseMessage;
 import com.bughunters.mountainspirit.common.UserInfo;
 import com.bughunters.mountainspirit.report.query.dto.ReportCheckDTO;
 import com.bughunters.mountainspirit.report.query.dto.ReportDetailDTO;
+import com.bughunters.mountainspirit.report.query.dto.ReportMemberDetailDTO;
 import com.bughunters.mountainspirit.report.query.dto.ReportQueryDTO;
 import com.bughunters.mountainspirit.report.query.service.ReportQueryService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -77,6 +78,11 @@ public class ReportQueryController {
     @GetMapping("/{id}")
     public List<ReportDetailDTO> getReportDetail(@PathVariable Long id) {
         return reportQueryService.selectReportDetailById(id);
+    }
+
+    @GetMapping("/member/{id}")
+    public List<ReportMemberDetailDTO> getReportMemberDetail(@PathVariable Long id) {
+        return reportQueryService.selectReportMemberDetailById(id);
     }
 
     // 로그인 된 회원 신고 조회: /reports/my

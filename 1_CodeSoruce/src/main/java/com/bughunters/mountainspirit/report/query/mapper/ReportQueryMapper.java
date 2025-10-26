@@ -2,6 +2,7 @@ package com.bughunters.mountainspirit.report.query.mapper;
 
 import com.bughunters.mountainspirit.report.query.dto.ReportCheckDTO;
 import com.bughunters.mountainspirit.report.query.dto.ReportDetailDTO;
+import com.bughunters.mountainspirit.report.query.dto.ReportMemberDetailDTO;
 import com.bughunters.mountainspirit.report.query.dto.ReportQueryDTO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -36,4 +37,9 @@ public interface ReportQueryMapper {
             @Param("memberId") Long memberId,
             @Param("limit") Integer limit,
             @Param("offset") Integer offset);
+
+    // 회원신고 클릭시 회원정보와 해당 신고 내역 조회
+    List<ReportMemberDetailDTO> selectReportMemberDetail(
+            @Param("reportId") Long reportId
+    );
 }
