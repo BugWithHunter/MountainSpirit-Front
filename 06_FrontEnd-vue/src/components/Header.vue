@@ -18,7 +18,12 @@
         <div class="profile image"  
           @mouseover="showLoginMenu = true"
           @mouseleave="showLoginMenu = false">
-            <img class="profile-image" src="/notLogin.png" alt="프로필" >
+            <template v-if="profileImage">
+                <img class="profile-image" :src="profileImage"  >
+            </template>
+            <template v-else>
+                <img class="profile-image" src="/notLogin.png"  >
+            </template>
             <ul class="login-submenu" :class="{ visible: showLoginMenu }">
                 <li><RouterLink :to="{name : 'member-login'}">로그인</RouterLink></li>
                 <li><RouterLink to="/member/signUp">회원 가입</RouterLink></li>
@@ -33,9 +38,13 @@
 </template>
 
 <script setup>
-    import {RouterLink, } from 'vue-router';
+    import {RouterLink } from 'vue-router';
     import MenuExtention from '@/components/MenuExtention.vue';
-    import {ref,watch} from 'vue';
+    import {ref,watch, inject} from 'vue';
+
+    
+    const profileImage = inject('profileImage')
+    console.log('헤더에서 프로필 경로 확인:', profileImage.value);
 
     const showLoginMenu = ref(false);
     const showSubmenu = ref(false);
@@ -153,6 +162,8 @@ div.profile {
   transition: all 0.6s ease;
   border-radius: 4px;
   text-align: center;
+  
+  z-index: 20000;
 }
 
 .login-submenu.visible {

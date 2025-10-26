@@ -48,7 +48,7 @@
         
         <section class="pane-right">
                 <EchartDonut 
-                :hsaStamp="hsaStamp" :totalStamp="totalStamp" 
+                :chartItems="stamps" :radius="stampRadius"
                 v-slot:title>
                     <h2 class="slot-title">흭득 도장</h2>
                 </EchartDonut>
@@ -66,13 +66,29 @@
     import { onMounted, ref, reactive } from 'vue';
     import EchartDonut from '@/components/echart/EchartDonut.vue';
     import EchartLine from '@/components/echart/EchartLine.vue';
-    const apiKey = import.meta.env.VITE_API_KEY;
-    console.log('apiKey:',apiKey);
+    const stamps = reactive([]);
+    const stampRadius = reactive([]);
+    
     const hsaStamp = reactive([]);
     const totalStamp = reactive([]);
     const selectedMountain = ref({});
     const selectedCourse = ref({});
-    const mountains = reactive([
+    
+    const changeMountain = () => {
+        console.log(selectedMountain.value);
+    }
+    
+    const changeCourse = () => {
+        console.log(selectedCourse.value);
+    }
+    
+    // ---- 샘플 데이터 생성 ----
+    stamps.push({name: '흭득', value:0 });
+    stamps.push({name: '미흭득', value:0});
+    stampRadius.push('40%');
+    stampRadius.push('65%');
+
+const mountains = reactive([
         {
             frtrlNm: '관악산',
             frtrlId: '0000000010',
@@ -118,23 +134,15 @@
             ]
         }
     ]);
-    
-    const changeMountain = () => {
-        console.log(selectedMountain.value);
-    }
-    
-    const changeCourse = () => {
-        console.log(selectedCourse.value);
-    }
+
     
     for(let i = 0; i < 100; i++){
         if(i % 3 == 0){
-            hsaStamp.push(i);
+            stamps[0].value++;
+        } else {
+            stamps[1].value++;
         }
-        totalStamp.push(i);
     }
-    console.log('산정보:',mountains);
-    console.log(hsaStamp.length, totalStamp.length);
 
 </script>
 <style scoped>

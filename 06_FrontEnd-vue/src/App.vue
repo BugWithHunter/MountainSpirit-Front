@@ -1,7 +1,12 @@
 <script setup>
+  import { provide ,ref } from 'vue';
   import {RouterLink, RouterView} from 'vue-router';
   import headerComponent from './components/Header.vue';
   import FooterView from './views/sample/FooterView.vue';
+
+  // 프로필 이미지 설정을 위함
+  const profileImage = ref('') 
+  provide('profileImage', profileImage) // 자식에게 공유
 </script>
 
 <template>
@@ -39,13 +44,16 @@
   flex-direction: column;   /* 세로 방향으로 배치: header → main → footer 순서로 쌓이게 함 */
 }
 
+.header { flex: 0 0 auto; }   /* 네가 쓰는 헤더 엘리먼트 클래스/태그에 맞춰 지정 */
+
 /*
   main 영역 설정
   본문이 화면의 가운데 오도록 정렬하고,
   flex: 1로 남는 공간을 차지하게 해서 footer를 아래로 밀어냄
 */
 main {
-  flex: 1;                    /* 남은 공간을 전부 main이 차지하도록 해서 footer를 하단으로 밀기 */
+  flex: 1 1 auto; 
+  min-height: 0;
   display: flex;              /* main 내부에서 또 중앙 정렬을 하기 위해 flex 설정 */
   justify-content: center;    /* 가로 방향 중앙 정렬 */
   align-items: center;        /* 세로 방향 중앙 정렬 */
@@ -55,6 +63,7 @@ main {
   footer 영역 스타일
 */
 footer {
+  flex: 0 0 auto;
   background: #0055cc;   /* 배경색 (파란색) */
   color: #fff;            /* 글자색 흰색 */
   font-size: 15px;        /* 글자 크기 설정 */

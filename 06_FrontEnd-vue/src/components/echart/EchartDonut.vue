@@ -4,7 +4,7 @@
         <div class="chart-wrap">
             <!-- 중앙 상단 타이틀: 부모에서 내려준 슬롯(title) -->
             <div class="chart-title">
-            <slot name="title" ></slot>
+                <slot name="title" ></slot>
             </div>
             <!-- 실제 차트가 들어갈 박스 -->
             <div ref="chartDiv" class="chart-box"></div>
@@ -13,93 +13,82 @@
 </template>
 
 <script setup>
-    import { onMounted, ref, defineProps, watch} from 'vue';
+ import { onMounted, onBeforeUnmount, ref, defineProps, watch, nextTick } from 'vue';
 
-    const props = defineProps({
-        hsaStamp: { type: Array },
-        totalStamp: { type: Array }
-    })
+let myChart;
+let option;
+const props = defineProps({
+  chartItems : {type:Array, default: () => []},
+  radius     : {type:Array, default: () => ['48%','72%']},
+});
+const chartDiv = ref(null);
 
-    const chartDiv = ref(null);
-    const remainStamp = props.totalStamp.length - props.hsaStamp.length;
-    
-    onMounted(() => {
-            // 차트를 그릴 div 테그 선택
-            var myChart = echarts.init(chartDiv.value, null, {
-                renderer: 'canvas',
-                useDirtyRect: false
-            });
-            var app = {};
-            var option;
+function ensureChart() {
+  if (!myChart && chartDiv.value) {
+    myChart = echarts.init(chartDiv.value, null, { renderer: 'canvas', useDirtyRect: false });
+    window.addEventListener('resize', myChart.resize);
+  }
+}
 
-            option = {
-                tooltip: {
-                    trigger: 'item', 
-                    show: false
-                },
-                legend: {
-                    top: '5%',
-                    left: 'center',
-                    show: false
-                },
-                textStyle: { // 툴팁 안의 텍스트 크기/색 등 커스텀
-                fontSize: 20,
-                color: '#222'
-                },
-                series: [
-                    {
-                        name: '',
-                        type: 'pie',
-                        radius: ['40%', '70%'],
-                        avoidLabelOverlap: false,
-                        itemStyle: {
-                            borderRadius: 10,
-                            borderColor: '#fff',
-                            borderWidth: 2
-                        },
-                        label: {
-                            show: true,                   // 기본적으로 라벨 표시
-                            position: 'outside',          // 조각 바깥쪽에 표시 (옆에 보이게)
-                            // {b}=이름, {c}=값, {d}=퍼센트
-                            // 필요에 따라 "{b}: {c}" 또는 "{b}\n{c} ({d}%)" 등으로 변경 가능
-                            formatter: '{b}\n{c}',
-                            fontSize: 18,                 // 기본 라벨 글씨 크기
-                            color: '#333',
-                            // (선택) 라벨을 더 예쁘게 하고 싶으면 rich 텍스트 사용 가능
-                            // formatter: '{name|{b}} {val|{c}}',
-                            // rich: { name:{fontSize:16,color:'#555'}, val:{fontSize:16,fontWeight:'bold',color:'#111'} }
-                        },
-                        emphasis: {
-                            label: {
-                                show: true,
-                                fontSize: 40,
-                                fontWeight: 'bold',
-                                // 예: '{b}\n{c} ({d}%)'
-                                formatter: '{b}\n{c}',
-                                fontSize: 24,               // 🔥 hover 시 크게
-                                fontWeight: 'bold',
-                                color: '#111'
-                            }
-                        },
-                        labelLine: {
-                            show: false
-                        },
-                        data: [
-                            { value: props.hsaStamp.length, name: '흭득', itemStyle: { color: '#ABF200' } },
-                            { value: remainStamp, name: '미흭득', itemStyle: { color: '#BDBDBD' } }
-                        ]
-                    }
-                ]
-            };
+function buildOption(items, radius) {
+  const data = (items ?? []).map(d => ({ name: d.name, value: d.value }));
+  const isEmpty = data.length === 0;
+  return {
+    tooltip: { trigger: 'item', show: false },
+    legend: { show:false },
+    series: [{
+      type: 'pie',
+      radius: Array.isArray(radius) ? radius : [radius],   // 반지름 정규화
+      center: ['50%','52%'],
+      left: 8, right: 8, top: 8, bottom: 8,
+      avoidLabelOverlap: false,
+      minShowLabelAngle: 1,
+      itemStyle: { borderRadius: 10, borderColor: '#fff', borderWidth: 2 },
+      label: { show: !isEmpty, position: 'outside', formatter: '{b}\n{c}', fontSize: 18, color: '#333' },
+      labelLayout: { moveOverlap: 'shiftY', hideOverlap: false },
+      emphasis: { label: { show: !isEmpty, formatter: '{b}\n{c}', fontSize: 24, fontWeight: 'bold', color: '#111' }, scale: false },
+      labelLine: { show: !isEmpty, length: 14, length2: 10, lineStyle: { width: 2, color: '#666' } },
+      silent: isEmpty,                    // 빈 상태면 상호작용 비활성화
+      animation: !isEmpty,                // 빈 → 데이터 전환시 깔끔
+      data: isEmpty ? [{ value: 1, name: 'empty', itemStyle: { color: '#ddd' } }] : data
+    }]
+  };
+}
 
-            if (option && typeof option === 'object') {
-                myChart.setOption(option);
-            }
+function render() {
+  ensureChart();
+  if (!myChart) return;
+  const opt = buildOption(props.chartItems, props.radius);
+  myChart.clear();               // ✅ 이전 상태 깨끗이
+  myChart.setOption(opt, true);  // ✅ notMerge=true: 완전 교체
+  myChart.resize();
+}
 
-            window.addEventListener('resize', myChart.resize);
-    });
-    
+onMounted(() => {
+  nextTick(() => setTimeout(() => {
+   render();                    // ✅ 처음에도 현재 props로 렌더
+  }, 360));
+});
+
+watch(
+  () => [props.chartItems, props.radius],
+  () => render(),
+  { deep: true, immediate: true }        // ✅ 처음 값과 깊은 변경 모두 반영
+);
+
+onBeforeUnmount(() => {
+  if (myChart) {
+    window.removeEventListener('resize', myChart.resize);
+    myChart.dispose();
+    myChart = null;
+  }
+});
 </script>
+
+<style scoped>
+.chart-box{ width:100%; height:100%; min-height:240px; padding-top:28px; }
+</style>
+
 
 <style scoped>
 
@@ -125,6 +114,7 @@
     .chart-box {
         flex: 1 1 auto;
         width: 100%;
+        height: 100%;
         min-height: 240px;          /* 필요 시 최소 높이 */
         padding-top: 28px;          /* 타이틀 높이만큼 여백 */
     }

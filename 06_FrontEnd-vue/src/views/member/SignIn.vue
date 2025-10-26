@@ -13,7 +13,7 @@
         </div>
 
         <!-- 로그인 버튼 -->
-        <button type="submit" class="btn">로그인</button>
+        <button type="button" class="btn" @click="signIn">로그인</button>
 
         <!-- 하단 링크 -->
         <div class="footer-link">
@@ -22,15 +22,82 @@
             </button>
         </div>
     </form>
+
 </template>
 
 <script setup>
     import { useRouter } from 'vue-router';
-    import { ref } from 'vue';
+    import { ref , inject  } from 'vue';
+    import axios from 'axios'
+
+    
+    // App.vue에서 제공한 profileImage ref를 가져오기
+    const profileImage = inject('profileImage')
 
     const router = useRouter();
     const moveSignUp = () => {
         router.push('/member/signUp')
+    }
+
+  
+        const testImage =ref('');
+
+    // async 함수
+    async function signIn() {
+    try {
+        // 1️⃣ 서버로 POST 요청 보내기
+        const response = await axios.post(
+        'http://localhost:8000/member-client/login',
+        {
+            email: 'user045@example.com',
+            pwd: 'pwd045'
+        },
+        {
+            headers: { 'Content-Type': 'application/json' }
+        }
+        );
+
+        
+    // ✅ 1. 응답 헤더에서 JWT 토큰 추출
+    const token = response.headers['token']; // 소문자로 써야 함!
+    console.log('헤더들 :', response.headers);
+    console.log('받은 토큰:', token);
+
+        // 2️⃣ HTTP 상태 코드 출력 (200이면 성공)
+        console.log('HTTP 상태 코드:', response.status);
+
+        // 3️⃣ 서버에서 보낸 JSON 본문 출력
+        console.log('응답 JSON:', response.data);
+
+        // 4️⃣ 원하는 필드만 추출
+        const { success, code, message, user, extra } = response.data;
+
+        console.log('로그인 성공 여부:', success);
+        console.log('응답 코드:', code);
+        console.log('메시지:', message);
+        console.log('사용자 이름:', user.username);
+        console.log('프로필 :', user.profilePath);
+        console.log('권한 목록:', user.authorities);
+        console.log('로그인 시각:', extra.loginAt);
+
+        testImage.value = user.profilePath;
+        profileImage.value = user.profilePath;
+        console.log('통신 후 이미지 패스:', testImage.value);
+
+    } catch (error) {
+        // 5️⃣ 에러 처리
+        if (error.response) {
+        // 서버가 응답했지만 (예: 400, 401 등)
+        console.error('❌ 서버 오류 코드:', error.response.status);
+        console.error('❌ 오류 내용:', error.response.data);
+        } else if (error.request) {
+        // 요청은 갔지만 응답이 없을 때 (네트워크 문제 등)
+        console.error('❌ 응답 없음:', error.request);
+        } else {
+        // 기타 오류
+        console.error('❌ 요청 설정 중 오류:', error.message);
+        }
+    }
     }
 
 </script>
