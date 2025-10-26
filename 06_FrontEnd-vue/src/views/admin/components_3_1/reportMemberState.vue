@@ -79,7 +79,7 @@
   // 상세 조회
   const fetchReport = async (id) => {
     try {
-      const res = await fetch(`/main-client/reports/member/${id}`, {
+      const res = await fetch(`http://localhost:8000/main-client/reports/member/${id}`, {
         headers: { Authorization: token },
       });
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
