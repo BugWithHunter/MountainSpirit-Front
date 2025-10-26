@@ -39,9 +39,15 @@
     <resultMap id="MyCrewClimbBoardByCrewMemberIdResultMap" type="com.bughunters.mountainspirit.crewclimbboard.query.dto.MyCrewClimbBoardListDTO">
         <id property="id" column="id"/>
         <result property="crewClimbHistoryIsSucceed" column="crewClimbHistoryIsSucceed"/>
-        <result property="crewClimbId" column="crewClimbId"/>
         <result property="crewMemberId" column="crewMemberId"/>
-        <result property="frtrlId" column="frtrlId"/>
+        <association property="crewClimbRecord" javaType="com.bughunters.mountainspirit.crewclimbboard.query.dto.CrewClimbDTO">
+            <id property="climbId" column="climbId"/>
+            <result property="crewClimbStartDate" column="crewClimbStartDate"/>
+        </association>
+        <association property="mountain" javaType="com.bughunters.mountainspirit.crewclimbboard.query.dto.MountainDTO">
+            <id property="frtrlId" column="frtrlId"/>
+            <result property="frtrlNm" column="frtrlNm"/>
+        </association>
     </resultMap>
     <select id="findAllCrewClimbBoardByCrewId" parameterType="_long" resultMap="crewClimbBoardResultMap">
         SELECT
@@ -89,11 +95,14 @@
         SELECT
                a.id
              , a.crewClimbHistoryIsSucceed
-             , a.crewClimbId
              , a.crewMemberId
-             , a.frtrlId
-          FROM CrewClimbRecord a
-         WHERE a.crewMemberId = #{crewMemberId}
+             , b.id as climbId
+             , b.crewClimbStartDate
+             , c.frtrlId
+             , c.frtrlNm
+          FROM CrewClimbRecord a JOIN CrewClimbBoard b ON a.crewClimbId = b.id
+                               JOIN Mountain c ON a.frtrlId = c.frtrlId
+         WHERE a.crewMemberId = 25;
     </select>
 
 </mapper>

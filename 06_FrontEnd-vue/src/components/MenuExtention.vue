@@ -8,7 +8,7 @@
               <li><RouterLink to="/nested">크루 생성</RouterLink></li>
               <li><RouterLink to="/">크루 정보</RouterLink></li>
               <li><RouterLink to="/">크루 등산 일정</RouterLink></li>
-              <li><RouterLink to="/">내 크루 등산 기록</RouterLink></li>
+              <li><RouterLink to="/crew/myclimb">내 크루 등산 기록</RouterLink></li>
             </ul>
           </li>
           <li>
