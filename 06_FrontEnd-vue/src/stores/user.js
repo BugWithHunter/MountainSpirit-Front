@@ -1,58 +1,73 @@
-import { defineStore } from "pinia";
-import { ref, readonly, computed } from 'vue'
+// stores/user.js
+import { defineStore } from 'pinia'
+import { ref, readonly } from 'vue'
 
-export const useUserStore = defineStore('user', () =>{
-    
-    //state 내부 변수
-    
-    const _name         = ref('');
-    const _email        = ref('');
-    const _roles        = ref([]);
-    const _profile      = ref('');
-    const _token        = ref('');
-    const _isLoggedIn   = ref(false)
-    
-    // state 읽기전용
-    const name          = readonly(_name);
-    const email         = readonly(_email);
-    const roles         = readonly(_roles);
-    const profile       = readonly(_profile);
-    const token         = readonly(_token);
-    const isLoggedIn    = readonly(_isLoggedIn);
+export const useUserStore = defineStore(
+  'user',
+  () => {
 
-    // getter
+    // ----- 외부 노출: 
+    const name          = ref('');
+    const userId        = ref(0);
+    const email         = ref('');
+    const roles         = ref([]);
+    const profile       = ref('');
+    const token         = ref('');
+    const isLoggedIn    = ref(false); 
 
-
-    // Setter
-    function logIn({username, userEmail, profilePath, authorities}) {
-        _name.value = username;
-        _email.value = userEmail;
-        _profile.value = profilePath;
-        _roles.value = authorities;
-        _isLoggedIn.value = true
+    // ----- Actions -----
+    function logIn({ userName, userEmail, profilePath, authorities,userId : uid }) {
+      name.value = userName
+      email.value = userEmail
+      profile.value = profilePath
+      roles.value = authorities
+      userId.value = uid
+      isLoggedIn.value = true
     }
     
-    function logOut({username, userEmail, profilePath, authorities}) {
-        _name.value = '';
-        _email.value = '';
-        _profile.value = '';
-        _roles.value = [];
-        _isLoggedIn.value = false
+    function logOut() {
+      name.value = ''
+      email.value = ''
+      profile.value = ''
+      roles.value = []
+      token.value = ''
+      userId.value = 0
+      isLoggedIn.value = false
     }
 
+    // function setToken() {
+    //     console.log('토큰을 읽어볼까:?')
+    // }
+    function setToken(jwtToken) {
+        console.log('토큰을 읽어볼까:?', jwtToken);
+        token.value = jwtToken; 
+    }
 
-    // return (public)
+    function changeProfile(newProfile) {
+        profile.value = newProfile;
+    }
 
+    // ----- 반환 -----
     return {
-        name,
-        email,
-        roles,
-        profile,
-        token,
-        isLoggedIn,
-
-        logIn,
-        logOut
+      // 외부 노출용 readonly state
+      name, email, roles, profile, token, isLoggedIn, userId,
+      // actions
+      logIn, logOut, changeProfile , setToken
     }
-
-})
+  },
+  {
+    persist: {
+      enabled: true, //storage 저장유무
+      storage: sessionStorage,
+      paths: [
+        'name',
+        'email',
+        'roles',
+        'profile',
+        'token',
+        'isLoggedIn',
+        'userId'
+      ]
+    }
+  }
+)

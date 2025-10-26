@@ -1,19 +1,21 @@
 <template>
-    <form class="login-card">
+    <form class="login-card" @submit.prevent="signIn">
         <!-- 이메일 -->
         <div class="field">
         <label for="email" class="label">이메일</label>
-        <input id="email" type="email" class="input" placeholder="aaaa@gmail.com" autocomplete="email" />
+        <input id="email" type="email" class="input" placeholder="aaaa@gmail.com" 
+        autocomplete="email" v-model="email" />
         </div>
 
         <!-- 비밀번호 -->
         <div class="field">
         <label for="password" class="label">비밀번호</label>
-        <input id="password" type="password" class="input" placeholder="password" autocomplete="current-password" />
+        <input id="password" type="password" class="input" placeholder="password" 
+        autocomplete="current-password" v-model="password" />
         </div>
 
         <!-- 로그인 버튼 -->
-        <button type="button" class="btn" @click="signIn">로그인</button>
+        <button type="submit" class="btn" @click="signIn">로그인</button>
 
         <!-- 하단 링크 -->
         <div class="footer-link">
@@ -32,9 +34,9 @@
     import { useUserStore } from '@/stores/user';
 
     const userStore =  useUserStore();
-
+    const password = ref('');
+    const email = ref('');
     
-
     const router = useRouter();
     const moveSignUp = () => {
         router.push('/member/signUp')
@@ -50,8 +52,8 @@
         const response = await axios.post(
             'http://localhost:8000/member-client/login',
             {
-                email: 'user045@example.com',
-                pwd: 'pwd045'
+                email: email.value,
+                pwd: password.value
             },
             {
                 headers: { 'Content-Type': 'application/json' }
@@ -76,13 +78,16 @@
         console.log('로그인 성공 여부:', success);
         console.log('응답 코드:', code);
         console.log('메시지:', message);
-        console.log('사용자 이름:', user.username);
+        console.log('사용자 이름:', user.userName);
         console.log('프로필 :', user.profilePath);
         console.log('권한 목록:', user.authorities);
         console.log('로그인 시각:', extra.loginAt);
         console.log('user 뽑아보자:', user);
 
+        // userStore.token = token;
+        userStore.setToken(token);
         userStore.logIn(user);
+        router.push("/");
 
     } catch (error) {
         // 5️⃣ 에러 처리

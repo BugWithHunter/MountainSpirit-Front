@@ -25,10 +25,28 @@
                 <img class="profile-image" src="/notLogin.png"  >
             </template>
             <ul class="login-submenu" :class="{ visible: showLoginMenu }">
-              <template v-if="userStore.isLoggedIn">  <!--로그아웃-->
+              <template v-if="userStore.isLoggedIn">  <!--로그인 상태-->
                 <li><RouterLink to="/" @click="userStore.logOut">{{ loginMenu }}</RouterLink></li>
+
+                
+
+                <li><button class="link-btn" @click="openFilePicker">프로필 변경</button></li>
+
+
+                <!-- 드롭다운 밖(컴포넌트 최하단 아무 곳) -->
+                <input
+                  ref="fileInput"
+                  type="file"
+                  accept="image/*"
+                  class="sr-only-file"
+                  @change="onFileSelected"
+                  tabindex="-1"
+                  aria-hidden="true"
+                />
+
+
               </template>
-              <template v-else> <!--로그인-->
+              <template v-else> <!--로그아웃 상태-->
                 <li><RouterLink :to="{name : 'member-login'}">{{ loginMenu }}</RouterLink></li>
               </template>
                 <li v-if="userStore.isLoggedIn">
@@ -55,6 +73,7 @@
     import MenuExtention from '@/components/MenuExtention.vue';
     import {ref, watch, computed} from 'vue';
     import { useUserStore } from '@/stores/user';
+    import axios from 'axios';
 
     const userStore = useUserStore();
     
@@ -64,7 +83,75 @@
     // 파생값은 computed를 사용 (값이 변하면 계산을 다시해서 반환하며 변하지 않으면 캐싱된 데이터 반환)
     const loginMenu = computed(() => (userStore.isLoggedIn ? '로그아웃' : '로그인'))
 
+
+
     const pageTitle = ['크루', '랭킹', '게시판', '산 목록'];
+
+
+const fileInput = ref(null)
+const uploading = ref(false)
+
+function openFilePicker() {
+  fileInput.value?.click()
+}
+
+async function onFileSelected(e) {
+  const input = e.target
+  const file = input.files?.[0]
+  input.value = '' // 같은 파일 다시 선택 가능하게 초기화
+
+  if (!file) return
+  if (!file.type.startsWith('image/')) return alert('이미지 파일만 업로드 가능해요.')
+  if (file.size > 5 * 1024 * 1024) return alert('5MB 이하만 업로드 가능합니다.')
+
+  try {
+    uploading.value = true
+    const form = new FormData()
+    form.append('singleFile', file)
+
+    const res = await axios.post(
+      `http://localhost:8000/member-client/member/Profile/${userStore.userId}`,
+      form,
+      {
+        headers: {
+          // 'Content-Type': 'multipart/form-data',
+          Authorization: `Bearer ${userStore.token}`,
+        },
+      }
+    )
+
+    const { httpStatus, result } = res.data ?? {}
+    const { responseData } = result ?? {}
+    const {
+      urlPath,
+      successUpload,
+      dirPath,
+      filePath,
+      exceptionMessage,
+    } = responseData ?? {}
+
+    console.log('업로드 응답:', { httpStatus, successUpload, urlPath, dirPath, filePath, exceptionMessage })
+
+    if (httpStatus !== 200 || !successUpload || !urlPath) {
+      alert('프로필 변경 실패: ' + (exceptionMessage || '알 수 없는 오류'))
+      return
+    }
+
+    // ✅ 스토어 반영 (화면 즉시 갱신)
+    userStore.changeProfile('');
+    setTimeout(async() => {
+      await userStore.changeProfile(urlPath)
+    },300)
+    alert('프로필이 변경되었습니다.')
+  } catch (err) {
+    console.error(err)
+    alert('업로드 실패 :' , err)
+  } finally {
+    uploading.value = false
+  }
+}
+
+
 
 </script>
 
@@ -203,5 +290,26 @@ div.profile {
   pointer-events: none; /* 👈 클릭 자체 불가능하게 함 */
 }
 
+.link-btn {
+  background: none;
+  border: none;
+  color: #337ab7;
+  font: inherit;
+  cursor: pointer;     /* 👈 손 모양 */
+  padding: 0;
+  text-align: left;
+}
 
+/* 화면/레이아웃에 안 보이지만 DOM에는 존재하도록 */
+.sr-only-file {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
 </style>
