@@ -29,23 +29,21 @@
 </template>
 
 <script setup>
-    import { onMounted, ref } from 'vue';
+    import axios from 'axios';
+import { onMounted, ref } from 'vue';
+    
 
     const crewList = ref([]);
     const modalCheck = ref(false);
     const selectedCrew = ref(0);
     onMounted(
     async ()=>{
-        const response = await fetch('http://localhost:8000/main-client/crew/crew-info',
-            {
-                method: "GET",
-                headers:{
-                    /* 나중에 토큰 값 전역변수에서 불러올것 */
-                    "Content-Type": "application/json",
-                    "Authorization":"Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJrYW5nOTk5OTk5QGV4YW1wbGUuY29tIiwiYXV0aCI6WyJST0xFX01FTUJFUiJdLCJ1c2VybmFtZSI6IuqwleyCsOyLoOuguSIsImlkIjoyMTcsImJpcnRoIjoiMTk4Ni0wMy0wOCIsIm1lbVN0c0lkIjoxLCJleHAiOjE3NjE0MTU2NDB9.io_uCz0hTX6L3Pb7SkGhdtenGzj3neF7qui9oCPGEAAn0qbQMhonXaokkGyPkl0L2utg9FsGRGCHKdsudmyTlQ"
+            const response = await axios.get('http://localhost:8000/main-client/crew/crew-info',{
+                headers: {
+                    "Authorization":"Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJrYW5nOTk5OTk5QGV4YW1wbGUuY29tIiwiYXV0aCI6WyJST0xFX01FTUJFUiJdLCJ1c2VybmFtZSI6IuqwleyCsOyLoOuguSIsImlkIjoyMTcsImJpcnRoIjoiMTk4Ni0wMy0wOCIsIm1lbVN0c0lkIjoxLCJleHAiOjE3NjE1MDAyNzJ9.BcnZCjXGMGVYGCWphyvnbM-il3zQKFoSJuXVDSEyKWDfWAwplYReAT6LIpaYmrGnR3uDMIKDbmZywILkfQ07DQ"
                 }
-            });
-        crewList.value = await response.json();
+            })
+        crewList.value = await response.data;
         console.log(crewList.value);
     });
 
@@ -55,24 +53,21 @@
         selectedCrew.value = crewId;
     }
 
+    
     const crewApply = async ()=>{
-        const req = {
+        console.log(selectedCrew.value,191);
+        const response = await axios.post('http://localhost:8000/main-client/crew-member/apply-request',{
             crewId: selectedCrew.value,
             cumId: 191
-        };
-        console.log(req);
-        const response =  await fetch('http://localhost:8000/main-client/crew-member/apply-request',
+            },
             {
-                method: "POST",
-                headers:{
-                    "Content-Type": "application/json",
-                    "Authorization":"Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJrYW5nOTk5OTk5QGV4YW1wbGUuY29tIiwiYXV0aCI6WyJST0xFX01FTUJFUiJdLCJ1c2VybmFtZSI6IuqwleyCsOyLoOuguSIsImlkIjoyMTcsImJpcnRoIjoiMTk4Ni0wMy0wOCIsIm1lbVN0c0lkIjoxLCJleHAiOjE3NjE0MTU2NDB9.io_uCz0hTX6L3Pb7SkGhdtenGzj3neF7qui9oCPGEAAn0qbQMhonXaokkGyPkl0L2utg9FsGRGCHKdsudmyTlQ"
-                },
-                body: JSON.stringify(req)
-            });
-            const data = await response.json();
-            console.log('POST End,',data);
-            modalCheck.value = !modalCheck.value
+                headers: {
+                    "Authorization":"Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJrYW5nOTk5OTk5QGV4YW1wbGUuY29tIiwiYXV0aCI6WyJST0xFX01FTUJFUiJdLCJ1c2VybmFtZSI6IuqwleyCsOyLoOuguSIsImlkIjoyMTcsImJpcnRoIjoiMTk4Ni0wMy0wOCIsIm1lbVN0c0lkIjoxLCJleHAiOjE3NjE1MDAyNzJ9.BcnZCjXGMGVYGCWphyvnbM-il3zQKFoSJuXVDSEyKWDfWAwplYReAT6LIpaYmrGnR3uDMIKDbmZywILkfQ07DQ"
+                }
+            })
+        const data = await response.data;
+        console.log('POST End,',data);
+        modalCheck.value = !modalCheck.value
         };
     
 </script>
