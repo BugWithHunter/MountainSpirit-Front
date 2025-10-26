@@ -57,9 +57,7 @@
         climbBoardData.value = response.data;
         climbBoardData.value.imageUrl = 'https://placehold.co/300x200?text=Mountain';
         console.log(climbBoardData.value);
-        climbBoardData.value = {
-        imageUrl: data.imageUrl || 'https://placehold.co/300x200?text=Mountain'
-        };
+        
     })
 </script>
 
