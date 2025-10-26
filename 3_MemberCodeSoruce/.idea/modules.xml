@@ -2,7 +2,9 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/mountainspirit.main.iml" filepath="$PROJECT_DIR$/.idea/modules/mountainspirit.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/com.BugHunters.mountainspirit.main.iml" filepath="$PROJECT_DIR$/.idea/modules/com.BugHunters.mountainspirit.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/mountainspirit.iml" filepath="$PROJECT_DIR$/.idea/modules/mountainspirit.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/mountainspirit.test.iml" filepath="$PROJECT_DIR$/.idea/modules/mountainspirit.test.iml" />
     </modules>
   </component>
 </project>

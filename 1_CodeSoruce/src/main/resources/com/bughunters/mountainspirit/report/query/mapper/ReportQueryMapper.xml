@@ -99,6 +99,8 @@
 
     <select id="findReportDetailById" resultType="com.bughunters.mountainspirit.report.query.dto.ReportDetailDTO">
         SELECT
+            r.id,
+            r.isAccepted,
             r.reason AS reason,
 
             CASE

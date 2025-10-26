@@ -1,10 +1,12 @@
 <script setup>
-  import {RouterLink, RouterView} from 'vue-router';
+  import {RouterLink, RouterView, useRoute} from 'vue-router';
 import MenuBar from './views/MenuBar.vue';
+
+const route = useRoute()
 </script>
 
 <template>
-  <header>
+  <header v-if="!route.matched.some(r => r.meta.isAdmin)">
     <MenuBar/>
   </header>
   
