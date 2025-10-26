@@ -28,7 +28,5 @@ public interface AdminMemberService {
 
     CrewStatsDTO getCrewStatsSummary();
 
-    List<CrewStatsDTO> getCrewMonthlyStats();
-
     AdminCrewStatsResponseDTO getAllCrewStats();
 }

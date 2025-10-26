@@ -44,7 +44,7 @@ public interface AdminMemberMapper {
     // 이번 달 새로 생성된 크루 수
     CrewStatsDTO selectNewCrewThisMonth();
     // 월별 생성 통계
-    List<CrewStatsDTO> selectMonthlyCrewStats();
+    List<CrewMonthlyStatsDTO> selectMonthlyCrewStats();
     // 활동 중인 크루 수
     CrewStatsDTO selectActiveCrewCount();
 

@@ -297,7 +297,7 @@
     </select>
 
     <!-- 월별 크루 생성 통계 -->
-    <select id="selectMonthlyCrewStats" resultType="com.bughunters.mountainspirit.admin.query.dto.CrewStatsDTO">
+    <select id="selectMonthlyCrewStats" resultType="com.bughunters.mountainspirit.admin.query.dto.CrewMonthlyStatsDTO">
         SELECT
         DATE_FORMAT(crewCreateDate, '%Y-%m') AS month,
         COUNT(*) AS monthlyCrewCount

@@ -124,12 +124,6 @@ public class AdminMemberController {
         return ResponseEntity.ok(result);
     }
 
-    @GetMapping("/crewmonthlystats")
-    public ResponseEntity<List<CrewStatsDTO>> getCrewMonthlyStats() {
-        List<CrewStatsDTO> result = adminMemberService.getCrewMonthlyStats();
-        return ResponseEntity.ok(result);
-    }
-
     @GetMapping("/crewdetailstats")
     public AdminCrewStatsResponseDTO getCrewDetailStats() {
         return adminMemberService.getAllCrewStats();

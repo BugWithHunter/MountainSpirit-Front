@@ -89,17 +89,15 @@ public class AdminMemberServiceImpl implements AdminMemberService {
 
     @Override
     public CrewStatsDTO getCrewStatsSummary() {
-        CrewStatsDTO stats = new CrewStatsDTO();
-        stats.setTotalCrewCount(adminMemberMapper.selectTotalCrewCount().getTotalCrewCount());
-        stats.setNewCrewCount(adminMemberMapper.selectNewCrewThisMonth().getNewCrewCount());
-        stats.setActiveCrewCount(adminMemberMapper.selectActiveCrewCount().getActiveCrewCount());
-        return stats;
+
+        int totalCrewCount = adminMemberMapper.selectTotalCrewCount().getTotalCrewCount();
+        int newCrewCount = adminMemberMapper.selectNewCrewThisMonth().getNewCrewCount();
+        int activeCrewCount = adminMemberMapper.selectActiveCrewCount().getActiveCrewCount();
+        List<CrewMonthlyStatsDTO> monthlyCrewStats = adminMemberMapper.selectMonthlyCrewStats();
+
+        return new CrewStatsDTO(totalCrewCount, newCrewCount, activeCrewCount, monthlyCrewStats);
     }
 
-    @Override
-    public List<CrewStatsDTO> getCrewMonthlyStats() {
-        return adminMemberMapper.selectMonthlyCrewStats();
-    }
 
     @Override
     public AdminCrewStatsResponseDTO getAllCrewStats() {
