@@ -1,46 +1,49 @@
 <template>
   <div>
+    <!-- 기존 신고 화면 -->
     <div v-if="mainView === 'report'">
-        <ReportBoard v-if="subView === 'board'" ref="boardRef" 
-        @select-report="handleSelectReport('board',$event)"/>
-        <ReportBoardState v-if="subView === 'board'" 
+      <ReportBoard v-if="subView === 'board'" ref="boardRef" 
+        @select-report="handleSelectReport('board',$event)" />
+      <ReportBoardState v-if="subView === 'board'" 
         :key="selectedId.board" 
-        :report-id="selectedId.board" 
-        @refresh="handleRefresh('board')"/>
+        :report-id="selectedId.board"
+        @refresh="handleRefresh('board')" />
 
-        <ReportCrew v-if="subView === 'crew'" ref="crewRef" 
-        @select-report="handleSelectReport('crew', $event)"/>
-        <ReportCrewState v-if="subView === 'crew'" :key="selectedId.crew" 
-        :report-id="selectedId.crew" @refresh="handleRefresh('crew')"/>
-        
-        <ReportComment v-if="subView === 'comment'" ref="commentRef"
-        @select-report="handleSelectReport('comment', $event)"/>
-        <ReportCommentState v-if="subView === 'comment'"
-        :key="selectedId.comment" :report-id="selectedId.comment"
-        @refresh="handleRefresh('comment')"/>
-        
-        <ReportMember v-if="subView === 'member'" ref="memberRef" 
-        @select-report="handleSelectReport('member', $event)"/>
-        <ReportMemberState v-if="subView === 'member'" 
+      <ReportCrew v-if="subView === 'crew'" ref="crewRef" 
+        @select-report="handleSelectReport('crew', $event)" />
+      <ReportCrewState v-if="subView === 'crew'" 
+        :key="selectedId.crew" 
+        :report-id="selectedId.crew"
+        @refresh="handleRefresh('crew')" />
+
+      <ReportComment v-if="subView === 'comment'" ref="commentRef"
+        @select-report="handleSelectReport('comment', $event)" />
+      <ReportCommentState v-if="subView === 'comment'"
+        :key="selectedId.comment" 
+        :report-id="selectedId.comment"
+        @refresh="handleRefresh('comment')" />
+
+      <ReportMember v-if="subView === 'member'" ref="memberRef" 
+        @select-report="handleSelectReport('member', $event)" />
+      <ReportMemberState v-if="subView === 'member'" 
         :key="selectedId.member"
         :report-id="selectedId.member"
-        @refresh="handleRefresh('member')"/>
+        @refresh="handleRefresh('member')" />
     </div>
 
-
-    <!-- 이의신청 관련 -->
+    <!-- 이의신청 -->
     <div v-else-if="mainView === 'reportProtest'">
-      <ProtestState />
+      <ProtestState :protest="selectedProtest" />
     </div>
 
     <!-- 회원정지 -->
     <div v-else-if="mainView === 'ban'">
-      <BanState />
+      <BanState :ban="selectedBan" />
     </div>
 
     <!-- 블랙리스트 -->
     <div v-else-if="mainView === 'blacklist'">
-      <BlackState />
+      <BlackState :black="selectedBlack" />
     </div>
   </div>
 </template>
@@ -61,16 +64,20 @@ import ReportMemberState from '../components_3_1/reportMemberState.vue';
 
 const props = defineProps({
   mainView: String,
-  subView: String
+  subView: String,
+  selectedProtest: Object,
+  selectedBan: Object,
+  selectedBlack: Object
 });
 
-// ✅ 각 신고유형별 선택된 ID
+// ✅ 신고 목록별 선택 상태
 const selectedId = ref({
   board: null,
   crew: null,
   comment: null,
   member: null,
 });
+
 const boardRef = ref(null);
 const crewRef = ref(null);
 const commentRef = ref(null);
@@ -83,22 +90,14 @@ const handleSelectReport = (type, payload) => {
 // ReportBoardState → refresh 이벤트 수신
 const handleRefresh = (type) => {
   switch (type) {
-    case 'board':
-      boardRef.value?.fetchReports();
-      break;
-    case 'crew':
-      crewRef.value?.fetchReports();
-      break;
-    case 'comment':
-      commentRef.value?.fetchReports();
-      break;
-    case 'member':
-      memberRef.value?.fetchReports();
-      break;
+    case 'board': boardRef.value?.fetchReports(); break;
+    case 'crew': crewRef.value?.fetchReports(); break;
+    case 'comment': commentRef.value?.fetchReports(); break;
+    case 'member': memberRef.value?.fetchReports(); break;
   }
 };
 </script>
 
-<style lang="scss" scoped>
+<style scoped>
 
 </style>
