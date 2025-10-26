@@ -80,7 +80,7 @@
   const fetchReports = async (page = 1) => {
     try {
       const res = await fetch(
-        `/main-client/reports/type/board?page=${page}&size=${pageSize}`,
+        `http://localhost:8000/main-client/reports/type/board?page=${page}&size=${pageSize}`,
         {
           headers: {
             'Authorization': token,

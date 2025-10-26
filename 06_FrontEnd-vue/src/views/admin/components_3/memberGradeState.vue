@@ -35,7 +35,7 @@
   // ✅ 데이터 가져오기
   const fetchRankStats = async () => {
     try {
-      const res = await fetch('/main-client/admin/memberrankstats', {
+      const res = await fetch('http://localhost:8000/main-client/admin/memberrankstats', {
         headers: {
           'Authorization': token,
           'Content-Type': 'application/json',

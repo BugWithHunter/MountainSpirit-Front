@@ -60,7 +60,7 @@ const token = import.meta.env.VITE_TEMP_TOKEN;
 // 회원 목록 불러오기
 const fetchMembers = async (page = 1) => {
   try {
-    const res = await fetch(`/main-client/admin/memberinfo?page=${page}&size=${pageSize}`, {
+    const res = await fetch(`http://localhost:8000/main-client/admin/memberinfo?page=${page}&size=${pageSize}`, {
       headers: {
         'Authorization': token,
         'Content-Type': 'application/json',

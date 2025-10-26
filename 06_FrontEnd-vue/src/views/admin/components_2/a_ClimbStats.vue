@@ -26,7 +26,7 @@
   
   const fetchData = async () => {
     try {
-      const res = await fetch("/main-client/admin/climbstats", {
+      const res = await fetch("http://localhost:8000/main-client/admin/climbstats", {
         headers: { Authorization: token, "Content-Type": "application/json" },
       });
       const data = await res.json();

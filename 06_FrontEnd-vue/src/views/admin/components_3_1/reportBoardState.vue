@@ -82,7 +82,7 @@ const statusClass = (status) => {
 // ✅ 상세 데이터 불러오기
 const fetchReport = async (id) => {
   try {
-    const res = await fetch(`/main-client/reports/${id}`, {
+    const res = await fetch(`http://localhost:8000/main-client/reports/${id}`, {
       headers: { Authorization: token },
     })
     if (!res.ok) throw new Error(`HTTP ${res.status}`)

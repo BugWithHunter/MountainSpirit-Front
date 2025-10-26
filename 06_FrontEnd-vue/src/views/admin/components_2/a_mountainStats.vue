@@ -26,7 +26,7 @@ const token = import.meta.env.VITE_TEMP_TOKEN;
 
 const fetchData = async () => {
   try {
-    const res = await fetch("/main-client/admin/mountainstats", {
+    const res = await fetch("http://localhost:8000/main-client/admin/mountainstats", {
       headers: { Authorization: token, "Content-Type": "application/json" },
     });
     const data = await res.json();

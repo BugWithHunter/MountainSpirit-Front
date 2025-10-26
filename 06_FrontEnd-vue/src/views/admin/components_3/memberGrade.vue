@@ -55,7 +55,7 @@
   const fetchMembers = async (page = 1) => {
     try {
       const res = await fetch(
-        `/main-client/admin/memberrank?page=${page}&size=${pageSize}`,
+        `http://localhost:8000/main-client/admin/memberrank?page=${page}&size=${pageSize}`,
         {
           headers: {
             'Authorization': token,

@@ -102,7 +102,7 @@
   const updateStatus = async (newStatus) => {
     if (!report.value || !props.reportId) return;
     try {
-      const res = await fetch(`/main-client/report/${props.reportId}`, {
+      const res = await fetch(`http://localhost:8000/main-client/report/${props.reportId}`, {
         method: 'PATCH',
         headers: {
           'Authorization': token,

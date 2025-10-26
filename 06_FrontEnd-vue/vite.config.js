@@ -1,5 +1,4 @@
 import { fileURLToPath, URL } from 'node:url'
-
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import vueDevTools from 'vite-plugin-vue-devtools'
@@ -16,12 +15,6 @@ export default defineConfig({
     },
   },
   server: {
-    proxy: {
-      '/main-client': {
-        target: 'http://localhost:8000',
-        changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/main-client/, '/main-client')
-      }
-    }
+    port: 5173,
   }
 })

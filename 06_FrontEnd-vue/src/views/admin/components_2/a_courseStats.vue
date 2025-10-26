@@ -22,7 +22,7 @@
   
   const fetchData = async () => {
     try {
-      const res = await fetch("/main-client/admin/coursestats", {
+      const res = await fetch("http://localhost:8000/main-client/admin/coursestats", {
         headers: { Authorization: token, "Content-Type": "application/json" },
       });
       const data = await res.json();

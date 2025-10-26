@@ -41,7 +41,7 @@
   // ✅ 데이터 불러오기
   const fetchStats = async () => {
     try {
-      const res = await fetch('/main-client/admin/memberinfostats', {
+      const res = await fetch('http://localhost:8000/main-client/admin/memberinfostats', {
         headers: {
           'Authorization': token, // 이미 Bearer 포함
           'Content-Type': 'application/json',
