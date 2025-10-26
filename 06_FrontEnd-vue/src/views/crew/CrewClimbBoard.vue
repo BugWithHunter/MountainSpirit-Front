@@ -16,7 +16,7 @@
 
         <div class="board-right">
           <div class="mountain-name">{{ item.mountain.frtrlNm }}</div>
-          <button class="status-btn" :class="item.crewClimbIsEnded === 'Y' ? 'closed' : 'open'">
+          <button @click="climbBoardPage(item.id)" class="status-btn" :class="item.crewClimbIsEnded === 'Y' ? 'closed' : 'open'">
             {{ item.crewClimbIsEnded === 'Y' ? '모집 완료' : '일정 보기' }}
           </button>
         </div>
@@ -41,10 +41,14 @@
 <script setup>
     import { onMounted, ref } from 'vue';
     import axios from 'axios';
+    import { useRouter } from 'vue-router';
+    const router = useRouter();
+    function climbBoardPage(id){
+        console.log(id);
+        router.push(`/crew/climb-board/${id}`);
+    }
 
-    const climbBoardData = ref({
-
-    });
+    const climbBoardData = ref({});
     const currentPage = ref(1);
     const totalPages = ref(8);
     onMounted(async ()=>{
