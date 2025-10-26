@@ -1,12 +1,9 @@
 <script setup>
-  import { provide ,ref } from 'vue';
+  import { ref } from 'vue';
   import {RouterLink, RouterView} from 'vue-router';
   import headerComponent from './components/Header.vue';
   import FooterView from './views/sample/FooterView.vue';
 
-  // 프로필 이미지 설정을 위함
-  const profileImage = ref('') 
-  provide('profileImage', profileImage) // 자식에게 공유
 </script>
 
 <template>

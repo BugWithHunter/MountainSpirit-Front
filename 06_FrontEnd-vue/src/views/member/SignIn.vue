@@ -27,12 +27,13 @@
 
 <script setup>
     import { useRouter } from 'vue-router';
-    import { ref , inject  } from 'vue';
+    import { ref   } from 'vue';
     import axios from 'axios'
+    import { useUserStore } from '@/stores/user';
+
+    const userStore =  useUserStore();
 
     
-    // App.vue에서 제공한 profileImage ref를 가져오기
-    const profileImage = inject('profileImage')
 
     const router = useRouter();
     const moveSignUp = () => {
@@ -47,21 +48,21 @@
     try {
         // 1️⃣ 서버로 POST 요청 보내기
         const response = await axios.post(
-        'http://localhost:8000/member-client/login',
-        {
-            email: 'user045@example.com',
-            pwd: 'pwd045'
-        },
-        {
-            headers: { 'Content-Type': 'application/json' }
-        }
+            'http://localhost:8000/member-client/login',
+            {
+                email: 'user045@example.com',
+                pwd: 'pwd045'
+            },
+            {
+                headers: { 'Content-Type': 'application/json' }
+            }
         );
 
         
-    // ✅ 1. 응답 헤더에서 JWT 토큰 추출
-    const token = response.headers['token']; // 소문자로 써야 함!
-    console.log('헤더들 :', response.headers);
-    console.log('받은 토큰:', token);
+        // ✅ 1. 응답 헤더에서 JWT 토큰 추출
+        const token = response.headers['token']; // 소문자로 써야 함!
+        console.log('헤더들 :', response.headers);
+        console.log('받은 토큰:', token);
 
         // 2️⃣ HTTP 상태 코드 출력 (200이면 성공)
         console.log('HTTP 상태 코드:', response.status);
@@ -79,10 +80,9 @@
         console.log('프로필 :', user.profilePath);
         console.log('권한 목록:', user.authorities);
         console.log('로그인 시각:', extra.loginAt);
+        console.log('user 뽑아보자:', user);
 
-        testImage.value = user.profilePath;
-        profileImage.value = user.profilePath;
-        console.log('통신 후 이미지 패스:', testImage.value);
+        userStore.logIn(user);
 
     } catch (error) {
         // 5️⃣ 에러 처리

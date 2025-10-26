@@ -18,16 +18,29 @@
         <div class="profile image"  
           @mouseover="showLoginMenu = true"
           @mouseleave="showLoginMenu = false">
-            <template v-if="profileImage">
-                <img class="profile-image" :src="profileImage"  >
+            <template v-if="userStore.profile">
+                <img class="profile-image" :src="userStore.profile"  >
             </template>
             <template v-else>
                 <img class="profile-image" src="/notLogin.png"  >
             </template>
             <ul class="login-submenu" :class="{ visible: showLoginMenu }">
-                <li><RouterLink :to="{name : 'member-login'}">로그인</RouterLink></li>
-                <li><RouterLink to="/member/signUp">회원 가입</RouterLink></li>
-                <li><RouterLink to="/member-view">마이페이지</RouterLink></li>
+              <template v-if="userStore.isLoggedIn">  <!--로그아웃-->
+                <li><RouterLink to="/" @click="userStore.logOut">{{ loginMenu }}</RouterLink></li>
+              </template>
+              <template v-else> <!--로그인-->
+                <li><RouterLink :to="{name : 'member-login'}">{{ loginMenu }}</RouterLink></li>
+              </template>
+                <li v-if="userStore.isLoggedIn">
+                    <RouterLink to="/member-view">마이페이지</RouterLink>
+                </li>
+                <li v-else>
+                    <RouterLink to="/member/signUp">회원 가입</RouterLink>
+                </li>
+
+                
+                
+                <!-- <li><RouterLink to="/member-view" >마이페이지</RouterLink></li> -->
             </ul>
         </div>
 
@@ -40,18 +53,19 @@
 <script setup>
     import {RouterLink } from 'vue-router';
     import MenuExtention from '@/components/MenuExtention.vue';
-    import {ref,watch, inject} from 'vue';
+    import {ref, watch, computed} from 'vue';
+    import { useUserStore } from '@/stores/user';
 
+    const userStore = useUserStore();
     
-    const profileImage = inject('profileImage')
-    console.log('헤더에서 프로필 경로 확인:', profileImage.value);
-
     const showLoginMenu = ref(false);
     const showSubmenu = ref(false);
-    const test = () => {console.log('showSubmenu:',showSubmenu.value)}
-    // watch(showSubmenu, (newValue, oldValue) => {console.log(newValue)});
+    console.log('userStore.isLoggedIn:',userStore.isLoggedIn);
+    // 파생값은 computed를 사용 (값이 변하면 계산을 다시해서 반환하며 변하지 않으면 캐싱된 데이터 반환)
+    const loginMenu = computed(() => (userStore.isLoggedIn ? '로그아웃' : '로그인'))
 
-    const pageTitle = ['크루', '랭킹', '게시판', '산 목록']
+    const pageTitle = ['크루', '랭킹', '게시판', '산 목록'];
+
 </script>
 
 <style scoped>
@@ -182,5 +196,12 @@ div.profile {
 .login-submenu li:hover {
   background-color: #f7f1ff;
 }
+
+.disabled-link {
+  color: #bbb;
+  cursor: not-allowed;
+  pointer-events: none; /* 👈 클릭 자체 불가능하게 함 */
+}
+
 
 </style>
