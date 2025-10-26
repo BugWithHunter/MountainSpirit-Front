@@ -13,7 +13,7 @@
           </li>
           <li>
             <ul>
-              <li><RouterLink to="/">산신령 랭킹</RouterLink></li>
+              <li><RouterLink to="/spirit-rank">산신령 랭킹</RouterLink></li>
               <li><RouterLink to="/">크루 랭킹</RouterLink></li>
             </ul>
           </li>

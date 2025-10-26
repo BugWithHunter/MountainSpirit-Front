@@ -7,6 +7,7 @@ import com.bughunters.mountainspirit.member.command.repository.*;
 import com.bughunters.mountainspirit.member.query.dto.BlackListDTO;
 import com.bughunters.mountainspirit.member.command.dto.RequestLoginwithAuthoritiesDTO;
 import com.bughunters.mountainspirit.member.query.service.MemberQueryService;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.security.core.GrantedAuthority;
@@ -274,13 +275,23 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     @Transactional
-    public ResponseProfileImageDTO updateProfileImage(MultipartFile singleFile, Long id) {
+    public ResponseProfileImageDTO updateProfileImage(MultipartFile singleFile, Long id, HttpServletRequest request) {
         ResponseProfileImageDTO responseProfileImageDTO = null;
         try {
-            responseProfileImageDTO = profileImageService.updateProfileImage(singleFile, id);
+            responseProfileImageDTO = profileImageService.updateProfileImage(singleFile, id , request);
 
-            ProfileOfMember proflie = modelMapper.map(responseProfileImageDTO, ProfileOfMember.class);
-            profileImageRepository.save(proflie);
+            ProfileOfMember findProfile = profileImageRepository.findByCumId(id);
+
+            //파일이 없었을때
+            if(findProfile == null){
+                findProfile = modelMapper.map(responseProfileImageDTO, ProfileOfMember.class);
+            } else { // 기존 파일이있어서 덮어 쓰기
+                findProfile.setFilePath(responseProfileImageDTO.getFilePath());
+                findProfile.setDirPath(responseProfileImageDTO.getDirPath());
+            }
+            profileImageRepository.save(findProfile);
+
+
 
         } catch (IOException e) {
             if (responseProfileImageDTO == null) {
@@ -292,6 +303,7 @@ public class MemberServiceImpl implements MemberService {
         }
 
         return responseProfileImageDTO;
+    }
     public void deleteCrewId(long crewId, long cumId) {
         Member member = memberRepository.findById(cumId).get();
         log.info("삭제할 회원 정보 : {}",member);
