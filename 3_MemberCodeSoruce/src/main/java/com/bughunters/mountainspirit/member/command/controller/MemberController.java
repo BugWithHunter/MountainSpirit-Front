@@ -8,6 +8,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -26,7 +27,7 @@ public class MemberController {
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
     public MemberController(MemberService memberService
-    , BCryptPasswordEncoder bCryptPasswordEncoder) {
+            , BCryptPasswordEncoder bCryptPasswordEncoder) {
         this.memberService = memberService;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
     }
@@ -35,7 +36,7 @@ public class MemberController {
     public String test(HttpServletRequest request, HttpServletResponse response) {
 
 
-        return"";
+        return "";
     }
 
     @GetMapping("/member-info/{id}")
@@ -115,10 +116,10 @@ public class MemberController {
     }
 
     @GetMapping("/crew-insertion")
-    public ResponseEntity<ResponseMessage> crewInfoInsertion(long crewId,long cumId) {
+    public ResponseEntity<ResponseMessage> crewInfoInsertion(long crewId, long cumId) {
         ResponseMessage responseMessage = new ResponseMessage();
-        log.info("넘어온 크루,유저 아이디 : {}, {}",crewId,cumId);
-        memberService.registCrewId(crewId,cumId);
+        log.info("넘어온 크루,유저 아이디 : {}, {}", crewId, cumId);
+        memberService.registCrewId(crewId, cumId);
 
         responseMessage.setHttpStatus(HttpStatus.OK.value());
         return ResponseEntity.ok()
@@ -126,10 +127,10 @@ public class MemberController {
     }
 
     @GetMapping("/crew-quit")
-    public ResponseEntity<ResponseMessage> crewQuit(long crewId,long cumId) {
+    public ResponseEntity<ResponseMessage> crewQuit(long crewId, long cumId) {
         ResponseMessage responseMessage = new ResponseMessage();
-        log.info("넘어온 크루,유저 아이디 : {}, {}",crewId,cumId);
-        memberService.deleteCrewId(crewId,cumId);
+        log.info("넘어온 크루,유저 아이디 : {}, {}", crewId, cumId);
+        memberService.deleteCrewId(crewId, cumId);
 
         responseMessage.setHttpStatus(HttpStatus.OK.value());
         return ResponseEntity.ok()
@@ -156,7 +157,9 @@ public class MemberController {
 
 
     @GetMapping("/testConfigServer")
-    public String testConfigServer(@Value("${test.test1}") String test) {return test;}
+    public String testConfigServer(@Value("${test.test1}") String test) {
+        return test;
+    }
 
     @PostMapping("/report/update-status/{memberId}")
     public ResponseEntity<Void> updateMemberStatus(@PathVariable Long memberId,
@@ -172,9 +175,11 @@ public class MemberController {
     }
 
     @PostMapping("/Profile/{id}")
-    public ResponseEntity<ResponseMessage> updateProfileImage(@RequestParam MultipartFile singleFile,
-                                   @PathVariable Long id) {
-        ResponseProfileImageDTO success = memberService.updateProfileImage(singleFile, id);
+    public ResponseEntity<ResponseMessage> updateProfileImage(
+            @RequestParam MultipartFile singleFile,
+            @PathVariable Long id,
+            HttpServletRequest request) {
+        ResponseProfileImageDTO success = memberService.updateProfileImage(singleFile, id,request);
 
 
         Map<String, Object> responseMap = new HashMap<>();
@@ -196,7 +201,6 @@ public class MemberController {
         return ResponseEntity.ok()
                 .body(responseMessage);
     }
-
 
 
 }

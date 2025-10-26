@@ -53,7 +53,7 @@ public class WebSecurity {
                 .formLogin(AbstractHttpConfigurer::disable);
         http.authorizeHttpRequests(authz ->
                                 authz
-                                        .requestMatchers("/**").permitAll()     // 테스트를 위해 모든 권한 오픈
+                                        .requestMatchers(HttpMethod.OPTIONS,"/**").permitAll()     // 테스트를 위해 모든 권한 오픈
                                         .requestMatchers(HttpMethod.GET, "/img/**").permitAll()     // 이미지 경로는 누구나 접근 허용
 //                                authz.requestMatchers(HttpMethod.GET, "/member/**").permitAll()
 //                                        .requestMatchers(HttpMethod.POST, "/users/**").permitAll()

@@ -11,6 +11,7 @@ public class ResponseProfileImageDTO {
     Long cumId;
     String dirPath;
     String filePath;
+    String urlPath;
     boolean successUpload;
     String exceptionMessage;
 }

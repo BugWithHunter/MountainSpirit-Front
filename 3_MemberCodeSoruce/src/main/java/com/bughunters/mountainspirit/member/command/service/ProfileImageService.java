@@ -1,6 +1,7 @@
 package com.bughunters.mountainspirit.member.command.service;
 
 import com.bughunters.mountainspirit.member.command.dto.ResponseProfileImageDTO;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
@@ -8,6 +9,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -15,13 +17,15 @@ import java.util.UUID;
 public class ProfileImageService {
 
     private String uploadDir = "";
+    private String dirPath = "";
 
     public ProfileImageService(@Value("${profile.dirPath}") String dirPath) {
-        //System.getProperty("user.dir") 실행 중인 프로젝트 루트 경로
+
+        this.dirPath = dirPath;
         uploadDir = System.getProperty("user.dir").replace("\\","/") + dirPath;
     }
 
-    public ResponseProfileImageDTO updateProfileImage(MultipartFile singleFile, Long id) throws IOException {
+    public ResponseProfileImageDTO updateProfileImage(MultipartFile singleFile, Long id, HttpServletRequest req) throws IOException {
         String originFileName = singleFile.getOriginalFilename();
         String ext = originFileName.substring(originFileName.lastIndexOf("."));
         String saveName = id + ext;
@@ -33,7 +37,14 @@ public class ProfileImageService {
         }
 
         singleFile.transferTo(new File(savePath));
-        ResponseProfileImageDTO responseProfileImageDTO = new ResponseProfileImageDTO(id, uploadDir, savePath, true,"");
+
+        String scheme = req.getScheme();         // http / https
+        String serverName = req.getServerName(); // localhost
+        int port = req.getServerPort();          // 8000
+        String requestPath = scheme + "://" + serverName +  ":" + port;
+        String urlImagePath = requestPath + dirPath +  saveName;
+
+        ResponseProfileImageDTO responseProfileImageDTO = new ResponseProfileImageDTO(id, uploadDir, savePath, urlImagePath, true,"");
 
         return responseProfileImageDTO;
     }
