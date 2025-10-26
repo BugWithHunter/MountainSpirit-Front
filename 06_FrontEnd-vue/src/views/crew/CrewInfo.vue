@@ -86,49 +86,10 @@ const members = ref([]);
   flex-direction: column;
 }
 
-/* 상단바 */
-.header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  background: white;
-  border-bottom: 2px solid #e5e5e5;
-  padding: 10px 40px;
-}
-
-.logo-area {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.logo {
-  width: 40px;
-  height: 40px;
-}
-
-.nav a {
-  margin: 0 20px;
-  font-weight: 700;
-  text-decoration: none;
-  color: black;
-}
-
-.nav a.active {
-  color: #007bff;
-}
-
-.login-btn {
-  border: none;
-  background: transparent;
-  font-weight: 600;
-  cursor: pointer;
-}
-
 /* 메인 */
 .main {
   display: flex;
-  padding: 40px;
+  padding: 20px;
   gap: 60px;
 }
 
@@ -138,6 +99,7 @@ const members = ref([]);
   border-radius: 10px;
   padding: 20px;
   width: 250px;
+  height: 200px;
   text-align: center;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
@@ -159,29 +121,37 @@ const members = ref([]);
   width: 100%;
   background: #fff;
   border: 2px solid #aaa;
+  color:#333;
   border-radius: 6px;
   padding: 8px;
   cursor: pointer;
   font-weight: 600;
+  transition-duration: 0.5s;
 }
 
 .leave-btn:hover {
-  background: #f3f3f3;
+  background: #ff2418;
+  color: #ebebeb;
+  transition-duration: 0.5s;
 }
 
 /* 오른쪽: 크루원 목록 */
 .crew-members {
   flex: 1;
   background: white;
+  width: 40cqmax;
   border-radius: 10px;
   padding: 20px 30px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .crew-intro {
-  font-size: 1rem;
-  margin-bottom: 15px;
+  box-shadow: 0px 0.5px 0.5px 0px rgb(211, 209, 209);   
+  font-size: 2rem;
+  margin-bottom: 5px;
+  height: 5cqmax;
   color: #444;
+  overflow-y: auto;
 }
 
 .member-title {
@@ -196,6 +166,8 @@ const members = ref([]);
   list-style: none;
   padding: 0;
   margin: 0;
+  max-height: 35cqmax;
+  overflow-y:auto;
 }
 
 .member-item {
@@ -203,7 +175,14 @@ const members = ref([]);
   justify-content: space-between;
   align-items: center;
   padding: 10px 0;
+  padding-right: 15px;
   border-bottom: 1px solid #f0f0f0;
+  transition-duration: 0.5s;
+}
+
+.member-item:hover {
+  background: #ebebeb;
+  transition-duration: 0.5s;
 }
 
 .member-info {
