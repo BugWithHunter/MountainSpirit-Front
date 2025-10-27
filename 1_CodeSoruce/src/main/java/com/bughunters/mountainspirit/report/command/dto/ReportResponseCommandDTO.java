@@ -12,6 +12,7 @@ public class ReportResponseCommandDTO {
     private String reportType;
     private String reason;
     private Long reportedId;
+    private Long adminId;
     private int suspensionCycle;
     private String result; // BAN, BLACKLIST, NORMAL
 }
