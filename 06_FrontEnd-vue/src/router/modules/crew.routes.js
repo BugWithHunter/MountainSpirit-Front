@@ -6,6 +6,11 @@ export default [
     // children 경로는 절대경로('/')를 쓰지 않습니다.
     children: [
       {
+        path: 'myclimb',
+        name: 'myCrewClimb',
+        component: () => import('@/views/crew/MyCrewClimb.vue'),
+      },
+        {
         path: 'join',
         name: 'crewJoin',
         component: () => import('@/views/crew/CrewJoin.vue'),
