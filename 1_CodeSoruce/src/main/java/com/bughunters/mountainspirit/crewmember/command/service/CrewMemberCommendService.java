@@ -3,7 +3,7 @@ package com.bughunters.mountainspirit.crewmember.command.service;
 import com.bughunters.mountainspirit.crewmember.command.dto.*;
 
 public interface CrewMemberCommendService {
-    void crewApplyRequest(CrewApplyDTO crewApplyDTO);
+    boolean crewApplyRequest(CrewApplyDTO crewApplyDTO);
 
     void crewApplyCancel(CrewApplyDTO crewApplyDTO);
 

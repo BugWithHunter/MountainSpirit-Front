@@ -7,7 +7,7 @@ import lombok.*;
 @Getter
 @Setter
 @ToString
-public class CrewClimbBoardDTO {
+public class CrewClimbBoardAndMountainDTO {
     private Long id;
     private String crewClimbStartDate;
     private String crewClimbRecruitStartDate;
@@ -17,7 +17,7 @@ public class CrewClimbBoardDTO {
     private Integer crewClimbAmountOfPeople;
     private char crewClimbIsEnded;
     private Long crewId;
-    private String frtrlId;
     private Long crewMemberId;
     private Long amountOfPeople;
+    private MountainDTO mountain;
 }

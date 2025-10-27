@@ -10,6 +10,32 @@ export default [
         name: 'myCrewClimb',
         component: () => import('@/views/crew/MyCrewClimb.vue'),
       },
+        {
+        path: 'join',
+        name: 'crewJoin',
+        component: () => import('@/views/crew/CrewJoin.vue'),
+      },
+      {
+        path: 'create',
+        name: 'crewCreate',
+        component: () => import('@/views/crew/CrewCreate.vue'),
+      },
+        {
+        path: 'climb',
+        name: 'crewClimbBoard',
+        component: () => import('@/views/crew/CrewClimbBoard.vue'),
+      },
+      {
+        path: 'climb-board/:climbId',
+        name: 'crewSelectedClimbBoard',
+        component: () => import('@/views/crew/CrewSelectedClimbBoard.vue'),
+      },
+        {
+        path: 'info',
+        name: 'crewInfo',
+        component: () => import('@/views/crew/CrewInfo.vue'),
+      },
     ],
   },
 ];
+
