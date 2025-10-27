@@ -1,6 +1,7 @@
 package com.bughunters.mountainspirit.climbhistory.query.service;
 
 import com.bughunters.mountainspirit.climbhistory.query.dto.FindClimbCheckQueryDTO;
+import com.bughunters.mountainspirit.climbhistory.query.dto.FindNotCompleteClimbCheckQueryDTO;
 import com.bughunters.mountainspirit.climbhistory.query.dto.RequestStartClimbMountainQueryDTO;
 import com.bughunters.mountainspirit.climbhistory.query.mapper.ClimbHistoryQueryRepository;
 import org.springframework.stereotype.Service;
@@ -26,9 +27,9 @@ public class ClimbHistoryQueryServiceImpl implements ClimbHistoryQueryService {
     }
 
     @Override
-    public List<RequestStartClimbMountainQueryDTO> findClimbNotComplete(RequestStartClimbMountainQueryDTO request) {
+    public List<FindNotCompleteClimbCheckQueryDTO> findClimbNotComplete(RequestStartClimbMountainQueryDTO request) {
 
-        List<RequestStartClimbMountainQueryDTO> notCompleteClimbs =
+        List<FindNotCompleteClimbCheckQueryDTO> notCompleteClimbs =
                 climbHistoryQueryRepository.selectAllClimbCheckByMember(request);
 
         return notCompleteClimbs;

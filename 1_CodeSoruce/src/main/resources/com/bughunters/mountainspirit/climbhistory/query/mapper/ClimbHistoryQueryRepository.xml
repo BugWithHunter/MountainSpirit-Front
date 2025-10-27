@@ -12,6 +12,17 @@
     <result property="stateCode" column="stateCode"/>
     <result property="id" column="id"/>
 </resultMap>
+<resultMap id="findNotCompleteClimbCheckResultMap" type="com.bughunters.mountainspirit.climbhistory.query.dto.FindNotCompleteClimbCheckQueryDTO">
+    <result property="memberName" column="memberName"/>
+    <result property="updateTime" column="updateTime"/>
+    <result property="endTime" column="endTime"/>
+    <result property="frtrlId" column="frtrlId"/>
+    <result property="frtrlNm" column="frtrlNm"/>
+    <result property="poiId" column="poiId"/>
+    <result property="placeNm" column="placeNm"/>
+    <result property="stateCode" column="stateCode"/>
+    <result property="id" column="id"/>
+</resultMap>
     <select id="selectClimbCheckByMember"
             parameterType="com.bughunters.mountainspirit.climbhistory.query.dto.RequestStartClimbMountainQueryDTO"
             resultMap="findClimbCheckResultMap">
@@ -36,12 +47,14 @@
 
     <select id="selectAllClimbCheckByMember"
             parameterType="com.bughunters.mountainspirit.climbhistory.query.dto.RequestStartClimbMountainQueryDTO"
-            resultMap="findClimbCheckResultMap">
+            resultMap="findNotCompleteClimbCheckResultMap">
         SELECT
         b.memName as memberName
         , a.updateTime
         , a.endTime
+        , c.frtrlId
         , c.frtrlNm
+        , d.poiId
         , d.placeNm
         , a.stateCode
         , a.id

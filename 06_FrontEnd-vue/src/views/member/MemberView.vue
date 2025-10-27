@@ -40,8 +40,8 @@
                     </li>
                 </ul>
                 <div class="actions">
-                    <button class="btn" @click="startClimb">등산 시작</button>
-                    <button class="btn ghost">등산 완료</button>
+                    <button class="btn" @click="startClimb"  :disabled="!buttonflag">등산 시작</button>
+                    <button class="btn ghost"  :disabled="buttonflag">등산 완료</button>
                 </div>
             </article>
         </section>
@@ -76,14 +76,16 @@
     const courses = ref([]);
     const mountains = ref([]);
     const userInfo = ref({});
-    
+    const notCompleteClimbing = ref([]);
 
     //로그인 안하고 url 치고 들어오는거 막기 위함
     if(userStore.token === '' || userStore.token === null){
         router.push("/");
     }
-    
-    
+
+    // 등산 시작, 완료 활성화 상태값(30일 이내 동일 한 코스로 완료 되지 않은 등산 기록 있을 경우 등산 시작 비활 성화)
+    const buttonflag = ref(false);
+
     const stamps = reactive([]);
     const stampRadius = reactive([]);
     
@@ -95,6 +97,17 @@
     // 산과 > 코스 (코스를 품은 산 목록)
     const mountainInfo = ref([]);
     
+    watch(() => selectedCourse.value, ()=> {
+        console.log('watch 실행되나? ', selectedCourse.value);
+        if(notCompleteClimbing.value.some((x) => x.poiId === selectedCourse.value.poiId)) {
+            buttonflag.value = false;
+        }
+        else{
+            buttonflag.value = true;
+
+        }
+    });
+    // })
 
     onMounted(async() => {
         try {
@@ -104,9 +117,9 @@
             tasks.push(axios.get('http://localhost:8000/main-client/search/course',{headers: {Authorization: `Bearer ${userStore.token}`} }));
             tasks.push(axios.get('http://localhost:8000/main-client/search/mountain',{headers: {Authorization: `Bearer ${userStore.token}`} }));
             tasks.push(axios.get(`http://localhost:8000/member-client/member/member-info/${userStore.userId}`,{headers: {Authorization: `Bearer ${userStore.token}`} }));
-            // tasks.push(axios.get(`http://localhost:8000/member-client/climb-history/climbing/${userStore.userId}`,{headers: {Authorization: `Bearer ${userStore.token}`} }));
-            // tasks.push(axios.get(`http://localhost:8000/member-client/climb-history/climbing/${userStore.userId}`,{headers: {Authorization: `Bearer ${userStore.token}`} }));
-
+            tasks.push(axios.get(`http://localhost:8000/main-client/climb-history/climbing-by-status?userId=${userStore.userId}&status=N`,{headers: {Authorization: `Bearer ${userStore.token}`} }));
+            // tasks.push(axios.get(`http://localhost:8000/main-client/climb-history/climbing-by-status?userId=${userStore.userId}&status=Y`,{headers: {Authorization: `Bearer ${userStore.token}`} }));
+            
             // ② 모든 요청이 끝날 때까지 기다림 (모두 끝나면 배열로 반환됨)
             const resAll = await Promise.all([...tasks]);
 
@@ -115,11 +128,13 @@
             console.log('courses:', resAll[1].data);
             console.log('mountains:', resAll[2].data);
             console.log('memberInfo:', resAll[3].data);
+            console.log('notCompleteClimbing',resAll[4].data )
 
             hasStamp.value      = resAll[0].data;
             courses.value     = resAll[1].data;
             mountains.value   = resAll[2].data;
             userInfo.value      = resAll[3].data;
+            notCompleteClimbing.value = resAll[4].data;
 
             // 도넛 차트에 들어갈 데이터
             stamps.push({name: '보유', value:hasStamp.value.length });
@@ -141,8 +156,6 @@
                 courseMap.get(c.frtrlId).push(c);
             }
 
-            console.log('courseMap 중간과정:', courseMap);
-
             // ② mountains 배열을 돌면서 courseMap에서 꺼내 병합
             mountainInfo.value = mountains.value.map(m => {
                 const {frtrlId, frtrlNm } = m;
@@ -154,7 +167,7 @@
 
             });
 
-            console.log('코스 + 산 머지:', mountainInfo.value);
+            // console.log('코스 + 산 머지:', mountainInfo.value);
 
         } catch (err) {
             // ④ 하나라도 실패하면 여기로 옴
@@ -186,64 +199,6 @@
         console.log('등산 시작결과:', res.data);
 
     }
-    
-    // ---- 샘플 데이터 생성 ----
-
-// const mountains = reactive([
-//         {
-//             frtrlNm: '관악산',
-//             frtrlId: '0000000010',
-//             course: [
-//                 {
-//                     poiId: '0000002790',
-//                     placeNm: '연주대'
-//                 },
-//                 {
-//                     poiId: '0000002991',
-//                     placeNm: '삼성산 정상'
-//                 },
-//                 {
-//                     poiId: '0000003143',
-//                     placeNm: '태양산'
-//                 },
-//                 {
-//                     poiId: '0000003347',
-//                     placeNm: '관모봉'
-//                 },
-//             ]
-//         },
-//         {
-//             frtrlNm: '북한산',
-//             frtrlId: '0000000047',
-//             course: [
-//                 {
-//                     poiId: '0000014336',
-//                     placeNm: '형제봉'
-//                 },
-//                 {
-//                     poiId: '0000014339',
-//                     placeNm: '향로봉'
-//                 },
-//                 {
-//                     poiId: '0000014415',
-//                     placeNm: '기자봉'
-//                 },
-//                 {
-//                     poiId: '0000014597',
-//                     placeNm: '북한산 정상(백운대)'
-//                 },
-//             ]
-//         }
-//     ]);
-
-    
-    // for(let i = 0; i < 100; i++){
-    //     if(i % 3 == 0){
-    //         stamps[0].value++;
-    //     } else {
-    //         stamps[1].value++;
-    //     }
-    // }
 
 </script>
 <style scoped>
@@ -370,9 +325,13 @@
 
 /* 서브 버튼(옅은 스타일) */
 .btn.ghost {
-  background:#E6E6E6;
+  background:rgba(3, 232, 253, 0.423);
   border:1px solid #d1d5db;
   color:#111827;
+}
+
+.btn:disabled{
+    background-color: #9ca3af;
 }
 
 /* ===================================================== */

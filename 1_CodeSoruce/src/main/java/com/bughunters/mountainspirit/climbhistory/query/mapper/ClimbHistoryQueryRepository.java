@@ -1,6 +1,7 @@
 package com.bughunters.mountainspirit.climbhistory.query.mapper;
 
 import com.bughunters.mountainspirit.climbhistory.query.dto.FindClimbCheckQueryDTO;
+import com.bughunters.mountainspirit.climbhistory.query.dto.FindNotCompleteClimbCheckQueryDTO;
 import com.bughunters.mountainspirit.climbhistory.query.dto.RequestStartClimbMountainQueryDTO;
 import org.apache.ibatis.annotations.Mapper;
 
@@ -10,5 +11,5 @@ import java.util.List;
 public interface ClimbHistoryQueryRepository {
     FindClimbCheckQueryDTO selectClimbCheckByMember(RequestStartClimbMountainQueryDTO request);
 
-    List<RequestStartClimbMountainQueryDTO> selectAllClimbCheckByMember(RequestStartClimbMountainQueryDTO request);
+    List<FindNotCompleteClimbCheckQueryDTO> selectAllClimbCheckByMember(RequestStartClimbMountainQueryDTO request);
 }

@@ -1,6 +1,7 @@
 package com.bughunters.mountainspirit.climbhistory.query.controller;
 
 import com.bughunters.mountainspirit.climbhistory.query.dto.FindClimbCheckQueryDTO;
+import com.bughunters.mountainspirit.climbhistory.query.dto.FindNotCompleteClimbCheckQueryDTO;
 import com.bughunters.mountainspirit.climbhistory.query.dto.RequestStartClimbMountainQueryDTO;
 import com.bughunters.mountainspirit.climbhistory.query.service.ClimbHistoryQueryService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,7 +33,7 @@ public class ClimbHistoryQueryController {
     }
 
     @GetMapping("/climbing-by-status")
-    public ResponseEntity<List<RequestStartClimbMountainQueryDTO>> findClimbNotComplete(
+    public ResponseEntity<List<FindNotCompleteClimbCheckQueryDTO>> findClimbNotComplete(
             @RequestParam Long  userId,
             @RequestParam String status){
         System.out.println(userId);
@@ -40,7 +41,7 @@ public class ClimbHistoryQueryController {
 
         RequestStartClimbMountainQueryDTO request =
                 new RequestStartClimbMountainQueryDTO(userId, "","", status);
-        List<RequestStartClimbMountainQueryDTO> findClimbCheckDTO
+        List<FindNotCompleteClimbCheckQueryDTO> findClimbCheckDTO
                 = climbHistoryQueryService.findClimbNotComplete(request);
         return ResponseEntity.ok()
                 .body(findClimbCheckDTO);
