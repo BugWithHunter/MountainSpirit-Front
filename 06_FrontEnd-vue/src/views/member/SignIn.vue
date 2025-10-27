@@ -15,7 +15,7 @@
         </div>
 
         <!-- 로그인 버튼 -->
-        <button type="submit" class="btn" @click="signIn">로그인</button>
+        <button type="submit" class="btn" >로그인</button>
 
         <!-- 하단 링크 -->
         <div class="footer-link">
@@ -34,8 +34,8 @@
     import { useUserStore } from '@/stores/user';
 
     const userStore =  useUserStore();
-    const password = ref('');
-    const email = ref('');
+    const password = ref('pwd045');
+    const email = ref('user045@example.com');
     
     const router = useRouter();
     const moveSignUp = () => {

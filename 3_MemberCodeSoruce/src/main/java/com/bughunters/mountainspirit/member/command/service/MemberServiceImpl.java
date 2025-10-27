@@ -38,6 +38,7 @@ public class MemberServiceImpl implements MemberService {
     private final MemberAuthorityRepository memberAuthorityRepository;
     private final ProfileImageService profileImageService;
     private final ProfileImageRepository profileImageRepository;
+    private final MemberRankRepository memberRankRepository;
 
     public MemberServiceImpl(MemberRepository memberRepository
             , MemberQueryService memberQueryService
@@ -48,7 +49,8 @@ public class MemberServiceImpl implements MemberService {
             , AuthorityRepository authorityRepository
             , MemberAuthorityRepository memberAuthorityRepository
             , ProfileImageService profileImageService
-            , ProfileImageRepository profileImageRepository) {
+            , ProfileImageRepository profileImageRepository
+            , MemberRankRepository memberRankRepository) {
         this.memberRepository = memberRepository;
         this.memberQueryService = memberQueryService;
         this.modelMapper = modelMapper;
@@ -59,6 +61,7 @@ public class MemberServiceImpl implements MemberService {
         this.memberAuthorityRepository = memberAuthorityRepository;
         this.profileImageService = profileImageService;
         this.profileImageRepository = profileImageRepository;
+        this.memberRankRepository = memberRankRepository;
     }
 
     //등산 이후 회원 정보 변경
@@ -116,6 +119,11 @@ public class MemberServiceImpl implements MemberService {
             ProfileOfMember profile = profileImageRepository.findByCumId(responseMemberDTO.getId());
             String profilePath = profile != null ? profile.getFilePath() : null;
             responseMemberDTO.setProfilePath(profilePath);
+
+            MemberRank memberRank = memberRankRepository.findById(responseMemberDTO.getMemRankId()).orElse(null);
+            String rankName = memberRank != null ? memberRank.getName() : null;
+            responseMemberDTO.setRankName(rankName);
+
         }
         return responseMemberDTO;
     }

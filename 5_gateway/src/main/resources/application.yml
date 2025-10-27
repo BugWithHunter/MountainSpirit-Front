@@ -97,7 +97,7 @@ security:
 
       # 멤버 읽기: USER 또는 ADMIN
       - pattern: /main-client/**
-        methods: [ GET, PUT, PATCH, DELETE  ]
+        methods: [ GET, PUT, PATCH, DELETE, POST  ]
         anyRole: [ ROLE_ADMIN , ROLE_MEMBER]   # 토큰은 ROLE_USER/ROLE_ADMIN 이고, 필터에서 ROLE_ 제거 정규화
 
       # 멤버 쓰기: ADMIN만

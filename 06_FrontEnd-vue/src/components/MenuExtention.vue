@@ -36,7 +36,7 @@
 <script setup>
 
     import {RouterLink} from 'vue-router';
-    import { ref, defineProps ,watch } from 'vue'
+    import { ref, watch } from 'vue'
 
 
     const props = defineProps({

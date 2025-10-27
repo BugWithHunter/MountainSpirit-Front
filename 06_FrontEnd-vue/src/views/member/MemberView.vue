@@ -7,12 +7,12 @@
                 <h3 class="card-title">개인 정보</h3>
                 <!-- 네 정보 리스트 등 -->
                 <ul class="info-list">
-                    <li><strong>이름</strong><span>홍길동</span></li>
-                    <li><strong>Email</strong><span>me@gmail.com</span></li>
-                    <li><strong>닉네임</strong><span>산신령</span></li>
-                    <li><strong>점수</strong><span>55</span></li>
-                    <li><strong>등급</strong><span>새싹이</span></li>
-                    <li><strong>가입일</strong><span>2025-01-01</span></li>
+                    <li><strong>이름</strong><span>{{ userInfo.memName }}</span></li>
+                    <li><strong>Email</strong><span>{{ userInfo.email }}</span></li>
+                    <li><strong>닉네임</strong><span>{{ userInfo.nickname }}</span></li>
+                    <li><strong>점수</strong><span>{{ userInfo.score }}</span></li>
+                    <li><strong>등급</strong><span>{{ userInfo.rankName }}</span></li>
+                    <li><strong>가입일</strong><span>{{ userInfo.signInDate }}</span></li>
                 </ul>
                 <div class="actions">
                     <button class="btn">비밀번호 변경</button>
@@ -26,21 +26,21 @@
                 <ul class="info-list">
                     <li><strong>산</strong>
                         <select class="ui-select" v-model="selectedMountain" @change="changeMountain">
-                            <option v-for="mt in mountains" :value="mt">
+                            <option v-for="mt in mountainInfo" :value="mt">
                                 {{ mt.frtrlNm }}
                             </option>
                         </select>
                     </li>
                     <li><strong>코스</strong>
                         <select class="ui-select" v-model="selectedCourse" @change="changeCourse" >
-                            <option v-for="course in selectedMountain.course" :value="course">
+                            <option v-for="course in selectedMountain.courses" :value="course">
                                 {{ course.placeNm }}
                             </option>
                         </select>
                     </li>
                 </ul>
                 <div class="actions">
-                    <button class="btn">등산 시작</button>
+                    <button class="btn" @click="startClimb">등산 시작</button>
                     <button class="btn ghost">등산 완료</button>
                 </div>
             </article>
@@ -50,7 +50,7 @@
                 <EchartDonut 
                 :chartItems="stamps" :radius="stampRadius"
                 v-slot:title>
-                    <h2 class="slot-title">흭득 도장</h2>
+                    <h2 class="slot-title">도장 현황</h2>
                 </EchartDonut>
 
                 <EchartLine
@@ -63,9 +63,27 @@
 </template>
 
 <script setup>
-    import { onMounted, ref, reactive } from 'vue';
+    import { onMounted, ref, reactive, watch } from 'vue';
     import EchartDonut from '@/components/echart/EchartDonut.vue';
     import EchartLine from '@/components/echart/EchartLine.vue';
+    import { useRouter } from 'vue-router';
+    import { useUserStore } from '@/stores/user';
+    import axios from 'axios';
+
+    const router = useRouter();
+    const userStore = useUserStore();
+    const hasStamp = ref([]);
+    const courses = ref([]);
+    const mountains = ref([]);
+    const userInfo = ref({});
+    
+
+    //로그인 안하고 url 치고 들어오는거 막기 위함
+    if(userStore.token === '' || userStore.token === null){
+        router.push("/");
+    }
+    
+    
     const stamps = reactive([]);
     const stampRadius = reactive([]);
     
@@ -73,7 +91,77 @@
     const totalStamp = reactive([]);
     const selectedMountain = ref({});
     const selectedCourse = ref({});
+
+    // 산과 > 코스 (코스를 품은 산 목록)
+    const mountainInfo = ref([]);
     
+
+    onMounted(async() => {
+        try {
+            // ① 병렬로 요청을 시작 (순서 상관 없음)
+            const tasks = [];
+            tasks.push(axios.get(`http://localhost:8000/main-client/stamp/corse-stamp/${userStore.userId}`,{headers: {Authorization: `Bearer ${userStore.token}`} }));
+            tasks.push(axios.get('http://localhost:8000/main-client/search/course',{headers: {Authorization: `Bearer ${userStore.token}`} }));
+            tasks.push(axios.get('http://localhost:8000/main-client/search/mountain',{headers: {Authorization: `Bearer ${userStore.token}`} }));
+            tasks.push(axios.get(`http://localhost:8000/member-client/member/member-info/${userStore.userId}`,{headers: {Authorization: `Bearer ${userStore.token}`} }));
+            tasks.push(axios.get(`http://localhost:8000/member-client/climb-history/climbing/${userStore.userId}`,{headers: {Authorization: `Bearer ${userStore.token}`} }));
+            tasks.push(axios.get(`http://localhost:8000/member-client/climb-history/climbing/${userStore.userId}`,{headers: {Authorization: `Bearer ${userStore.token}`} }));
+
+            // ② 모든 요청이 끝날 때까지 기다림 (모두 끝나면 배열로 반환됨)
+            const resAll = await Promise.all([...tasks]);
+
+            // ③ 각각 결과 사용
+            console.log('hasStamp:', resAll[0].data);
+            console.log('courses:', resAll[1].data);
+            console.log('mountains:', resAll[2].data);
+            console.log('memberInfo:', resAll[3].data);
+
+            hasStamp.value      = resAll[0].data;
+            courses.value     = resAll[1].data;
+            mountains.value   = resAll[2].data;
+            userInfo.value      = resAll[3].data;
+
+            // 도넛 차트에 들어갈 데이터
+            stamps.push({name: '보유', value:hasStamp.value.length });
+            stamps.push({name: '미보유', value: courses.value.length - hasStamp.value.length});
+            stampRadius.push('40%');
+            stampRadius.push('65%');
+
+            // 산 + 코스 join
+            // ① frtrlId 별로 코스들을 미리 묶어둠
+            const courseMap = new Map();
+            console.log('courseMap:',courseMap);
+
+            // courses 배열 순회  
+            for (const c of courses.value) {
+                if (!courseMap.has(c.frtrlId)) {
+                    courseMap.set(c.frtrlId, []);
+                }
+
+                courseMap.get(c.frtrlId).push(c);
+            }
+
+            console.log('courseMap 중간과정:', courseMap);
+
+            // ② mountains 배열을 돌면서 courseMap에서 꺼내 병합
+            mountainInfo.value = mountains.value.map(m => {
+                const {frtrlId, frtrlNm } = m;
+                return{
+                    frtrlId,
+                    frtrlNm,
+                    courses: courseMap.get(m.frtrlId) || [] // 없으면 빈 배열
+                }
+
+            });
+
+            console.log('코스 + 산 머지:', mountainInfo.value);
+
+        } catch (err) {
+            // ④ 하나라도 실패하면 여기로 옴
+            console.error('요청 중 에러 발생:', err);
+        }
+    })
+
     const changeMountain = () => {
         console.log(selectedMountain.value);
     }
@@ -81,68 +169,81 @@
     const changeCourse = () => {
         console.log(selectedCourse.value);
     }
+
+
+
+    const startClimb = async () => {
+        const res = await axios.post(`http://localhost:8000/main-client/climb-history/climbing`,
+                    {
+                        'cumId' : userStore.userId,
+                        "frtrlId" : selectedCourse.value.frtrlId,     
+                        "poiId" : selectedCourse.value.poiId,         
+                        "stateCode" : "N"
+
+                    }
+                    ,{headers: {Authorization: `Bearer ${userStore.token}`} 
+                })
+        console.log('등산 시작결과:', res.data);
+
+    }
     
     // ---- 샘플 데이터 생성 ----
-    stamps.push({name: '흭득', value:0 });
-    stamps.push({name: '미흭득', value:0});
-    stampRadius.push('40%');
-    stampRadius.push('65%');
 
-const mountains = reactive([
-        {
-            frtrlNm: '관악산',
-            frtrlId: '0000000010',
-            course: [
-                {
-                    poiId: '0000002790',
-                    placeNm: '연주대'
-                },
-                {
-                    poiId: '0000002991',
-                    placeNm: '삼성산 정상'
-                },
-                {
-                    poiId: '0000003143',
-                    placeNm: '태양산'
-                },
-                {
-                    poiId: '0000003347',
-                    placeNm: '관모봉'
-                },
-            ]
-        },
-        {
-            frtrlNm: '북한산',
-            frtrlId: '0000000047',
-            course: [
-                {
-                    poiId: '0000014336',
-                    placeNm: '형제봉'
-                },
-                {
-                    poiId: '0000014339',
-                    placeNm: '향로봉'
-                },
-                {
-                    poiId: '0000014415',
-                    placeNm: '기자봉'
-                },
-                {
-                    poiId: '0000014597',
-                    placeNm: '북한산 정상(백운대)'
-                },
-            ]
-        }
-    ]);
+// const mountains = reactive([
+//         {
+//             frtrlNm: '관악산',
+//             frtrlId: '0000000010',
+//             course: [
+//                 {
+//                     poiId: '0000002790',
+//                     placeNm: '연주대'
+//                 },
+//                 {
+//                     poiId: '0000002991',
+//                     placeNm: '삼성산 정상'
+//                 },
+//                 {
+//                     poiId: '0000003143',
+//                     placeNm: '태양산'
+//                 },
+//                 {
+//                     poiId: '0000003347',
+//                     placeNm: '관모봉'
+//                 },
+//             ]
+//         },
+//         {
+//             frtrlNm: '북한산',
+//             frtrlId: '0000000047',
+//             course: [
+//                 {
+//                     poiId: '0000014336',
+//                     placeNm: '형제봉'
+//                 },
+//                 {
+//                     poiId: '0000014339',
+//                     placeNm: '향로봉'
+//                 },
+//                 {
+//                     poiId: '0000014415',
+//                     placeNm: '기자봉'
+//                 },
+//                 {
+//                     poiId: '0000014597',
+//                     placeNm: '북한산 정상(백운대)'
+//                 },
+//             ]
+//         }
+//     ]);
 
     
-    for(let i = 0; i < 100; i++){
-        if(i % 3 == 0){
-            stamps[0].value++;
-        } else {
-            stamps[1].value++;
-        }
-    }
+    // for(let i = 0; i < 100; i++){
+    //     if(i % 3 == 0){
+    //         stamps[0].value++;
+    //     } else {
+    //         stamps[1].value++;
+    //     }
+    // }
 
 </script>
 <style scoped>

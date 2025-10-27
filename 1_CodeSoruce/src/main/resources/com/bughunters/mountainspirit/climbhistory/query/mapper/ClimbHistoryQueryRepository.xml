@@ -33,6 +33,26 @@
            AND a.stateCode = #{stateCode}
            AND a.updateTime >= SUBDATE(now(), INTERVAL 30 day);
     </select>
+
+    <select id="selectAllClimbCheckByMember"
+            parameterType="com.bughunters.mountainspirit.climbhistory.query.dto.RequestStartClimbMountainQueryDTO"
+            resultMap="findClimbCheckResultMap">
+        SELECT
+        b.memName as memberName
+        , a.updateTime
+        , a.endTime
+        , c.frtrlNm
+        , d.placeNm
+        , a.stateCode
+        , a.id
+        FROM ClimbCheck a
+        JOIN Member b on a.cumId = b.id
+        JOIN Mountain c on a.frtrlId = c.frtrlId
+        JOIN Course d on a.poiId = d.poiId
+        WHERE a.cumId = #{cumId}
+        AND a.stateCode = #{stateCode}
+        AND a.updateTime >= SUBDATE(now(), INTERVAL 30 day);
+    </select>
 </mapper>
 
 

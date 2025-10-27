@@ -2,7 +2,7 @@
   import { ref } from 'vue';
   import {RouterLink, RouterView} from 'vue-router';
   import headerComponent from './components/Header.vue';
-  import FooterView from './views/sample/FooterView.vue';
+  import FooterView from './views/FooterView.vue';
 
 </script>
 
