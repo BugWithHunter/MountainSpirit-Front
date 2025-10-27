@@ -8,11 +8,11 @@
     <div class="allborder">
     <!-- <div> -->
         <div class="mtnresult" v-for="m in pagedMountains" :key="m.frtrlId">
-            <img src="" alt="산이미지">
+            <img src="getImageUrl(mountain.frtrlNm)" alt="산이미지">
             <p style="display: inline; cursor: pointer" @click="goToDetail(m)">{{ m.frtrlNm }}</p><br>
-            <p style="display: inline">위치</p>
+            <p style="display: inline">📍위치</p>
             <p style="display: inline">{{ m.addrNm }}</p><br>
-            <p style="display: inline">높이</p>
+            <p style="display: inline">🏔️높이</p>
             <p style="display: inline">{{ m.aslAltide }}</p>
             <hr>
         </div>

@@ -9,17 +9,17 @@
             <p style="display: inline">{{ mountain.aslAltide }}</p>
 
             <div class="course-section" v-if="courses.length">
-                <h3>코스 목록</h3>
-                <ul>
-                    <li 
-                        v-for="c in courses" 
-                        :key="c.poiId" 
-                        class="course-item"
-                        @click="goToCourseDetail(c)"
-                    >
-                        {{ c.placeNm }}
-                    </li>
-                </ul>
+            <h3>코스 목록</h3>
+            <ul>
+                <li 
+                    v-for="c in courses" 
+                    :key="c.poiId" 
+                    class="course-item"
+                    @click="goToCourseDetail(c)"
+                >
+                    {{ c.placeNm }}
+                </li>
+            </ul>
             </div>
         </div>
         

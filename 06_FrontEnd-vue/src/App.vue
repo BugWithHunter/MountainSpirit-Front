@@ -1,7 +1,6 @@
 <script setup>
   import { ref } from 'vue';
   import {RouterLink, RouterView} from 'vue-router';
-  import MenuBar from './views/MenuBar.vue';
   import MountainAll from './views/mountainall/MountainAll.vue';
   import headerComponent from './components/Header.vue';
   import FooterView from './views/FooterView.vue';
