@@ -26,16 +26,20 @@ public class ClimbHistoryController {
     public ResponseEntity<ResponseMessage> startClimbMountain(@RequestBody RequestSubmmitClimbMountainDTO request) {
         FindClimbCheckDTO findClimbCheckDTO = climbHistoryService.startClimbMountain(request);
         String responseMessage = "";
+        int statusCode = 0;
+
 
         Map<String, Object> responseMap = new HashMap<>();
         if (findClimbCheckDTO != null) {
             responseMap.put("item", findClimbCheckDTO);
             responseMessage = "동일 코스로 30일 이내 완료 인증을 하지 않았습니다. \n정상에서 등산 인증 해 주세요.";
+            statusCode = 400;
         } else {
             responseMessage = "등산 시작 인증 완료";
+            statusCode = 200;
         }
 
-        ResponseMessage responseMessageClass = new ResponseMessage(200,responseMessage , responseMap);
+        ResponseMessage responseMessageClass = new ResponseMessage(statusCode,responseMessage , responseMap);
         return ResponseEntity.ok()
                 .body(responseMessageClass);
     }
@@ -46,17 +50,20 @@ public class ClimbHistoryController {
     public ResponseEntity<ResponseMessage> completeClimbMountain(@RequestBody RequestSubmmitClimbMountainDTO request) {
         FindClimbCheckDTO findClimbCheckDTO = climbHistoryService.completeClimbMountain(request);
         String responseMessage = "";
+        int statusCode = 0;
 
 
         Map<String, Object> responseMap = new HashMap<>();
         if (findClimbCheckDTO != null) {
             responseMap.put("member", findClimbCheckDTO);
             responseMessage = "봉우리 완등 인증 완료";
+            statusCode = 200;
         } else {
             responseMessage = "현재 등산로에 등산 시작 정보가 없습니다.\n 등산완료 인증 실패";
+            statusCode = 400;
         }
 
-        ResponseMessage responseMessageClass = new ResponseMessage(200,responseMessage , responseMap);
+        ResponseMessage responseMessageClass = new ResponseMessage(statusCode,responseMessage , responseMap);
         return ResponseEntity.ok()
                 .body(responseMessageClass);
     }

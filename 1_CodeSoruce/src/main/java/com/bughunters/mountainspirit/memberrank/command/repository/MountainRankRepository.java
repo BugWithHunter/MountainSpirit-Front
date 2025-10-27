@@ -11,4 +11,6 @@ public interface MountainRankRepository extends JpaRepository<MountainRank, Long
     MountainRank findByCumId(Long cumId);
 
     List<MountainRank> findByFrtrlIdAndMtRankIdGreaterThanEqual(String frtrlId, Long i);
+
+    MountainRank findByCumIdAndFrtrlId(long cumId, String frtrlId);
 }
