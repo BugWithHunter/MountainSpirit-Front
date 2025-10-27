@@ -33,6 +33,7 @@
 <script setup>
 import axios from 'axios';
 import { onMounted,ref } from 'vue';
+import { useRoute } from 'vue-router';
 
 const crew = ref({
   name: "",
@@ -41,14 +42,15 @@ const crew = ref({
   maxCount: 0,
   tier: "",
 });
+const crewRoute = useRoute();
 
 const members = ref([]);
     onMounted(async () => {
         const [crewReq,memberReq] = await Promise.all([
-            axios.get('http://localhost:8000/main-client/crew/crew-info/2',{
+            axios.get(`http://localhost:8000/main-client/crew/crew-info/${crewRoute.params.crewId}`,{
                 headers:{"Authorization":"Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJrYW5nOTk5OTk5QGV4YW1wbGUuY29tIiwiYXV0aCI6WyJST0xFX01FTUJFUiJdLCJ1c2VybmFtZSI6IuqwleyCsOyLoOuguSIsImlkIjoyMTcsImJpcnRoIjoiMTk4Ni0wMy0wOCIsIm1lbVN0c0lkIjoxLCJleHAiOjE3NjE1Njc3OTl9.hrkEktZ_X20kC-eju4Yx63eItDilxt5-2Fi0AjtGx6Xlryc9SQ8rYmwEFJ3Neiuj8GgLwHynCdPokZXlt1IZAA"}
             }),
-            axios.get('http://localhost:8000/main-client/crew-member/crew-member-list/2',{
+            axios.get(`http://localhost:8000/main-client/crew-member/crew-member-list/${crewRoute.params.crewId}`,{
                 headers:{"Authorization":"Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJrYW5nOTk5OTk5QGV4YW1wbGUuY29tIiwiYXV0aCI6WyJST0xFX01FTUJFUiJdLCJ1c2VybmFtZSI6IuqwleyCsOyLoOuguSIsImlkIjoyMTcsImJpcnRoIjoiMTk4Ni0wMy0wOCIsIm1lbVN0c0lkIjoxLCJleHAiOjE3NjE1Njc3OTl9.hrkEktZ_X20kC-eju4Yx63eItDilxt5-2Fi0AjtGx6Xlryc9SQ8rYmwEFJ3Neiuj8GgLwHynCdPokZXlt1IZAA"}
             })
         ])

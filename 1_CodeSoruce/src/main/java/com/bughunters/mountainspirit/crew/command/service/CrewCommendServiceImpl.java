@@ -46,7 +46,7 @@ public class CrewCommendServiceImpl implements CrewCommendService {
     }
 
     @Override
-    public void insertCrew(CrewRegistDTO crewRegistDTO) {
+    public Long insertCrew(CrewRegistDTO crewRegistDTO) {
         Long crewId = null;
         try {
             crewId = insertCrewTransaction(crewRegistDTO);
@@ -57,6 +57,7 @@ public class CrewCommendServiceImpl implements CrewCommendService {
         } catch (Exception e) {
 
         }
+        return crewId;
     }
 
     @Transactional

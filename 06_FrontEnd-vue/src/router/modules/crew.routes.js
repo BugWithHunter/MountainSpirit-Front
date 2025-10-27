@@ -36,7 +36,7 @@ export default [
         component: () => import('@/views/crew/CrewMySelectedClimb.vue'),
       },
         {
-        path: 'info',
+        path: 'info/:crewId',
         name: 'crewInfo',
         component: () => import('@/views/crew/CrewInfo.vue'),
       },
