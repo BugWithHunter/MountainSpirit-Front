@@ -8,15 +8,14 @@
           <p>인원 : {{ crew.memberCount }} / {{ crew.maxCount }}</p>
           <p>크루 티어 : {{ crew.tier }}</p>
         </div>
-        <!-- <div v-if="role===2">
+        <div v-if="role.roleId===2">
           <button class="leave-btn">크루 신청 리스트</button>
           <button class="leave-btn">크루 정보 수정</button>
           <button class="leave-btn">크루 삭제</button>
         </div> 
          <div v-else>
           <button class="leave-btn">크루 탈퇴</button>
-        </div>  -->
-        <button class="leave-btn">크루 탈퇴</button>
+        </div>
         
       </section>
 
@@ -43,6 +42,9 @@
 import axios from 'axios';
 import { onMounted,ref } from 'vue';
 import { useRoute } from 'vue-router';
+    import { useUserStore } from '@/stores/user';
+    
+    const userStore = useUserStore();
 
 const crew = ref({
   name: "",
@@ -57,10 +59,10 @@ const members = ref([]);
     onMounted(async () => {
         const [crewReq,memberReq] = await Promise.all([
             axios.get(`http://localhost:8000/main-client/crew/crew-info/${crewRoute.params.crewId}`,{
-                headers:{"Authorization":"Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJrYW5nOTk5OTk5QGV4YW1wbGUuY29tIiwiYXV0aCI6WyJST0xFX01FTUJFUiJdLCJ1c2VybmFtZSI6IuqwleyCsOyLoOuguSIsImlkIjoyMTcsImJpcnRoIjoiMTk4Ni0wMy0wOCIsIm1lbVN0c0lkIjoxLCJleHAiOjE3NjE1Njc3OTl9.hrkEktZ_X20kC-eju4Yx63eItDilxt5-2Fi0AjtGx6Xlryc9SQ8rYmwEFJ3Neiuj8GgLwHynCdPokZXlt1IZAA"}
+                headers:{"Authorization":`Bearer ${userStore.token}`}
             }),
             axios.get(`http://localhost:8000/main-client/crew-member/crew-member-list/${crewRoute.params.crewId}`,{
-                headers:{"Authorization":"Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJrYW5nOTk5OTk5QGV4YW1wbGUuY29tIiwiYXV0aCI6WyJST0xFX01FTUJFUiJdLCJ1c2VybmFtZSI6IuqwleyCsOyLoOuguSIsImlkIjoyMTcsImJpcnRoIjoiMTk4Ni0wMy0wOCIsIm1lbVN0c0lkIjoxLCJleHAiOjE3NjE1Njc3OTl9.hrkEktZ_X20kC-eju4Yx63eItDilxt5-2Fi0AjtGx6Xlryc9SQ8rYmwEFJ3Neiuj8GgLwHynCdPokZXlt1IZAA"}
+                headers:{"Authorization":`Bearer ${userStore.token}`}
             })
         ])
         
@@ -84,17 +86,16 @@ const members = ref([]);
       name: m.memberList.nickName,
       joinDate: m.crewMemberJoinDate,
       role: m.crewRole.crewRoleName,
+      roleId: m.crewRole.roleId
     }));
 
     console.log(crew.value);
     console.log(members.value);
     
-    let memberRole = members.value.find(member=>{
+    role.value = members.value.find(member=>{
       console.log(member.userId);
-      member.userId==200
+      if(member.userId==userStore.userId)return member;
     });
-    console.log(memberRole);
-    role.value = memberRole.userId;
     console.log(role.value);
     })
 </script>
@@ -121,7 +122,7 @@ const members = ref([]);
   border-radius: 10px;
   padding: 20px;
   width: 250px;
-  height: 200px;
+  height: 330px;
   text-align: center;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
