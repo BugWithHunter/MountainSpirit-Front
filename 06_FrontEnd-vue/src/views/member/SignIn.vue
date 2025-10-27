@@ -1,4 +1,5 @@
 <template>
+  <section class="signup-wrap">
     <form class="login-card" @submit.prevent="signIn">
         <!-- 이메일 -->
         <div class="field">
@@ -24,6 +25,7 @@
             </button>
         </div>
     </form>
+    </section>
 
 </template>
 
@@ -32,7 +34,6 @@
     import { ref   } from 'vue';
     import axios from 'axios'
     import { useUserStore } from '@/stores/user';
-
     const userStore =  useUserStore();
     const password = ref('pwd045');
     const email = ref('user045@example.com');
@@ -109,6 +110,15 @@
 
 <style scoped>
  
+/* 전체 레이아웃 */
+.signup-wrap {
+  display: flex;
+  place-items: center;
+  justify-content: center;
+  padding: 24px 12px;
+  height: 100%;
+  width: 100%;
+}
     /* 로그인 폼 전체를 감싸는 카드 스타일 */
     .login-card {
     width: 300px;                         /* 카드 가로 크기 */

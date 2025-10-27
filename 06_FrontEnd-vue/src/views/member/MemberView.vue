@@ -104,8 +104,8 @@
             tasks.push(axios.get('http://localhost:8000/main-client/search/course',{headers: {Authorization: `Bearer ${userStore.token}`} }));
             tasks.push(axios.get('http://localhost:8000/main-client/search/mountain',{headers: {Authorization: `Bearer ${userStore.token}`} }));
             tasks.push(axios.get(`http://localhost:8000/member-client/member/member-info/${userStore.userId}`,{headers: {Authorization: `Bearer ${userStore.token}`} }));
-            tasks.push(axios.get(`http://localhost:8000/member-client/climb-history/climbing/${userStore.userId}`,{headers: {Authorization: `Bearer ${userStore.token}`} }));
-            tasks.push(axios.get(`http://localhost:8000/member-client/climb-history/climbing/${userStore.userId}`,{headers: {Authorization: `Bearer ${userStore.token}`} }));
+            // tasks.push(axios.get(`http://localhost:8000/member-client/climb-history/climbing/${userStore.userId}`,{headers: {Authorization: `Bearer ${userStore.token}`} }));
+            // tasks.push(axios.get(`http://localhost:8000/member-client/climb-history/climbing/${userStore.userId}`,{headers: {Authorization: `Bearer ${userStore.token}`} }));
 
             // ② 모든 요청이 끝날 때까지 기다림 (모두 끝나면 배열로 반환됨)
             const resAll = await Promise.all([...tasks]);
