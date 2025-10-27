@@ -1,6 +1,6 @@
 <template>
     <div>
-    <h1>자유 게시글 전체</h1>
+    <h1>크루 게시글 전체</h1>
     <div class="searchBar">
         <select v-model="searchType">
             <option value="title">제목</option>
@@ -55,11 +55,11 @@
     import WritePost from './WritePost.vue';
     import { useUserStore } from '@/stores/user';
 
-const userStore =  useUserStore();
-const token = userStore.token;
-    
+    const userStore =  useUserStore();
+    const token = userStore.token;
 
     const router = useRouter();
+
     const postList = ref([]);
     const pagingInfo = ref({
         currentPage: 1,
