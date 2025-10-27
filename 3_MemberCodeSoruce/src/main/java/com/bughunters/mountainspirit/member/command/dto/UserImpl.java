@@ -31,7 +31,7 @@ public class UserImpl extends User {
         this.memberName = user.getMemberName();
         this.birth = user.getBirth();
         this.memStsId = user.getMemStsId();
-        this.crewId = user.getCrewId();
+        this.crewId = user.getCrewId() == null ? 0L : user.getCrewId();
         this.loginLockUntil = user.getLoginLockUntil();
     }
 }
