@@ -2,11 +2,11 @@
     <div class="allborder">
         <div class="detail" v-if="mountain">
             <img :src="getImageUrl(mountain.frtrlNm)" alt="산이미지" ><br>
-            <p style="display: inline">{{ mountain.frtrlNm }}</p><br>
-            <p style="display: inline">위치</p>
-            <p style="display: inline">{{ mountain.addrNm }}</p><br>
-            <p style="display: inline">높이</p>
-            <p style="display: inline">{{ mountain.aslAltide }}</p>
+            <h2 style="display: inline">{{ mountain.frtrlNm }}</h2><br>
+            <p style="display: inline">📍 위치</p>
+            <p style="display: inline">&nbsp;{{ mountain.addrNm }}</p><br>
+            <p style="display: inline">🏔️ 높이</p>
+            <p style="display: inline">&nbsp;{{ mountain.aslAltide }}m</p>
 
             <div class="course-section" v-if="courses.length">
             <h3>코스 목록</h3>
@@ -111,8 +111,7 @@
     function goToCourseDetail(course) {
         router.push({
             name: "courseDetail",
-            params: { courseId: course.poiId },
-            query: { frtrlId: mountain.value.frtrlNm }
+            params: { frtrlNm: mountain.value.frtrlNm, placeNm: course.placeNm  },
         });
     }
 

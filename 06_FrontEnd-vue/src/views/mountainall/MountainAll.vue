@@ -13,7 +13,7 @@
             <p style="display: inline">📍 위치</p>
             <p style="display: inline">{{ m.addrNm }}</p><br>
             <p style="display: inline">🏔️ 높이</p>
-            <p style="display: inline">{{ m.aslAltide }}</p>
+            <p style="display: inline">{{ m.aslAltide }}m</p>
             <hr>
         </div>
     </div>

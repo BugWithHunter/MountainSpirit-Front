@@ -20,9 +20,9 @@ export default [
         props: true,
     },
     {
-    path: '/mountain/:frtrlNm/course/:courseId',
-    name: 'courseDetail',
-    component: () => import('@/views/mountainall/CourseDetail.vue'),
-    props: true,
+        path: '/mountain/:frtrlNm/course/:placeNm',
+        name: 'courseDetail',
+        component: () => import('@/views/mountainall/CourseDetail.vue'),
+        props: true,
     },
 ]
