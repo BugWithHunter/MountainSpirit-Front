@@ -9,21 +9,16 @@
         <result property="endDate" column="endDate"/>
         <result property="userId" column="userId"/>
         <result property="adminId" column="adminId"/>
-    </resultMap>
-    <resultMap id="reportedMemberResultMap" type="com.bughunters.mountainspirit.report.command.dto.ReportMemberDTO">
-        <id property="id" column="id"/>
-        <result property="startDate" column="startDate"/>
-        <result property="endDate" column="endDate"/>
-        <result property="userId" column="userId"/>
-        <result property="adminId" column="adminId"/>
-        <result property="signInDate" column="signInDate"/>
+        <result property="annotation" column="annotation"/>
     </resultMap>
     <select id="selectAllBan" resultMap="banQueryResultMap">
         SELECT
-              startDate
+               id
+            , startDate
             , endDate
             , userId
             , adminId
+            , annotation
         FROM Ban
         ORDER BY id DESC
         <if test="limit != null and offset != null">

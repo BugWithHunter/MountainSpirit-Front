@@ -106,7 +106,7 @@
   text-align: center;
 }
 
-/* ✅ 가로 정렬 및 균등 간격 */
+/* 가로 정렬 및 균등 간격 */
 .charts-row {
   display: flex;
   justify-content: center;
@@ -115,7 +115,7 @@
   flex-wrap: nowrap;
 }
 
-/* ✅ 카드 형태의 차트 박스 */
+/* 카드 형태의 차트 박스 */
 .chart-box {
   width: 800px;    
   height: 450px;     
@@ -129,7 +129,7 @@
   align-items: center;
 }
 
-/* ✅ 제목 스타일 */
+/* 제목 스타일 */
 .chart-box h3 {
   font-size: 18px;
   font-weight: 600;
@@ -137,10 +137,10 @@
   color: #2c3e50;
 }
 
-/* ✅ 차트 크기 확대 */
+/* 차트 크기 확대 */
 canvas {
   width: 100%;
-  height: 400px; /* ✅ 그래프 영역을 넉넉히 확보 */
+  height: 400px; /* 그래프 영역확보 */
   display: block;
   margin: 0 auto;
 }

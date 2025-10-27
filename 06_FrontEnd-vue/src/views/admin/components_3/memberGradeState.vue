@@ -3,19 +3,19 @@
       <h2>회원 등급 통계</h2>
   
       <div class="charts-row">
-        <!-- 1️⃣ 등급별 회원 수 -->
+        <!-- 등급별 회원 수 -->
         <div class="chart-card">
           <h3>등급별 회원 수</h3>
           <canvas id="memberCountChart"></canvas>
         </div>
   
-        <!-- 2️⃣ 등급별 평균 점수 -->
+        <!-- 등급별 평균 점수 -->
         <div class="chart-card">
           <h3>등급별 평균 점수</h3>
           <canvas id="avgScoreChart"></canvas>
         </div>
   
-        <!-- 3️⃣ 등급별 평균 등반 횟수 -->
+        <!-- 등급별 평균 등반 횟수 -->
         <div class="chart-card">
           <h3>등급별 평균 등반 횟수</h3>
           <canvas id="avgClimbCntChart"></canvas>
@@ -32,7 +32,7 @@
   const rankStats = ref([]);
   const token = import.meta.env.VITE_TEMP_TOKEN;
   
-  // ✅ 데이터 가져오기
+  // 데이터 가져오기
   const fetchRankStats = async () => {
     try {
       const res = await fetch('http://localhost:8000/main-client/admin/memberrankstats', {
@@ -55,11 +55,11 @@
     }
   };
   
-  // ✅ 차트 렌더링 함수
+  // 차트 렌더링 함수
   const renderCharts = (data) => {
     const labels = data.map((item) => item.levelRange);
   
-    // 1️⃣ 등급별 회원 수
+    // 등급별 회원 수
     new Chart(document.getElementById('memberCountChart'), {
       type: 'bar',
       data: {
@@ -80,7 +80,7 @@
       },
     });
   
-    // 2️⃣ 등급별 평균 점수
+    // 등급별 평균 점수
     new Chart(document.getElementById('avgScoreChart'), {
       type: 'line',
       data: {
@@ -104,7 +104,7 @@
       },
     });
   
-    // 3️⃣ 등급별 평균 등반 횟수
+    // 등급별 평균 등반 횟수
     new Chart(document.getElementById('avgClimbCntChart'), {
       type: 'bar',
       data: {

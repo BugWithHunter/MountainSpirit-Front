@@ -43,7 +43,7 @@ const setSubView = (view) => {
   subView.value = view;
 };
 
-// 🟢 ReportChild1로부터 이벤트 수신
+// ReportChild1로부터 이벤트 수신
 const handleSelectProtest = (item) => {
   selectedProtest.value = item;
 };

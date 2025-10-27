@@ -1,6 +1,6 @@
 <template>
     <div class="member-stats">
-      <!-- 1️⃣ 충성도 / 로그인 비교 / 회원 상태 -->
+      <!-- 충성도 / 로그인 비교 / 회원 상태 -->
       <div class="stats-row">
         <div class="chart-card">
           <h3>회원 충성도 지수</h3>
@@ -18,7 +18,7 @@
         </div>
       </div>
   
-      <!-- 2️⃣ 로그인 시간대 분포 -->
+      <!-- 로그인 시간대 분포 -->
       <div class="stats-row">
         <div class="chart-card wide">
           <h3>시간대별 로그인 분포</h3>
@@ -36,7 +36,7 @@
   
   const token = import.meta.env.VITE_TEMP_TOKEN;
   
-  // ✅ 데이터 불러오기
+  // 데이터 불러오기
   const fetchStats = async () => {
     try {
       const res = await fetch('http://localhost:8000/main-client/admin/memberloginstats', {
@@ -65,11 +65,11 @@
     }
   };
   
-  // ✅ Chart.js 차트 렌더링
+  // Chart.js 차트 렌더링
   const renderCharts = (data) => {
     const loginStats = data.loginStats[0];
   
-    // 1️⃣ 충성도 게이지 (반원 도넛)
+    // 충성도 게이지 (반원 도넛)
     new Chart(document.getElementById('loyaltyChart'), {
       type: 'doughnut',
       data: {
@@ -100,7 +100,7 @@
       },
     });
   
-    // 2️⃣ 최근 7일 / 30일 로그인 비율 비교
+    // 최근 7일 / 30일 로그인 비율 비교
     new Chart(document.getElementById('activityChart'), {
       type: 'bar',
       data: {
@@ -133,7 +133,7 @@
       },
     });
   
-    // 3️⃣ 로그인 시간대 분포 (라인 차트)
+    // 로그인 시간대 분포 (라인 차트)
     new Chart(document.getElementById('loginTimeChart'), {
       type: 'line',
       data: {
@@ -163,7 +163,7 @@
       },
     });
   
-    // 4️⃣ 회원 상태 비율 (도넛)
+    // 회원 상태 비율 (도넛)
     new Chart(document.getElementById('statusChart'), {
       type: 'doughnut',
       data: {

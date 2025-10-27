@@ -63,7 +63,7 @@ const pageSize = 10;
 const hasNextPage = ref(true);
 const token = import.meta.env.VITE_TEMP_TOKEN;
 
-// ✅ 날짜 포맷
+// 날짜 포맷
 const formatDate = (dateString) => {
   if (!dateString) return '-';
   const date = new Date(dateString);
@@ -76,7 +76,7 @@ const formatDate = (dateString) => {
   });
 };
 
-// ✅ 상태 텍스트
+// 상태 텍스트
 const statusText = (status) => {
   switch (status) {
     case 'Y': return '승인';
@@ -86,7 +86,7 @@ const statusText = (status) => {
   }
 };
 
-// ✅ 상태별 색상 클래스
+// 상태별 색상 클래스
 const statusClass = (status) => {
   switch (status) {
     case 'Y': return 'accepted';
@@ -96,7 +96,7 @@ const statusClass = (status) => {
   }
 };
 
-// ✅ 신고 목록 불러오기
+// 신고 목록 불러오기
 const fetchReports = async (page = 1) => {
   try {
     const res = await fetch(
@@ -119,7 +119,7 @@ const fetchReports = async (page = 1) => {
   }
 };
 
-// ✅ 부모에서 접근 가능하도록
+// 부모에서 접근 가능하도록
 defineExpose({ fetchReports });
 
 // ✅ 페이지 변경

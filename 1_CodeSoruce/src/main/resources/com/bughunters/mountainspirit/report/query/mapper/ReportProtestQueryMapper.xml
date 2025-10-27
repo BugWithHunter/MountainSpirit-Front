@@ -49,6 +49,7 @@
     <select id="findAppealDetailById" resultType="com.bughunters.mountainspirit.report.query.dto.AppealDetailByIdDTO">
         SELECT
             a.appealReason AS appealReason,
+            a.isAccepted,
             -- 제목 (크루/자유게시판만)
             CASE
                 WHEN r.crewPostId IS NOT NULL THEN c.title

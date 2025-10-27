@@ -51,7 +51,7 @@
   const hasNextPage = ref(true);
   const token = import.meta.env.VITE_TEMP_TOKEN;
   
-  // ✅ 회원 등급 목록 불러오기
+  // 회원 등급 목록 불러오기
   const fetchMembers = async (page = 1) => {
     try {
       const res = await fetch(
@@ -82,7 +82,7 @@
     }
   };
   
-  // ✅ 페이지 변경
+  // 페이지 변경
   const changePage = (page) => {
     if (page < 1) return;
     fetchMembers(page);

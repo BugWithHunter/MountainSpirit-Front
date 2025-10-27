@@ -14,7 +14,9 @@
 
     <select id="selectAllBlacklist" resultMap="blacklistResultMap">
         SELECT
-              createDate
+              id
+            , annotation
+            , createDate
             , adminId
             , memberId
             FROM Blacklist

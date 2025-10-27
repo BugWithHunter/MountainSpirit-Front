@@ -13,7 +13,7 @@
       </span>
     </p>
 
-    <!-- ✅ 상태별 버튼 -->
+    <!-- 상태별 버튼 -->
     <div class="action-buttons">
       <!-- 미승인(U) -->
       <button v-if="report.isAccepted === 'U'" @click="confirmAction('Y')" class="accept">수락</button>
@@ -26,7 +26,7 @@
       <button v-if="report.isAccepted === 'N'" @click="confirmAction('Y')" class="reapprove">재승인</button>
     </div>
 
-    <!-- ✅ 모달창 -->
+    <!--  모달창 -->
     <div v-if="showModal" class="modal-overlay">
       <div class="modal">
         <p>정말로 상태를 <strong>{{ statusText(pendingStatus) }}</strong>(으)로 변경하시겠습니까?</p>
@@ -60,7 +60,7 @@ const showModal = ref(false)
 const pendingStatus = ref(null) // 사용자가 클릭한 상태 저장
 const token = import.meta.env.VITE_TEMP_TOKEN
 
-// ✅ 상태 텍스트 & 클래스
+//  상태 텍스트 & 클래스
 const statusText = (status) => {
   switch (status) {
     case 'Y': return '승인'
@@ -79,7 +79,7 @@ const statusClass = (status) => {
   }
 }
 
-// ✅ 상세 데이터 불러오기
+//  상세 데이터 불러오기
 const fetchReport = async (id) => {
   try {
     const res = await fetch(`http://localhost:8000/main-client/reports/${id}`, {
@@ -98,7 +98,7 @@ const fetchReport = async (id) => {
   }
 }
 
-// ✅ 모달 제어
+//  모달 제어
 const confirmAction = (status) => {
   pendingStatus.value = status
   showModal.value = true
@@ -109,7 +109,7 @@ const closeModal = () => {
   pendingStatus.value = null
 }
 
-// ✅ PATCH 요청
+// PATCH 요청
 const updateStatus = async (newStatus) => {
 
   if (!report.value || !props.reportId) return
@@ -137,7 +137,7 @@ const updateStatus = async (newStatus) => {
   }
 }
 
-// ✅ ID 변경 감지
+// ID 변경 감지
 watch(
   () => props.reportId,
   (newId) => {

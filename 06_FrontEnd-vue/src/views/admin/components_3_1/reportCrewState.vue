@@ -55,7 +55,7 @@
   const pendingStatus = ref(null);
   const token = import.meta.env.VITE_TEMP_TOKEN;
   
-  // ✅ 상태 표시
+  // 상태 표시
   const statusText = (status) => {
     switch (status) {
       case 'Y': return '승인';
@@ -73,7 +73,7 @@
     }
   };
   
-  // ✅ 상세 데이터 불러오기
+  // 상세 데이터 불러오기
   const fetchReport = async (id) => {
     try {
       const res = await fetch(`http://localhost:8000/main-client/reports/${id}`, {
@@ -88,7 +88,7 @@
     }
   };
   
-  // ✅ 모달 제어
+  // 모달 제어
   const confirmAction = (status) => {
     pendingStatus.value = status;
     showModal.value = true;
@@ -98,7 +98,7 @@
     pendingStatus.value = null;
   };
   
-  // ✅ PATCH 요청
+  // PATCH 요청
   const updateStatus = async (newStatus) => {
     if (!report.value || !props.reportId) return;
     try {
@@ -123,7 +123,7 @@
     }
   };
   
-  // ✅ ID 변경 감시
+  // ID 변경 감시
   watch(
     () => props.reportId,
     (newId) => {

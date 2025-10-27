@@ -33,7 +33,7 @@
 
     <!-- 이의신청 -->
     <div v-else-if="mainView === 'reportProtest'">
-      <ProtestState :protest="selectedProtest" />
+      <ProtestState :key="selectedProtest?.id" :protest="selectedProtest" />
     </div>
 
     <!-- 회원정지 -->
@@ -76,12 +76,14 @@ const selectedId = ref({
   crew: null,
   comment: null,
   member: null,
+  protest: null,
 });
 
 const boardRef = ref(null);
 const crewRef = ref(null);
 const commentRef = ref(null);
 const memberRef = ref(null);
+
 
 const handleSelectReport = (type, payload) => {
   selectedId.value[type] = payload.id;
@@ -96,6 +98,8 @@ const handleRefresh = (type) => {
     case 'member': memberRef.value?.fetchReports(); break;
   }
 };
+
+
 </script>
 
 <style scoped>

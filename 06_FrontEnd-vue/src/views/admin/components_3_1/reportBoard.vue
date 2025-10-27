@@ -18,8 +18,8 @@
           <tr v-for="report in reports" :key="report.id"
           @click="$emit('select-report', {id: report.id, isAccepted: report.isAccepted })" class="clickable">
             <td>{{ report.id }}</td>
-            <td>{{ report.reportedId }}</td>
-            <td>{{ formatDate(report.reportDate) }}</td>
+            <td >{{ report.reportedId }}</td>
+            <td class="reportDate">{{ formatDate(report.reportDate) }}</td>
             <td>{{ report.reportname }}</td>
             <td>{{ report.reportId }}</td>
             <td>{{ report.postId || '-' }}</td>
@@ -63,7 +63,7 @@
   const hasNextPage = ref(true);
   const token = import.meta.env.VITE_TEMP_TOKEN;
   
-  // ✅ 날짜 포맷 함수
+  // 날짜 포맷 함수
   const formatDate = (dateString) => {
     if (!dateString) return '-';
     const date = new Date(dateString);
@@ -76,7 +76,7 @@
     });
   };
   
-  // ✅ 신고 목록 불러오기
+  // 신고 목록 불러오기
   const fetchReports = async (page = 1) => {
     try {
       const res = await fetch(
@@ -103,7 +103,7 @@
     }
   };
 
-// ✅ 부모에서 접근 가능하게 노출
+// 부모에서 접근 가능하게 노출
 defineExpose({
   fetchReports,
 })
@@ -219,6 +219,10 @@ const statusClass = (status) => {
   button:disabled {
     background-color: #eee;
     cursor: not-allowed;
+  }
+
+  .reportDate {
+    width: 200px;
   }
   </style>
   

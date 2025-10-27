@@ -11,7 +11,7 @@
       <!-- 2~4. 차트 영역 -->
       <div class="charts-row">
         <div class="chart-box">
-          <h3>회원 크루 소속 비율</h3>
+          <h3>회원에 대한 크루 소속 비율</h3>
           <br/><br/>
           <div class="chart-canvas-wrapper">
             <canvas id="affiliationChart"></canvas>
@@ -27,7 +27,7 @@
         </div>
   
         <div class="chart-box">
-          <h3>등반 성공률</h3>
+          <h3>크루등반 성공률</h3>
           <br/><br/>
           <div class="chart-canvas-wrapper">
             <canvas id="climbSuccessChart"></canvas>
@@ -71,10 +71,10 @@
   const formatLabel = (key) => {
     const map = {
       totalCrewMemberCount: "전체 크루 구성원 수",
-      activeCrewMemberCount: "활동 중 구성원 수",
+      activeCrewMemberCount: "활동 중 크루구성원 수",
       totalCrewClimbBoardCount: "등반 게시글 수",
       totalCrewApplyCount: "크루 신청 수",
-      totalCrewMemberHistoryCount: "구성원 히스토리 수",
+      totalCrewMemberHistoryCount: "크루구성원 히스토리 수",
     };
     return map[key] || key;
   };

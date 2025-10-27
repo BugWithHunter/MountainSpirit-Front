@@ -2,7 +2,7 @@
     <div class="member-stats">
 
       <div class="stats-row">
-        <!-- 1️⃣ 회원수 + 성별비율 -->
+        <!-- 회원수 + 성별비율 -->
         <div class="stats-column">
           <div class="stat-card">
             <h2>총 회원 수 &nbsp; {{ totalMembers }}명</h2>
@@ -14,13 +14,13 @@
           </div>
         </div>
   
-        <!-- 2️⃣ 연령 분포 -->
+        <!-- 연령 분포 -->
         <div class="chart-card">
           <h3>연령 분포</h3>
           <canvas id="ageChart"></canvas>
         </div>
   
-        <!-- 3️⃣ 월별 신규 회원 -->
+        <!-- 월별 신규 회원 -->
         <div class="chart-card">
           <h3>월별 신규 회원</h3>
           <canvas id="monthlyChart"></canvas>
@@ -38,7 +38,7 @@
   const stats = ref({});
   const token = import.meta.env.VITE_TEMP_TOKEN;
   
-  // ✅ 데이터 불러오기
+  // 데이터 불러오기
   const fetchStats = async () => {
     try {
       const res = await fetch('http://localhost:8000/main-client/admin/memberinfostats', {
@@ -69,7 +69,7 @@
     }
   };
   
-  // ✅ Chart.js 렌더링
+  // Chart.js 렌더링
   const renderCharts = (data) => {
     // 성별 비율
     new Chart(document.getElementById('genderChart'), {
@@ -216,7 +216,7 @@
 .chart-card canvas {
   flex-grow: 1;           /* 차트가 카드 내부 공간을 꽉 채움 */
   width: 100%;
-  height: 300px !important; /* ✅ 고정 높이 (overflow 방지) */
+  height: 300px !important; /* 고정 높이 (overflow 방지) */
   max-height: 320px;
   margin-top: 10px;
 }
