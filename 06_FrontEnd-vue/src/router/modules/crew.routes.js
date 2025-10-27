@@ -39,6 +39,13 @@ export default [
         path: 'info/:crewId',
         name: 'crewInfo',
         component: () => import('@/views/crew/CrewInfo.vue'),
+        children:[
+        {
+        path: 'modify/:crewId',
+        name: 'crewInfoModify',
+        component: () => import('@/views/crew/CrewInfoModify.vue'),
+        }
+        ]
       },
     ],
   },

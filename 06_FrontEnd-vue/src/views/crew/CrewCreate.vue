@@ -29,7 +29,6 @@ import { useRouter } from 'vue-router';
         let crewData = req.data;
         console.log(crewData);
         
-        
         router.push(`/crew/info/${crewData}`);
     }
 

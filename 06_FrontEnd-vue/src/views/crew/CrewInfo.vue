@@ -8,7 +8,16 @@
           <p>인원 : {{ crew.memberCount }} / {{ crew.maxCount }}</p>
           <p>크루 티어 : {{ crew.tier }}</p>
         </div>
+        <!-- <div v-if="role===2">
+          <button class="leave-btn">크루 신청 리스트</button>
+          <button class="leave-btn">크루 정보 수정</button>
+          <button class="leave-btn">크루 삭제</button>
+        </div> 
+         <div v-else>
+          <button class="leave-btn">크루 탈퇴</button>
+        </div>  -->
         <button class="leave-btn">크루 탈퇴</button>
+        
       </section>
 
       <!-- 오른쪽: 크루원 목록 -->
@@ -43,7 +52,7 @@ const crew = ref({
   tier: "",
 });
 const crewRoute = useRoute();
-
+const role = ref('');
 const members = ref([]);
     onMounted(async () => {
         const [crewReq,memberReq] = await Promise.all([
@@ -57,8 +66,8 @@ const members = ref([]);
         
         const crewData = crewReq.data;
         const memberData = memberReq.data;
-        console.log(crewData);
-        console.log(memberData);
+        // console.log(crewData);
+        // console.log(memberData);
 
          crew.value = {
       name: crewData.crewName,
@@ -71,11 +80,22 @@ const members = ref([]);
 
     members.value = memberData.map((m) => ({
       id: m.id,
+      userId: m.memberList.userId,
       name: m.memberList.nickName,
       joinDate: m.crewMemberJoinDate,
       role: m.crewRole.crewRoleName,
     }));
+
+    console.log(crew.value);
+    console.log(members.value);
     
+    let memberRole = members.value.find(member=>{
+      console.log(member.userId);
+      member.userId==200
+    });
+    console.log(memberRole);
+    role.value = memberRole.userId;
+    console.log(role.value);
     })
 </script>
 
