@@ -26,7 +26,7 @@ public class MemberController {
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
     public MemberController(MemberService memberService
-    , BCryptPasswordEncoder bCryptPasswordEncoder) {
+            , BCryptPasswordEncoder bCryptPasswordEncoder) {
         this.memberService = memberService;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
     }
@@ -173,7 +173,7 @@ public class MemberController {
 
     @PostMapping("/Profile/{id}")
     public ResponseEntity<ResponseMessage> updateProfileImage(@RequestParam MultipartFile singleFile,
-                                   @PathVariable Long id) {
+                                                              @PathVariable Long id) {
         ResponseProfileImageDTO success = memberService.updateProfileImage(singleFile, id);
 
 

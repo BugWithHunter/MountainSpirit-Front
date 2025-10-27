@@ -63,10 +63,6 @@ spring:
 token:
   secret: v7o98gdK42iddFqTxH07Yjv18KbwIZWQZu7NRPeR9+ji9tOGDX2r8PO3mGptklEdEiIB0RMT066q3qb19YBfqQ==
   expiration_time: 43200000 # 12시간
-<<<<<<< HEAD
-=======
-
-
 
 # 권한별 설정
 security:
@@ -96,4 +92,4 @@ security:
       # 헬스체크 공개
       - pattern: /main-client/health
         permitAll: true
->>>>>>> develop
+

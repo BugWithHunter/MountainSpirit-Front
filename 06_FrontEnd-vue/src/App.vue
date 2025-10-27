@@ -13,7 +13,7 @@
   <!-- 본문 -->
   <main>
     <RouterView/>
-    <MountainAll/>
+    <!-- <MountainAll/> -->
   </main>
 
   <!-- footer 하 -->
@@ -49,7 +49,7 @@
 */
 main {
   flex: 1;                    /* 남은 공간을 전부 main이 차지하도록 해서 footer를 하단으로 밀기 */
-  display: flex;              /* main 내부에서 또 중앙 정렬을 하기 위해 flex 설정 */
+  /*display: flex;              /* main 내부에서 또 중앙 정렬을 하기 위해 flex 설정 */
   justify-content: center;    /* 가로 방향 중앙 정렬 */
   align-items: center;        /* 세로 방향 중앙 정렬 */
 }

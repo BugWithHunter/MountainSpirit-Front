@@ -1,13 +1,15 @@
 <template>
-    <div>
+    <div class="search">
         <p>검색 결과</p>
         <input type="text" id="mountain-search" name="mountain-search">
         <button>검색</button>
-    </div>
+    </div><br>
+    
     <div class="allborder">
+    <!-- <div> -->
         <div class="mtnresult" v-for="m in pagedMountains" :key="m.frtrlId">
             <img src="" alt="산이미지">
-            <p style="display: inline">{{ m.frtrlNm }}</p><br>
+            <p style="display: inline; cursor: pointer" @click="goToDetail(m)">{{ m.frtrlNm }}</p><br>
             <p style="display: inline">위치</p>
             <p style="display: inline">{{ m.addrNm }}</p><br>
             <p style="display: inline">높이</p>
@@ -21,11 +23,27 @@
             {{ page }}
         </button>
     </div>
+
 </template>
 
 <script setup>
     import {ref, onMounted, computed} from "vue";
+    import {useRouter} from "vue-router";
     import axios from "axios";
+
+    const router = useRouter();
+    function goToDetail(m){
+        router.push({
+            name: 'mountainDetail',
+            params: { frtrlNm: m.frtrlNm },
+            query: {
+                addrNm: m.addrNm,
+                aslAltide: m.aslAltide,
+                frtrlId: m.frtrlId,
+            }
+        });
+            // `/mountain/${frtrlNm}`});
+    }
 
     const mountains = ref([]);
     const currentPage = ref(1);
@@ -41,7 +59,7 @@
 
     async function fetchMountains(){
         try{
-            const token = "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJrYW5nMTIxMzFAZXhhbXBsZS5jb20iLCJhdXRoIjpbIlJPTEVfQURNSU4iLCJST0xFX01FTUJFUiJdLCJ1c2VybmFtZSI6IuqwlTEyMTQiLCJpZCI6MjE0LCJiaXJ0aCI6IjE5ODYtMDMtMDgiLCJtZW1TdHNJZCI6MSwiZXhwIjoxNzYxNDIwMzY2fQ.4eh2ryoQF-LTovfVEQl6Lhy7gOU46AL8HLl_5JfnfXkvFC_rLbMSdQl9WA4W8j_CaXHo4ZHMiyNg4Ql-0fMrcw";
+            const token = "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJrYW5nMTIxMzFAZXhhbXBsZS5jb20iLCJhdXRoIjpbIlJPTEVfQURNSU4iLCJST0xFX01FTUJFUiJdLCJ1c2VybmFtZSI6IuqwlTEyMTQiLCJpZCI6MjE0LCJiaXJ0aCI6IjE5ODYtMDMtMDgiLCJtZW1TdHNJZCI6MSwiZXhwIjoxNzYxNTc1NTI5fQ.zYwVKZrpdkJklZk1NNwKLATddGjjQbler3vjHkNtwsBAeJ1ExJm7wFCiJFiI4vDqwmJdLqhEdfY36ziH41ktjg";
             // localStorage.setItem("accessToken", token);
             const response = await axios.get("http://localhost:8000/main-client/search/mountain",
                 {
@@ -59,18 +77,12 @@
 </script>
 
 <style scoped>
-    .allborder{
-        border: 1px solid #b3b3b3;
-        border-radius: 20px;
-        position: absolute;
-        left: 50%;
-        top: 50%;
-        transform: translate(-50%);
-        width: 1051px;
-        padding: 5%;
+    .search{
+        
     }
 
     .pagination button {
+        position: relative;
         margin: 2px;
         padding: 5px 10px;
     }
@@ -80,4 +92,18 @@
         background-color: #007bff;
         color: white;
     }
+
+    .allborder{
+        border: 1px solid #b3b3b3;
+        border-radius: 20px;
+        /* position: absolute; */
+        position: relative;
+        /* left: 50%; */
+        /* top: 50%; */
+        /* transform: translate(-50%); */
+        width: 1051px;
+        padding: 5%;
+        margin: 40px auto;
+    }
+    
 </style>

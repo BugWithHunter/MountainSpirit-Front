@@ -292,6 +292,7 @@ public class MemberServiceImpl implements MemberService {
         }
 
         return responseProfileImageDTO;
+    }
     public void deleteCrewId(long crewId, long cumId) {
         Member member = memberRepository.findById(cumId).get();
         log.info("삭제할 회원 정보 : {}",member);

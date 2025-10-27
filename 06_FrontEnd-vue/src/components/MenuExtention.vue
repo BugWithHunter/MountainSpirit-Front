@@ -26,7 +26,7 @@
           </li>
           <li>
             <ul>
-              <li><RouterLink to="/">산 전체 목록</RouterLink></li>
+              <li><RouterLink to="/mountain">산 전체 목록</RouterLink></li>
             </ul>
           </li>
         </ul>
