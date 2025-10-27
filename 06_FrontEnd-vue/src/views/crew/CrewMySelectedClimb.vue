@@ -13,6 +13,7 @@
         />
         <div class="date-text">{{ climbBoardData.crewClimbStartDate }}</div>
         <div class="course-title">{{ climbBoardData.mountain.frtrlNm }}</div>
+        
         <div class="plan-text">{{ climbBoardData.crewClimbContent }}</div>
       </div>
 
@@ -28,23 +29,14 @@
             </div>
           </li>
         </ul>
-
-          <button class="apply-btn" @click.stop="modalOpen()">등산 신청</button>
-
-            <div class="modal-wrap" v-show="modalCheck">
-            <div class="modal-container">
-                
-                <h1>등산 신청 하시겠습니까?</h1>
-                
-                <div class="modal-btn">
-                <button @click.stop="modalOpen()">취소</button>
-                <button @click.stop="climbApply(climbBoardData.id,
-                climbBoardData.crewClimbAmountOfPeople,
-                climbBoardData.mountain.frtrlId,
-                77)">신청</button>
-                </div>
-            </div>
-            </div>
+        <span
+                class="status"
+                :class="{
+                success: climbId.params.state === 'Y',
+                fail: climbId.params.state === 'N',
+                }">
+                등산 {{ isSucceed(climbId.params.state) }}
+            </span>
       </div>
     </div>
   </div>
@@ -56,9 +48,11 @@
     import { useRoute } from 'vue-router';
     
     const climbId = useRoute();
-    const modalCheck = ref(false);
+    const isSucceed = (flag)=>{
+        if(flag==='Y')return "성공";
+        else if(flag==='N')return "실패";
+    }
     
-
     const climbBoardData = ref({
         imageUrl:'',
         crewClimbStartDate:'',
@@ -78,30 +72,7 @@
         console.log(climbBoardData.value);
     };
     onMounted(getData);
-
-    const modalOpen = ()=>{
-        modalCheck.value = !modalCheck.value;
-    }
-    const climbApply = async (crewClimbId,amountOfPeople,frtrlId,crewMemberId)=>{
-        console.log(crewClimbId,amountOfPeople,frtrlId,crewMemberId);
-        const response = await axios.post('http://localhost:8000/main-client/crew-climb-board/climb-apply',
-        {
-            crewClimbId:crewClimbId,
-            crewClimbAmountOfPeople:amountOfPeople,
-            frtrlId:frtrlId,
-            crewMemberId:crewMemberId
-        },
-        {
-            headers: {
-                "Content-Type": "application/json",
-                "Authorization":"Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJrYW5nOTk5OTk5QGV4YW1wbGUuY29tIiwiYXV0aCI6WyJST0xFX01FTUJFUiJdLCJ1c2VybmFtZSI6IuqwleyCsOyLoOuguSIsImlkIjoyMTcsImJpcnRoIjoiMTk4Ni0wMy0wOCIsIm1lbVN0c0lkIjoxLCJleHAiOjE3NjE1Njc3OTl9.hrkEktZ_X20kC-eju4Yx63eItDilxt5-2Fi0AjtGx6Xlryc9SQ8rYmwEFJ3Neiuj8GgLwHynCdPokZXlt1IZAA"
-              }
-        }
-    )
-    console.log('POST End')
-    modalCheck.value = !modalCheck.value;
-    getData();
-    }
+    
 </script>
 
 <style scoped>
@@ -254,4 +225,24 @@
   height: 100%;
   background: rgba(0, 0, 0, 0.1);
 }
+    .status {
+        margin: 1cqmax;
+        height: 4cqmax;
+        text-align: center;
+        align-items: center;
+    font-size: 1.2cqmax;
+    padding: 1.1cqmax 4px;
+    border-radius: 6px;
+    font-weight: 600;
+    }
+
+    .status.success {
+    background: #d9f8e2;
+    color: #1a7f37;
+    }
+
+    .status.fail {
+    background: #ffe0e0;
+    color: #d32f2f;
+    }
 </style>

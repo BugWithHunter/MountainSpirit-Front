@@ -29,7 +29,7 @@
                 }">
                 등산 {{ isSucceed(item.crewClimbHistoryIsSucceed) }}
             </span>
-            <button class="detail-btn">상세 보기</button>
+            <button @click="climbInfo(item.crewClimbRecord.climbId,item.crewClimbHistoryIsSucceed)" class="detail-btn">상세 보기</button>
             </div>
         </div>
         </div>
@@ -39,8 +39,25 @@
     <script setup>
     import axios from 'axios'
     import { onMounted, ref } from 'vue'
+    import { useRouter } from 'vue-router';
+    const router = useRouter();
 
-    const myClimbData = ref([])
+    const myClimbData = ref({
+        id:0,
+        crewClimbHistoryIsSucceed:'',
+        crewMemberId:'',
+        crewClimbRecord:{},
+        mountain:{}
+    })
+    const climbInfo = (climbId,state)=>{
+        console.log(climbId,state);
+        if(state === 'Y' || state === 'N'){
+            router.push(`/crew/my-climb-board/${climbId}/${state}`);
+        }
+        else{
+            router.push(`/crew/climb-board/${climbId}`);
+        }
+    }
     const isSucceed = (flag)=>{
         if(flag==='Y')return "성공";
         else if(flag==='N')return "실패";
@@ -51,10 +68,7 @@
     const response = await axios.get(
         'http://localhost:8000/main-client/crew-climb-board/climb-board-mylist/25',
         {
-        headers: {
-            Authorization:
-            'Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJrYW5nOTk5OTk5QGV4YW1wbGUuY29tIiwiYXV0aCI6WyJST0xFX01FTUJFUiJdLCJ1c2VybmFtZSI6IuqwleyCsOyLoOuguSIsImlkIjoyMTcsImJpcnRoIjoiMTk4Ni0wMy0wOCIsIm1lbVN0c0lkIjoxLCJleHAiOjE3NjE1MDAyNzJ9.BcnZCjXGMGVYGCWphyvnbM-il3zQKFoSJuXVDSEyKWDfWAwplYReAT6LIpaYmrGnR3uDMIKDbmZywILkfQ07DQ'
-        }
+            headers:{"Authorization":"Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJrYW5nOTk5OTk5QGV4YW1wbGUuY29tIiwiYXV0aCI6WyJST0xFX01FTUJFUiJdLCJ1c2VybmFtZSI6IuqwleyCsOyLoOuguSIsImlkIjoyMTcsImJpcnRoIjoiMTk4Ni0wMy0wOCIsIm1lbVN0c0lkIjoxLCJleHAiOjE3NjE1Njc3OTl9.hrkEktZ_X20kC-eju4Yx63eItDilxt5-2Fi0AjtGx6Xlryc9SQ8rYmwEFJ3Neiuj8GgLwHynCdPokZXlt1IZAA"}
         }
     )
     myClimbData.value = response.data

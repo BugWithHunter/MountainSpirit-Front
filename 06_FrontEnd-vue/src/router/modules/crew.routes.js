@@ -30,6 +30,11 @@ export default [
         name: 'crewSelectedClimbBoard',
         component: () => import('@/views/crew/CrewSelectedClimbBoard.vue'),
       },
+      {
+        path: 'my-climb-board/:climbId/:state',
+        name: 'crewMySelectedClimbBoard',
+        component: () => import('@/views/crew/CrewMySelectedClimb.vue'),
+      },
         {
         path: 'info',
         name: 'crewInfo',
