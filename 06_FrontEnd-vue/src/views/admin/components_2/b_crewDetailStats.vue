@@ -41,6 +41,19 @@
   import { ref, onMounted } from "vue";
   import { Chart, registerables } from "chart.js";
   Chart.register(...registerables);
+
+  const baseChartOptions = {
+  responsive: false,               //  반응형 (필수)
+  maintainAspectRatio: false,     //  컨테이너 높이에 맞춤
+  animation: {
+    duration: 1200,               //  1.2초 애니메이션
+    easing: "easeOutQuart",       //  부드러운 등장
+  },
+  plugins: {
+    legend: { position: "bottom" },
+  },
+};
+
   
   const stats = ref({
     countSummary: {},
@@ -67,7 +80,7 @@
     }
   };
   
-  // ✅ 라벨 포맷
+  // 라벨 포맷
   const formatLabel = (key) => {
     const map = {
       totalCrewMemberCount: "전체 크루 구성원 수",
@@ -79,7 +92,7 @@
     return map[key] || key;
   };
   
-  // 📊 소속 비율
+  // 소속 비율
   const renderAffiliationChart = (data) => {
     new Chart(document.getElementById("affiliationChart"), {
       type: "doughnut",
@@ -92,11 +105,11 @@
           },
         ],
       },
-      options: { plugins: { legend: { position: "bottom" } } },
+      options: baseChartOptions,
     });
   };
   
-  // 📊 가입/탈퇴/강퇴 비율
+  // 가입/탈퇴/강퇴 비율
   const renderStateRateChart = (data) => {
     new Chart(document.getElementById("stateRateChart"), {
       type: "pie",
@@ -113,11 +126,11 @@
           },
         ],
       },
-      options: { plugins: { legend: { position: "bottom" } } },
+      options: baseChartOptions,
     });
   };
   
-  // 📊 등반 성공률
+  //  등반 성공률
   const renderClimbSuccessChart = (data) => {
     new Chart(document.getElementById("climbSuccessChart"), {
       type: "doughnut",
@@ -132,8 +145,9 @@
         ],
       },
       options: {
+        ...baseChartOptions,
         plugins: {
-          legend: { position: "bottom" },
+          ...baseChartOptions.plugins,
           tooltip: {
             callbacks: {
               label: (ctx) =>
@@ -156,7 +170,7 @@
     text-align: center;
   }
   
-  /* ✅ 상단 카드 */
+  /* 상단 카드 */
   .stats-cards {
     display: flex;
     justify-content: center;
@@ -185,7 +199,7 @@
     margin-top: 8px;
   }
   
-  /* ✅ 차트 박스들을 가로 정렬 */
+  /* 차트 박스들을 가로 정렬 */
   .charts-row {
     display: flex;
     justify-content: center;
@@ -196,7 +210,7 @@
   .chart-box {
     flex: 1 1 30%; /* 최소 너비 30%로 반응형 */
     max-width: 400px;
-    height: 350px;
+    height: 480px;
     background: #fff;
     border-radius: 10px;
     padding: 25px;
@@ -212,8 +226,8 @@
   }
   
   canvas {
-    width: 100%;
-    height: 250px;
+    width: 100% !important;
+    height: 280px !important;
   }
   </style>
   

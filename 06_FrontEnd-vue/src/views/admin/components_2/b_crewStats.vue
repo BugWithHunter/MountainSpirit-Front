@@ -18,8 +18,6 @@
   
       <!-- 월별 그래프 -->
       <div class="chart-box">
-        <h3>월별 크루 생성 추이</h3>
-        <br><br>
         <canvas id="crewMonthlyChart"></canvas>
       </div>
     </div>
@@ -74,8 +72,12 @@
         ],
       },
       options: {
-        responsive: true,
+        responsive: false,
         maintainAspectRatio: false,
+        animation: {
+        duration: 1200, 
+        easing: "easeOutQuart", 
+    },
         scales: {
           y: {
             beginAtZero: true,
@@ -84,6 +86,12 @@
         },
         plugins: {
           legend: { display: false },
+      title: {
+        display: true,
+        text: "월별 크루 생성 추이",
+        font: { size: 18 },
+        padding: { top: 10, bottom: 20 },
+      }
         },
       },
     });
@@ -126,21 +134,34 @@
   }
   
   .chart-box {
-    width: 80%;
-    height: 400px;
+    width: 1200px;
+    height: 600px;
     margin: 0 auto;
     background: #fff;
-    padding: 70px;
+    padding: 20px;
+    padding-top: 120px;
     padding-bottom: 130px;
     border-radius: 10px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  }
+    display: flex;
+    flex-direction: column;
+    justify-content: center; 
+    align-items: center;
+   }
   
   .chart-box h3 {
     font-size: 18px;
     color: #444;
     margin-bottom: 20px;
   }
+
+  canvas {
+  width: 100% !important;
+  height: 580px !important;
+  display: block;
+  margin: 0 auto;
+}
+
 
   
   </style>

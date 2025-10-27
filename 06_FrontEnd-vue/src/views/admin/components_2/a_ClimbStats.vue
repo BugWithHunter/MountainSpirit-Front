@@ -3,6 +3,7 @@
       <div class="charts-row">
         <div class="chart-box">
           <h3>스탬프 · 즐겨찾기</h3>
+          <br/><br><br>
           <canvas id="stampChart"></canvas>
         </div>
         <div class="chart-box">
@@ -38,7 +39,9 @@
     }
   };
   
-  const chartOptions = { responsive: false, maintainAspectRatio: false };
+  const chartOptions = { responsive: true, 
+  maintainAspectRatio: false,
+  aspectRatio: 1.2,  };
   
   const renderStampChart = (s) =>
     new Chart(document.getElementById("stampChart"), {
@@ -62,7 +65,6 @@
           },
         ],
       },
-      options: chartOptions,
     });
   
   const renderStartChart = (data) =>
@@ -118,14 +120,14 @@
 /* 카드 형태의 차트 박스 */
 .chart-box {
   width: 800px;    
-  height: 450px;     
+  height: 530px;     
   background: #fff;
   border-radius: 10px;
   padding: 40px 30px;
   box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
   display: flex;
   flex-direction: column;
-  justify-content: flex-start;
+  justify-content: center;
   align-items: center;
 }
 
@@ -133,7 +135,7 @@
 .chart-box h3 {
   font-size: 18px;
   font-weight: 600;
-  margin-bottom: 25px;
+  margin-bottom: 10px;
   color: #2c3e50;
 }
 

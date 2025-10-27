@@ -1,23 +1,21 @@
 <template>
-    <div class="member-rank-stats">
-      <h2>회원 등급 통계</h2>
-  
+    <div class="member-rank-stats"> 
       <div class="charts-row">
         <!-- 등급별 회원 수 -->
         <div class="chart-card">
-          <h3>등급별 회원 수</h3>
+          <h2>등급별 회원 수</h2>
           <canvas id="memberCountChart"></canvas>
         </div>
   
         <!-- 등급별 평균 점수 -->
         <div class="chart-card">
-          <h3>등급별 평균 점수</h3>
+          <h2>등급별 평균 점수</h2>
           <canvas id="avgScoreChart"></canvas>
         </div>
   
         <!-- 등급별 평균 등반 횟수 -->
         <div class="chart-card">
-          <h3>등급별 평균 등반 횟수</h3>
+          <h2>등급별 평균 등반 횟수</h2>
           <canvas id="avgClimbCntChart"></canvas>
         </div>
       </div>
@@ -75,7 +73,7 @@
       options: {
         plugins: { legend: { display: false } },
         scales: { y: { beginAtZero: true } },
-        responsive: true,
+        responsive: false,
         maintainAspectRatio: false,
       },
     });
@@ -99,7 +97,7 @@
       options: {
         plugins: { legend: { position: 'bottom' } },
         scales: { y: { beginAtZero: true } },
-        responsive: true,
+        responsive: false,
         maintainAspectRatio: false,
       },
     });
@@ -120,7 +118,7 @@
       options: {
         plugins: { legend: { display: false } },
         scales: { y: { beginAtZero: true } },
-        responsive: true,
+        responsive: false,
         maintainAspectRatio: false,
       },
     });
@@ -172,8 +170,8 @@
   
   .chart-card canvas {
     flex-grow: 1;
-    width: 100%;
-    height: 320px !important;
+    width: 400px !important;
+    height: 200px !important;
   }
   </style>
   

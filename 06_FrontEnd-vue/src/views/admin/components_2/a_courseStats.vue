@@ -90,12 +90,11 @@
   }
   
   .chart-box {
-    width: 800px;
-    height: 350px;
+    height: 450px;
     background: #fff;
     position: relative;
     border-radius: 10px;
-    padding: 40px 30px 30px;
+    padding: 50px 34px 50px;
     box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
     display: flex;
     flex-direction: column;

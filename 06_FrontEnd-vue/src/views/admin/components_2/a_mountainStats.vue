@@ -3,15 +3,15 @@
     <div class="charts-row">
       <div class="chart-box">
         <h3>지역별 산 개수</h3>
-        <canvas id="regionChart" width="300" height="200"></canvas>
+        <canvas id="regionChart" ></canvas>
       </div>
       <div class="chart-box">
         <h3>인기 산 TOP 5</h3>
-        <canvas id="topMountainChart" width="300" height="200"></canvas>
+        <canvas id="topMountainChart" ></canvas>
       </div>
       <div class="chart-box">
         <h3>고도 구간별 등반 수</h3>
-        <canvas id="altitudeChart" width="300" height="200"></canvas>
+        <canvas id="altitudeChart" ></canvas>
       </div>
     </div>
   </div>
@@ -39,8 +39,12 @@ const fetchData = async () => {
 };
 
 const baseOptions = {
-  responsive: true,
+  responsive: false,
   maintainAspectRatio: false,
+  animation: {
+    duration: 1200,
+    easing: "easeOutQuart",
+  },
   plugins: { legend: { position: "bottom" } },
 };
 
@@ -81,8 +85,8 @@ const renderTopMountainChart = (topData) => {
       maintainAspectRatio: false,
       scales: {
         x: {
-          beginAtZero: true, // ✅ 최소값 0부터
-          ticks: { stepSize: 1 }, // ✅ 등반횟수가 적을 때 간격 고정
+          beginAtZero: true, // 최소값 0부터
+          ticks: { stepSize: 1 }, // 등반횟수가 적을 때 간격 고정
         },
         y: { ticks: { autoSkip: false } },
       },
@@ -126,24 +130,27 @@ onMounted(fetchData);
 }
 
 .chart-box {
-  width: 70%;
+  width: 500px;
   height: 400px;
   background: #fff;
   position: relative;
   border-radius: 8px;
-  padding: 30px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
 }
 
 .chart-box h3 {
-  font-size: 14px;
-  margin-bottom: 5px;
-  color: #333;
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 10px;
+  color: #2c3e50;
 }
 
 canvas {
-  width: 100%;
-  height: 180px;
+  width: 100% !important;   /* ✅ 부모 영역에 맞춤 */
+  height: 350px !important; /* ✅ 원하는 세로 크기 */
   display: block;
   margin: 0 auto;
 }

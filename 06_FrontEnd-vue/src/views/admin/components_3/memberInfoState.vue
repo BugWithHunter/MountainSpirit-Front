@@ -15,13 +15,13 @@
         </div>
   
         <!-- 연령 분포 -->
-        <div class="chart-card">
+        <div class="chart-card2">
           <h3>연령 분포</h3>
           <canvas id="ageChart"></canvas>
         </div>
   
         <!-- 월별 신규 회원 -->
-        <div class="chart-card">
+        <div class="chart-card2">
           <h3>월별 신규 회원</h3>
           <canvas id="monthlyChart"></canvas>
         </div>
@@ -84,6 +84,8 @@
         ],
       },
       options: {
+        responsive: false,
+        maintainAspectRatio: false,
         plugins: {
           legend: { position: 'bottom' },
         },
@@ -104,7 +106,7 @@
         ],
       },
       options: {
-        responsive: true,
+        responsive: false,
         maintainAspectRatio: false,
         scales: {
           y: { beginAtZero: true },
@@ -134,7 +136,7 @@
         ],
       },
       options: {
-        responsive: true,
+        responsive: false,
         maintainAspectRatio: false,
         scales: {
           y: { beginAtZero: true },
@@ -174,7 +176,8 @@
   
   /* 각 영역 */
   .stats-column,
-  .chart-card {
+  .chart-card,
+  .chart-card2 {
     flex: 1;
     background: white;
     border-radius: 16px;
@@ -193,7 +196,8 @@
     gap: 10px;
   }
 
-  .chart-card {
+  .chart-card,
+  .chart-card2 {
     min-height: 100px;
   }
   
@@ -220,11 +224,20 @@
   max-height: 320px;
   margin-top: 10px;
 }
+
+.chart-card2 canvas {
+  padding-top: 30px;
+  flex-grow: 1;           /* 차트가 카드 내부 공간을 꽉 채움 */
+  width: 100%;
+  height: 300px !important; /* 고정 높이 (overflow 방지) */
+  max-height: 320px;
+  margin-top: 10px;
+}
   /* 제목 */
   h3 {
     margin-bottom: 8px;
     font-weight: 600;
-    font-size: 1.1rem;
+    font-size: 1.7rem;
   }
   
   </style>

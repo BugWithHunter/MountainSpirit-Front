@@ -1,8 +1,7 @@
 <template>
     <div class="sidebar">
         <div class="logo">
-          <img src="./cqrs.png" alt="산신령 로고" />
-          <span>산신령</span>
+          <img src="/public/logo.png" alt="산신령 로고" />
         </div>
 
         <nav class="menu">
