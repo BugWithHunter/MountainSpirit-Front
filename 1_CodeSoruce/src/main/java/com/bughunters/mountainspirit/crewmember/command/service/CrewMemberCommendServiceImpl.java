@@ -60,7 +60,6 @@ public class CrewMemberCommendServiceImpl implements CrewMemberCommendService {
             return false;
         }
 
-
         CrewApply crewApply = new CrewApply();
         LocalDateTime now = LocalDateTime.now();
         crewApply.setCrewApplyDate(now.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));

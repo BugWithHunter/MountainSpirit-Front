@@ -27,16 +27,7 @@ public class CrewQueryServiceImpl implements CrewQueryService {
     }
 
     @Override
-    public List<CrewDTO> findAllCrews() {
-//        pageable = PageRequest.of(pageable.getPageNumber() <= 0 ? 0 : pageable.getPageNumber() - 1,
-//                pageable.getPageSize(),
-//                Sort.by("menuCode").descending());
-//
-//        Page<Menu> menuList = menuRepository.findAll(pageable);
-//
-//        log.debug("menuList(service) = {}", menuList);
-        return crewMapper.findAllCrews();
-    }
+    public List<CrewDTO> findAllCrews() {return crewMapper.findAllCrews();}
 
     @Override
     public CrewInfoDTO findOneCrewById(Long crewId) {
