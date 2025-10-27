@@ -138,8 +138,8 @@ public class CrewMemberCommendServiceImpl implements CrewMemberCommendService {
 //        memberService.setMemberCrewId(crewApplyDTO.getCumId(),crewApplyDTO.getCrewId());
 
             // 크루 가입 신청(CrewApply) 테이블에서 신청 데이터 delete
-            crewApplyCommendRepository.delete(crewApply);
-            log.info("service 가입신청 삭제 완료");
+            int deleteQuery = crewApplyCommendRepository.deleteByCumId(crewApply.getCumId());
+            log.info("service 가입신청 삭제 완료, {}",deleteQuery);
         } catch (Exception e) {
             log.info("service 가입 신청 예외 발생");
             crewApply = null;
