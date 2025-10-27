@@ -86,7 +86,7 @@ function collapseMap(mountain) {
     const newCenter = new kakao.maps.LatLng(mountain.lat, mountain.lng);
 
     if (!isCollapsed.value) {
-        const desiredLevel = 4;
+        const desiredLevel = 8;
         isCollapsed.value = true;
 
         map.setLevel(desiredLevel, { anchor: newCenter, animate: { duration: 300 } });
@@ -110,7 +110,7 @@ function collapseMap(mountain) {
 
 const mapContainer = ref(null)   // 지도 DOM 참조
 
-// ✅ 여러 마커 좌표 (배열로 관리)
+//  여러 마커 좌표 (배열로 관리)
 const markerData = [
   { lat: 37.69883, lng: 127.01547, img: '/khg3.png', mountainNm: '도봉산' , member : null},
   { lat: 37.658657, lng: 126.978056, img: '/khg4.jpg', mountainNm: '북한산' , member : detailRows.value[1] },
@@ -122,16 +122,16 @@ const markerData = [
   { lat: 36.649026, lng: 127.96407, img: '/khg2.jpg', mountainNm: '대야산', member : null }
 ]
 
-// ✅ 줌 레벨별 크기 매핑 함수
+//  줌 레벨별 크기 매핑 함수
 function sizeForLevel(level) {
-  const baseLevel = 10
-  const baseSize = 50
+  const baseLevel = 8
+  const baseSize = 40
   const step = 8
   const size = baseSize + (baseLevel - level) * step
   return Math.max(32, Math.min(size, 128))
 }
 
-// ✅ 마커용 DOM 엘리먼트 생성 함수
+//  마커용 DOM 엘리먼트 생성 함수
 function createMarkerElement(initialSize, data) {
   const el = document.createElement('div')
   el.className = 'circle-marker'
@@ -153,7 +153,7 @@ function createMarkerElement(initialSize, data) {
 
   el.appendChild(img)
 
-  // ✅ hover 이벤트: 살짝 확대
+  //  hover 이벤트: 살짝 확대
   el.addEventListener('mouseenter', () => {
     el.style.transform = 'scale(1.75)'
   })
@@ -161,7 +161,7 @@ function createMarkerElement(initialSize, data) {
     el.style.transform = 'scale(1.0)'
   })
 
-  // ✅ click 이벤트: 콘솔 + alert
+  //  click 이벤트: 콘솔 + alert
   el.addEventListener('click', () => {
     selectedDetailRows.value = data.member;
     panelTitle.value = data.mountainNm;
@@ -196,10 +196,10 @@ function createMarkerElement(initialSize, data) {
 
 onMounted(() => {
   // 지도 옵션
-  const center = new window.kakao.maps.LatLng(37.54699, 127.09598)
+  const center = new window.kakao.maps.LatLng(35.94699, 127.09598)
   map = new window.kakao.maps.Map(mapContainer.value, {
     center,
-    level: 8
+    level: 12
   })
 
 

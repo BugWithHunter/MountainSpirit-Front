@@ -137,12 +137,11 @@ async function onFileSelected(e) {
       return
     }
 
-    // ✅ 스토어 반영 (화면 즉시 갱신)
     userStore.changeProfile('');
     setTimeout(async() => {
       await userStore.changeProfile(urlPath)
     },300)
-    alert('프로필이 변경되었습니다.')
+    // alert('프로필이 변경되었습니다.')
   } catch (err) {
     console.error(err)
     alert('업로드 실패 :' , err)

@@ -38,11 +38,7 @@ export const useUserStore = defineStore(
       isLoggedIn.value = false
     }
 
-    // function setToken() {
-    //     console.log('토큰을 읽어볼까:?')
-    // }
     function setToken(jwtToken) {
-        console.log('토큰을 읽어볼까:?', jwtToken);
         token.value = jwtToken; 
     }
 

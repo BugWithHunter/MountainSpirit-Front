@@ -15,7 +15,7 @@
                     <li><strong>가입일</strong><span>{{ userInfo.signInDate }}</span></li>
                 </ul>
                 <div class="actions">
-                    <button class="btn">비밀번호 변경</button>
+                    <button class="btn" @click="openModal('1213','12345',true)">비밀번호 변경</button>
                     <button class="btn ghost">신고내역 조회</button>
                 </div>
             </article>
@@ -40,8 +40,8 @@
                     </li>
                 </ul>
                 <div class="actions">
-                    <button class="btn" @click="startClimb"  :disabled="!buttonflag">등산 시작</button>
-                    <button class="btn ghost"  :disabled="buttonflag">등산 완료</button>
+                    <button class="btn" @click="startClimb"  :disabled="!selectedCourse || !buttonflag">등산 시작</button>
+                    <button class="btn ghost" @click="endClimb"  :disabled="!selectedCourse || buttonflag">등산 완료</button>
                 </div>
             </article>
         </section>
@@ -60,6 +60,17 @@
                 </EchartLine>
         </section>  
     </section>  
+
+    
+   <!-- 모달 컴포넌트 -->
+  <BaseModal
+        v-model:open="modal.open"
+        :title="modal.title"
+        :message="modal.message"
+        :confirmText="'확인'"
+        :hasFunction="modal.hasFunction"
+        @confirm="ModalConfirm"
+    > </BaseModal>
 </template>
 
 <script setup>
@@ -69,7 +80,9 @@
     import { useRouter } from 'vue-router';
     import { useUserStore } from '@/stores/user';
     import axios from 'axios';
+    import BaseModal from '@/components/BaseModal.vue' // 경로는 프로젝트에 맞게
 
+    const tttt = ref('');
     const router = useRouter();
     const userStore = useUserStore();
     const hasStamp = ref([]);
@@ -83,28 +96,51 @@
         router.push("/");
     }
 
+    const modal = reactive({
+        open: false,
+        title: '알림',
+        message: '',
+        confirmText: '확인',
+        hasFunction: false  
+    })
+
+    function ModalConfirm() {
+        console.log('ModalConfirm 실행 됨')
+        console.log('모달 컨펌:' , tttt.value);
+        // router.push('/member/login');
+    }
+
+    async function onSubmit() {
+        openModal('테스트 모달', '알림', true);
+    }
+
+    function openModal(msg, title = '알림', hasFunction = false) {
+        modal.title = title;
+        modal.message = msg;
+        modal.open = true;
+        modal.hasFunction = hasFunction;
+    }
+
     // 등산 시작, 완료 활성화 상태값(30일 이내 동일 한 코스로 완료 되지 않은 등산 기록 있을 경우 등산 시작 비활 성화)
     const buttonflag = ref(false);
 
-    const stamps = reactive([]);
+    const stamps = ref([]);
     const stampRadius = reactive([]);
-    
+     
     const hsaStamp = reactive([]);
     const totalStamp = reactive([]);
     const selectedMountain = ref({});
-    const selectedCourse = ref({});
+    const selectedCourse = ref(null);
 
     // 산과 > 코스 (코스를 품은 산 목록)
     const mountainInfo = ref([]);
     
     watch(() => selectedCourse.value, ()=> {
-        console.log('watch 실행되나? ', selectedCourse.value);
-        if(notCompleteClimbing.value.some((x) => x.poiId === selectedCourse.value.poiId)) {
+        if(notCompleteClimbing.value.some((x) => x.poiId === selectedCourse.value?.poiId)) {
             buttonflag.value = false;
         }
         else{
             buttonflag.value = true;
-
         }
     });
     // })
@@ -137,8 +173,8 @@
             notCompleteClimbing.value = resAll[4].data;
 
             // 도넛 차트에 들어갈 데이터
-            stamps.push({name: '보유', value:hasStamp.value.length });
-            stamps.push({name: '미보유', value: courses.value.length - hasStamp.value.length});
+            stamps.value.push({name: '보유', value:hasStamp.value.length });
+            stamps.value.push({name: '미보유', value: courses.value.length - hasStamp.value.length});
             stampRadius.push('40%');
             stampRadius.push('65%');
 
@@ -176,6 +212,7 @@
     })
 
     const changeMountain = () => {
+        selectedCourse.value = null;
         console.log(selectedMountain.value);
     }
     
@@ -192,12 +229,72 @@
                         "frtrlId" : selectedCourse.value.frtrlId,     
                         "poiId" : selectedCourse.value.poiId,         
                         "stateCode" : "N"
-
                     }
                     ,{headers: {Authorization: `Bearer ${userStore.token}`} 
                 })
         console.log('등산 시작결과:', res.data);
 
+        // 정상으로 아직 미완료 등산 목록에 추가
+        if(res.data.httpStatus === 200) {
+            notCompleteClimbing.value.push({
+                 frtrlId: selectedCourse.value.frtrlId, poiId : selectedCourse.value.poiId
+            })
+
+            console.log('등산 정상 시작 완료 후:', notCompleteClimbing.value);
+            buttonflag.value = false;
+        } else {
+            //등산 시작 실패 에러메시지 모달창 출력
+            openModal(res.data.message, '등산 시작 버튼');
+        }
+    }
+
+    const endClimb = async() => {
+        const res = await axios.put(`http://localhost:8000/main-client/climb-history/climbing`,
+                    {
+                        'cumId' : userStore.userId,
+                        "frtrlId" : selectedCourse.value.frtrlId,     
+                        "poiId" : selectedCourse.value.poiId,         
+                        "stateCode" : "N"
+                    }
+                    ,{headers: {Authorization: `Bearer ${userStore.token}`} 
+                })
+
+        console.log('등산 완료결과:', res.data);
+        
+        if(res.data.httpStatus === 200) {
+            
+            // 등산 완료 후 미완료 리스트에서 제거
+            const index = notCompleteClimbing.value.findIndex(x => x.poiId == res.data.result.member.poiId);
+            if(index !== -1){
+                notCompleteClimbing.value.splice(index,1);
+            }
+
+            replaceData();
+            console.log('등반 정상 완료 후:', notCompleteClimbing.value);
+            buttonflag.value = true;
+
+        } else {
+            openModal(res.data.message, '등산 완료 버튼');
+        }
+    }
+
+
+    // 등산 완료후 그래프, 회원 정보 갱신
+    const replaceData = async() => {
+        
+            const tasks = [];
+            tasks.push(axios.get(`http://localhost:8000/main-client/stamp/corse-stamp/${userStore.userId}`,{headers: {Authorization: `Bearer ${userStore.token}`} }));
+            tasks.push(axios.get(`http://localhost:8000/member-client/member/member-info/${userStore.userId}`,{headers: {Authorization: `Bearer ${userStore.token}`} }));
+            
+            const resAll = await Promise.all([...tasks]);
+
+            hasStamp.value      = resAll[0].data;
+            userInfo.value      = resAll[1].data;
+
+            // 도넛 차트에 들어갈 데이터
+            stamps.value = [] ;
+            stamps.value.push({name: '보유', value:hasStamp.value.length });
+            stamps.value.push({name: '미보유', value: courses.value.length - hasStamp.value.length});
     }
 
 </script>

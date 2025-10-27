@@ -38,9 +38,10 @@
           기본값으로 message를 표시함
         -->
         <p class="desc" :id="descId">
-          <slot>{{ message }}</slot>
+          {{ message }}
         </p>
 
+          <slot></slot>
         <!-- 버튼 영역 -->
         <div class="actions">
           <!-- 확인 버튼 -->
@@ -193,14 +194,15 @@ const onConfirm = async () => {
 .title {
   margin: 0 0 8px;
   font-weight: 700;
-  font-size: 16px;
+  font-size: 30px;
 }
 
 /* 내용(메시지) 스타일 */
 .desc {
   margin: 0 0 16px;
-  color: #374151;
+  color: red;
   line-height: 1.5;
+  font-size: 20;
   white-space: pre-line; /* 줄바꿈 문자(\n)를 실제 줄바꿈으로 표시 */
 }
 
