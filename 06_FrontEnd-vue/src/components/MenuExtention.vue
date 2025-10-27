@@ -19,7 +19,7 @@
           </li>
           <li>
             <ul>
-              <li><RouterLink to="/">자유 게시판</RouterLink></li>
+              <li><RouterLink to="/boards/list">자유 게시판</RouterLink></li>
               <li><RouterLink to="/">크루 게시판</RouterLink></li>
               <li><RouterLink to="/">공지사항 게시판</RouterLink></li>
             </ul>
