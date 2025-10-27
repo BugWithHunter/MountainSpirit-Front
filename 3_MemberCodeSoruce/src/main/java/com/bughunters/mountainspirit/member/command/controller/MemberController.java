@@ -8,6 +8,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -26,7 +27,7 @@ public class MemberController {
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
     public MemberController(MemberService memberService
-            , BCryptPasswordEncoder bCryptPasswordEncoder) {
+    , BCryptPasswordEncoder bCryptPasswordEncoder) {
         this.memberService = memberService;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
     }
@@ -172,9 +173,11 @@ public class MemberController {
     }
 
     @PostMapping("/Profile/{id}")
-    public ResponseEntity<ResponseMessage> updateProfileImage(@RequestParam MultipartFile singleFile,
-                                                              @PathVariable Long id) {
-        ResponseProfileImageDTO success = memberService.updateProfileImage(singleFile, id);
+    public ResponseEntity<ResponseMessage> updateProfileImage(
+            @RequestParam MultipartFile singleFile,
+            @PathVariable Long id,
+            HttpServletRequest request) {
+        ResponseProfileImageDTO success = memberService.updateProfileImage(singleFile, id,request);
 
 
         Map<String, Object> responseMap = new HashMap<>();

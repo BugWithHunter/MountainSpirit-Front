@@ -11,21 +11,6 @@ spring:
     name: gateway-server
   cloud:
     gateway:
-      default-filters:
-        - DedupeResponseHeader=Access-Control-Allow-Origin Access-Control-Allow-Credentials
-      globalcors:
-        cors-configurations:
-          '[/**]':
-            allowedOrigins:
-              - 'http://localhost:5173' # 허용하려는 도메인
-            allow-credentials: true # 요청 시 인증 정보를 전송하도록 허가
-            allowedHeaders: '*' # 허용하려는 헤더
-            allowedMethods: # 허용하려는 HTTP 메서드
-              - PUT
-              - GET
-              - POST
-              - DELETE
-              - OPTIONS
       routes:
         - id: main-client
           uri: lb://MAIN-CLIENT
@@ -51,7 +36,6 @@ spring:
             - RewritePath=/member-client/(?<segment>.*), /$\{segment}
             - JwtTokenFilter
 
-
 #        - id: test-client
 #          uri: lb://TEST-CLIENT
 #          predicates:
@@ -63,6 +47,8 @@ spring:
 token:
   secret: v7o98gdK42iddFqTxH07Yjv18KbwIZWQZu7NRPeR9+ji9tOGDX2r8PO3mGptklEdEiIB0RMT066q3qb19YBfqQ==
   expiration_time: 43200000 # 12시간
+
+
 
 # 권한별 설정
 security:
@@ -92,4 +78,3 @@ security:
       # 헬스체크 공개
       - pattern: /main-client/health
         permitAll: true
-

@@ -10,7 +10,7 @@ import lombok.*;
 public class MyCrewClimbBoardListDTO {
     private Long id;
     private char crewClimbHistoryIsSucceed;
-    private Long crewClimbId;
     private Long crewMemberId;
-    private String frtrlId;
+    private CrewClimbDTO crewClimbRecord;
+    private MountainDTO mountain;
 }

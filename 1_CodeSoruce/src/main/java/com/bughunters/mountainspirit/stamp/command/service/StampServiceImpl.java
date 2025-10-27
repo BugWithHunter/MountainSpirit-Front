@@ -3,6 +3,7 @@ package com.bughunters.mountainspirit.stamp.command.service;
 import com.bughunters.mountainspirit.memberrank.command.service.MemberRankService;
 import com.bughunters.mountainspirit.mountain.command.service.MountainService;
 import com.bughunters.mountainspirit.stamp.command.dto.RequestSubmmitClimbMountainDTO;
+import com.bughunters.mountainspirit.stamp.command.dto.ResponseCourseDTO;
 import com.bughunters.mountainspirit.stamp.command.dto.StampWithCourseAndMountainDTO;
 import com.bughunters.mountainspirit.stamp.command.entity.CourseStamp;
 import com.bughunters.mountainspirit.stamp.command.entity.MountainStamp;
@@ -100,6 +101,14 @@ public class StampServiceImpl implements StampService {
 
 
         return stampDTO;
+    }
+
+    @Override
+    public List<CourseStamp> findCourseStamp(Long memberId) {
+        //메모. 현재 회원이 해당산의 가지고 있는전체 도장 조회
+        List<CourseStamp> courseStamps = courseStampRepository.findByCumId(memberId);
+
+        return courseStamps;
     }
 
 

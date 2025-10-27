@@ -4,16 +4,16 @@
         <ul class="submenu-row">
           <li>
             <ul>
-              <li><RouterLink to="/">크루 가입</RouterLink></li>
-              <li><RouterLink to="/nested">크루 생성</RouterLink></li>
-              <li><RouterLink to="/">크루 정보</RouterLink></li>
-              <li><RouterLink to="/">크루 등산 일정</RouterLink></li>
-              <li><RouterLink to="/">내 크루 등산 기록</RouterLink></li>
+              <li><RouterLink to="/crew/join">크루 가입</RouterLink></li>
+              <li><RouterLink to="/crew/create">크루 생성</RouterLink></li>
+              <li><RouterLink to="/crew/info/2">크루 정보</RouterLink></li>
+              <li><RouterLink to="/crew/climb">크루 등산 일정</RouterLink></li>
+              <li><RouterLink to="/crew/myclimb">내 크루 등산 기록</RouterLink></li>
             </ul>
           </li>
           <li>
             <ul>
-              <li><RouterLink to="/">산신령 랭킹</RouterLink></li>
+              <li><RouterLink to="/spirit-rank">산신령 랭킹</RouterLink></li>
               <li><RouterLink to="/">크루 랭킹</RouterLink></li>
             </ul>
           </li>
@@ -36,7 +36,7 @@
 <script setup>
 
     import {RouterLink} from 'vue-router';
-    import { ref, defineProps ,watch } from 'vue'
+    import { ref, watch } from 'vue'
 
 
     const props = defineProps({

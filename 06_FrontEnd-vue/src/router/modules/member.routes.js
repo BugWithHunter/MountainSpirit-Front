@@ -17,4 +17,10 @@ export default [
       },
     ],
   },
+  {
+    path: '/member-view',
+    name: 'member-view',
+    component: () => import('@/views/member/MemberView.vue'),
+    
+  }
 ];

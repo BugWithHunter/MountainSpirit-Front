@@ -7,6 +7,7 @@ import com.bughunters.mountainspirit.member.command.repository.*;
 import com.bughunters.mountainspirit.member.query.dto.BlackListDTO;
 import com.bughunters.mountainspirit.member.command.dto.RequestLoginwithAuthoritiesDTO;
 import com.bughunters.mountainspirit.member.query.service.MemberQueryService;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.security.core.GrantedAuthority;
@@ -37,6 +38,7 @@ public class MemberServiceImpl implements MemberService {
     private final MemberAuthorityRepository memberAuthorityRepository;
     private final ProfileImageService profileImageService;
     private final ProfileImageRepository profileImageRepository;
+    private final MemberRankRepository memberRankRepository;
 
     public MemberServiceImpl(MemberRepository memberRepository
             , MemberQueryService memberQueryService
@@ -47,7 +49,8 @@ public class MemberServiceImpl implements MemberService {
             , AuthorityRepository authorityRepository
             , MemberAuthorityRepository memberAuthorityRepository
             , ProfileImageService profileImageService
-            , ProfileImageRepository profileImageRepository) {
+            , ProfileImageRepository profileImageRepository
+            , MemberRankRepository memberRankRepository) {
         this.memberRepository = memberRepository;
         this.memberQueryService = memberQueryService;
         this.modelMapper = modelMapper;
@@ -58,6 +61,7 @@ public class MemberServiceImpl implements MemberService {
         this.memberAuthorityRepository = memberAuthorityRepository;
         this.profileImageService = profileImageService;
         this.profileImageRepository = profileImageRepository;
+        this.memberRankRepository = memberRankRepository;
     }
 
     //등산 이후 회원 정보 변경
@@ -115,6 +119,11 @@ public class MemberServiceImpl implements MemberService {
             ProfileOfMember profile = profileImageRepository.findByCumId(responseMemberDTO.getId());
             String profilePath = profile != null ? profile.getFilePath() : null;
             responseMemberDTO.setProfilePath(profilePath);
+
+            MemberRank memberRank = memberRankRepository.findById(responseMemberDTO.getMemRankId()).orElse(null);
+            String rankName = memberRank != null ? memberRank.getName() : null;
+            responseMemberDTO.setRankName(rankName);
+
         }
         return responseMemberDTO;
     }
@@ -274,13 +283,23 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     @Transactional
-    public ResponseProfileImageDTO updateProfileImage(MultipartFile singleFile, Long id) {
+    public ResponseProfileImageDTO updateProfileImage(MultipartFile singleFile, Long id, HttpServletRequest request) {
         ResponseProfileImageDTO responseProfileImageDTO = null;
         try {
-            responseProfileImageDTO = profileImageService.updateProfileImage(singleFile, id);
+            responseProfileImageDTO = profileImageService.updateProfileImage(singleFile, id , request);
 
-            ProfileOfMember proflie = modelMapper.map(responseProfileImageDTO, ProfileOfMember.class);
-            profileImageRepository.save(proflie);
+            ProfileOfMember findProfile = profileImageRepository.findByCumId(id);
+
+            //파일이 없었을때
+            if(findProfile == null){
+                findProfile = modelMapper.map(responseProfileImageDTO, ProfileOfMember.class);
+            } else { // 기존 파일이있어서 덮어 쓰기
+                findProfile.setFilePath(responseProfileImageDTO.getFilePath());
+                findProfile.setDirPath(responseProfileImageDTO.getDirPath());
+            }
+            profileImageRepository.save(findProfile);
+
+
 
         } catch (IOException e) {
             if (responseProfileImageDTO == null) {
