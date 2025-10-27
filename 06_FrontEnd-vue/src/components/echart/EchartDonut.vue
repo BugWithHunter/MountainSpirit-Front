@@ -59,21 +59,21 @@ function render() {
   ensureChart();
   if (!myChart) return;
   const opt = buildOption(props.chartItems, props.radius);
-  myChart.clear();               // ✅ 이전 상태 깨끗이
-  myChart.setOption(opt, true);  // ✅ notMerge=true: 완전 교체
+  myChart.clear();               //  이전 상태 깨끗이
+  myChart.setOption(opt, true);  //  notMerge=true: 완전 교체
   myChart.resize();
 }
 
 onMounted(() => {
   nextTick(() => setTimeout(() => {
-   render();                    // ✅ 처음에도 현재 props로 렌더
+   render();                    //  처음에도 현재 props로 렌더
   }, 360));
 });
 
 watch(
   () => [props.chartItems, props.radius],
   () => render(),
-  { deep: true, immediate: true }        // ✅ 처음 값과 깊은 변경 모두 반영
+  { deep: true, immediate: true }        //  처음 값과 깊은 변경 모두 반영
 );
 
 onBeforeUnmount(() => {

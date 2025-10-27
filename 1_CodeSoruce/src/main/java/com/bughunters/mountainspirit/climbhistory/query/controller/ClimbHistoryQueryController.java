@@ -3,6 +3,7 @@ package com.bughunters.mountainspirit.climbhistory.query.controller;
 import com.bughunters.mountainspirit.climbhistory.query.dto.FindClimbCheckQueryDTO;
 import com.bughunters.mountainspirit.climbhistory.query.dto.FindNotCompleteClimbCheckQueryDTO;
 import com.bughunters.mountainspirit.climbhistory.query.dto.RequestStartClimbMountainQueryDTO;
+import com.bughunters.mountainspirit.climbhistory.query.dto.SelectClimbingRecordMonthlyDTO;
 import com.bughunters.mountainspirit.climbhistory.query.service.ClimbHistoryQueryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -47,6 +48,15 @@ public class ClimbHistoryQueryController {
                 .body(findClimbCheckDTO);
     }
 
+    @GetMapping("/monthly-record/{id}")
+    public ResponseEntity<List<SelectClimbingRecordMonthlyDTO>> findClimbNotComplete(
+            @PathVariable Long id) {
+        List<SelectClimbingRecordMonthlyDTO> selectClimbingRecordMonthlyDTO
+                = climbHistoryQueryService.selectMonthlyRecord(id);
+
+        return ResponseEntity.ok()
+                .body(selectClimbingRecordMonthlyDTO);
+    }
 
 
 }
