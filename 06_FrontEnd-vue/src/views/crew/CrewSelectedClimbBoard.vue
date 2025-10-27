@@ -40,8 +40,7 @@
                 <button @click.stop="modalOpen()">취소</button>
                 <button @click.stop="climbApply(climbBoardData.id,
                 climbBoardData.crewClimbAmountOfPeople,
-                climbBoardData.mountain.frtrlId,
-                77)">신청</button>
+                climbBoardData.mountain.frtrlId)">신청</button>
                 </div>
             </div>
             </div>
@@ -85,14 +84,14 @@
     const modalOpen = ()=>{
         modalCheck.value = !modalCheck.value;
     }
-    const climbApply = async (crewClimbId,amountOfPeople,frtrlId,crewMemberId)=>{
-        console.log(crewClimbId,amountOfPeople,frtrlId,crewMemberId);
+    const climbApply = async (crewClimbId,amountOfPeople,frtrlId)=>{
+        console.log(crewClimbId,amountOfPeople,frtrlId);
         const response = await axios.post('http://localhost:8000/main-client/crew-climb-board/climb-apply',
         {
             crewClimbId:crewClimbId,
             crewClimbAmountOfPeople:amountOfPeople,
             frtrlId:frtrlId,
-            crewMemberId:crewMemberId
+            cumId:userStore.userId
         },
         {
             headers: {

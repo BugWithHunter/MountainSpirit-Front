@@ -39,7 +39,7 @@
             <result property="nickName" column="nickName"/>
         </collection>
     </resultMap>
-    <resultMap id="MyCrewClimbBoardByCrewMemberIdResultMap" type="com.bughunters.mountainspirit.crewclimbboard.query.dto.MyCrewClimbBoardListDTO">
+    <resultMap id="MyCrewClimbBoardByMemberIdResultMap" type="com.bughunters.mountainspirit.crewclimbboard.query.dto.MyCrewClimbBoardListDTO">
         <id property="id" column="id"/>
         <result property="crewClimbHistoryIsSucceed" column="crewClimbHistoryIsSucceed"/>
         <result property="crewMemberId" column="crewMemberId"/>
@@ -95,7 +95,7 @@
           AND a.crewClimbIsDeleted = 'N'
           AND a.crewMemberId IS NOT NULL
     </select>
-    <select id="findMyCrewClimbBoardByCrewMemberId" parameterType="_long" resultMap="MyCrewClimbBoardByCrewMemberIdResultMap">
+    <select id="findMyCrewClimbBoardByMemberId" parameterType="_long" resultMap="MyCrewClimbBoardByMemberIdResultMap">
         SELECT
                a.id
              , a.crewClimbHistoryIsSucceed
@@ -104,9 +104,10 @@
              , b.crewClimbStartDate
              , c.frtrlId
              , c.frtrlNm
-          FROM CrewClimbRecord a JOIN CrewClimbBoard b ON a.crewClimbId = b.id
+        FROM CrewClimbRecord a JOIN CrewClimbBoard b ON a.crewClimbId = b.id
                                JOIN Mountain c ON a.frtrlId = c.frtrlId
-         WHERE a.crewMemberId = 25;
+                               JOIN CrewMember d ON a.crewMemberId = d.id
+        WHERE d.cumId = #{memberId}
     </select>
 
 </mapper>

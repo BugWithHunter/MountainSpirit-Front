@@ -31,7 +31,7 @@ public class CrewClimbBoardQueryServiceImpl implements CrewClimbBoardQueryServic
     }
 
     @Override
-    public List<MyCrewClimbBoardListDTO> findMyCrewClimbBoardByCrewMemberId(Long crewMemberId) {
-        return crewClimbBoardQueryMapper.findMyCrewClimbBoardByCrewMemberId(crewMemberId);
+    public List<MyCrewClimbBoardListDTO> findMyCrewClimbBoardByMemberId(Long memberId) {
+        return crewClimbBoardQueryMapper.findMyCrewClimbBoardByMemberId(memberId);
     }
 }

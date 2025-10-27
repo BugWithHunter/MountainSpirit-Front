@@ -9,8 +9,8 @@
           <p>크루 티어 : {{ crew.tier }}</p>
         </div>
         <div v-if="role.roleId===2">
-          <button class="leave-btn">크루 신청 리스트</button>
-          <button class="leave-btn">크루 정보 수정</button>
+          <button class="config-btn">크루 신청 리스트</button>
+          <button class="config-btn">크루 정보 수정</button>
           <button class="leave-btn">크루 삭제</button>
         </div> 
          <div v-else>
@@ -154,6 +154,25 @@ const members = ref([]);
 
 .leave-btn:hover {
   background: #ff2418;
+  color: #ebebeb;
+  transition-duration: 0.5s;
+}
+
+.config-btn {
+  margin-top: 20px;
+  width: 100%;
+  background: #fff;
+  border: 2px solid #aaa;
+  color:#333;
+  border-radius: 6px;
+  padding: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  transition-duration: 0.5s;
+}
+
+.config-btn:hover {
+  background: #131313;
   color: #ebebeb;
   transition-duration: 0.5s;
 }

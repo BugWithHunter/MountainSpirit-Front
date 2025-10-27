@@ -69,7 +69,7 @@
 
     onMounted(async () => {
     const response = await axios.get(
-        'http://localhost:8000/main-client/crew-climb-board/climb-board-mylist/25',
+        `http://localhost:8000/main-client/crew-climb-board/climb-board-mylist/${userStore.userId}`,
         {
             headers:{"Authorization":`Bearer ${userStore.token}`}
         }
