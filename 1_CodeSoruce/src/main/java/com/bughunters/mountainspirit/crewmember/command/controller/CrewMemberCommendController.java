@@ -27,13 +27,13 @@ public class CrewMemberCommendController {
 
     @PostMapping("/apply-request")
     public ResponseEntity<?> crewApplyRequest(@RequestBody CrewApplyDTO crewApplyDTO) {
-        boolean forCheckBanDate = crewMemberQueryService.checkCrewApplyIsBanned(crewApplyDTO.getCrewId(),crewApplyDTO.getCumId());
-        if(forCheckBanDate==true){
+        boolean forCheckBanDate = crewMemberQueryService.checkCrewApplyIsBanned(crewApplyDTO.getCrewId(), crewApplyDTO.getCumId());
+        if (forCheckBanDate == true) {
             log.info("추방당한 회원입니다.");
-            return ResponseEntity.ok().build();
+            return ResponseEntity.ok().body(new CrewApplyResultDTO("추방당한 회원입니다."));
         }
-        crewMemberCommendService.crewApplyRequest(crewApplyDTO);
-        return ResponseEntity.ok().build();
+        boolean flag = crewMemberCommendService.crewApplyRequest(crewApplyDTO);
+        return ResponseEntity.ok().body(flag ? new CrewApplyResultDTO("가입신청이 완료되었습니다.") : new CrewApplyResultDTO("이미 가입신청이 되어있습니다."));
     }
 
     @PostMapping("/apply-cancel")
@@ -55,7 +55,7 @@ public class CrewMemberCommendController {
     }
 
     @PostMapping("/leave-crew")
-    public ResponseEntity<?> leaveCrew(@RequestBody CrewIdentifyMemberDTO crewIdentifyMemberDTO){
+    public ResponseEntity<?> leaveCrew(@RequestBody CrewIdentifyMemberDTO crewIdentifyMemberDTO) {
         // 크루장이면 탈퇴 못하게 막는 기능도 필요
         crewMemberCommendService.leaveCrew(crewIdentifyMemberDTO);
         return ResponseEntity.ok().build();
@@ -63,26 +63,26 @@ public class CrewMemberCommendController {
 
     // //////////////////////////관리자 권한 기능//////////////////////////
     @PostMapping("/regist-crew-role")
-    public ResponseEntity<?> registCrewRole(@RequestBody String crewRole){
+    public ResponseEntity<?> registCrewRole(@RequestBody String crewRole) {
         crewMemberCommendService.registCrewRole(crewRole);
         return ResponseEntity.ok().build();
     }
 
     @PostMapping("/modify-crew-role")
-    public ResponseEntity<?> modifyCrewRole(@RequestBody CrewMemberAuthModifyDTO crewMemberAuthModifyDTO){
+    public ResponseEntity<?> modifyCrewRole(@RequestBody CrewMemberAuthModifyDTO crewMemberAuthModifyDTO) {
         crewMemberCommendService.modifyCrewRole(crewMemberAuthModifyDTO);
         return ResponseEntity.ok().build();
     }
 
     // //////////////////////////크루장 권한 기능//////////////////////////
     @PostMapping("/modify-crew-member-role")
-    public ResponseEntity<?> modifyCrewMemberRole(@RequestBody CrewMemberRoleModifyDTO crewMemberRoleModifyDTO){
+    public ResponseEntity<?> modifyCrewMemberRole(@RequestBody CrewMemberRoleModifyDTO crewMemberRoleModifyDTO) {
         crewMemberCommendService.modifyCrewMemberRole(crewMemberRoleModifyDTO);
         return ResponseEntity.ok().build();
     }
 
     @PostMapping("/ban-crew-member")
-    public ResponseEntity<?> banCrewMember(@RequestBody CrewMemberBanDTO crewMemberBanDTO){
+    public ResponseEntity<?> banCrewMember(@RequestBody CrewMemberBanDTO crewMemberBanDTO) {
         crewMemberCommendService.banCrewMember(crewMemberBanDTO);
         return ResponseEntity.ok().build();
     }

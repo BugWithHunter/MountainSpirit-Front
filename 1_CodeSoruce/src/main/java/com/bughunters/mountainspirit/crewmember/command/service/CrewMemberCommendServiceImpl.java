@@ -53,11 +53,11 @@ public class CrewMemberCommendServiceImpl implements CrewMemberCommendService {
 
     @Override
     @Transactional
-    public void crewApplyRequest(CrewApplyDTO crewApplyDTO) {
+    public boolean crewApplyRequest(CrewApplyDTO crewApplyDTO) {
         // 이미 가입 신청이 되어있을 시 가입 신청 불가
         if (crewApplyCommendRepository.existsByCrewIdAndCumId(crewApplyDTO.getCrewId(), crewApplyDTO.getCumId())) {
             log.info("이미 크루 가입 신청이 되어 있습니다.");
-            return;
+            return false;
         }
 
 
@@ -68,6 +68,7 @@ public class CrewMemberCommendServiceImpl implements CrewMemberCommendService {
         crewApply.setCumId(crewApplyDTO.getCumId());
 
         crewApplyCommendRepository.save(crewApply);
+        return true;
     }
 
     @Override
