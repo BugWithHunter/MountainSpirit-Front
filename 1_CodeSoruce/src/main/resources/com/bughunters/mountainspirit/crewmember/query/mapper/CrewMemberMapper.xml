@@ -26,7 +26,10 @@
         <result property="crewMemberJoinDate" column="crewMemberJoinDate"/>
         <result property="crewMemberRoleUpdateDate" column="crewMemberRoleUpdateDate"/>
         <result property="crewId" column="crewId"/>
-        <result property="crewRoleId" column="crewRoleId"/>
+        <association property="crewRole" javaType="com.bughunters.mountainspirit.crewmember.query.dto.CrewRoleDTO">
+            <id property="roleId" column="roleId"/>
+            <result property="crewRoleName" column="crewRoleName"/>
+        </association>
         <association property="memberList" javaType="com.bughunters.mountainspirit.crewmember.query.dto.MemberDTO">
             <id property="userId" column="userId"/>
             <result property="nickName" column="nickName"/>
@@ -57,9 +60,12 @@
              , a.crewMemberRoleUpdateDate
              , a.crewId
              , a.crewRoleId
+             , c.id as roleId
+             , c.crewRoleName
              , b.id as userId
              , b.nickName
-          FROM CrewMember a JOIN Member b ON a.cumId = b.id
-         WHERE b.crewId = #{crewId}
+        FROM CrewMember a JOIN Member b ON a.cumId = b.id
+                          JOIN CrewMemberRole c ON a.crewRoleId = c.id
+        WHERE b.crewId = #{crewId};
     </select>
 </mapper>

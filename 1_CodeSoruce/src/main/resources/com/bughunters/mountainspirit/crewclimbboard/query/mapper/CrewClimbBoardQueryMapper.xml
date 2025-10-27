@@ -3,7 +3,7 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.bughunters.mountainspirit.crewclimbboard.query.mapper.CrewClimbBoardQueryMapper">
-    <resultMap id="crewClimbBoardResultMap" type="com.bughunters.mountainspirit.crewclimbboard.query.dto.CrewClimbBoardDTO">
+    <resultMap id="crewClimbBoardResultMap" type="com.bughunters.mountainspirit.crewclimbboard.query.dto.CrewClimbBoardAndMountainDTO">
         <id property="id" column="id"/>
         <result property="crewClimbStartDate" column="crewClimbStartDate"/>
         <result property="crewClimbRecruitStartDate" column="crewClimbRecruitStartDate"/>
@@ -13,9 +13,12 @@
         <result property="crewClimbAmountOfPeople" column="crewClimbAmountOfPeople"/>
         <result property="crewClimbIsEnded" column="crewClimbIsEnded"/>
         <result property="crewId" column="crewId"/>
-        <result property="frtrlId" column="frtrlId"/>
         <result property="crewMemberId" column="crewMemberId"/>
         <result property="amountOfPeople" column="amountOfPeople"/>
+        <association property="mountain" javaType="com.bughunters.mountainspirit.crewclimbboard.query.dto.MountainDTO">
+            <id property="frtrlId" column="frtrlId"/>
+            <result property="frtrlNm" column="frtrlNm"/>
+        </association>
     </resultMap>
     <resultMap id="findOneCrewClimbBoardByCrewClimbBoardIdResultMap" type="com.bughunters.mountainspirit.crewclimbboard.query.dto.CrewClimbBoardAndMountainAndCrewMemberDTO">
         <id property="id" column="id"/>
@@ -54,10 +57,11 @@
              , a.crewClimbAmountOfPeople
              , a.crewClimbIsEnded
              , a.crewId
-             , a.frtrlId
              , a.crewMemberId
              , (SELECT COUNT(*) FROM CrewClimbRecord WHERE crewClimbId = a.id) as amountOfPeople
-          FROM CrewClimbBoard a
+             , b.frtrlId
+             , b.frtrlNm
+          FROM CrewClimbBoard a JOIN Mountain b ON a.frtrlId = b.frtrlId
          WHERE crewId = #{crewId}
            AND crewClimbIsDeleted = 'N'
            AND crewMemberId IS NOT NULL
