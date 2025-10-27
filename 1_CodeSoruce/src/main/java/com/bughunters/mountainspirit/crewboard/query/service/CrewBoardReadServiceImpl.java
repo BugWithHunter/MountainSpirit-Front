@@ -1,6 +1,5 @@
 package com.bughunters.mountainspirit.crewboard.query.service;
 
-import com.bughunters.mountainspirit.board.query.dto.BoardNameDTO;
 import com.bughunters.mountainspirit.crewboard.query.dto.CrewBoardDTO;
 import com.bughunters.mountainspirit.crewboard.query.dto.CrewBoardNameDTO;
 import com.bughunters.mountainspirit.crewboard.query.mapper.CrewBoardGetMapper;

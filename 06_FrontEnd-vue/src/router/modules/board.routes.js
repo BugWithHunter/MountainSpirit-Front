@@ -1,7 +1,7 @@
 export default [
     {
         path: '/boards',
-        name: 'board',       // link(to) 사용시 경로가 아닌 name을 사용해서 맵핑가능 
+        name: 'board',  
         component: () => import('@/views/Board/Board.vue'),
         children: [
             {
@@ -14,7 +14,12 @@ export default [
                 name: 'boardDetail',
                 component: () => import('@/views/Board/BoardDetail.vue'),
             },
+            {
+                path: 'commentList',
+                name: 'commentList',
+                component: () => import('@/views/Comment/CommentList.vue'),
+            },
         ],
     },
-    
+
 ];

@@ -13,7 +13,7 @@ public interface BoardService {
 
     void deletePostById(int id);
 
-    void createOrDeleteLikesByPostId(int id);
+    void createOrDeleteLikesByPostId(int id, long userId);
 
     void deleteBoardImage(long id);
 

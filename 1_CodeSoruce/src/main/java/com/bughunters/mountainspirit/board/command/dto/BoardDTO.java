@@ -1,7 +1,5 @@
 package com.bughunters.mountainspirit.board.command.dto;
 
-import com.bughunters.mountainspirit.board.command.entity.BoardImage;
-import com.bughunters.mountainspirit.board.query.dto.ThumbnailDTO;
 import lombok.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -14,7 +12,6 @@ import java.util.List;
 @Setter
 @ToString
 public class BoardDTO {
-    private long id;
     private String title;
     private String content;
     private LocalDateTime createDate;

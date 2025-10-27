@@ -8,8 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.stereotype.Service;
 import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
@@ -27,10 +27,13 @@ public class BoardReadServiceImpl implements BoardReadService {
 
     @Override
     public Page<BoardNameDTO> getBoardName(Pageable pageable) {
-        pageable = PageRequest.of(pageable.getPageNumber() <= 0 ? 0 : pageable.getPageNumber() - 1,
-                pageable.getPageSize());
-        List<BoardNameDTO> boardList = boardGetMapper.selectBoardName(pageable);
-        Page<BoardNameDTO> boardPage = new PageImpl<>(boardList, pageable, boardList.size());
+        int pageNum = pageable.getPageNumber() <= 0 ? 0 : pageable.getPageNumber() - 1;
+        int pageSize = 7;
+        pageable = PageRequest.of(pageNum, pageSize);
+        int offset = (pageNum) * pageSize;
+        List<BoardNameDTO> boardList = boardGetMapper.selectBoardName(offset, pageSize);
+        long totalCount = boardGetMapper.selectBoardNameCount();
+        Page<BoardNameDTO> boardPage = new PageImpl<>(boardList, pageable, totalCount);
 
         return boardPage;
     }
@@ -44,8 +47,18 @@ public class BoardReadServiceImpl implements BoardReadService {
     }
 
     @Override
-    public List<BoardDTO> getBoardInfoByKeyword(String keyword) {
-        List<BoardDTO> boardDTOList = boardGetMapper.selectBoardInfoByKeyword(keyword);
+    public List<BoardDTO> getBoardInfoByKeyword(String keyword, String type) {
+
+        List<BoardDTO> boardDTOList;
+
+        /* 설명. type은 "title", "content", "title_content" 중 하나를 선택 */
+        if ("title".equals(type)) {
+            boardDTOList = boardGetMapper.searchByTitle(keyword);
+        } else if ("content".equals(type)) {
+            boardDTOList = boardGetMapper.searchByContent(keyword);
+        } else {
+            boardDTOList = boardGetMapper.searchByTitleOrContent(keyword);
+        }
 
         return boardDTOList;
     }

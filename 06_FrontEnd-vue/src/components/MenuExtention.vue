@@ -20,8 +20,8 @@
           <li>
             <ul>
               <li><RouterLink to="/boards/list">자유 게시판</RouterLink></li>
-              <li><RouterLink to="/">크루 게시판</RouterLink></li>
-              <li><RouterLink to="/">공지사항 게시판</RouterLink></li>
+              <li><RouterLink to="/crewboards/list">크루 게시판</RouterLink></li>
+              <li><RouterLink to="/noticeboards/list">공지사항 게시판</RouterLink></li>
             </ul>
           </li>
           <li>
