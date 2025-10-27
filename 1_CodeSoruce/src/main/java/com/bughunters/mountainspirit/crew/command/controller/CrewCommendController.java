@@ -29,8 +29,8 @@ public class CrewCommendController {
 
     @PostMapping("/crew-create")
     public ResponseEntity<?> createCrew(@RequestBody CrewRegistDTO crewRegistDTO) {
-        crewCommendService.insertCrew(crewRegistDTO);
-        return ResponseEntity.created(URI.create("crew/crew_info")).build();
+        Long crewId = crewCommendService.insertCrew(crewRegistDTO);
+        return ResponseEntity.created(URI.create("crew/crew_info")).body(crewId);
     }
 
     @PutMapping("/crew-modify")
