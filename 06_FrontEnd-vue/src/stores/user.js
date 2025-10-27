@@ -14,14 +14,16 @@ export const useUserStore = defineStore(
     const profile       = ref('');
     const token         = ref('');
     const isLoggedIn    = ref(false); 
+    const crewId        = ref(0);
 
     // ----- Actions -----
-    function logIn({ userName, userEmail, profilePath, authorities,userId : uid }) {
+    function logIn({ userName, userEmail, profilePath, authorities,userId : uid, crewId : crew }) {
       name.value = userName
       email.value = userEmail
       profile.value = profilePath
       roles.value = authorities
       userId.value = uid
+      crewId.value = crew;
       isLoggedIn.value = true
     }
     
@@ -32,6 +34,7 @@ export const useUserStore = defineStore(
       roles.value = []
       token.value = ''
       userId.value = 0
+      crewId.value = 0;
       isLoggedIn.value = false
     }
 
@@ -50,7 +53,7 @@ export const useUserStore = defineStore(
     // ----- 반환 -----
     return {
       // 외부 노출용 readonly state
-      name, email, roles, profile, token, isLoggedIn, userId,
+      name, email, roles, profile, token, isLoggedIn, userId,crewId,
       // actions
       logIn, logOut, changeProfile , setToken
     }

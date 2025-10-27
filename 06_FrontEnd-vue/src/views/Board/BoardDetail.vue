@@ -72,10 +72,11 @@
 <script setup>
     import { ref, onMounted } from 'vue';
     import { useRoute, useRouter } from 'vue-router';
-    import axios from 'axios'
+    import axios from 'axios';
+    import { useUserStore } from '@/stores/user';
 
-    const token = "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJrYW5nMTIxMzFAZXhhbXBsZS5jb20iLCJhdXRoIjpbIlJPTEVfQURNSU4iLCJST0xFX01FTUJFUiJdLCJ1c2VybmFtZSI6IuqwlTEyMTQiLCJpZCI6MjE0LCJiaXJ0aCI6IjE5ODYtMDMtMDgiLCJtZW1TdHNJZCI6MSwiZXhwIjoxNzYxNTM3ODE0fQ.ke7AS_JDlbghNlbuog_HSK45jYwMccDDULPe3tAaOnkkpoHvJ5DSRyIuWndlVPik8umeTHsBQVzNyk8k7Sb2eg";
-
+    const userStore =  useUserStore();
+    const token = userStore.token;
 
     const route = useRoute();
     const router = useRouter()

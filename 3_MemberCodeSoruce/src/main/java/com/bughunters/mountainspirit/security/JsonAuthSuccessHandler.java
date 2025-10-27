@@ -76,6 +76,7 @@ public class JsonAuthSuccessHandler implements AuthenticationSuccessHandler {
                 .append(",\"user\":{")
                 .append("\"userId\":\"").append(escapeJson(id.toString())).append("\",")
                 .append("\"userName\":\"").append(escapeJson(userName)).append("\",")
+                .append("\"crewId\":\"").append(escapeJson(user.getCrewId().toString())).append("\",")
                 .append("\"userEmail\":\"").append(escapeJson(userEmail)).append("\",")
                 .append("\"profilePath\":\"").append(escapeJson(profilePath)).append("\",")
                 .append("\"authorities\":").append(toJsonArray(authorities))
