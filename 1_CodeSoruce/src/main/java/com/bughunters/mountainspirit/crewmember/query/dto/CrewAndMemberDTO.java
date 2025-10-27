@@ -14,6 +14,6 @@ public class CrewAndMemberDTO {
     private String crewMemberJoinDate;
     private String crewMemberRoleUpdateDate;
     private long crewId;
-    private long crewRoleId;
+    private CrewRoleDTO crewRole;
     private MemberDTO memberList;
 }
