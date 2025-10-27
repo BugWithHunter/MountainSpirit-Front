@@ -1,7 +1,7 @@
 package com.bughunters.mountainspirit.crewclimbboard.query.controller;
 
 import com.bughunters.mountainspirit.crewclimbboard.query.dto.CrewClimbBoardAndMountainAndCrewMemberDTO;
-import com.bughunters.mountainspirit.crewclimbboard.query.dto.CrewClimbBoardDTO;
+import com.bughunters.mountainspirit.crewclimbboard.query.dto.CrewClimbBoardAndMountainDTO;
 import com.bughunters.mountainspirit.crewclimbboard.query.dto.MyCrewClimbBoardListDTO;
 import com.bughunters.mountainspirit.crewclimbboard.query.service.CrewClimbBoardQueryService;
 import lombok.extern.slf4j.Slf4j;
@@ -26,9 +26,9 @@ public class CrewClimbBoardQueryController {
     }
 
     @GetMapping("/climb-board-list/{crewId}")
-    public ResponseEntity<List<CrewClimbBoardDTO>> findAllCrewClimbBoardByCrewId(@PathVariable Long crewId){
-        List<CrewClimbBoardDTO> crewClimbBoardDTO = crewClimbBoardQueryService.findAllCrewClimbBoardByCrewId(crewId);
-        return ResponseEntity.ok().body(crewClimbBoardDTO);
+    public ResponseEntity<List<CrewClimbBoardAndMountainDTO>> findAllCrewClimbBoardByCrewId(@PathVariable Long crewId){
+        List<CrewClimbBoardAndMountainDTO> crewClimbBoardAndMountainDTO = crewClimbBoardQueryService.findAllCrewClimbBoardByCrewId(crewId);
+        return ResponseEntity.ok().body(crewClimbBoardAndMountainDTO);
     }
 
     @GetMapping("/climb-board/{crewClimbBoardId}")
