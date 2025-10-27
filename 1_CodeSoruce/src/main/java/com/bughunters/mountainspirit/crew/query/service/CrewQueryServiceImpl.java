@@ -6,6 +6,9 @@ import com.bughunters.mountainspirit.crew.query.dto.CrewInfoDTO;
 import com.bughunters.mountainspirit.crew.query.mapper.CrewMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -24,9 +27,7 @@ public class CrewQueryServiceImpl implements CrewQueryService {
     }
 
     @Override
-    public List<CrewDTO> findAllCrews() {
-        return crewMapper.findAllCrews();
-    }
+    public List<CrewDTO> findAllCrews() {return crewMapper.findAllCrews();}
 
     @Override
     public CrewInfoDTO findOneCrewById(Long crewId) {

@@ -53,13 +53,12 @@ public class CrewMemberCommendServiceImpl implements CrewMemberCommendService {
 
     @Override
     @Transactional
-    public void crewApplyRequest(CrewApplyDTO crewApplyDTO) {
+    public boolean crewApplyRequest(CrewApplyDTO crewApplyDTO) {
         // 이미 가입 신청이 되어있을 시 가입 신청 불가
         if (crewApplyCommendRepository.existsByCrewIdAndCumId(crewApplyDTO.getCrewId(), crewApplyDTO.getCumId())) {
             log.info("이미 크루 가입 신청이 되어 있습니다.");
-            return;
+            return false;
         }
-
 
         CrewApply crewApply = new CrewApply();
         LocalDateTime now = LocalDateTime.now();
@@ -68,6 +67,7 @@ public class CrewMemberCommendServiceImpl implements CrewMemberCommendService {
         crewApply.setCumId(crewApplyDTO.getCumId());
 
         crewApplyCommendRepository.save(crewApply);
+        return true;
     }
 
     @Override
@@ -137,8 +137,8 @@ public class CrewMemberCommendServiceImpl implements CrewMemberCommendService {
 //        memberService.setMemberCrewId(crewApplyDTO.getCumId(),crewApplyDTO.getCrewId());
 
             // 크루 가입 신청(CrewApply) 테이블에서 신청 데이터 delete
-            crewApplyCommendRepository.delete(crewApply);
-            log.info("service 가입신청 삭제 완료");
+            int deleteQuery = crewApplyCommendRepository.deleteByCumId(crewApply.getCumId());
+            log.info("service 가입신청 삭제 완료, {}",deleteQuery);
         } catch (Exception e) {
             log.info("service 가입 신청 예외 발생");
             crewApply = null;

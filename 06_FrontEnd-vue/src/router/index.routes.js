@@ -1,12 +1,15 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import homeRoutes from './modules/home.routes';
+import CrewRoutes from './modules/crew.routes';
 import memberRoutes from './modules/member.routes';
 import rankRoutes from './modules/rank.routes';
 
 const routes = [
   ...homeRoutes,
   ...memberRoutes,
-  ...rankRoutes
+  ...rankRoutes,
+  ...CrewRoutes,
+  ...memberRoutes
 ];
 
 const router = createRouter({
