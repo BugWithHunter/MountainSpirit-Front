@@ -16,7 +16,8 @@
                 </ul>
                 <div class="actions">
                     <button class="btn" @click="openModal('1213','12345',true)">비밀번호 변경</button>
-                    <button class="btn ghost">신고내역 조회</button>
+                    <button class="btn ghost" @click="goToProtest">신고내역 조회</button>
+                    <button class="btn ghost" @click="goToProtestConfirm">이의신청 확인</button>
                 </div>
             </article>
 
@@ -84,6 +85,14 @@
     import { useLoadingStore } from '@/stores/loading'
 
     const loading = useLoadingStore()
+
+    const goToProtest = () => {
+      router.push('/member-view/memberProtest');
+    }
+
+    const goToProtestConfirm = () => {
+        router.push('/member-view/protestConfirm');
+    }
 
     const tttt = ref('');
     const router = useRouter();

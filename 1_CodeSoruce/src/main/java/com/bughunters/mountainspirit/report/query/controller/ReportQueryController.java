@@ -3,10 +3,7 @@ package com.bughunters.mountainspirit.report.query.controller;
 
 import com.bughunters.mountainspirit.common.ResponseMessage;
 import com.bughunters.mountainspirit.common.UserInfo;
-import com.bughunters.mountainspirit.report.query.dto.ReportCheckDTO;
-import com.bughunters.mountainspirit.report.query.dto.ReportDetailDTO;
-import com.bughunters.mountainspirit.report.query.dto.ReportMemberDetailDTO;
-import com.bughunters.mountainspirit.report.query.dto.ReportQueryDTO;
+import com.bughunters.mountainspirit.report.query.dto.*;
 import com.bughunters.mountainspirit.report.query.service.ReportQueryService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
@@ -87,27 +84,15 @@ public class ReportQueryController {
 
     // 로그인 된 회원 신고 조회: /reports/my
     // 마이페이지에서 사용자만 사용가능
-    @GetMapping("/my")
+    @GetMapping("/my/{memberId}")
     public ResponseEntity<ResponseMessage> selectReportsByMember(
+            @PathVariable Long memberId,
             @RequestParam(value = "page", defaultValue = "1") int page,
-            @RequestParam(value = "size", defaultValue = "10") int size,
-            HttpServletRequest request
+            @RequestParam(value = "size", defaultValue = "10") int size
     ){
 
-        UserInfo userInfo = (UserInfo) request.getAttribute("userInfo");
-
-        if (userInfo == null) {
-            ResponseMessage errorResponse = new ResponseMessage(
-                    HttpStatus.UNAUTHORIZED.value(),
-                    "로그인 필요",
-                    null
-            );
-        }
-
-        Long memberId = userInfo.getId();
         List<ReportQueryDTO> reports = reportQueryService.selectReportsByMemberId(memberId, page, size);
 
-        log.debug("memberId={} reports size={}", memberId, reports.size());
 
         Map<String, Object> result = new HashMap<>();
         result.put("reports", reports);
@@ -120,4 +105,10 @@ public class ReportQueryController {
         return ResponseEntity.ok().body(responseMessage);
     }
 
+    @GetMapping("/category/{targetId}")
+    public List<ReportCategoryDTO> selectReportCategory(
+            @PathVariable long targetId
+    ) {
+        return reportQueryService.selectReportCategory(targetId);
+    }
 }

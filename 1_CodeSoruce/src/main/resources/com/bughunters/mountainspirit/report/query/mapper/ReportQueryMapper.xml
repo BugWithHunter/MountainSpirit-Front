@@ -167,4 +167,18 @@
                  LEFT JOIN Member m ON r.reportedId = m.id
         WHERE r.id = #{reportId}
     </select>
+
+    <select id="selectReportCategory" resultType="com.bughunters.mountainspirit.report.query.dto.ReportCategoryDTO">
+        SELECT
+            rcs.categoryId,
+            rc.reportName
+        FROM
+            ReportCategoryStandard rcs
+                JOIN
+            ReportCategory rc
+            ON
+                rcs.categoryId = rc.id
+        WHERE
+            rcs.reportTargetId = #{targetId}
+    </select>
 </mapper>
