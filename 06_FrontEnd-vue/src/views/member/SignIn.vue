@@ -95,32 +95,14 @@
         
         // ✅ 1. 응답 헤더에서 JWT 토큰 추출
         const token = response.headers['token']; // 소문자로 써야 함!
-        console.log('헤더들 :', response.headers);
-        console.log('받은 토큰:', token);
-
-        // 2️⃣ HTTP 상태 코드 출력 (200이면 성공)
-        console.log('HTTP 상태 코드:', response.status);
-
-        // 3️⃣ 서버에서 보낸 JSON 본문 출력
-        console.log('응답 JSON:', response.data);
+        
 
         // 4️⃣ 원하는 필드만 추출
         const { success, code, message, user, extra } = response.data;
-
-        console.log('로그인 성공 여부:', success);
-        console.log('응답 코드:', code);
-        console.log('메시지:', message);
-        console.log('사용자 이름:', user.userName);
-        console.log('프로필 :', user.profilePath);
-        console.log('권한 목록:', user.authorities);
-        console.log('로그인 시각:', extra.loginAt);
-        console.log('user 뽑아보자:', user);
-
-        // userStore.token = token;
+        
         userStore.setToken(token);
         userStore.logIn(user);
         
-        console.log('containTest:', user.authorities.some(x => x ==='ROLE_ADMIN'))
         if(user.authorities.some(x => x === 'ROLE_ADMIN')){
             router.push("/admin");
         } else {
@@ -131,7 +113,6 @@
     } catch (error) {
         // 5️⃣ 에러 처리
         if (error.response) {
-            // 서버가 응답했지만 (예: 400, 401 등)
             console.error('❌ 서버 오류 코드:', error.response.status);
             console.error('❌ 오류 내용:', error.response.data);
             const errorMessage = error.response.status >= 500 ? 

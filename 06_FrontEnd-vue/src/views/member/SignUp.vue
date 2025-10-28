@@ -97,7 +97,6 @@
 
       <!-- 회원가입 버튼 -->
       <button class="submit" type="submit" :disabled="submitting || !isFormValid">
-      <!-- <button class="submit" type="submit" > -->
         회원가입
       </button>
     </form>
@@ -253,7 +252,6 @@ function openModal(msg, title = '알림', isError = false, hasFunction = false) 
 let submitting = false
 
 function ModalConfirm() {
-    console.log('모달 컨펌');
     router.push('/member/login');
 }
 
@@ -284,17 +282,12 @@ async function onSubmit() {
             // Authorization: `Bearer ${userStore.token}`
           }
       });
-
-    console.log('회원 가입 통신 결과:',response);
-    console.log('회원 가입 통신 결과 데이터:',response.data);
-    
               
     openModal('회원 가입이 완료 되었습니다.','회원 가입', false,true);
     // 실제 API 호출 예시:
     // await axios.post('/api/auth/signup', form)
 
   } catch (e) {
-    console.log('catch1:',e);
     openModal(e.response.data.message,'회원 가입 실패', true);
 } finally {
     submitting = false

@@ -184,19 +184,12 @@ const replacee = (frtrlId, frtrlNm) => {
           chartItems.value = [];
 
       if(selectedDetailRows.value !== null) {            
-          // console.log(selectedDetailRows.value);
-
-
           selectedDetailRows.value.forEach((data) => {
-            // console.log('selectedDetailRows.value.forEach((data) => { 호출되니?', data )
               chartItems.value.push({
                   name: data.memName,
                   value: data.count
               })
           });
-      console.log('replace 함수 호촐(selectedDetailRows.value):', selectedDetailRows.value);
-
-          // console.log('chartItems 확인:',  chartItems);
       } 
 }
 
@@ -209,68 +202,34 @@ onMounted(async() =>  {
       level: 12
     })
 
-  // try{
-      const responmse = await axios.get(`http://localhost:8000/main-client/climb-history/mountainRank`,{headers: {Authorization: `Bearer ${userStor.token}`} });
-      console.log('산신령 랭킹 데이터 수신:', responmse.data);
-      for (const [key, value] of Object.entries(responmse.data)) {
-            const level = map.getLevel()
-            const size = sizeForLevel(level)
-            const markerEl = createMarkerElement(size, value.frtrlId, value.frtrlNm, value.filePath);
+    const responmse = await axios.get(`http://localhost:8000/main-client/climb-history/mountainRank`,{headers: {Authorization: `Bearer ${userStor.token}`} });
+    for (const [key, value] of Object.entries(responmse.data)) {
+          const level = map.getLevel()
+          const size = sizeForLevel(level)
+          const markerEl = createMarkerElement(size, value.frtrlId, value.frtrlNm, value.filePath);
 
-            markerEl.addEventListener('click', (e) => {
-                e.stopPropagation();       // 지도의 click과 중복 방지
-                collapseMap(value);    // 오른쪽 패널 타이틀 업데이트 + 축소
-            })
+          markerEl.addEventListener('click', (e) => {
+              e.stopPropagation();       // 지도의 click과 중복 방지
+              collapseMap(value);    // 오른쪽 패널 타이틀 업데이트 + 축소
+          })
 
-            const overlay = new window.kakao.maps.CustomOverlay({
-                position: new window.kakao.maps.LatLng(value.lat, value.lot),
-                content: markerEl,
-                xAnchor: 0.5,
-                yAnchor: 1.0,
-                map
-            })
-            
-        overlays.push({ overlay, markerEl })
-
-        if (!mountainRank.value[key]) mountainRank.value[key] = [];
-        
-          if (Array.isArray(value.mountainRanks)) {
-            mountainRank.value[key].push(...value.mountainRanks);
-          }
+          const overlay = new window.kakao.maps.CustomOverlay({
+              position: new window.kakao.maps.LatLng(value.lat, value.lot),
+              content: markerEl,
+              xAnchor: 0.5,
+              yAnchor: 1.0,
+              map
+          })
           
-      }
+      overlays.push({ overlay, markerEl })
+
+      if (!mountainRank.value[key]) mountainRank.value[key] = [];
       
-
-      console.log('mountainRanks:', mountainRank.value);
-
-  // }
-  // catch(error){
-  //     console.error('❌ 서버 오류 코드:', error);
-  //     console.error('❌ 오류 내용:', error);
-  // }
-
-
-
-  // markerData.forEach(data => {
-  //   const level = map.getLevel()
-  //   const size = sizeForLevel(level)
-  //   const markerEl = createMarkerElement(size, data)
-
-  //   markerEl.addEventListener('click', (e) => {
-  //    e.stopPropagation();       // 지도의 click과 중복 방지
-  //    collapseMap(data);    // 오른쪽 패널 타이틀 업데이트 + 축소
-  //  })
-
-  //   const overlay = new window.kakao.maps.CustomOverlay({
-  //     position: new window.kakao.maps.LatLng(data.lat, data.lng),
-  //     content: markerEl,
-  //     xAnchor: 0.5,
-  //     yAnchor: 1.0,
-  //     map
-  //   })
-
-  //   overlays.push({ overlay, markerEl })
-  // })
+        if (Array.isArray(value.mountainRanks)) {
+          mountainRank.value[key].push(...value.mountainRanks);
+        }
+        
+    }
 
     // 줌 이벤트: 모든 마커 크기 동기 변경
     window.kakao.maps.event.addListener(map, 'zoom_changed', () => {
@@ -284,69 +243,6 @@ onMounted(async() =>  {
 
 
 })
-
-
-
-
-
-//  마커용 DOM 엘리먼트 생성 함수
-// function createMarkerElement(initialSize, frtrlId, filePath) {
-//   const el = document.createElement('div')
-//   el.className = 'circle-marker'
-//   el.style.width = `${initialSize}px`
-//   el.style.height = `${initialSize}px`
-//   el.style.borderRadius = '50%'
-//   el.style.overflow = 'hidden'
-//   el.style.border = '3px solid #fff'
-//   el.style.boxShadow = '0 2px 8px rgba(0,0,0,.25)'
-//   el.style.transition = 'width .12s ease, height .12s ease, transform .15s ease'
-
-//   const img = document.createElement('img')
-//   img.src = data.img
-//   img.alt = data.name
-//   img.style.width = '100%'
-//   img.style.height = '100%'
-//   img.style.objectFit = 'cover'
-//   img.style.display = 'block'
-
-//   el.appendChild(img)
-
-//   //  hover 이벤트: 살짝 확대
-//   el.addEventListener('mouseenter', () => {
-//     el.style.transform = 'scale(1.75)'
-//   })
-//   el.addEventListener('mouseleave', () => {
-//     el.style.transform = 'scale(1.0)'
-//   })
-
-//   //  click 이벤트: 콘솔 + alert
-//   el.addEventListener('click', () => {
-//     selectedDetailRows.value = data.member;
-//     panelTitle.value = data.mountainNm;
-
-//     if( chartItems.value.length > 0)
-//         chartItems.value = [];
-
-//     console.log('selectedDetailRows 확인:', selectedDetailRows.value);
-
-//     if(selectedDetailRows.value !== null) {            
-//         console.log(selectedDetailRows.value);
-
-
-//         selectedDetailRows.value.forEach((data) => {
-//             chartItems.value.push({
-//                 name: data.label,
-//                 value: data.count
-//             })
-//         });
-
-//         console.log('chartItems 확인:',  chartItems);
-//     } 
-//   })
-
-//   return el
-// }
-
 
 </script>
 
