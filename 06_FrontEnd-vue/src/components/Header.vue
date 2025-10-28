@@ -82,9 +82,6 @@
     console.log('userStore.isLoggedIn:',userStore.isLoggedIn);
     // 파생값은 computed를 사용 (값이 변하면 계산을 다시해서 반환하며 변하지 않으면 캐싱된 데이터 반환)
     const loginMenu = computed(() => (userStore.isLoggedIn ? '로그아웃' : '로그인'))
-
-
-
     const pageTitle = ['크루', '랭킹', '게시판', '산 목록'];
 
 
