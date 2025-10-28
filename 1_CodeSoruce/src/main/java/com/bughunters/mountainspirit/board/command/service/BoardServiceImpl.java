@@ -54,7 +54,6 @@ public class BoardServiceImpl implements BoardService {
 
         modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
         Board board = modelMapper.map(boardDTO, Board.class);
-//        boardRepository.save(board);
         log.info("save 전 게시글ID : {}", board.getId());
         try {
             boardRepository.saveAndFlush(board);
@@ -104,7 +103,6 @@ public class BoardServiceImpl implements BoardService {
     }
 
 
-    /* 필기. 좋아요를 누른 회웡ID는 service계층에서 @Authentication을 이용해서 받아오면 되는지? */
     @Override
     @Transactional
     public String createOrDeleteLikesByPostId(int id, long userId) {

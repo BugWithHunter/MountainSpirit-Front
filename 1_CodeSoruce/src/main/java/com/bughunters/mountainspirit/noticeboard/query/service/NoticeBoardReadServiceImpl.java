@@ -27,10 +27,16 @@ public class NoticeBoardReadServiceImpl implements NoticeBoardReadService {
 
     @Override
     public Page<BoardNameDTO> getBoardName(Pageable pageable) {
-        pageable = PageRequest.of(pageable.getPageNumber() <= 0 ? 0 : pageable.getPageNumber() - 1,
-                pageable.getPageSize());
-        List<BoardNameDTO> boardList = noticeBoardGetMapper.selectBoardName(pageable);
-        Page<BoardNameDTO> boardPage = new PageImpl<>(boardList, pageable, boardList.size());
+        int pageNum = pageable.getPageNumber() <= 0 ? 0 : pageable.getPageNumber() - 1;
+        int pageSize = 7;
+
+        pageable = PageRequest.of(pageNum, pageSize);
+        int offset = (pageNum) * pageSize;
+
+        List<BoardNameDTO> boardList = noticeBoardGetMapper.selectBoardName(offset, pageSize);
+        long totalCount = noticeBoardGetMapper.selectBoardNameCount();
+
+        Page<BoardNameDTO> boardPage = new PageImpl<>(boardList, pageable, totalCount);
 
         return boardPage;
     }
@@ -43,9 +49,16 @@ public class NoticeBoardReadServiceImpl implements NoticeBoardReadService {
     }
 
     @Override
-    public List<BoardDTO> getBoardInfoByKeyword(String keyword) {
-        List<BoardDTO> boardDTOList = noticeBoardGetMapper.selectBoardInfoByKeyword(keyword);
+    public List<BoardDTO> getBoardInfoByKeyword(String keyword, String type) {
+        List<BoardDTO> boardDTOList;
 
+        if ("title".equals(type)) {
+            boardDTOList = noticeBoardGetMapper.searchByTitle(keyword);
+        } else if ("content".equals(type)) {
+            boardDTOList = noticeBoardGetMapper.searchByContent(keyword);
+        } else {
+            boardDTOList = noticeBoardGetMapper.searchByTitleOrContent(keyword);
+        }
         return boardDTOList;
     }
 }

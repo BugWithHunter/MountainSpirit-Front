@@ -14,7 +14,7 @@ public interface CrewBoardService {
 
     void deletePostById(int id);
 
-    void createOrDeleteLikesByPostId(int id, long userId);
+    String createOrDeleteLikesByPostId(int id, long userId);
 
     void addImageInPost(List<MultipartFile> multiFiles, int postid);
 

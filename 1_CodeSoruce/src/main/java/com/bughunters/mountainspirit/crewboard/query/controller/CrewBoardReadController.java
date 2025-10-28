@@ -12,6 +12,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -35,15 +36,16 @@ public class CrewBoardReadController {
 
     @GetMapping("/crewboards/list/{id}/select")
     public List<CrewBoardDTO> findDetailBoardById(@PathVariable int id) {
-        List<CrewBoardDTO> crewBoardDTOList = crewBoardReadService.getBoardInfo(id);
+        List<CrewBoardDTO> boardDTOList = crewBoardReadService.getBoardInfo(id);
 
-        return crewBoardDTOList;
+        return boardDTOList;
     }
 
-    @GetMapping("/crewboards/search/{keyword}")
-    public List<CrewBoardDTO> findDetailBoardByKeyword(@PathVariable String keyword) {
-        List<CrewBoardDTO> crewBoardDTOList = crewBoardReadService.getBoardInfoByKeyword(keyword);
+    @GetMapping("/crewboards/search")
+    public List<CrewBoardDTO> findDetailBoardByKeyword(@RequestParam String type,
+                                                       @RequestParam String keyword) {
+        List<CrewBoardDTO> boardDTOList = crewBoardReadService.getBoardInfoByKeyword(keyword, type);
 
-        return crewBoardDTOList;
+        return boardDTOList;
     }
 }

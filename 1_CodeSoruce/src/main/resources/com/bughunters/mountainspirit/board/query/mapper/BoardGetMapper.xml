@@ -7,12 +7,14 @@
         <id property="id" column="ID"/>
         <result property="title" column="TITLE"/>
         <result property="createDate" column="CREATEDATE"/>
+        <result property="cumId" column="CUMID"/>
     </resultMap>
     <select id="selectBoardName" resultMap="getBoardMap" parameterType="map">
         SELECT
                A.ID
              , A.TITLE
              , A.CREATEDATE
+             , A.CUMID
           FROM Board A
          WHERE A.ISDELETED = 'N'
          ORDER BY A.CREATEDATE DESC

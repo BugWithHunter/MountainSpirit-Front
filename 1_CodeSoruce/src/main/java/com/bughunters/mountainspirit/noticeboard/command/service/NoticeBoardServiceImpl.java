@@ -47,8 +47,15 @@ public class NoticeBoardServiceImpl implements NoticeBoardService {
 
         modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
         NoticeBoard noticeBoard = modelMapper.map(boardDTO, NoticeBoard.class);
-        noticeBoardRepository.saveAndFlush(noticeBoard);
+        try {
+            noticeBoardRepository.saveAndFlush(noticeBoard);
+            log.info("After saveAndFlush, board ID: {}", noticeBoard.getId());
+        } catch (Exception e) {
+            log.error("Error saving board entity", e);
+            throw e; // 필요시 다시 던지기
+        }
 
+        noticeBoardRepository.saveAndFlush(noticeBoard);
         List<Map<String, Object>> files = multiFileUpload(multiFiles, noticeBoard);
         insertInBoardImageEntity(files);
 
@@ -96,6 +103,7 @@ public class NoticeBoardServiceImpl implements NoticeBoardService {
 
         /* 설명. DB에 보낼 값을 담기 위한 컬렉션 */
         List<Map<String, Object>> files = new ArrayList<>();
+        String filesPath = "C:/bughunters_re/MountainSpirit/06_FrontEnd-vue/public/boardImage/";
 
         /* 설명. 화면에서 각 파일마다 img 태그의 src 속성으로 적용하기 위한 문자열을 담은 컬렉션 */
         List<String> imgSrcs = new ArrayList<>();
@@ -109,19 +117,19 @@ public class NoticeBoardServiceImpl implements NoticeBoardService {
                 String saveName = UUID.randomUUID().toString().replace("-", "") + ext;
 
                 /* 설명. 각 파일을 저장 경로에 저장 */
-                multiFiles.get(i).transferTo(new File(filepath + "/img/multi/" + saveName));
+                multiFiles.get(i).transferTo(new File(filesPath + saveName));
 
                 /* 설명. DB에 보낼 값 설정(각 파일마다 Map<String, String>에 저장) */
                 Map<String, Object> file = new HashMap<>();
                 file.put("originName", originFileName);
                 file.put("renaming", saveName);
-                file.put("thumbnail", "/img/multi/" + saveName);
-                file.put("path", "/img/multi/");
+                file.put("thumbnail", saveName);
+                file.put("path", filesPath);
                 file.put("postId", noticeBoard.getId());
 
 
                 files.add(file);
-                imgSrcs.add("/img/multi/" + saveName);
+                imgSrcs.add(filesPath + saveName);
             }
 
 
@@ -130,7 +138,7 @@ public class NoticeBoardServiceImpl implements NoticeBoardService {
             /* 설명. 부분적인 파일 저장 실패와 관련되어 후처리 */
             for (int i = 0; i < files.size(); i++) {       // 업로드에 성공한 것들은 List에 쌓였다는 생각으로
                 Map<String, Object> file = files.get(i);
-                new File(filepath + "/img/multi/" + file.get("saveName")).delete();
+                new File(filesPath + file.get("saveName")).delete();
             }
 
         }

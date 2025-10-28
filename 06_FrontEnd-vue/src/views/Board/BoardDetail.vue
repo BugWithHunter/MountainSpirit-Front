@@ -131,7 +131,9 @@ async function fetchPostDetail() {
 }
 
 // 마운트시 호출
-onMounted(fetchPostDetail);
+onMounted(
+    fetchPostDetail
+);
 
     const currentUserId = ref(null);
 
@@ -154,9 +156,6 @@ onMounted(fetchPostDetail);
 
     // 좋아요 기능
     const likes = async (writter) => {
-        console.log(userStore.token);
-        console.log(userStore.userId);
-        console.log(writter);
 
         if (userStore.userId == writter) return;
 

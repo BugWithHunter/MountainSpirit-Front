@@ -13,4 +13,5 @@ public class BoardNameDTO {
     private Long id;
     private String title;
     private LocalDateTime CreateDate;
+    private Long cumId;
 }

@@ -7,15 +7,21 @@
         <id property="id" column="ID"/>
         <result property="title" column="TITLE"/>
         <result property="createDate" column="CREATEDATE"/>
+        <result property="cumId" column="CUMID"/>
     </resultMap>
     <select id="selectBoardName" resultMap="getBoardMap" parameterType="map">
         SELECT
                A.ID
              , A.TITLE
              , A.CREATEDATE
+             , A.CUMID
           FROM CrewBoard A
+         WHERE A.ISDELETED = 'N'
          ORDER BY A.CREATEDATE DESC
         LIMIT #{offset}, #{limit}
+    </select>
+    <select id="selectBoardNameCount" resultType="long">
+        SELECT COUNT(*) FROM Board
     </select>
     <resultMap id="getBoardMap2" type="com.bughunters.mountainspirit.crewboard.query.dto.CrewBoardDTO">
         <id property="id" column="ID"/>
@@ -33,7 +39,7 @@
     </resultMap>
     <select id="selectBoardInfoByPostId" resultMap="getBoardMap2" parameterType="_int">
         SELECT
-        A.ID
+          A.ID
         , A.TITLE
         , A.CONTENT
         , A.CREATEDATE
@@ -47,7 +53,7 @@
         LEFT JOIN CrewBoardImage B ON (A.ID = B.POSTID)
         WHERE A.ID = #{id}
     </select>
-    <select id="selectBoardInfoByKeyword" resultMap="getBoardMap2" parameterType="string">
+    <select id="searchByTitle" resultMap="getBoardMap2" parameterType="string">
         SELECT
         A.ID
         , A.TITLE
@@ -55,12 +61,38 @@
         , A.CREATEDATE
         , A.MODIFYDATE
         , A.ISDELETED
-        , A.ISNOTICE
-        , A.CREWID
         , A.CUMID
         , B.THUMBNAIL
         FROM CrewBoard A
         LEFT JOIN CrewBoardImage B ON (A.ID = B.POSTID)
         WHERE A.TITLE LIKE CONCAT('%', #{keyword}, '%');
+    </select>
+    <select id="searchByContent" resultMap="getBoardMap2" parameterType="string">
+        SELECT
+        A.ID
+        , A.TITLE
+        , A.CONTENT
+        , A.CREATEDATE
+        , A.MODIFYDATE
+        , A.ISDELETED
+        , A.CUMID
+        , B.THUMBNAIL
+        FROM CrewBoard A
+        LEFT JOIN CrewBoardImage B ON (A.ID = B.POSTID)
+        WHERE A.CONTENT LIKE CONCAT('%', #{keyword}, '%');
+    </select>
+    <select id="searchByTitleOrContent" resultMap="getBoardMap2" parameterType="string">
+        SELECT
+        A.ID
+        , A.TITLE
+        , A.CONTENT
+        , A.CREATEDATE
+        , A.MODIFYDATE
+        , A.ISDELETED
+        , A.CUMID
+        , B.THUMBNAIL
+        FROM CrewBoard A
+        LEFT JOIN CrewBoardImage B ON (A.ID = B.POSTID)
+        WHERE A.TITLE LIKE CONCAT('%', #{keyword}, '%') OR A.CONTENT LIKE CONCAT('%', #{keyword}, '%');
     </select>
 </mapper>

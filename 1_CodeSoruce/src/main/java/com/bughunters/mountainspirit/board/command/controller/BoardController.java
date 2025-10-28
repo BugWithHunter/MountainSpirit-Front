@@ -41,9 +41,7 @@ public class BoardController {
         UserInfo userInfo = (UserInfo) request.getAttribute("userInfo");
         long userId = userInfo.getId();
 
-        /* 설명. 아래처럼 빈 리스트로 대체했으니 이미지 파일이 없어도 문제없이 게시글이 등록되야 할 것 같은데,
-            어노테이션에 (required = false)가 없으면 오류남. 왜 오류나지??  */
-        // multiFiles == null 인 경우, 빈 리스트로 대체
+
         if (multiFiles == null) {
             multiFiles = new ArrayList<>();
         }
