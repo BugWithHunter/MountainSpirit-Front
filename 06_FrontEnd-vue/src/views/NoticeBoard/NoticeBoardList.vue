@@ -1,6 +1,6 @@
 <template>
     <div>
-    <h1>자유 게시글 전체</h1>
+    <h1>공지사항 게시글 전체</h1>
     <div class="searchBar">
         <select v-model="searchType">
             <option value="title">제목</option>
@@ -76,7 +76,7 @@ const token = userStore.token;
     const fetchBoardList = async (page = 1) => {
     isSearching.value = false;
     try {
-        const response = await axios.get(`http://localhost:8000/main-client/boards/list?page=${page}`, {
+        const response = await axios.get(`http://localhost:8000/main-client/noticeboards/list?page=${page}`, {
         headers: {
             Authorization: `Bearer ${token}`
         }
@@ -101,7 +101,7 @@ function onPostSuccess() {
     // 제목 클릭 시 이동 함수
     const goToDetail = (postId) => {
         console.log('함수 실행됨..', postId);
-        router.push(`/boards/detail/${postId}`)
+        router.push(`/noticeboards/detail/${postId}`)
     }
 
     onMounted(() => {
@@ -115,7 +115,7 @@ const onSearch = async () => {
     try {
         console.log(searchType.value);
         console.log(searchQuery.value);
-        const response = await axios.get(`http://localhost:8000/main-client/boards/search?type=${searchType.value}&keyword=${searchQuery.value}`,
+        const response = await axios.get(`http://localhost:8000/main-client/noticeboards/search?type=${searchType.value}&keyword=${searchQuery.value}`,
         {
             headers: {
             Authorization: `Bearer ${token}`
