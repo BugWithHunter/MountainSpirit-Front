@@ -2,7 +2,7 @@
     <div class="crew-detail-stats">
       <!-- 1. 상단 요약 카드 -->
       <div class="stats-cards">
-        <div class="card" v-for="(value, key) in stats.countSummary" :key="key">
+        <div class="card" v-for="(value, key) in filteredSummary" :key="key">
           <h3>{{ formatLabel(key) }}</h3>
           <p>{{ value }} 개</p>
         </div>
@@ -38,9 +38,15 @@
   </template>
   
   <script setup>
-  import { ref, onMounted } from "vue";
+  import { ref, onMounted, computed } from "vue";
   import { Chart, registerables } from "chart.js";
   Chart.register(...registerables);
+
+  const filteredSummary = computed(() => {
+  const copy = { ...stats.value.countSummary };
+  delete copy.activeCrewMemberCount;
+  return copy;
+});
 
   const baseChartOptions = {
   responsive: false,               //  반응형 (필수)

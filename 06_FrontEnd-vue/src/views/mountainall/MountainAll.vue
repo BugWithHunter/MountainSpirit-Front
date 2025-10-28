@@ -139,8 +139,8 @@
 <style scoped>
     .search{
         position: relative;
-        top: 10%;
-        left: 16%;
+        top: -1%;
+        left: 25%;
     }
 
     .search button{

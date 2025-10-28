@@ -63,8 +63,8 @@
     .footer{
     background: #0f172a; /* slate-900 느낌 */
     color: #e2e8f0;      /* slate-200 */
-    padding: 32px 0 16px;
-    margin-top: 48px;
+    padding-top: 48px;
+
     }
     .wrap{
     width: min(1100px, 92%);

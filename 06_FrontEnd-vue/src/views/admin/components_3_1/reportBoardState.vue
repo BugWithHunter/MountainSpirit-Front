@@ -5,7 +5,6 @@
     <p><strong>제목:</strong> {{ report.title }}</p>
     <p><strong>내용:</strong> {{ report.content }}</p>
 
-    <!-- 상태 표시 -->
     <p>
       <strong>처리 상태:</strong>
       <span :class="statusClass(report.isAccepted)">
@@ -13,28 +12,11 @@
       </span>
     </p>
 
-    <!-- 상태별 버튼 -->
     <div class="action-buttons">
-      <!-- 미승인(U) -->
-      <button v-if="report.isAccepted === 'U'" @click="confirmAction('Y')" class="accept">수락</button>
-      <button v-if="report.isAccepted === 'U'" @click="confirmAction('N')" class="reject">거절</button>
-
-      <!-- 승인(Y) -->
-      <button v-if="report.isAccepted === 'Y'" @click="confirmAction('N')" class="cancel">승인 취소</button>
-
-      <!-- 반려(N) -->
-      <button v-if="report.isAccepted === 'N'" @click="confirmAction('Y')" class="reapprove">재승인</button>
-    </div>
-
-    <!--  모달창 -->
-    <div v-if="showModal" class="modal-overlay">
-      <div class="modal">
-        <p>정말로 상태를 <strong>{{ statusText(pendingStatus) }}</strong>(으)로 변경하시겠습니까?</p>
-        <div class="modal-buttons">
-          <button class="confirm" @click="updateStatus(pendingStatus)">예</button>
-          <button class="cancel" @click="closeModal">아니오</button>
-        </div>
-      </div>
+      <button v-if="report.isAccepted === 'U'" @click="updateStatus('Y')" class="accept">수락</button>
+      <button v-if="report.isAccepted === 'U'" @click="updateStatus('N')" class="reject">거절</button>
+      <button v-if="report.isAccepted === 'Y'" @click="updateStatus('N')" class="cancel">승인 취소</button>
+      <button v-if="report.isAccepted === 'N'" @click="updateStatus('Y')" class="reapprove">재승인</button>
     </div>
   </div>
 
@@ -42,6 +24,7 @@
     <p>신고를 선택하면 상세정보가 표시됩니다.</p>
   </div>
 </template>
+
 
 <script setup>
 import { ref, watch } from 'vue'
@@ -56,11 +39,9 @@ const props = defineProps({
 })
 
 const report = ref(null)
-const showModal = ref(false)
-const pendingStatus = ref(null) // 사용자가 클릭한 상태 저장
 const token = import.meta.env.VITE_TEMP_TOKEN
 
-//  상태 텍스트 & 클래스
+// 상태 텍스트 & 클래스
 const statusText = (status) => {
   switch (status) {
     case 'Y': return '승인'
@@ -79,7 +60,7 @@ const statusClass = (status) => {
   }
 }
 
-//  상세 데이터 불러오기
+// 상세 데이터 불러오기
 const fetchReport = async (id) => {
   try {
     const res = await fetch(`http://localhost:8000/main-client/reports/${id}`, {
@@ -87,31 +68,14 @@ const fetchReport = async (id) => {
     })
     if (!res.ok) throw new Error(`HTTP ${res.status}`)
     const data = await res.json()
-    // 응답 데이터 구조 확인
-    if (data && data.length > 0) {
-      report.value = data[0]
-    } else {
-      report.value = null
-    }
+    report.value = data && data.length > 0 ? data[0] : null
   } catch (err) {
     console.error('신고 상세 불러오기 실패:', err)
   }
 }
 
-//  모달 제어
-const confirmAction = (status) => {
-  pendingStatus.value = status
-  showModal.value = true
-}
-
-const closeModal = () => {
-  showModal.value = false
-  pendingStatus.value = null
-}
-
-// PATCH 요청
+// PATCH 요청 (즉시 실행)
 const updateStatus = async (newStatus) => {
-
   if (!report.value || !props.reportId) return
   try {
     const res = await fetch(`http://localhost:8000/main-client/report/${props.reportId}`, {
@@ -125,15 +89,12 @@ const updateStatus = async (newStatus) => {
 
     if (!res.ok) throw new Error(`HTTP ${res.status}`)
 
-    // 변경 후 UI 반영
     report.value.isAccepted = newStatus
     alert(`상태가 "${statusText(newStatus)}" 으로 변경되었습니다.`)
     emit('refresh')
   } catch (err) {
     console.error('상태 변경 실패:', err)
     alert('상태 변경 중 오류가 발생했습니다.')
-  } finally {
-    closeModal()
   }
 }
 
@@ -146,6 +107,7 @@ watch(
   { immediate: true }
 )
 </script>
+
 
 <style scoped>
 .report-state {

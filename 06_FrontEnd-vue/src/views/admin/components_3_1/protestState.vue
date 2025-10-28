@@ -12,20 +12,8 @@
     <div class="action-box">
       <textarea v-model="reason" placeholder="이의신청심사내용"></textarea>
       <div class="buttons">
-        <button class="accept" @click="openModal('Y')">수락</button>
-        <button class="reject" @click="openModal('N')">거절</button>
-      </div>
-    </div>
-
-    <!-- 모달창 -->
-    <div v-if="showModal" class="modal-overlay">
-      <div class="modal">
-        <h3>확인</h3>
-        <p>정말로 "{{ modalStatus === 'Y' ? '수락' : '거절' }}" 하시겠습니까?</p>
-        <div class="modal-buttons">
-          <button @click="confirmAction">확인</button>
-          <button @click="closeModal">취소</button>
-        </div>
+        <button class="accept" @click="updateProtestStatus('Y')">수락</button>
+        <button class="reject" @click="updateProtestStatus('N')">거절</button>
       </div>
     </div>
   </div>
@@ -36,7 +24,7 @@
 </template>
 
 <script setup>
-import { ref, watch , onUnmounted } from 'vue';
+import { ref, watch, onUnmounted } from 'vue';
 const token = import.meta.env.VITE_TEMP_TOKEN;
 
 const props = defineProps({
@@ -48,9 +36,8 @@ const props = defineProps({
 
 const protest = ref(null);
 const reason = ref('');
-const showModal = ref(false);
-const modalStatus = ref(null);
 
+// 상세조회
 const fetchProtestDetail = async (id) => {
   if (!id) return;
   try {
@@ -65,8 +52,13 @@ const fetchProtestDetail = async (id) => {
   }
 };
 
-// PATCH 요청
+// PATCH 즉시 요청
 const updateProtestStatus = async (status) => {
+  if (!reason.value.trim()) {
+    alert('변경 사유를 입력해주세요.');
+    return;
+  }
+
   try {
     const res = await fetch(`http://localhost:8000/main-client/protest/${props.protest.id}`, {
       method: 'PATCH',
@@ -79,6 +71,7 @@ const updateProtestStatus = async (status) => {
         changeStatusReason: reason.value,
       }),
     });
+
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
     alert(`이의신청이 ${status === 'Y' ? '수락' : '거절'}되었습니다.`);
     protest.value.isAccepted = status;
@@ -88,42 +81,21 @@ const updateProtestStatus = async (status) => {
   }
 };
 
-// 모달 제어
-const openModal = (status) => {
-  if (!reason.value.trim()) {
-    alert('변경 사유를 입력해주세요.');
-    return;
-  }
-  modalStatus.value = status;
-  showModal.value = true;
-};
-const closeModal = () => (showModal.value = false);
-const confirmAction = () => {
-  updateProtestStatus(modalStatus.value);
-  showModal.value = false;
-};
-
+// props 변경 감지
 watch(
   () => props.protest,
   (newVal) => {
-    // 항상 상태 초기화
     reason.value = '';
-    showModal.value = false;
-    modalStatus.value = null;
     protest.value = null;
-
-    // 새 항목이 있을 때만 다시 로드
     if (newVal?.id) fetchProtestDetail(newVal.id);
   },
   { immediate: true }
 );
 
-// 컴포넌트 완전 종료 시도 (탭 전환 시 초기화용)
+// 컴포넌트 종료 시 초기화
 onUnmounted(() => {
-  reason.value = '';
-  showModal.value = false;
-  modalStatus.value = null;
-  protest.value = null;
+    reason.value = '';
+    protest.value = null;
 });
 </script>
 
@@ -174,38 +146,5 @@ button {
 }
 button:hover {
   opacity: 0.9;
-}
-
-/* 모달 스타일 */
-.modal-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.45);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-.modal {
-  background: white;
-  padding: 20px;
-  border-radius: 10px;
-  text-align: center;
-  width: 300px;
-}
-.modal-buttons {
-  margin-top: 15px;
-  display: flex;
-  justify-content: center;
-  gap: 10px;
-}
-.modal-buttons button:first-child {
-  background-color: #4caf50;
-  color: white;
-}
-.modal-buttons button:last-child {
-  background-color: #ccc;
 }
 </style>

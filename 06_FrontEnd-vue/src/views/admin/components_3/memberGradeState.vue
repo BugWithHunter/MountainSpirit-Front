@@ -7,12 +7,6 @@
           <canvas id="memberCountChart"></canvas>
         </div>
   
-        <!-- 등급별 평균 점수 -->
-        <div class="chart-card">
-          <h2>등급별 평균 점수</h2>
-          <canvas id="avgScoreChart"></canvas>
-        </div>
-  
         <!-- 등급별 평균 등반 횟수 -->
         <div class="chart-card">
           <h2>등급별 평균 등반 횟수</h2>
@@ -77,30 +71,7 @@
         maintainAspectRatio: false,
       },
     });
-  
-    // 등급별 평균 점수
-    new Chart(document.getElementById('avgScoreChart'), {
-      type: 'line',
-      data: {
-        labels,
-        datasets: [
-          {
-            label: '평균 점수',
-            data: data.map((item) => item.avgScore),
-            borderColor: '#f77b72',
-            backgroundColor: '#ffb3b3',
-            fill: true,
-            tension: 0.3,
-          },
-        ],
-      },
-      options: {
-        plugins: { legend: { position: 'bottom' } },
-        scales: { y: { beginAtZero: true } },
-        responsive: false,
-        maintainAspectRatio: false,
-      },
-    });
+
   
     // 등급별 평균 등반 횟수
     new Chart(document.getElementById('avgClimbCntChart'), {
@@ -170,7 +141,7 @@
   
   .chart-card canvas {
     flex-grow: 1;
-    width: 400px !important;
+    width: 700px !important;
     height: 200px !important;
   }
   </style>
