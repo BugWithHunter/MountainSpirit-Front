@@ -2,21 +2,8 @@
   <section class="signup-wrap">
     <!-- 카드 -->
     <form class="card" @submit.prevent="onSubmit">
-      <!-- 아이디(email) -->
-      <div class="field">
-        <label for="email">아이디(email)</label>
-        <input
-          id="email"
-          type="email"
-          v-model.trim="form.email"
-          placeholder="aaaa@gmail.com"
-          autocomplete="email"
-          @blur="validateEmail"
-        />
-        <p v-if="errors.email" class="error">{{ errors.email }}</p>
-      </div>
 
-      <!-- 비밀번호 -->
+      <!-- 이전 비밀번호 -->
       <div class="field">
         <label for="password">비밀번호</label>
         <input
@@ -30,74 +17,37 @@
         <p v-if="errors.password" class="error">{{ errors.password }}</p>
       </div>
 
-      <!-- 비밀번호 확인 -->
+      <!-- 변경 할 비밀번호 확인 -->
       <div class="field">
         <label for="password2">비밀번호 확인</label>
         <input
-          id="password2"
+          id="newPassword"
           type="password"
-          v-model="form.password2"
+          v-model="form.newPassword"
           placeholder="password"
           autocomplete="new-password"
-          @blur="validatePassword2"
+          @blur="validateNewPassword"
         />
-        <p v-if="errors.password2" class="error">{{ errors.password2 }}</p>
+        <p v-if="errors.newPassword" class="error">{{ errors.newPassword }}</p>
       </div>
 
-      <!-- 이름 -->
+      <!-- 변경 할 비밀번호 확인 -->
       <div class="field">
-        <label for="name">이름</label>
+        <label for="password2">비밀번호 확인</label>
         <input
-          id="name"
-          type="text"
-          v-model.trim="form.name"
-          placeholder="홍길동"
-          @blur="validateName"
+          id="newPassword2"
+          type="password"
+          v-model="form.newPassword2"
+          placeholder="password"
+          autocomplete="new-password"
+          @blur="validateNewPassword2"
         />
-        <p v-if="errors.name" class="error">{{ errors.name }}</p>
+        <p v-if="errors.newPassword2" class="error">{{ errors.newPassword2 }}</p>
       </div>
 
-      <!-- 닉네임 -->
-      <div class="field">
-        <label for="nickname">닉네임</label>
-        <input
-          id="nickname"
-          type="text"
-          v-model.trim="form.nickname"
-          placeholder="등산왕"
-          @blur="validateNickname"
-        />
-        <p v-if="errors.nickname" class="error">{{ errors.nickname }}</p>
-      </div>
-
-      <!-- 생년 월일 -->
-      <div class="field">
-        <label for="birth">생년 월일</label>
-        <input
-          id="birth"
-          type="date"
-          v-model="form.birth"
-          @blur="validateBirth"
-        />
-        <p v-if="errors.birth" class="error">{{ errors.birth }}</p>
-      </div>
-
-      <!-- 성별 -->
-      <div class="field">
-        <label for="gender">성별</label>
-        <input
-          id="gender"
-          type="text"
-          v-model.trim="form.gender"
-          placeholder="F or M"
-          @blur="validateGender"
-        />
-        <p v-if="errors.gender" class="error">{{ errors.gender }}</p>
-      </div>
-
-      <!-- 회원가입 버튼 -->
+      <!-- 비밀번호 변경 버튼 -->
       <button class="submit" type="submit" :disabled="submitting || !isFormValid">
-        회원가입
+        비밀번호 변경
       </button>
     </form>
   </section>
@@ -135,65 +85,64 @@ const modal = reactive({
 
 // 폼 상태
 const form = reactive({
-  email       : 'test01@naver.com',
-  password    : 'pwd045',
-  password2   : 'pwd045',
-  name        : '이순신',
-  nickname    : '장군',
-  birth       : '1992-04-12',
-  gender      : 'M' // 'F' 또는 'M'
+  password      : '',
+  newPassword   : '',
+  newPassword2  : ''
 })
 
 // 에러 메시지
 const errors = reactive({
-  email: '',
-  password: '',
-  password2: '',
-  name: '',
-  nickname: '',
-  birth: '',
-  gender: ''
+  password      : '',
+  newPassword   : '',
+  newPassword2  : ''
 })
 
-const emailRegex =
-  /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/ // 기본 이메일 검증
 const pwRegex =
   /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d!@#$%^&*()_\-+=]{6,}$/ // 6자 이상, 영문+숫자 1개 이상
-const nameRegex = /^.{2,30}$/ // 2~30자 (간단화)
-const nicknameRegex = /^.{2,20}$/
 
-function validateEmail() {
-  errors.email = ''
-  if (!form.email) errors.email = '이메일을 입력해 주세요.'
-  else if (!emailRegex.test(form.email)) errors.email = '이메일 형식이 올바르지 않습니다.'
-}
 
-function validatePassword() {
+async function validatePassword() {
   errors.password = ''
   if (!form.password) errors.password = '비밀번호를 입력해 주세요.'
   else if (!pwRegex.test(form.password))
     errors.password = '6자 이상, 영문과 숫자를 포함해야 합니다.'
+  else {
+      try {
+          const response = await axios.post(
+            'http://localhost:8000/member-client/member/password-info',
+            {
+                "id"       : userStore.userId,
+                "password" : form.password
+            },
+            {
+                headers: { 
+                  // 'Content-Type': 'application/json' ,
+                  Authorization: `Bearer ${userStore.token}`
+                }
+            } 
+          );
+      } catch(e) {
+          errors.password = '비밀번호가 틀렸습니다.'
+      }
+  }       
 }
 
-function validatePassword2() {
-  errors.password2 = ''
-  if (!form.password2) errors.password2 = '비밀번호 확인을 입력해 주세요.'
-  else if (form.password !== form.password2)
-    errors.password2 = '비밀번호가 일치하지 않습니다.'
+
+function validateNewPassword() {
+  errors.newPassword = ''
+  if (!form.newPassword) errors.newPassword = '비밀번호를 입력해 주세요.'
+  else if (!pwRegex.test(form.newPassword))
+    errors.newPassword = '6자 이상, 영문과 숫자를 포함해야 합니다.'
 }
 
-function validateName() {
-  errors.name = ''
-  if (!form.name) errors.name = '이름을 입력해 주세요.'
-  else if (!nameRegex.test(form.name)) errors.name = '이름은 2~30자여야 합니다.'
+function validateNewPassword2() {
+  errors.newPassword2 = ''
+  if (!form.newPassword2) errors.newPassword2 = '비밀번호 확인을 입력해 주세요.'
+  else if (form.newPassword !== form.newPassword2)
+    errors.newPassword2 = '비밀번호가 일치하지 않습니다.'
 }
 
-function validateNickname() {
-  errors.nickname = ''
-  if (!form.nickname) errors.nickname = '닉네임을 입력해 주세요.'
-  else if (!nicknameRegex.test(form.nickname))
-    errors.nickname = '닉네임은 2~20자여야 합니다.'
-}
+
 
 function validateBirth() {
   errors.birth = ''
@@ -222,20 +171,13 @@ const isFormValid = computed(() => {
 
   // 에러가 하나도 없고, 값이 모두 존재하면 OK
   return (
-    !errors.email &&
     !errors.password &&
-    !errors.password2 &&
-    !errors.name &&
-    !errors.nickname &&
-    !errors.birth &&
-    !errors.gender &&
-    form.email &&
+    !errors.newPassword &&
+    !errors.newPassword2 &&
     form.password &&
-    form.password2 &&
-    form.name &&
-    form.nickname &&
-    form.birth &&
-    form.gender
+    form.newPassword &&
+    form.newPassword2 &&
+    form.newPassword === form.newPassword2 
   )
 })
 
@@ -252,7 +194,7 @@ function openModal(msg, title = '알림', isError = false, hasFunction = false) 
 let submitting = false
 
 function ModalConfirm() {
-    router.push('/member/login');
+    router.push('/member-view');
 }
 
 async function onSubmit() {
@@ -263,26 +205,22 @@ async function onSubmit() {
     submitting = true
 
     const response = await axios.post(
-      'http://localhost:8000/member-client/member/member',
+      'http://localhost:8000/member-client/member/member-password',
       {
-          "memId": form.email,
-          "email": form.email,
-          "nickname": form.nickname,
-          "memPwd": form.password,
-          "memName": form.name,
-          "birth": form.birth,
-          "gender": form.gender
+          "id"          : userStore.userId,
+          "oldPassword" : form.password,
+          "newPassword" : form.newPassword
       },
       {
           headers: { 
             'Content-Type': 'application/json' ,
-            // Authorization: `Bearer ${userStore.token}`
+            Authorization: `Bearer ${userStore.token}`
           }
       });
               
-    openModal('회원 가입이 완료 되었습니다.','회원 가입', false,true);
+    openModal('비밀번호 변경 성공.','비밀 번호 변경', false ,true);
   } catch (e) {
-    openModal(e.response.data.message,'회원 가입 실패', true);
+    openModal(e.response.data.message,'비밀번호 변경 실패', true);
 } finally {
     submitting = false
   }

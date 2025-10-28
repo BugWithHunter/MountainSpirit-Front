@@ -86,7 +86,7 @@ onBeforeUnmount(() => {
 </script>
 
 <style scoped>
-.chart-box{ width:100%; height:100%; min-height:240px; padding-top:28px; }
+  .chart-box{ width:100%; height:100%; min-height:240px; padding-top:28px; }
 </style>
 
 
