@@ -1,7 +1,7 @@
 <template>
     <div class="sidebar">
         <div class="logo">
-          <img src="/public/logo.png" alt="산신령 로고" />
+          <RouterLink to="/"><img src="/logo.png" alt="산신령"></RouterLink>
         </div>
 
         <nav class="menu">
@@ -10,10 +10,18 @@
             <RouterLink to="/admin/mountainCourse" class="menu-item">산 및 코스</RouterLink>
             <RouterLink to="/admin/crew" class="menu-item">크루</RouterLink>
         </nav>
+        <div class="menu logout-menu">
+          
+            <RouterLink to="/" @click="userStore.logOut" class="menu-item">로그아웃</RouterLink>
+        </div>
     </div>
 </template>
 
 <script setup>
+
+import { useUserStore } from '@/stores/user';
+
+ const userStore = useUserStore();
 
 </script>
 
@@ -61,7 +69,7 @@
   display: block;
   width: 95%;
   margin-top: 10px;
-  padding: 4px;
+  padding: 20px;
   text-align: center;
   text-decoration: none; /* 밑줄 제거 */
   background-color: #3f4b65;
@@ -74,5 +82,10 @@
 .menu-item:hover {
   background-color: #556080;
   transform: scale(1.03);
+}
+
+.logout-menu {
+  margin-top: auto;
+  margin-bottom: 2rem; /* 여백 약간 추가 (선택사항) */
 }
 </style>
