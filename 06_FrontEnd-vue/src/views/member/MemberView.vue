@@ -126,7 +126,6 @@
 
     const stamps = ref([]);
     const stampRadius = reactive([]);
-     
     const hsaStamp = reactive([]);
     const totalStamp = reactive([]);
     const selectedMountain = ref({});

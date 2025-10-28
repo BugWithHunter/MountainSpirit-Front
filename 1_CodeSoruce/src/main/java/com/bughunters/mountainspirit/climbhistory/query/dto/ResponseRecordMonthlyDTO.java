@@ -7,7 +7,7 @@ import lombok.*;
 @Getter
 @Setter
 @ToString
-public class SelectClimbingRecordMonthlyDTO {
+public class ResponseRecordMonthlyDTO {
     private Long cumId;
     private String monthly;
     private int count;

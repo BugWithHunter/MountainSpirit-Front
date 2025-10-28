@@ -47,6 +47,12 @@ public class ClimbHistoryQueryServiceImpl implements ClimbHistoryQueryService {
         List<SelectClimbingRecordMonthlyDTO> selectClimbingRecordMonthlyDTO
                 = climbRecordQueryRepository.SelectClimbingRecordMonthly(id);
 
+        List<String> months = selectClimbingRecordMonthlyDTO.stream()
+                .map(SelectClimbingRecordMonthlyDTO::getMonthly).toList();
+
+        List<Integer> counts = selectClimbingRecordMonthlyDTO.stream()
+                .map(SelectClimbingRecordMonthlyDTO::getCount).toList();
+
         return selectClimbingRecordMonthlyDTO;
 
     }
