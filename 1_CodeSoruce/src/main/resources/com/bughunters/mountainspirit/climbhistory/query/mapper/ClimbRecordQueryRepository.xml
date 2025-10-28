@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bughunters.mountainspirit.climbhistory.query.mapper.ClimbRecordQueryRepository">
+<resultMap id="SelectClimbingRecordMonthlyMap" type="com.bughunters.mountainspirit.climbhistory.query.dto.SelectClimbingRecordMonthlyDTO">
+    <result property="cumId" column="cumId"/>
+    <result property="monthly" column="ym"/>
+    <result property="count" column="cnt"/>
+</resultMap>
+    <select id="SelectClimbingRecordMonthly"
+            parameterType="_long"
+            resultMap="SelectClimbingRecordMonthlyMap">
+        <![CDATA[
+        WITH RECURSIVE months AS (
+            SELECT 0 AS k, DATE_FORMAT(CURDATE(), '%Y-%m-01') AS mstart
+            UNION ALL
+            SELECT k+1,
+            DATE_FORMAT(DATE_SUB(CURDATE(), INTERVAL (k+1) MONTH), '%Y-%m-01')
+            FROM months
+            WHERE k < 11
+        )
+        SELECT
+                DATE_FORMAT(m.mstart, '%y-%m') AS ym,
+                c.cumId,
+                COUNT(c.id) AS cnt
+          FROM months m
+          LEFT JOIN ClimbRecord c
+            ON c.startTime >= m.mstart
+           AND c.startTime < DATE_ADD(m.mstart, INTERVAL 1 MONTH)
+           AND c.cumId = #{id}
+         GROUP BY c.cumId, m.mstart
+         ORDER BY m.mstart,c.cumId
+         ]]>
+    </select>
+</mapper>
+
+

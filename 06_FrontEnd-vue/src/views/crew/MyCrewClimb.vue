@@ -40,6 +40,9 @@
     import axios from 'axios'
     import { onMounted, ref } from 'vue'
     import { useRouter } from 'vue-router';
+        import { useUserStore } from '@/stores/user';
+    
+    const userStore = useUserStore();
     const router = useRouter();
 
     const myClimbData = ref({
@@ -66,9 +69,9 @@
 
     onMounted(async () => {
     const response = await axios.get(
-        'http://localhost:8000/main-client/crew-climb-board/climb-board-mylist/25',
+        `http://localhost:8000/main-client/crew-climb-board/climb-board-mylist/${userStore.userId}`,
         {
-            headers:{"Authorization":"Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJrYW5nOTk5OTk5QGV4YW1wbGUuY29tIiwiYXV0aCI6WyJST0xFX01FTUJFUiJdLCJ1c2VybmFtZSI6IuqwleyCsOyLoOuguSIsImlkIjoyMTcsImJpcnRoIjoiMTk4Ni0wMy0wOCIsIm1lbVN0c0lkIjoxLCJleHAiOjE3NjE1Njc3OTl9.hrkEktZ_X20kC-eju4Yx63eItDilxt5-2Fi0AjtGx6Xlryc9SQ8rYmwEFJ3Neiuj8GgLwHynCdPokZXlt1IZAA"}
+            headers:{"Authorization":`Bearer ${userStore.token}`}
         }
     )
     myClimbData.value = response.data

@@ -1,6 +1,23 @@
 <template>
     <div class="board-detail">
-    <h1>자유 게시글</h1>
+    <h2>자유 게시글</h2>
+        <!-- (수정/삭제 버튼 구현 예시, 작성자만 보임) -->
+    <div v-if="Number(currentUserId) === post.cumId" class="author-actions">
+    <button @click="openEditModal">
+        <img src="./asset/edit.png" alt="수정" style="width:20px; height:20px;">
+    </button>
+    <EditPost
+    v-if="showEditModal"
+    :init-title="post.title"
+    :init-content="post.content"
+    :init-images="post.images"
+    @close="showEditModal = false"
+    @edit-success="handleEditSuccess"
+    />
+    <button @click="deletePost">
+        <img src="./asset/delete.png" alt="삭제" style="width:20px; height:20px;">
+    </button>
+    </div>
     <div class="board-detail__header">
         <table>
             <thead>
@@ -16,13 +33,8 @@
                 </tr>
             </tbody>
         </table>
-    <!-- <h2 class="board-detail__title">{{ post.title }}</h2>
-    <div class="board-detail__meta">
-        <span>글번호 {{ post.id }}</span>
-        <span>작성일 {{ post.createDate?.slice(0, 10) }}</span>
-        <span>작성자번호 {{ post.cumId }}</span> -->
         <div class="board-detail__report-dropdown">
-        <button @click="toggleReportMenu" class="report-btn">
+        <button @click="toggleReportMenu(post.cumId)" class="report-btn">
             신고
             <span :class="{'arrow-up': showReportMenu, 'arrow-down': !showReportMenu}"></span>
         </button>
@@ -35,34 +47,25 @@
         </div>
         </div>
     </div>
-    <!-- </div> -->
     <div class="board-detail__content">
     <p>{{ post.content }}</p>
     <div v-if="post.thumbnailDTOList && post.thumbnailDTOList.length > 0" class="thumbnail-list">
         <img
         v-for="thumb in post.thumbnailDTOList"
         :key="thumb.thumbnail"
-        :src="`/thumbnails/${thumb.thumbnail}`"
+        :src="`@/boardImage/${thumb.thumbnail}`"
         alt="썸네일"
         class="thumbnail-img"
         />
     </div>
     </div>
     <div class="board-detail__footer">
-    <button class="icon-btn" @click="like">
-        <img src="./asset/fullheart.png" alt="좋아요" style="width:20px; height:20px;">
+    <button class="icon-btn" @click="likes(post.cumId)">
+        <img v-if="!isLiked" src="./asset/defaultHeart.png" alt="좋아요" style="width:20px; height:20px;">
+        <img v-if="isLiked" src="./asset/fullheart.png" alt="좋아요" style="width:20px; height:20px;">
     </button>
-    <button class="icon-btn" @click="comment">
+    <button @click="goToCommentList(postId)" class="icon-btn">
         <img src="./asset/comment.png" alt="댓글" style="width:20px; height:20px;">
-    </button>
-    </div>
-    <!-- (수정/삭제 버튼 구현 예시, 작성자만 보임) -->
-    <div v-if="Number(currentUserId) === post.cumId" class="author-actions">
-    <button @click="editPost">
-        <img src="./asset/edit.png" alt="수정" style="width:20px; height:20px;">
-    </button>
-    <button @click="deletePost">
-        <img src="./asset/delete.png" alt="삭제" style="width:20px; height:20px;">
     </button>
     </div>
     </div>
@@ -74,12 +77,23 @@
     import { useRoute, useRouter } from 'vue-router';
     import axios from 'axios';
     import { useUserStore } from '@/stores/user';
+    import EditPost from './EditPost.vue';
 
     const userStore =  useUserStore();
     const token = userStore.token;
 
+    const showEditModal = ref(false);
+    function openEditModal() {
+        showEditModal.value = true;
+    }
+
+    function handleEditSuccess() {
+        showEditModal.value = false;
+        onMounted();
+    }
+
     const route = useRoute();
-    const router = useRouter()
+    const router = useRouter();
     const postId = route.params.postId;
     const post = ref({});
 
@@ -88,7 +102,8 @@
         '성희롱', '사기', '협박', '욕설', '도배글', '혐오콘텐츠'
     ]
 
-    function toggleReportMenu() {
+    function toggleReportMenu(writter) {
+        if (userStore.userId == writter) return;
         showReportMenu.value = !showReportMenu.value
     }
     function reportType(type) {
@@ -114,24 +129,53 @@ onMounted(async () => {
     }
 })
 
-
     const currentUserId = ref(null);
 
     onMounted(() => {
-    currentUserId.value = getCurrentUserId();
+    currentUserId.value = userStore.userId;
     console.log("현재 로그인한 사용자 ID:", currentUserId.value);
     });
 
-    function getCurrentUserId() {
-    if (!token) return null;
-    try {
-        const base64Payload = token.split('.')[1];
-        const payload = JSON.parse(atob(base64Payload));
-        return payload.id;
-    } catch (e) {
-        console.error("토큰 파싱 실패:", e);
-        return null;
+    // 댓글 조회 컴포넌트로 이동
+    const goToCommentList = () => {
+        router.push({ 
+            name: 'commentList',
+            params: { 
+                type: 1,
+                postId: route.params.postId },
+        })
     }
+
+    const isLiked = ref(false);
+
+    // 좋아요 기능
+    const likes = async (writter) => {
+        console.log(userStore.token);
+        console.log(userStore.userId);
+        console.log(writter);
+
+        if (userStore.userId == writter) return;
+
+        try {
+            console.log(postId);
+            const response = await axios.get(
+            `http://localhost:8000/main-client/boards/${postId}/select/likes`,
+            {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+            });
+            console.log(response.data);
+            if (response.data == "좋아요 등록") {
+                isLiked.value = true;
+            } else {
+                isLiked.value = false;
+            }
+        } catch (e) {
+            // 네트워크/에러시 기본값: 해제(default)
+            isLiked.value = false;
+            console.error('좋아요 상태 변경 실패:', e);
+        }
     }
 </script>
 
@@ -168,7 +212,7 @@ tbody {
     border: none;
     text-align: left;
 }
-h1 {
+h2 {
     text-align: left;
     margin: 32px 0 24px 0;
     margin-left: auto;
@@ -176,6 +220,10 @@ h1 {
 }
 div {
     margin: 12px 0;
+}
+button {
+    background: none;
+    border: none;
 }
 
 .board-detail__report-dropdown {
@@ -269,8 +317,8 @@ div {
 .icon-btn:hover { opacity: 1; }
 
 .author-actions {
-  max-width: 650px;
-  margin: 0 auto 36px auto;
+  max-width: 1200px;
+  margin: 0 auto 20px auto;
   display: flex;
   justify-content: flex-end;
   gap: 6px;

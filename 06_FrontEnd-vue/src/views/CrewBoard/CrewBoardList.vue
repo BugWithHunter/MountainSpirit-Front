@@ -51,8 +51,10 @@
     import axios from 'axios';
     import { ref, onMounted } from 'vue';
     import { useRouter } from 'vue-router'
-    import Pagination from './Pagination.vue';
-    import WritePost from './WritePost.vue';
+    import Pagination from '@/views/Board/Pagination.vue';
+    import WritePost from '@/views/Board/WritePost.vue';
+
+    
     import { useUserStore } from '@/stores/user';
 
     const userStore =  useUserStore();

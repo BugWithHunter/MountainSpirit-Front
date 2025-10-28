@@ -1,13 +1,10 @@
 <template>
             <article class="card chart">
-  <!-- ✅ 차트 카드 래퍼 (relative로 기준점 제공) -->
   <div class="chart-wrap">
-    <!-- ✅ 중앙 상단 타이틀: 부모에서 내려준 슬롯(title) -->
     <div class="chart-title">
       <slot name="title" ></slot>
     </div>
 
-    <!-- ✅ 실제 차트가 들어갈 박스 -->
     <div ref="chartDiv" class="chart-box"></div>
   </div>
   </article>
@@ -15,47 +12,96 @@
 
 
 <script setup>
-    import { onMounted, ref, defineProps, watch} from 'vue';
+    import { onMounted, ref, defineProps, watch, onBeforeUnmount, nextTick  } from 'vue';
+
+    let myChart;
+    let option;
 
     const props = defineProps({
-        hsaStamp: { type: Array },
-        totalStamp: { type: Array }
-    })
-
+        cumId : {type:Number},
+        xAxis : {type:Array, default: () => []},
+        yAxis : {type:Array, default: () => []},
+    });
     const chartDiv = ref(null);
-    const remainStamp = props.totalStamp.length - props.hsaStamp.length;
     
-    onMounted(() => {
-            // 차트를 그릴 div 테그 선택
-            var myChart = echarts.init(chartDiv.value, null, {
-                renderer: 'canvas',
-                useDirtyRect: false
-            });
-            var app = {};
-            var option;
-
-             option = {
+    function buildOption(cumId, xAxis, yAxis) {
+        return {
+            tooltip: {
+                trigger: 'axis', // 🔹 축 기준으로 호버 시 표시
+                axisPointer: {
+                    type: 'cross' // 🔹 십자선 커서
+                },
+                backgroundColor: 'rgba(50,50,50,0.8)',
+                borderColor: '#333',
+                textStyle: {
+                    color: '#fff'
+                },
+                formatter: (params) => {
+                    // params: 현재 마우스 위치의 데이터 정보 배열
+                    const item = params[0]; // 단일 시리즈라 0번째 사용
+                    return `
+                        <b>${item.axisValue}</b><br/>
+                        y: ${item.data}
+                    `;
+                }
+            },
             xAxis: {
                 type: 'category',
-                data: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12']
+                data: xAxis
             },
             yAxis: {
                 type: 'value'
             },
             series: [
                 {
-                    data: [10, 5, 3, 7, 0, 1, 2, 15, 2, 3, 4, 1,],
+                    data: yAxis,
                     type: 'line',
-                    color: '#1DDB16' //색상 코드
+                    color: '#1DDB16', //색상 코드
+                    // smooth: true,     // 🔹 라인을 부드럽게
+                    symbol: 'circle', // 🔹 데이터 점 표시
+                    symbolSize: 6,    // 🔹 점 크기
+                    lineStyle: {
+                        width: 2
+                    }
                 }
             ]
         };
+    }
 
-            if (option && typeof option === 'object') {
-                myChart.setOption(option);
-            }
-
+    function ensureChart() {
+        if (!myChart && chartDiv.value) {
+            myChart = echarts.init(chartDiv.value, null, { renderer: 'canvas', useDirtyRect: false });
             window.addEventListener('resize', myChart.resize);
+        }
+    }
+
+    function render() {
+        ensureChart();
+        if (!myChart) return;
+        const opt = buildOption(props.cumId, props.xAxis,props.yAxis);
+        myChart.clear();               //  이전 상태 깨끗이
+        myChart.setOption(opt, true);  //  notMerge=true: 완전 교체
+        myChart.resize();
+    }
+
+    onMounted(() => {
+        nextTick(() => setTimeout(() => {
+            render();                    //  처음에도 현재 props로 렌더
+        }, 360));
+    });
+
+    watch(
+        () => [props.cumId, props.xAxis,props.yAxis],
+        () => render(),
+        { deep: true, immediate: true }        //  처음 값과 깊은 변경 모두 반영
+    );
+        
+    onBeforeUnmount(() => {
+        if (myChart) {
+            window.removeEventListener('resize', myChart.resize);
+            myChart.dispose();
+            myChart = null;
+        }
     });
     
 </script>

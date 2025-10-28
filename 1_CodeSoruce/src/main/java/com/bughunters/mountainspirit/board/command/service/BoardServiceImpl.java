@@ -49,14 +49,24 @@ public class BoardServiceImpl implements BoardService {
     @Override
     @Transactional
     public void registPost(BoardDTO boardDTO, List<MultipartFile> multiFiles) {
-        boardDTO.setCumId(199);    // @Authentication으로 회원 인식하면 이 라인 지울것!
         boardDTO.setIsDeleted("N");
         boardDTO.setCreateDate(LocalDateTime.now());
 
         modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
         Board board = modelMapper.map(boardDTO, Board.class);
 //        boardRepository.save(board);
+        log.info("save 전 게시글ID : {}", board.getId());
+        try {
+            boardRepository.saveAndFlush(board);
+            log.info("After saveAndFlush, board ID: {}", board.getId());
+        } catch (Exception e) {
+            log.error("Error saving board entity", e);
+            throw e; // 필요시 다시 던지기
+        }
+
         boardRepository.saveAndFlush(board);
+        log.info("save 후 게시글ID : {}", board.getId());
+
 
         List<Map<String, Object>> files = multiFileUpload(multiFiles, board);
         insertInBoardImageEntity(files);
@@ -97,22 +107,24 @@ public class BoardServiceImpl implements BoardService {
     /* 필기. 좋아요를 누른 회웡ID는 service계층에서 @Authentication을 이용해서 받아오면 되는지? */
     @Override
     @Transactional
-    public void createOrDeleteLikesByPostId(int id) {
+    public String createOrDeleteLikesByPostId(int id, long userId) {
         Board board = boardRepository.findById(id).orElseThrow(IllegalArgumentException::new);
 
         Likes likes = likesRepository.findByPostId(board.getId());
-        if (likes != null && likes.getCumId() == 169) {   // 회원아이디는 얻어오는걸로 수정
+        if (likes != null && likes.getCumId() == userId) {
             likesRepository.delete(likes);
+            return "좋아요 해제";
         } else {
 
             LikesDTO likesDTO = new LikesDTO();
             likesDTO.setPostId((long)id);
-            likesDTO.setCumId(169);    // 임의로 넣은 값임. 나중에 회원id로 받아올 것!
+            likesDTO.setCumId(userId);
 
             modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
             likes = modelMapper.map(likesDTO, Likes.class);
 
             likesRepository.save(likes);
+            return "좋아요 등록";
         }
     }
 
@@ -126,6 +138,7 @@ public class BoardServiceImpl implements BoardService {
 
         /* 설명. DB에 보낼 값을 담기 위한 컬렉션 */
         List<Map<String, Object>> files = new ArrayList<>();
+        String filesPath = "C:/bughunters_re/MountainSpirit/06_FrontEnd-vue/src/boardImage/";
 
         /* 설명. 화면에서 각 파일마다 img 태그의 src 속성으로 적용하기 위한 문자열을 담은 컬렉션 */
         List<String> imgSrcs = new ArrayList<>();
@@ -139,19 +152,19 @@ public class BoardServiceImpl implements BoardService {
                 String saveName = UUID.randomUUID().toString().replace("-", "") + ext;
 
                 /* 설명. 각 파일을 저장 경로에 저장 */
-                multiFiles.get(i).transferTo(new File(filepath + "/img/multi/" + saveName));
+                multiFiles.get(i).transferTo(new File(filesPath + saveName));
 
                 /* 설명. DB에 보낼 값 설정(각 파일마다 Map<String, String>에 저장) */
                 Map<String, Object> file = new HashMap<>();
                 file.put("originName", originFileName);
                 file.put("renaming", saveName);
-                file.put("thumbnail", "/img/multi/" + saveName);
-                file.put("path", "/img/multi/");
+                file.put("thumbnail", saveName);
+                file.put("path", filesPath);
                 file.put("postId", board.getId());
 
 
                 files.add(file);
-                imgSrcs.add("/img/multi/" + saveName);
+                imgSrcs.add(filesPath + saveName);
             }
 
 
@@ -160,7 +173,7 @@ public class BoardServiceImpl implements BoardService {
             /* 설명. 부분적인 파일 저장 실패와 관련되어 후처리 */
             for (int i = 0; i < files.size(); i++) {       // 업로드에 성공한 것들은 List에 쌓였다는 생각으로
                 Map<String, Object> file = files.get(i);
-                new File(filepath + "/img/multi/" + file.get("saveName")).delete();
+                new File(filesPath + file.get("saveName")).delete();
             }
 
         }
@@ -177,7 +190,9 @@ public class BoardServiceImpl implements BoardService {
             boardImage.setPath((String) file.get("path"));
             boardImage.setPostId((Long) file.get("postId"));
 
-            boardImageRepository.save(boardImage);
+            log.info("save 전 게시글이미지ID : {}", boardImage.getId());
+            boardImageRepository.saveAndFlush(boardImage);
+            log.info("save 후 게시글이미지ID : {}", boardImage.getId());
         }
 
     }

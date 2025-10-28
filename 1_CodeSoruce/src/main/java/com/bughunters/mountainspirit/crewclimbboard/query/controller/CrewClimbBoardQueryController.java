@@ -37,9 +37,9 @@ public class CrewClimbBoardQueryController {
         return ResponseEntity.ok().body(crewClimbBoardAndMountainAndCrewMemberDTO);
     }
 
-    @GetMapping("/climb-board-mylist/{crewMemberId}")
-    public ResponseEntity<List<MyCrewClimbBoardListDTO>> findCrewClimbBoardByCrewMemberId(@PathVariable Long crewMemberId){
-        List<MyCrewClimbBoardListDTO> myCrewClimbBoardListDTO = crewClimbBoardQueryService.findMyCrewClimbBoardByCrewMemberId(crewMemberId);
+    @GetMapping("/climb-board-mylist/{memberId}")
+    public ResponseEntity<List<MyCrewClimbBoardListDTO>> findCrewClimbBoardByCrewMemberId(@PathVariable Long memberId){
+        List<MyCrewClimbBoardListDTO> myCrewClimbBoardListDTO = crewClimbBoardQueryService.findMyCrewClimbBoardByMemberId(memberId);
         return ResponseEntity.ok().body(myCrewClimbBoardListDTO);
     }
 

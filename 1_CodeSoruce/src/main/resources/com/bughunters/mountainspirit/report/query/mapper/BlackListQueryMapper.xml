@@ -7,15 +7,38 @@
     <resultMap id="blacklistResultMap" type="com.bughunters.mountainspirit.report.query.dto.BlacklistQueryDTO">
         <id property="id" column="id"/>
         <result property="createDate" column="createDate"/>
+        <result property="annotation" column="annotation"/>
         <result property="adminId" column="adminId"/>
         <result property="memberId" column="memberId"/>
     </resultMap>
 
     <select id="selectAllBlacklist" resultMap="blacklistResultMap">
         SELECT
-              createDate
+              id
+            , annotation
+            , createDate
             , adminId
             , memberId
             FROM Blacklist
+            ORDER BY createDate DESC
+        <if test="limit != null and offset != null">
+            LIMIT #{limit} OFFSET #{offset}
+        </if>
+    </select>
+    <select id="selectBlacklistById" resultType="com.bughunters.mountainspirit.report.query.dto.BlacklistByIdDTO">
+        SELECT b.id AS blacklistId,
+               b.memberId,
+               m.memName,
+               m.crewId,
+               m.climbCnt,
+               m.score,
+               COUNT(r.id) AS reportCount
+
+        FROM Blacklist b
+                 LEFT JOIN Member m ON b.memberId = m.id
+                 LEFT JOIN Report r ON b.memberId = r.reportedId
+
+        WHERE b.id = #{id}
+        GROUP BY b.id, b.memberId, m.memName, m.crewId, m.climbCnt, m.score;
     </select>
 </mapper>

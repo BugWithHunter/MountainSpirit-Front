@@ -47,7 +47,7 @@ function buildOption(items, radius) {
       label: { show: !isEmpty, position: 'outside', formatter: '{b}\n{c}', fontSize: 18, color: '#333' },
       labelLayout: { moveOverlap: 'shiftY', hideOverlap: false },
       emphasis: { label: { show: !isEmpty, formatter: '{b}\n{c}', fontSize: 24, fontWeight: 'bold', color: '#111' }, scale: false },
-      labelLine: { show: !isEmpty, length: 14, length2: 10, lineStyle: { width: 2, color: '#666' } },
+      labelLine: { show: !isEmpty, length: 40, length2: 30, lineStyle: { width: 3, color: '#666' } },
       silent: isEmpty,                    // 빈 상태면 상호작용 비활성화
       animation: !isEmpty,                // 빈 → 데이터 전환시 깔끔
       data: isEmpty ? [{ value: 1, name: 'empty', itemStyle: { color: '#ddd' } }] : data
@@ -59,21 +59,21 @@ function render() {
   ensureChart();
   if (!myChart) return;
   const opt = buildOption(props.chartItems, props.radius);
-  myChart.clear();               // ✅ 이전 상태 깨끗이
-  myChart.setOption(opt, true);  // ✅ notMerge=true: 완전 교체
+  myChart.clear();               //  이전 상태 깨끗이
+  myChart.setOption(opt, true);  //  notMerge=true: 완전 교체
   myChart.resize();
 }
 
 onMounted(() => {
   nextTick(() => setTimeout(() => {
-   render();                    // ✅ 처음에도 현재 props로 렌더
+   render();                    //  처음에도 현재 props로 렌더
   }, 360));
 });
 
 watch(
   () => [props.chartItems, props.radius],
   () => render(),
-  { deep: true, immediate: true }        // ✅ 처음 값과 깊은 변경 모두 반영
+  { deep: true, immediate: true }        //  처음 값과 깊은 변경 모두 반영
 );
 
 onBeforeUnmount(() => {

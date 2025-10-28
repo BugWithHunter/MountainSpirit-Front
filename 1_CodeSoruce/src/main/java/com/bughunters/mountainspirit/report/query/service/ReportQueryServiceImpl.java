@@ -1,6 +1,6 @@
 package com.bughunters.mountainspirit.report.query.service;
 
-import com.bughunters.mountainspirit.report.query.dto.ReportQueryDTO;
+import com.bughunters.mountainspirit.report.query.dto.*;
 import com.bughunters.mountainspirit.report.query.mapper.ReportQueryMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,17 +18,42 @@ public class ReportQueryServiceImpl implements ReportQueryService {
     }
 
     @Override
-    public List<ReportQueryDTO> selectAllReport() {
-        return reportQueryMapper.reportAll();
+    public List<ReportQueryDTO> selectAllReport(int page, int size) {
+        int offset = (page - 1) * size;
+        return reportQueryMapper.reportAll(size, offset);
     }
 
     @Override
-    public List<ReportQueryDTO> selectReportsByTypeAndStatus(String reportType, String isAccepted) {
-        return reportQueryMapper.findReportsByTypeAndStatus(reportType, isAccepted);
+    public List<ReportCheckDTO> searchReportsByType(String reportType, int page, int size) {
+        int offset = (page - 1) * size;
+        return reportQueryMapper.findReportsByType(reportType, size, offset);
     }
 
     @Override
-    public List<ReportQueryDTO> selectReportsByMemberId(Long memberId) {
-        return reportQueryMapper.findReportsByMemberId(memberId);
+    public List<ReportCheckDTO> selectReportsByTypeAndStatus(String reportType, String isAccepted, int page, int size) {
+        int offset = (page - 1) * size;
+        return reportQueryMapper.findReportsByTypeAndStatus(reportType, isAccepted, size, offset);
     }
+
+    @Override
+    public List<ReportDetailDTO> selectReportDetailById(Long id) {
+        return reportQueryMapper.findReportDetailById(id);
+    }
+
+    @Override
+    public List<ReportQueryDTO> selectReportsByMemberId(Long memberId, int page, int size) {
+        int offset = (page - 1) * size;
+        return reportQueryMapper.findReportsByMemberId(memberId, size, offset);
+    }
+
+    @Override
+    public List<ReportMemberDetailDTO> selectReportMemberDetailById(Long reportId) {
+        return reportQueryMapper.selectReportMemberDetail(reportId);
+    }
+
+    @Override
+    public List<ReportCategoryDTO> selectReportCategory(Long targetId) {
+        return reportQueryMapper.selectReportCategory(targetId);
+    }
+
 }

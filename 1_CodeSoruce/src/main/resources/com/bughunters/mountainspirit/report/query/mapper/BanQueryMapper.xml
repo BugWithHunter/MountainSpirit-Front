@@ -9,33 +9,36 @@
         <result property="endDate" column="endDate"/>
         <result property="userId" column="userId"/>
         <result property="adminId" column="adminId"/>
-    </resultMap>
-    <resultMap id="reportedMemberResultMap" type="com.bughunters.mountainspirit.report.command.dto.ReportMemberDTO">
-        <id property="id" column="id"/>
-        <result property="startDate" column="startDate"/>
-        <result property="endDate" column="endDate"/>
-        <result property="userId" column="userId"/>
-        <result property="adminId" column="adminId"/>
-        <result property="signInDate" column="signInDate"/>
+        <result property="annotation" column="annotation"/>
     </resultMap>
     <select id="selectAllBan" resultMap="banQueryResultMap">
         SELECT
-              startDate
+               id
+            , startDate
             , endDate
             , userId
             , adminId
+            , annotation
         FROM Ban
+        ORDER BY id DESC
+        <if test="limit != null and offset != null">
+            LIMIT #{limit} OFFSET #{offset}
+        </if>
     </select>
+    <select id="selectByIdBan" resultType="com.bughunters.mountainspirit.report.query.dto.BanByIdDTO">
+        SELECT b.id AS banId,
+               b.userId,
+               m.memName,
+               m.crewId,
+               m.climbCnt,
+               m.score,
+               COUNT(r.id) AS reportCount
 
-    <select id="selectMemberByReportedId" parameterType="_long" resultMap="reportedMemberResultMap">
-        SELECT
-               id
-             , memName
-             , email
-             , memStsId
-             , banCnt
-             , signInDate
-          FROM Member
-         WHERE id = #{reportedId}
+        FROM Ban b
+                 LEFT JOIN Member m ON b.userId = m.id
+                 LEFT JOIN Report r ON b.userId = r.reportedId
+
+        WHERE b.id = #{id}
+        GROUP BY b.id, b.userId, m.memName, m.crewId, m.climbCnt, m.score;
     </select>
 </mapper>

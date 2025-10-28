@@ -14,4 +14,5 @@ public class BanQueryDTO {
     private LocalDateTime endDate;
     private long userId;
     private Long adminId; // nullable
+    private String annotation;
 }

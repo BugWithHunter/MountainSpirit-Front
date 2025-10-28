@@ -38,11 +38,7 @@ export const useUserStore = defineStore(
       isLoggedIn.value = false
     }
 
-    // function setToken() {
-    //     console.log('토큰을 읽어볼까:?')
-    // }
     function setToken(jwtToken) {
-        console.log('토큰을 읽어볼까:?', jwtToken);
         token.value = jwtToken; 
     }
 
@@ -50,12 +46,16 @@ export const useUserStore = defineStore(
         profile.value = newProfile;
     }
 
+    function changeCrew(id) {
+        crewId.value = id;
+    }
+
     // ----- 반환 -----
     return {
       // 외부 노출용 readonly state
       name, email, roles, profile, token, isLoggedIn, userId,crewId,
       // actions
-      logIn, logOut, changeProfile , setToken
+      logIn, logOut, changeProfile , setToken, changeCrew
     }
   },
   {

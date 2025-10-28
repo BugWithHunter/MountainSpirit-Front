@@ -8,6 +8,8 @@ import com.bughunters.mountainspirit.crewclimbboard.command.entity.CrewClimbBoar
 import com.bughunters.mountainspirit.crewclimbboard.command.entity.CrewClimbRecord;
 import com.bughunters.mountainspirit.crewclimbboard.command.repository.CrewClimbBoardCommendRepository;
 import com.bughunters.mountainspirit.crewclimbboard.command.repository.CrewClimbRecordCommendRepository;
+import com.bughunters.mountainspirit.crewmember.command.entity.CrewMember;
+import com.bughunters.mountainspirit.crewmember.command.repository.CrewMemberCommendRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +21,7 @@ import java.util.List;
 @Service
 @Slf4j
 public class CrewClimbBoardCommendServiceImpl implements CrewClimbBoardCommendService {
+    private final CrewMemberCommendRepository crewMemberCommendRepository;
     ModelMapper modelMapper;
     private CrewClimbBoardCommendRepository crewClimbBoardCommendRepository;
     private CrewClimbRecordCommendRepository crewClimbRecordCommendRepository;
@@ -26,10 +29,11 @@ public class CrewClimbBoardCommendServiceImpl implements CrewClimbBoardCommendSe
     @Autowired
     public CrewClimbBoardCommendServiceImpl(CrewClimbBoardCommendRepository crewClimbBoardCommendRepository,
                                             ModelMapper modelMapper,
-                                            CrewClimbRecordCommendRepository crewClimbRecordCommendRepository) {
+                                            CrewClimbRecordCommendRepository crewClimbRecordCommendRepository, CrewMemberCommendRepository crewMemberCommendRepository) {
         this.crewClimbBoardCommendRepository = crewClimbBoardCommendRepository;
         this.modelMapper = modelMapper;
         this.crewClimbRecordCommendRepository = crewClimbRecordCommendRepository;
+        this.crewMemberCommendRepository = crewMemberCommendRepository;
     }
 
     @Override
@@ -116,6 +120,8 @@ public class CrewClimbBoardCommendServiceImpl implements CrewClimbBoardCommendSe
             return;
         }
 
+        CrewMember crewMember = crewMemberCommendRepository.findByCumId(crewClimbBoardApplyDTO.getCumId());
+        crewClimbBoardApplyDTO.setCumId(crewMember.getId());
         CrewClimbRecord crewClimbRecord = setCrewClimbRecordRegistInfo(crewClimbBoardApplyDTO);
         crewClimbRecordCommendRepository.save(crewClimbRecord);
 
@@ -172,7 +178,7 @@ public class CrewClimbBoardCommendServiceImpl implements CrewClimbBoardCommendSe
         CrewClimbRecord crewClimbRecord = new CrewClimbRecord();
 //        crewClimbRecord.setCrewClimbHistoryIsSucceed('N');
         crewClimbRecord.setCrewClimbId(crewClimbBoardApplyDTO.getCrewClimbId());
-        crewClimbRecord.setCrewMemberId(crewClimbBoardApplyDTO.getCrewMemberId());
+        crewClimbRecord.setCrewMemberId(crewClimbBoardApplyDTO.getCumId());
         crewClimbRecord.setFrtrlId(crewClimbBoardApplyDTO.getFrtrlId());
         return crewClimbRecord;
     }

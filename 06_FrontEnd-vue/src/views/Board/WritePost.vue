@@ -1,152 +1,264 @@
 <template>
-    <div class="modal-bg">
-        <div class="write-post-modal">
-            <form @submit.prevent="onSubmit">
-                <label>제목</label>
-                <input v-model="title" type="text" required />
-
-                <label>내용</label>
-                <textarea v-model="content" rows="5" required></textarea>
-
-                <label>사진 업로드</label>
-                <div class="upload-box" @click="onImageClick">
-                    <input type="file" ref="fileInput" @change="handleFile" style="display:none"/>
-                    <img src="./asset/upload.png" alt="업로드" class="upload-icon""/>
+  <div class="modal-wrap">
+    <div class="modal-container">
+      <h3>게시글 작성</h3>
+      <form @submit.prevent="submitPost" enctype="multipart/form-data">
+        <label>제목</label>
+        <input v-model="title" type="text" required>
+        <label>내용</label>
+        <textarea v-model="content" required></textarea>
+        <label>사진 업로드</label>
+        <div class="upload-row">
+            <template v-for="(fileObj, idx) in previewList" :key="fileObj.id">
+                <div class="image-thumb">
+                <img :src="fileObj.url" alt="미리보기">
+                <button class="thumb-remove-btn" @click="removeFile(idx)" type="button">&times;</button>
                 </div>
-
-                <button class="submit-btn" @click="submitPost">등록</button>
-            </form>
+            </template>
+        <label class="upload-label-box">
+        <img src="./asset/upload.png" alt="사진업로드">
+        <input type="file" @change="onFileChange" multiple>
+        </label>
         </div>
+        <div class="modal-btn">
+          <button type="button" @click="closeModal">취소</button>
+          <button type="submit" >등록</button>
+        </div>
+      </form>
     </div>
+  </div>
 </template>
 
 <script setup>
 import { ref } from 'vue';
+import axios from 'axios';
 import { useUserStore } from '@/stores/user';
-
 
 const userStore =  useUserStore();
 const token = userStore.token;
 
 const title = ref('');
 const content = ref('');
-const imageFile = ref(null);
+const files = ref([]);
+const previewList = ref([]);
+const emit = defineEmits(['close', 'post-success']);
 
-async function submitPost() {
+let fileId = 0;
 
+function closeModal() {
+  emit('close');
+}
 
+    function onFileChange(event) {
+    //   files.value = event.target.files;
+        const fileList = event.target.files;
+    // 여러 장 한 번에 업로드도 지원
+    for (let i = 0; i < fileList.length; i++) {
+        const file = fileList[i];
+        const reader = new FileReader();
+        const curId = Date.now() + '-' + (fileId++);
+
+        reader.onload = e => {
+        previewList.value.push({
+            id: curId,
+            file: file,
+            url: e.target.result
+        });
+        // files.value도 동기화
+        files.value = previewList.value.map(obj => obj.file);
+        };
+        reader.readAsDataURL(file);
+    }
+}
+
+    function removeFile(idx) {
+    previewList.value.splice(idx, 1);
+    files.value = previewList.value.map(obj => obj.file);
+    }
+
+    async function submitPost() {
     const formData = new FormData();
     formData.append('title', title.value);
     formData.append('content', content.value);
-    formData.append('image', imageFile.value);
+    for (const file of files.value) {
+        formData.append('multiFiles', file);
+    }
 
     try {
-        const response = await axios.post(
-        'http://localhost:8000/main-client/boards/insert',
-        formData, // FormData 객체
-        {
-            headers: {
+        await axios.post('http://localhost:8000/main-client/boards/insert', formData, {
+        headers: {
             Authorization: `Bearer ${token}`,
-            }
+            'Content-Type': 'multipart/form-data'
         }
-        );
-        console.log('서버 응답:', response.data);
+        });
+        emit('post-success');
     } catch (error) {
-        if (error.response) {
-        // 서버가 에러 메시지를 보낸 경우
-        console.error('업로드 실패:', error.response.data);
-        } else {
-        // 네트워크 등 기타 오류
-        console.error('업로드 실패:', error.message);
-        }
+        alert('게시글 등록 실패: ' + error);
     }
-    
-
-}
-    function onImageClick() {
-    fileInput.value.click();
-}
-
-    // 이미지 파일 입력 핸들러
-    function handleFile(e) {
-    imageFile.value = e.target.files[0];
     }
 </script>
 
 <style scoped>
-.modal-bg {
-    position: fixed;
-    left: 0; top: 0; right: 0; bottom: 0;
-    background: #f6f6f6;
-    min-width: 100vw;
-    min-height: 100vh;
-    z-index: 998;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+.modal-wrap {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0,0,0,0.15);
+  z-index: 1000;
 }
-.write-post-modal {
-    background: #fff;
-    border-radius: 17px;
-    box-shadow: 0 2px 8px #e7e7e7;
-    padding: 35px 29px 38px 29px;
-    width: 410px;
-    min-height: 440px;
-    position: relative;
+.modal-container {
+  background: #fff;
+  border-radius: 15px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.07);
+  padding: 28px 30px 24px 30px;
+  width: 550px;
+  min-width: 320px;
+  height: 600px;
 }
-.modal-title {
-    font-size: 16px;
-    color: #bbb;
-    margin-bottom: 18px;
+h3 {
+  text-align: center;
+  margin-bottom: 20px;
+  font-size: 18px;
+  font-weight: 600;
 }
 label {
-    font-size: 18px;
-    font-weight: 600;
-    margin-bottom: 5px;
-    margin-top: 12px;
-    display: block;
+  font-size: 15px;
+  margin-top: 8px;
+  margin-bottom: 4px;
+  display: block;
 }
-input[type="text"],
+input[type="text"] {
+  width: 100%;
+  border: 1.5px solid #ddd;
+  border-radius: 10px;
+  padding: 8px 10px;
+  font-size: 15px;
+  margin-bottom: 10px;
+  box-sizing: border-box;
+  outline: none;
+}
 textarea {
-    width: 90%;
-    border-radius: 10px;
-    border: 1px solid #c5c5c5;
-    background: #fff;
-    margin-bottom: 12px;
-    margin-top: 2px;
-    padding: 8px 16px;
-    font-size: 17px;
-    resize: none;
-    outline: none;
+  width: 100%;
+  min-height: 170px;
+  border: 1.5px solid #ddd;
+  border-radius: 10px;
+  padding: 10px 14px;
+  font-size: 15px;
+  margin-bottom: 14px;
+  resize: vertical;
+  outline: none;
+  box-sizing: border-box;
 }
-.upload-box {
-    width: 88px; height: 88px;
-    border: 2px solid #ececec;
-    border-radius: 11px;
-    margin-bottom: 18px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
+
+.upload-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 14px;
 }
-.upload-icon {
-    width: 20px;
-    height: 20px;
-    opacity: 0.5;
+.image-thumb {
+  width: 65px; height: 65px;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1.3px solid #ddd;
+  display: flex; align-items: center; justify-content: center;
+  background: #faf9f7;
+  position: relative;
+  margin-right: 3px;
 }
-.submit-btn {
-    float: right;
-    background: #222;
-    color: #fff;
-    border: none;
-    border-radius: 7px;
-    font-size: 16px;
-    padding: 7px 24px;
-    margin-top: 10px;
-    cursor: pointer;
-    transition: background 0.15s;
+.image-thumb img {
+    width: 65px; height: 65px;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
-.submit-btn:hover {
-    background: #111;
+.thumb-remove-btn {
+  position: absolute;
+  top: -8px; right: -8px;
+  width: 20px; height: 20px;
+  border: none;
+  border-radius: 50%;
+  background: #fff;
+  color: #333;
+  font-size: 18px;
+  cursor: pointer;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.09);
+  z-index: 2;
+  padding: 0;
+}
+.upload-label-box {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 68px; height: 68px;
+  border: 2px solid #eee;
+  border-radius: 12px;
+  background: #fafcff;
+  position: relative;
+  cursor: pointer;
+}
+
+.upload-label-box img {
+  width: 30px; height: 30px;
+  opacity: 0.7;
+}
+
+input[type="file"] { display: none; }
+
+
+.upload-label-box {
+  display: inline-block;
+  width: 80px; height: 80px;
+  border: 2px solid #eee;
+  border-radius: 12px;
+  background: #fafcff;
+  margin-bottom: 10px;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+.upload-label-box img {
+  position: absolute;
+  top: 50%; left: 50%;
+  width: 20px; height: 20px;
+  transform: translate(-50%, -50%);
+  opacity: 0.5;
+}
+
+.modal-btn {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 5px;
+}
+button[type="submit"] {
+  background: #222;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  padding: 7px 18px;
+  font-size: 15px;
+  cursor: pointer;
+  margin-left: 2px;
+  transition: background 0.15s;
+}
+button[type="submit"]:hover {
+  background: #444;
+}
+button[type="button"] {
+  background: #fff;
+  color: #444;
+  border: 1px solid #bbb;
+  border-radius: 5px;
+  padding: 7px 15px;
+  font-size: 15px;
+  cursor: pointer;
+  transition: border 0.15s, background 0.12s;
+}
+button[type="button"]:hover {
+  border-color: #888;
 }
 </style>
+

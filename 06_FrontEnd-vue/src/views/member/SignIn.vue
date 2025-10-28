@@ -88,7 +88,13 @@
         // userStore.token = token;
         userStore.setToken(token);
         userStore.logIn(user);
-        router.push("/");
+            console.log('containTest:', user.authorities.some(x => x ==='ROLE_ADMIN'))
+        if(user.authorities.some(x => x === 'ROLE_ADMIN')){
+            router.push("/admin");
+        } else {
+            router.push("/");
+        }
+        
 
     } catch (error) {
         // 5️⃣ 에러 처리

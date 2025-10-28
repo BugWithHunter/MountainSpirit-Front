@@ -13,5 +13,5 @@ public interface CrewClimbBoardQueryMapper {
 
     CrewClimbBoardAndMountainAndCrewMemberDTO findOneCrewClimbBoardByCrewClimbBoardId(Long crewClimbBoardId);
 
-    List<MyCrewClimbBoardListDTO> findMyCrewClimbBoardByCrewMemberId(Long crewMemberId);
+    List<MyCrewClimbBoardListDTO> findMyCrewClimbBoardByMemberId(Long memberId);
 }

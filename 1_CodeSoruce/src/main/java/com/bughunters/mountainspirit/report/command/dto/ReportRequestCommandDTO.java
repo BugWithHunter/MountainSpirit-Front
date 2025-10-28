@@ -8,6 +8,7 @@ import lombok.*;
 @Setter
 @Builder
 public class ReportRequestCommandDTO {
+    private Long id;
     private String reportType;
     private String reason;
     private Long reportedId;

@@ -38,6 +38,9 @@
 <script setup>
 import axios from 'axios'
 import { onMounted, ref } from 'vue'
+    import { useUserStore } from '@/stores/user';
+    
+    const userStore = useUserStore();
 
 const crewList = ref([])
 const modalCheck = ref(false)
@@ -45,10 +48,8 @@ const selectedCrew = ref(0)
 
 onMounted(async () => {
   const response = await axios.get('http://localhost:8000/main-client/crew/crew-info', {
-    headers: {
-      Authorization:
-        'Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJrYW5nOTk5OTk5QGV4YW1wbGUuY29tIiwiYXV0aCI6WyJST0xFX01FTUJFUiJdLCJ1c2VybmFtZSI6IuqwleyCsOyLoOuguSIsImlkIjoyMTcsImJpcnRoIjoiMTk4Ni0wMy0wOCIsIm1lbVN0c0lkIjoxLCJleHAiOjE3NjE1Njc3OTl9.hrkEktZ_X20kC-eju4Yx63eItDilxt5-2Fi0AjtGx6Xlryc9SQ8rYmwEFJ3Neiuj8GgLwHynCdPokZXlt1IZAA'
-    }
+    headers:{"Authorization":`Bearer ${userStore.token}`}
+
   })
   crewList.value = response.data
   console.log(crewList.value)
@@ -64,13 +65,10 @@ const crewApply = async () => {
     'http://localhost:8000/main-client/crew-member/apply-request',
     {
       crewId: selectedCrew.value,
-      cumId: 191
+      cumId: userStore.userId
     },
     {
-      headers: {
-        Authorization:
-          'Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJrYW5nOTk5OTk5QGV4YW1wbGUuY29tIiwiYXV0aCI6WyJST0xFX01FTUJFUiJdLCJ1c2VybmFtZSI6IuqwleyCsOyLoOuguSIsImlkIjoyMTcsImJpcnRoIjoiMTk4Ni0wMy0wOCIsIm1lbVN0c0lkIjoxLCJleHAiOjE3NjE1Njc3OTl9.hrkEktZ_X20kC-eju4Yx63eItDilxt5-2Fi0AjtGx6Xlryc9SQ8rYmwEFJ3Neiuj8GgLwHynCdPokZXlt1IZAA'
-      }
+        headers:{"Authorization":`Bearer ${userStore.token}`}
     }
   )
   console.log('가입 신청 완료:', response.data)
