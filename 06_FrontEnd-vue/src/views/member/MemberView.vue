@@ -286,8 +286,12 @@
                 openModal(res.data.message, '등산 완료 버튼');
             }
         }
-        catch(e) {
-
+        catch(error) {
+            console.error('❌ 서버 오류 코드:', error.response.status);
+            console.error('❌ 오류 내용:', error.response.data);
+            const errorMessage = error.response.status >= 500 ? 
+            '서버 이상' : error.response.data.message;
+            openModal(errorMessage,'등산 인증 실패', true);
         }
         finally {
             loading.stop();  // 스피너 OFF + 화면 복귀

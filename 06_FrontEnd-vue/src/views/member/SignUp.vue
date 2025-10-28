@@ -137,8 +137,8 @@ const modal = reactive({
 // 폼 상태
 const form = reactive({
   email       : 'test01@naver.com',
-  password    : 'pwd045pwd045',
-  password2   : 'pwd045pwd045',
+  password    : 'pwd045',
+  password2   : 'pwd045',
   name        : '이순신',
   nickname    : '장군',
   birth       : '1992-04-12',

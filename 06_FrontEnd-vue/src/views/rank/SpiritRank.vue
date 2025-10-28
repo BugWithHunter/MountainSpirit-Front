@@ -45,6 +45,7 @@
 <script setup>
 import { onMounted, ref, reactive, nextTick } from 'vue'
 import EchartDonut from '@/components/echart/EchartDonut.vue'
+import axios from 'axios';
 
 //--------------------------
 let map;
@@ -195,6 +196,8 @@ function createMarkerElement(initialSize, data) {
 }
 
 onMounted(() => {
+
+  // tasks.push(axios.get(`http://localhost:8000/main-client/stamp/corse-stamp/${userStore.userId}`,{headers: {Authorization: `Bearer ${userStore.token}`} }));
   // 지도 옵션
   const center = new window.kakao.maps.LatLng(35.94699, 127.09598)
   map = new window.kakao.maps.Map(mapContainer.value, {

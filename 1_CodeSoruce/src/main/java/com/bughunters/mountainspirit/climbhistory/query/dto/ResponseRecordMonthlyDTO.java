@@ -2,6 +2,9 @@ package com.bughunters.mountainspirit.climbhistory.query.dto;
 
 import lombok.*;
 
+import java.util.List;
+import java.util.Map;
+
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
@@ -9,6 +12,6 @@ import lombok.*;
 @ToString
 public class ResponseRecordMonthlyDTO {
     private Long cumId;
-    private String monthly;
-    private int count;
+    private List<String> xAxis;
+    private List<Integer> yAxis;
 }

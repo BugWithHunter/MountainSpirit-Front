@@ -134,7 +134,9 @@
             // 서버가 응답했지만 (예: 400, 401 등)
             console.error('❌ 서버 오류 코드:', error.response.status);
             console.error('❌ 오류 내용:', error.response.data);
-            openModal(error.response.data.message,'로그인 실패', true);
+            const errorMessage = error.response.status >= 500 ? 
+            '서버 이상' : error.response.data.message;
+            openModal(errorMessage,'로그인 실패', true);
         } else if (error.request) {
             // 요청은 갔지만 응답이 없을 때 (네트워크 문제 등)
             console.error('❌ 응답 없음:', error.request);
