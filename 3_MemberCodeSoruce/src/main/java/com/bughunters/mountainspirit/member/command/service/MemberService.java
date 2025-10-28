@@ -30,4 +30,8 @@ public interface MemberService {
 
     ResponseProfileImageDTO updateProfileImage(MultipartFile singleFile, Long id, HttpServletRequest request);
     void deleteCrewId(long crewId, long cumId);
+
+    boolean checkPassowrd(CheckPasswordDTO checkPasswordDTO);
+
+    boolean modifyPassword(ModifyPasswordDTO modifyPasswordDTO);
 }

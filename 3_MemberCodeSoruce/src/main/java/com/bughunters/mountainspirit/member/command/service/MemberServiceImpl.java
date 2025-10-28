@@ -7,13 +7,18 @@ import com.bughunters.mountainspirit.member.command.repository.*;
 import com.bughunters.mountainspirit.member.query.dto.BlackListDTO;
 import com.bughunters.mountainspirit.member.command.dto.RequestLoginwithAuthoritiesDTO;
 import com.bughunters.mountainspirit.member.query.service.MemberQueryService;
+import com.bughunters.mountainspirit.security.MemberStatusAuthenticationException;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -40,6 +45,9 @@ public class MemberServiceImpl implements MemberService {
     private final ProfileImageRepository profileImageRepository;
     private final MemberRankRepository memberRankRepository;
 
+    private final PasswordEncoder passwordEncoder;  //평문과 암호화 된 다이제스트를 비교하기 위한 도구
+
+    @Autowired
     public MemberServiceImpl(MemberRepository memberRepository
             , MemberQueryService memberQueryService
             , ModelMapper modelMapper
@@ -50,7 +58,8 @@ public class MemberServiceImpl implements MemberService {
             , MemberAuthorityRepository memberAuthorityRepository
             , ProfileImageService profileImageService
             , ProfileImageRepository profileImageRepository
-            , MemberRankRepository memberRankRepository) {
+            , MemberRankRepository memberRankRepository
+            , PasswordEncoder passwordEncoder) {
         this.memberRepository = memberRepository;
         this.memberQueryService = memberQueryService;
         this.modelMapper = modelMapper;
@@ -62,6 +71,7 @@ public class MemberServiceImpl implements MemberService {
         this.profileImageService = profileImageService;
         this.profileImageRepository = profileImageRepository;
         this.memberRankRepository = memberRankRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     //등산 이후 회원 정보 변경
@@ -316,6 +326,33 @@ public class MemberServiceImpl implements MemberService {
         Member member = memberRepository.findById(cumId).get();
         log.info("삭제할 회원 정보 : {}",member);
         member.setCrewId(null);
+    }
+
+    @Override
+    public boolean checkPassowrd(CheckPasswordDTO checkPasswordDTO) {
+        /* 설명. DB에 있는 해당 회원의 정보 */
+        Member member =  memberRepository.findById(checkPasswordDTO.getId()).orElse(null);
+        if(member == null || !passwordEncoder.matches(checkPasswordDTO.getPassword(), member.getMemPwd())){
+            return false;
+        }
+
+        return true;
+    }
+
+    @Override
+    public boolean modifyPassword(ModifyPasswordDTO modifyPasswordDTO) {
+        Member member =  memberRepository.findById(modifyPasswordDTO.getId()).orElse(null);
+
+        if(member == null || !passwordEncoder.matches(modifyPasswordDTO.getOldPassword(), member.getMemPwd())){
+            return false;
+        }
+        // BCrypt 암호화
+        modifyPasswordDTO.setNewPassword(bCryptPasswordEncoder.encode(modifyPasswordDTO.getNewPassword()));
+
+        member.setMemPwd(modifyPasswordDTO.getNewPassword());
+        memberRepository.save(member);
+
+        return true;
     }
 
 

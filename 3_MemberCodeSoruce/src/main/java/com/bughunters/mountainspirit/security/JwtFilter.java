@@ -29,7 +29,6 @@ public class JwtFilter extends OncePerRequestFilter {
         log.info("URI={} method={} contentType={}",
                 request.getRequestURI(), request.getMethod(), request.getContentType());
 
-
         /* 설명. 토큰을 제대로 들고 왔다면 */
         if(authorizationHeader != null && authorizationHeader.startsWith("Bearer ")){
             String token = authorizationHeader.substring(7);

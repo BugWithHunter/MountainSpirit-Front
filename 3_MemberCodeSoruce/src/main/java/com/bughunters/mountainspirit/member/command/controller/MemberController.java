@@ -200,6 +200,52 @@ public class MemberController {
                 .body(responseMessage);
     }
 
+    @PostMapping("/password-info")
+    public ResponseEntity<ResponseMessage> checkPassword(@RequestBody CheckPasswordDTO checkPasswordDTO) {
+        boolean ableToPassword = memberService.checkPassowrd(checkPasswordDTO);
+
+        ResponseMessage responseMessage = new ResponseMessage();
+        HttpStatus httpStatus = ableToPassword ? HttpStatus.OK :HttpStatus.BAD_REQUEST;
+
+        if(ableToPassword)
+        {
+            responseMessage.setHttpStatus(httpStatus.value());
+            responseMessage.setMessage("password 일치");
+        }
+        else {
+            responseMessage.setHttpStatus(httpStatus.value());
+            responseMessage.setMessage("password 불 일치");
+        }
+
+        return ResponseEntity
+                .status(httpStatus)
+                .body(responseMessage);
+    }
+
+    @PostMapping("/member-password")
+    public ResponseEntity<ResponseMessage> modifyPassword(@RequestBody ModifyPasswordDTO modifyPasswordDTO) {
+
+        boolean ableToPassword = memberService.modifyPassword(modifyPasswordDTO);
+
+        ResponseMessage responseMessage = new ResponseMessage();
+        HttpStatus httpStatus = ableToPassword ? HttpStatus.OK :HttpStatus.BAD_REQUEST;
+
+        if(ableToPassword)
+        {
+            responseMessage.setHttpStatus(httpStatus.value());
+            responseMessage.setMessage("password 변경 완료");
+        }
+        else {
+            responseMessage.setHttpStatus(httpStatus.value());
+            responseMessage.setMessage("password 변경 실패");
+        }
+
+        return ResponseEntity
+                .status(httpStatus)
+                .body(responseMessage);
+    }
+
+
 
 
 }

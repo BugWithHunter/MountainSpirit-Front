@@ -7,7 +7,8 @@ import lombok.*;
 @Getter
 @Setter
 @ToString
-public class CheckPasswordDTO {
+public class ModifyPasswordDTO {
     Long id;
-    String password;
+    String newPassword;
+    String oldPassword;
 }

@@ -135,10 +135,10 @@ const modal = reactive({
 
 // 폼 상태
 const form = reactive({
-  email       : 'test01@naver.com',
+  email       : 'test@naver.com',
   password    : 'pwd045',
   password2   : 'pwd045',
-  name        : '이순신',
+  name        : '',
   nickname    : '장군',
   birth       : '1992-04-12',
   gender      : 'M' // 'F' 또는 'M'
