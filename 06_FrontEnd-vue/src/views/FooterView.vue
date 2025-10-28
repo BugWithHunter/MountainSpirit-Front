@@ -22,8 +22,6 @@
                 <h4>지원</h4>
                 <ul>
                     <li><RouterLink to="/">이용 가이드</RouterLink></li>
-                    <li><RouterLink to="/report">신고/제안하기</RouterLink></li>
-                    <li><a href="mailto:suhyun8913@naver.com">이메일 문의</a></li>
                 </ul>
                 </div>
                 <div>

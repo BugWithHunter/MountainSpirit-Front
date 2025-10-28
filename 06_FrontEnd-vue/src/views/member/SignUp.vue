@@ -96,8 +96,8 @@
       </div>
 
       <!-- 회원가입 버튼 -->
-      <!-- <button class="submit" type="submit" :disabled="submitting || !isFormValid"> -->
-      <button class="submit" type="submit" >
+      <button class="submit" type="submit" :disabled="submitting || !isFormValid">
+      <!-- <button class="submit" type="submit" > -->
         회원가입
       </button>
     </form>
@@ -110,6 +110,7 @@
         :message="modal.message"
         :confirmText="'확인'"
         :hasFunction="modal.hasFunction"
+        :isError="modal.isError"
         @confirm="ModalConfirm"
     />
 </template>
@@ -117,9 +118,11 @@
 <script setup>
 import { reactive, computed, nextTick } from 'vue'
 import { useRouter } from 'vue-router'
-import BaseModal from '@/components/BaseModal.vue' // 경로는 프로젝트에 맞게
+import BaseModal from '@/components/BaseModal.vue' 
+import axios from 'axios';
+import { useUserStore } from '@/stores/user';
 
-
+const userStore = useUserStore();
 const router = useRouter();
 
 const modal = reactive({
@@ -127,18 +130,19 @@ const modal = reactive({
   title: '알림',
   message: '',
   confirmText: '확인',
-  hasFunction: false  
+  hasFunction: false ,
+  isError: false 
 })
 
 // 폼 상태
 const form = reactive({
-  email: '',
-  password: '',
-  password2: '',
-  name: '',
-  nickname: '',
-  birth: '',
-  gender: '' // 'F' 또는 'M'
+  email       : 'test01@naver.com',
+  password    : 'pwd045',
+  password2   : 'pwd045',
+  name        : '이순신',
+  nickname    : '장군',
+  birth       : '1992-04-12',
+  gender      : 'M' // 'F' 또는 'M'
 })
 
 // 에러 메시지
@@ -155,7 +159,7 @@ const errors = reactive({
 const emailRegex =
   /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/ // 기본 이메일 검증
 const pwRegex =
-  /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d!@#$%^&*()_\-+=]{8,}$/ // 8자 이상, 영문+숫자 1개 이상
+  /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d!@#$%^&*()_\-+=]{6,}$/ // 6자 이상, 영문+숫자 1개 이상
 const nameRegex = /^.{2,30}$/ // 2~30자 (간단화)
 const nicknameRegex = /^.{2,20}$/
 
@@ -169,7 +173,7 @@ function validatePassword() {
   errors.password = ''
   if (!form.password) errors.password = '비밀번호를 입력해 주세요.'
   else if (!pwRegex.test(form.password))
-    errors.password = '8자 이상, 영문과 숫자를 포함해야 합니다.'
+    errors.password = '6자 이상, 영문과 숫자를 포함해야 합니다.'
 }
 
 function validatePassword2() {
@@ -238,11 +242,12 @@ const isFormValid = computed(() => {
 
 
 
-function openModal(msg, title = '알림', hasFunction = false) {
+function openModal(msg, title = '알림', isError = false, hasFunction = false) {
   modal.title = title;
   modal.message = msg;
   modal.open = true;
   modal.hasFunction = hasFunction;
+  modal.isError = isError;
 }
 
 let submitting = false
@@ -253,18 +258,44 @@ function ModalConfirm() {
 }
 
 async function onSubmit() {
-    openModal('테스트 모달', '알림', true);
-
+  
+  // openModal('테스트 모달', '알림', true);
+  
   // 최종 검증
   if (!isFormValid.value) return
-
+  
   try {
     submitting = true
+
+    const response = await axios.post(
+      'http://localhost:8000/member-client/member/member',
+      {
+          "memId": form.email,
+          "email": form.email,
+          "nickname": form.nickname,
+          "memPwd": form.password,
+          "memName": form.name,
+          "birth": form.birth,
+          "gender": form.gender
+      },
+      {
+          headers: { 
+            'Content-Type': 'application/json' ,
+            // Authorization: `Bearer ${userStore.token}`
+          }
+      });
+
+    console.log('회원 가입 통신 결과:',response);
+    console.log('회원 가입 통신 결과 데이터:',response.data);
+    
+              
+    openModal('회원 가입이 완료 되었습니다.','회원 가입', false,true);
     // 실제 API 호출 예시:
     // await axios.post('/api/auth/signup', form)
 
   } catch (e) {
-    console.log(e);
+    console.log('catch1:',e);
+    openModal(e.response.data.message,'회원 가입 실패', true);
 } finally {
     submitting = false
   }
@@ -333,7 +364,7 @@ input:focus {
   margin-top: 4px;
   border: none;
   border-radius: 8px;
-  background: #111827;
+  background: #00c774;;
   color: #fff;
   font-weight: 600;
   cursor: pointer;
