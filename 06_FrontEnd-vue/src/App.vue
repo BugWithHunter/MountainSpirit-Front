@@ -4,11 +4,13 @@
   import MountainAll from './views/mountainall/MountainAll.vue';
   import headerComponent from './components/Header.vue';
   import FooterView from './views/FooterView.vue';
+  import LoadingOverlay from '@/components/LoadingOverlay.vue'
 
 const route = useRoute();
 </script>
 
 <template>
+  <!-- 항상 맨 아래에 전역 오버레이 한 번만 -->
   <header v-if="!route.matched.some(r => r.meta.isAdmin)">
     <headerComponent></headerComponent>
   </header>
@@ -17,11 +19,12 @@ const route = useRoute();
     <RouterView/>
     <!-- <MountainAll/> -->
   </main>
-
+  
   <!-- footer 하 -->
   <footer v-if="!route.matched.some(r => r.meta.isAdmin)">
     <FooterView/>
   </footer>
+<LoadingOverlay />
 </template>
 
 <style scoped>

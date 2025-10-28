@@ -81,6 +81,9 @@
     import { useUserStore } from '@/stores/user';
     import axios from 'axios';
     import BaseModal from '@/components/BaseModal.vue' // 경로는 프로젝트에 맞게
+    import { useLoadingStore } from '@/stores/loading'
+
+    const loading = useLoadingStore()
 
     const tttt = ref('');
     const router = useRouter();
@@ -253,32 +256,45 @@
     }
 
     const endClimb = async() => {
-        const res = await axios.put(`http://localhost:8000/main-client/climb-history/climbing`,
-                    {
-                        'cumId' : userStore.userId,
-                        "frtrlId" : selectedCourse.value.frtrlId,     
-                        "poiId" : selectedCourse.value.poiId,         
-                        "stateCode" : "N"
-                    }
-                    ,{headers: {Authorization: `Bearer ${userStore.token}`} 
-                })
+        try {
+            loading.start();  // 스피너 ON + 화면 차단
+            const res = await axios.put(`http://localhost:8000/main-client/climb-history/climbing`,
+                        {
+                            'cumId' : userStore.userId,
+                            "frtrlId" : selectedCourse.value.frtrlId,     
+                            "poiId" : selectedCourse.value.poiId,         
+                            "stateCode" : "N"
+                        }
+                        ,{headers: {Authorization: `Bearer ${userStore.token}`} 
+                    })
 
-        console.log('등산 완료결과:', res.data);
-        
-        if(res.data.httpStatus === 200) {
+            console.log('등산 완료결과:', res.data);
             
-            // 등산 완료 후 미완료 리스트에서 제거
-            const index = notCompleteClimbing.value.findIndex(x => x.poiId == res.data.result.member.poiId);
-            if(index !== -1){
-                notCompleteClimbing.value.splice(index,1);
+            if(res.data.httpStatus === 200) {
+                
+                // 등산 완료 후 미완료 리스트에서 제거
+                const index = notCompleteClimbing.value.findIndex(x => x.poiId == res.data.result.member.poiId);
+                if(index !== -1){
+                    notCompleteClimbing.value.splice(index,1);
+                }
+
+                replaceData();
+                console.log('등반 정상 완료 후:', notCompleteClimbing.value);
+                buttonflag.value = true;
+
+            } else {
+                openModal(res.data.message, '등산 완료 버튼');
             }
-
-            replaceData();
-            console.log('등반 정상 완료 후:', notCompleteClimbing.value);
-            buttonflag.value = true;
-
-        } else {
-            openModal(res.data.message, '등산 완료 버튼');
+        }
+        catch(error) {
+            console.error('❌ 서버 오류 코드:', error.response.status);
+            console.error('❌ 오류 내용:', error.response.data);
+            const errorMessage = error.response.status >= 500 ? 
+            '서버 이상' : error.response.data.message;
+            openModal(errorMessage,'등산 인증 실패', true);
+        }
+        finally {
+            loading.stop();  // 스피너 OFF + 화면 복귀
         }
     }
 

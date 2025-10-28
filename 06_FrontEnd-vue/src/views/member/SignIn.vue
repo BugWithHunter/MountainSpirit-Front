@@ -27,13 +27,44 @@
     </form>
     </section>
 
+    
+   <!-- 모달 컴포넌트 -->
+  <BaseModal
+        v-model:open="modal.open"
+        :title="modal.title"
+        :message="modal.message"
+        :confirmText="'확인'"
+        :hasFunction="modal.hasFunction"
+        :isError="modal.isError"
+    />
+
 </template>
 
 <script setup>
     import { useRouter } from 'vue-router';
-    import { ref   } from 'vue';
+    import { ref ,reactive  } from 'vue';
     import axios from 'axios'
-    import { useUserStore } from '@/stores/user';
+    import { useUserStore } from '@/stores/user'
+    import BaseModal from '@/components/BaseModal.vue' ;
+
+    const modal = reactive({
+        open: false,
+        title: '알림',
+        message: '',
+        confirmText: '확인',
+        hasFunction: false ,
+        isError: false 
+    })
+
+    
+    function openModal(msg, title = '알림', isError = false, hasFunction = false) {
+        modal.title = title;
+        modal.message = msg;
+        modal.open = true;
+        modal.hasFunction = hasFunction;
+        modal.isError = isError;
+    }
+
     const userStore =  useUserStore();
     const password = ref('pwd045');
     const email = ref('user045@example.com');
@@ -88,7 +119,8 @@
         // userStore.token = token;
         userStore.setToken(token);
         userStore.logIn(user);
-            console.log('containTest:', user.authorities.some(x => x ==='ROLE_ADMIN'))
+        
+        console.log('containTest:', user.authorities.some(x => x ==='ROLE_ADMIN'))
         if(user.authorities.some(x => x === 'ROLE_ADMIN')){
             router.push("/admin");
         } else {
@@ -99,15 +131,18 @@
     } catch (error) {
         // 5️⃣ 에러 처리
         if (error.response) {
-        // 서버가 응답했지만 (예: 400, 401 등)
-        console.error('❌ 서버 오류 코드:', error.response.status);
-        console.error('❌ 오류 내용:', error.response.data);
+            // 서버가 응답했지만 (예: 400, 401 등)
+            console.error('❌ 서버 오류 코드:', error.response.status);
+            console.error('❌ 오류 내용:', error.response.data);
+            const errorMessage = error.response.status >= 500 ? 
+            '서버 이상' : error.response.data.message;
+            openModal(errorMessage,'로그인 실패', true);
         } else if (error.request) {
-        // 요청은 갔지만 응답이 없을 때 (네트워크 문제 등)
-        console.error('❌ 응답 없음:', error.request);
+            // 요청은 갔지만 응답이 없을 때 (네트워크 문제 등)
+            console.error('❌ 응답 없음:', error.request);
         } else {
-        // 기타 오류
-        console.error('❌ 요청 설정 중 오류:', error.message);
+            // 기타 오류
+            console.error('❌ 요청 설정 중 오류:', error.message);
         }
     }
     }

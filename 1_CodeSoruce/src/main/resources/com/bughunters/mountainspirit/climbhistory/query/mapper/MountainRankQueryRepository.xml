@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bughunters.mountainspirit.climbhistory.query.mapper.MountainRankQueryRepository">
+    <resultMap id="mountainRankMap" type="com.bughunters.mountainspirit.climbhistory.query.dto.MountainRankDTO">
+        <result property="cumId" column="cumId"/>
+        <result property="frtrlId" column="frtrlId"/>
+        <result property="mtRankId" column="mtRankId"/>
+        <result property="rankName" column="rankName"/>
+        <result property="count" column="count"/>
+    </resultMap>
+    <resultMap id="propfileMoutnain" type="com.bughunters.mountainspirit.climbhistory.query.dto.SpiritProfileDTO">
+        <result property="cumId" column="cumId"/>
+        <result property="filePath" column="filePath"/>
+        <result property="frtrlId" column="frtrlId"/>
+        <result property="frtrlNm" column="frtrlNm"/>
+        <result property="lat" column="lat"/>
+        <result property="lot" column="lot"/>
+    </resultMap>
+    <select id="SelectMountainRank"
+            resultMap="mountainRankMap">
+        with maxRank as (
+            select
+                   max(id) as max
+              from MountainRankStandard
+        ),
+        <!-- select * from maxRank -->
+        membersWithMaxRank as (
+            select distinct frtrlId
+              from MountainRank
+             where mtRankId = (
+                                select max
+                                  from maxRank
+            )
+        ),
+        <!-- select * from membersWithMaxRank -->
+        climbingCount as (
+            select
+                   b.cumId
+                 , b.frtrlId
+                 , b.mtRankId
+                 , count(*) as count
+            from ClimbRecord as a
+            join MountainRank as b
+              on a.cumId = b.cumId
+             and a.frtrlId = b.frtrlId
+           where b.frtrlId in (
+                               select frtrlId
+                                 from membersWithMaxRank
+            )
+            group by b.cumId, b.frtrlId, b.mtRankId
+            order by b.frtrlId, b.mtRankId desc, count desc
+        )
+        select
+               a.cumId
+             , a.frtrlId
+             , a.mtRankId
+             , b.rankName
+             , a.count
+          from climbingCount as a
+          join MountainRankStandard as b
+            on a.mtRankId = b.id
+    </select>
+
+    <select id="selectSpiritProfileMountain"
+            resultMap="propfileMoutnain">
+        select
+               a.cumId
+             , a.filePath
+             , b.frtrlId
+             , c.frtrlNm
+             , c.lat
+             , c.lot
+         from ProfileOfMember as a
+         join (
+                select
+                       cumId
+                     , frtrlId
+                  from MountainRank
+                 where mtRankId = (
+                    select
+                           max(id) as max
+                      from MountainRankStandard
+                )
+        ) as b
+        on a.cumId = b.cumId
+        join Mountain as c
+        on b.frtrlId = c.frtrlId
+    </select>
+</mapper>
+
+
