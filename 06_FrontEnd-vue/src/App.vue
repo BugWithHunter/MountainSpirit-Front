@@ -66,12 +66,12 @@ main {
 /*
   footer 영역 스타일
 */
-footer {
-  flex: 0 0 auto;
-  background: #0055cc;   /* 배경색 (파란색) */
-  color: #fff;            /* 글자색 흰색 */
-  font-size: 15px;        /* 글자 크기 설정 */
-  text-align: center;     /* 텍스트 가운데 정렬 */
-  padding: 2px 0;        /* 위아래 12px 여백 추가 — footer 높이를 확보하는 효과 */
-}
+/*footer {
+  /*flex: 0 0 auto;
+  /*background: #ccecdf;   /* 배경색 (파란색) */
+  /*color: #72798b;            /* 글자색 흰색 */
+  /*font-size: 15px;        /* 글자 크기 설정 */
+  /*text-align: center;     /* 텍스트 가운데 정렬 */
+  /*padding: 2px 0;        /* 위아래 12px 여백 추가 — footer 높이를 확보하는 효과 */
+/* } */
 </style>

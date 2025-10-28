@@ -101,11 +101,11 @@ import { useUserStore } from '@/stores/user';
   font-weight: bold;
   margin-bottom: 8px;
   text-decoration: none;
-  color: rgb(30, 30, 233);
+  color: #02a360;
 }
 
 .submenu-row ul li:hover {
-  background-color: #f7f1ff;
+  background-color: #00c77425;
 }
 
 </style>
