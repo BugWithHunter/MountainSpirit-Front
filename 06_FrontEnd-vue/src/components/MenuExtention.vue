@@ -5,7 +5,7 @@
           <li>
             <ul>
               <div v-if="userStore.crewId>0">
-                <li><RouterLink to="/crew/info/2">크루 정보</RouterLink></li>
+                <li><RouterLink :to="`/crew/info/${userStore.crewId}`">크루 정보</RouterLink></li>
                 <li><RouterLink to="/crew/climb">크루 등산 일정</RouterLink></li>
                 <li><RouterLink to="/crew/myclimb">내 크루 등산 기록</RouterLink></li>
               </div>
@@ -18,7 +18,6 @@
           <li>
             <ul>
               <li><RouterLink to="/spirit-rank">산신령 랭킹</RouterLink></li>
-              <li><RouterLink to="/">크루 랭킹</RouterLink></li>
             </ul>
           </li>
           <li>

@@ -87,7 +87,7 @@ const crewLeave = async ()=>{
       headers:{"Authorization":`Bearer ${userStore.token}`}
     }
   )
-  userStore.leaveCrew();
+  userStore.changeCrew(0);
   crewRouter.push('/');
 }
     onMounted(async () => {

@@ -50,8 +50,8 @@ export const useUserStore = defineStore(
         profile.value = newProfile;
     }
 
-    function leaveCrew() {
-        crewId.value = 0;
+    function changeCrew(id) {
+        crewId.value = id;
     }
 
     // ----- 반환 -----
@@ -59,7 +59,7 @@ export const useUserStore = defineStore(
       // 외부 노출용 readonly state
       name, email, roles, profile, token, isLoggedIn, userId,crewId,
       // actions
-      logIn, logOut, changeProfile , setToken, leaveCrew
+      logIn, logOut, changeProfile , setToken, changeCrew
     }
   },
   {
