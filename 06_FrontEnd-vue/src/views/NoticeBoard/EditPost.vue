@@ -48,7 +48,7 @@ function closeModal() {
     formData.append('content', content.value);
 
     try {
-        await axios.put(`http://localhost:8000/main-client/boards/modify/${props.postId}`, formData, {
+        await axios.put(`http://localhost:8000/main-client/noticeboards/modify/${props.postId}`, formData, {
         headers: {
             Authorization: `Bearer ${token}`,
             'Content-Type': 'multipart/form-data'

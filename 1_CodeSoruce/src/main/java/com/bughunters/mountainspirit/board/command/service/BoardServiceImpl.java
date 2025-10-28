@@ -138,7 +138,7 @@ public class BoardServiceImpl implements BoardService {
 
         /* 설명. DB에 보낼 값을 담기 위한 컬렉션 */
         List<Map<String, Object>> files = new ArrayList<>();
-        String filesPath = "C:/bughunters_re/MountainSpirit/06_FrontEnd-vue/src/boardImage/";
+        String filesPath = "C:/bughunters_re/MountainSpirit/06_FrontEnd-vue/public/boardImage/";
 
         /* 설명. 화면에서 각 파일마다 img 태그의 src 속성으로 적용하기 위한 문자열을 담은 컬렉션 */
         List<String> imgSrcs = new ArrayList<>();

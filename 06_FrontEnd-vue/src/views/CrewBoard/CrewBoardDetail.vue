@@ -1,6 +1,6 @@
 <template>
     <div class="board-detail">
-    <h2>자유 게시글</h2>
+    <h2>크루 게시글</h2>
         <!-- (수정/삭제 버튼 구현 예시, 작성자만 보임) -->
     <div v-if="Number(currentUserId) === post.cumId" class="author-actions">
     <button @click="openEditModal">
@@ -116,7 +116,7 @@
 async function fetchPostDetail() {
   try {
     const response = await axios.get(
-      `http://localhost:8000/main-client/boards/list/${route.params.postId}/select`,
+      `http://localhost:8000/main-client/crewboards/list/${route.params.postId}/select`,
       {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -145,7 +145,7 @@ onMounted(fetchPostDetail);
         router.push({ 
             name: 'commentList',
             params: { 
-                type: 1,
+                type: 2,
                 postId: route.params.postId },
         })
     }
@@ -163,7 +163,7 @@ onMounted(fetchPostDetail);
         try {
             console.log(postId);
             const response = await axios.get(
-            `http://localhost:8000/main-client/boards/${postId}/select/likes`,
+            `http://localhost:8000/main-client/crewboards/${postId}/select/likes`,
             {
             headers: {
                 Authorization: `Bearer ${token}`
@@ -185,7 +185,7 @@ onMounted(fetchPostDetail);
 
     const deletePost = async () => {
         try {
-            const response = await axios.put(`http://localhost:8000/main-client/boards/delete/${postId}`,
+            const response = await axios.put(`http://localhost:8000/main-client/crewboards/delete/${postId}`,
             {}, {
             headers: {
                 Authorization: `Bearer ${token}`
@@ -195,7 +195,7 @@ onMounted(fetchPostDetail);
         } catch (error) {
         console.error('게시글 삭제 실패:', error);
     }
-    router.push("/boards/list");
+    router.push("/crewboards/list");
     }
 </script>
 
