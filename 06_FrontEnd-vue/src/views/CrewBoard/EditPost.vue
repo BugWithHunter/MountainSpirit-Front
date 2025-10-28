@@ -125,7 +125,7 @@ textarea {
   margin-top: 5px;
 }
 button[type="submit"] {
-  background: #222;
+  background: #00c774;
   color: #fff;
   border: none;
   border-radius: 5px;

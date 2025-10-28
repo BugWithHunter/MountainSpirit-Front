@@ -327,7 +327,7 @@
 }
 
 .modal-btn button:last-child {
-  background: #007bff;
+  background: #00c774;
   color: #fff;
   border: none;
 }

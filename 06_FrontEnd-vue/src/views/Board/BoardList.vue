@@ -23,6 +23,7 @@
             <th>NO.</th>
             <th>제목</th>
             <th>작성일</th>
+            <th>사용자ID</th>
             </tr>
         </thead>
         <tbody>
@@ -32,6 +33,7 @@
                 {{ post.title }}
             </td>
             <td>{{ post.createDate }}</td>
+            <td>{{ post.cumId }}</td>          <!-- 백엔드에서 DTO랑 mapper 수정하기 -->
         </tr>
         </tbody>
     </table>

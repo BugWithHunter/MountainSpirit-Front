@@ -99,7 +99,7 @@ const visiblePages = computed(() => {
 }
 
 .pagination-page.active {
-  background: #222;
+  background: #00c774;
   color: #fff;
 }
 

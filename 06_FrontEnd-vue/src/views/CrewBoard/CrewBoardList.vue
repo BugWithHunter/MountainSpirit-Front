@@ -23,6 +23,7 @@
             <th>NO.</th>
             <th>제목</th>
             <th>작성일</th>
+            <th>사용자ID</th>
             </tr>
         </thead>
         <tbody>
@@ -32,6 +33,7 @@
                 {{ post.title }}
             </td>
             <td>{{ post.createDate }}</td>
+            <td>{{ post.cumId }}</td>
         </tr>
         </tbody>
     </table>
@@ -53,7 +55,7 @@
     import { ref, onMounted } from 'vue';
     import { useRouter } from 'vue-router'
     import Pagination from '@/views/Board/Pagination.vue';
-    import WritePost from '@/views/Board/WritePost.vue';
+    import WritePost from '@/views/CrewBoard/WritePost.vue';
 
     
     import { useUserStore } from '@/stores/user';
