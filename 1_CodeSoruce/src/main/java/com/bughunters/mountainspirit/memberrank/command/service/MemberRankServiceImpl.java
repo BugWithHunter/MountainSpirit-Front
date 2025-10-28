@@ -107,7 +107,7 @@ public class MemberRankServiceImpl implements MemberRankService {
 
     private void modifyMountainRankOfMember(RequestRankDTO requestRankDTO, List<ResponseMountainRankDTO> responseMountainRankDTOs) {
         //메모. 처음 해당 산의 코스 도장을 받은 경우 산 등급 insert( 도장이 한개인 산은 바로 산신령 후보로 올림)
-        if (requestRankDTO.isFirstClimbForMountain() && !requestRankDTO.isFirstClimbForMountain()) {
+        if (requestRankDTO.isFirstClimbForMountain() && !requestRankDTO.isNewMountainStamp()) {
             MountainRank mountainRank = new MountainRank(
                     null, 1L, requestRankDTO.getCumId(), requestRankDTO.getFrtrlId()
             );
@@ -176,7 +176,7 @@ public class MemberRankServiceImpl implements MemberRankService {
 
                     //산신령 등급에서 아래 단계로 등급 하락
                     MountainRank previousHighestRank
-                            = mountainsRankRepository.findByCumId(higherClimbers.get(1).getCumId());
+                            = mountainsRankRepository.findByCumIdAndFrtrlId(higherClimbers.get(1).getCumId(),higherClimbers.get(1).getFrtrlId());
                     previousHighestRank.setMtRankId(maxRank - 1);
                     MountainRank previousRank = mountainsRankRepository.save(previousHighestRank);
 

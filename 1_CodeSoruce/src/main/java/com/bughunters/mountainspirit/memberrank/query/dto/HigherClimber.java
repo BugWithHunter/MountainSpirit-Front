@@ -10,6 +10,7 @@ import lombok.*;
 @ToString
 public class HigherClimber {
     private Long cumId;
+    private String frtrlId;
     private Long mtRankId;
     private Long climbCount;
 }

@@ -51,7 +51,6 @@
                                  from membersWithMaxRank
             )
             group by b.cumId, b.frtrlId, b.mtRankId
-            order by b.frtrlId, b.mtRankId desc, count desc
         )
         select
                a.cumId
@@ -63,6 +62,7 @@
           from climbingCount as a
           join MountainRankStandard as b on a.mtRankId = b.id
           join Member as c on a.cumId = c.id
+          order by frtrlId, mtRankId desc, count desc
     </select>
 
     <select id="selectSpiritProfileMountain"

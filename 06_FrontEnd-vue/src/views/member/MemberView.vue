@@ -81,7 +81,7 @@
     import { useRouter } from 'vue-router';
     import { useUserStore } from '@/stores/user';
     import axios from 'axios';
-    import BaseModal from '@/components/BaseModal.vue' // 경로는 프로젝트에 맞게
+    import BaseModal from '@/components/BaseModal.vue' 
     import { useLoadingStore } from '@/stores/loading'
 
     const loading = useLoadingStore()
@@ -116,13 +116,6 @@
         confirmText: '확인',
         hasFunction: false  
     })
-
-    function ModalConfirm() {
-    }
-
-    async function onSubmit() {
-        openModal('테스트 모달', '알림', true);
-    }
 
     function openModal(msg, title = '알림', hasFunction = false) {
         modal.title = title;

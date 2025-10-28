@@ -34,7 +34,7 @@
         <ul class="kv-list">
           <li v-for="(row, i) in selectedDetailRows" :key="i">
             <strong>{{ row.memName }}</strong>
-            <span>{{ row.count }}</span>
+            <span>{{ row.rankName }}</span>
           </li>
         </ul>
       </article>

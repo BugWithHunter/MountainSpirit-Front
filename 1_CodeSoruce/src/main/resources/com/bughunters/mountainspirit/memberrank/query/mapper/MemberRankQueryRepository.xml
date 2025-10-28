@@ -5,6 +5,7 @@
 <mapper namespace="com.bughunters.mountainspirit.memberrank.query.mapper.MemberRankQueryRepository">
     <resultMap id="findHigherClimbers" type="com.bughunters.mountainspirit.memberrank.query.dto.HigherClimber">
         <result property="cumId" column="cumId"/>
+        <result property="frtrlId" column="frtrlId"/>
         <result property="mtRankId" column="mtRankId"/>
         <result property="climbCount" column="climbCount"/>
     </resultMap>
@@ -13,6 +14,7 @@
         SELECT
                b.cumId
              , b.mtRankId
+             , a.frtrlId
              , count(*) as climbCount
           FROM ClimbRecord a
           JOIN MountainRank b
