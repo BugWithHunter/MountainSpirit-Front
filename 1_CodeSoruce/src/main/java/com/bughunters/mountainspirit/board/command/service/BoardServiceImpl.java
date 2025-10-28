@@ -49,14 +49,24 @@ public class BoardServiceImpl implements BoardService {
     @Override
     @Transactional
     public void registPost(BoardDTO boardDTO, List<MultipartFile> multiFiles) {
-        boardDTO.setCumId(199);    // @Authentication으로 회원 인식하면 이 라인 지울것!
         boardDTO.setIsDeleted("N");
         boardDTO.setCreateDate(LocalDateTime.now());
 
         modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
         Board board = modelMapper.map(boardDTO, Board.class);
 //        boardRepository.save(board);
+        log.info("save 전 게시글ID : {}", board.getId());
+        try {
+            boardRepository.saveAndFlush(board);
+            log.info("After saveAndFlush, board ID: {}", board.getId());
+        } catch (Exception e) {
+            log.error("Error saving board entity", e);
+            throw e; // 필요시 다시 던지기
+        }
+
         boardRepository.saveAndFlush(board);
+        log.info("save 후 게시글ID : {}", board.getId());
+
 
         List<Map<String, Object>> files = multiFileUpload(multiFiles, board);
         insertInBoardImageEntity(files);
@@ -97,17 +107,17 @@ public class BoardServiceImpl implements BoardService {
     /* 필기. 좋아요를 누른 회웡ID는 service계층에서 @Authentication을 이용해서 받아오면 되는지? */
     @Override
     @Transactional
-    public void createOrDeleteLikesByPostId(int id) {
+    public void createOrDeleteLikesByPostId(int id, long userId) {
         Board board = boardRepository.findById(id).orElseThrow(IllegalArgumentException::new);
 
         Likes likes = likesRepository.findByPostId(board.getId());
-        if (likes != null && likes.getCumId() == 169) {   // 회원아이디는 얻어오는걸로 수정
+        if (likes != null && likes.getCumId() == userId) {
             likesRepository.delete(likes);
         } else {
 
             LikesDTO likesDTO = new LikesDTO();
             likesDTO.setPostId((long)id);
-            likesDTO.setCumId(169);    // 임의로 넣은 값임. 나중에 회원id로 받아올 것!
+            likesDTO.setCumId(userId);
 
             modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
             likes = modelMapper.map(likesDTO, Likes.class);
@@ -177,7 +187,9 @@ public class BoardServiceImpl implements BoardService {
             boardImage.setPath((String) file.get("path"));
             boardImage.setPostId((Long) file.get("postId"));
 
-            boardImageRepository.save(boardImage);
+            log.info("save 전 게시글이미지ID : {}", boardImage.getId());
+            boardImageRepository.saveAndFlush(boardImage);
+            log.info("save 후 게시글이미지ID : {}", boardImage.getId());
         }
 
     }

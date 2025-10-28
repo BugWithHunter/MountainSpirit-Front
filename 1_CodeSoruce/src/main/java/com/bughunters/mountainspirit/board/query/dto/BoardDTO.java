@@ -1,6 +1,5 @@
 package com.bughunters.mountainspirit.board.query.dto;
 
-import com.bughunters.mountainspirit.board.command.entity.BoardImage;
 import lombok.*;
 
 import java.time.LocalDateTime;

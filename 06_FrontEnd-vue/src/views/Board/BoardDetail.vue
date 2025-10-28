@@ -1,6 +1,15 @@
 <template>
     <div class="board-detail">
     <h1>자유 게시글</h1>
+        <!-- (수정/삭제 버튼 구현 예시, 작성자만 보임) -->
+    <div v-if="Number(currentUserId) === post.cumId" class="author-actions">
+    <button @click="editPost">
+        <img src="./asset/edit.png" alt="수정" style="width:20px; height:20px;">
+    </button>
+    <button @click="deletePost">
+        <img src="./asset/delete.png" alt="삭제" style="width:20px; height:20px;">
+    </button>
+    </div>
     <div class="board-detail__header">
         <table>
             <thead>
@@ -16,11 +25,6 @@
                 </tr>
             </tbody>
         </table>
-    <!-- <h2 class="board-detail__title">{{ post.title }}</h2>
-    <div class="board-detail__meta">
-        <span>글번호 {{ post.id }}</span>
-        <span>작성일 {{ post.createDate?.slice(0, 10) }}</span>
-        <span>작성자번호 {{ post.cumId }}</span> -->
         <div class="board-detail__report-dropdown">
         <button @click="toggleReportMenu" class="report-btn">
             신고
@@ -35,7 +39,6 @@
         </div>
         </div>
     </div>
-    <!-- </div> -->
     <div class="board-detail__content">
     <p>{{ post.content }}</p>
     <div v-if="post.thumbnailDTOList && post.thumbnailDTOList.length > 0" class="thumbnail-list">
@@ -49,20 +52,12 @@
     </div>
     </div>
     <div class="board-detail__footer">
-    <button class="icon-btn" @click="like">
-        <img src="./asset/fullheart.png" alt="좋아요" style="width:20px; height:20px;">
+    <button class="icon-btn" @click="likes">
+        <img v-if="!isLiked" src="./asset/defaultHeart.png" alt="좋아요" style="width:20px; height:20px;">
+        <img v-if="isLiked" src="./asset/fullheart.png" alt="좋아요" style="width:20px; height:20px;">
     </button>
-    <button class="icon-btn" @click="comment">
+    <button @click="goToCommentList(postId)" class="icon-btn">
         <img src="./asset/comment.png" alt="댓글" style="width:20px; height:20px;">
-    </button>
-    </div>
-    <!-- (수정/삭제 버튼 구현 예시, 작성자만 보임) -->
-    <div v-if="Number(currentUserId) === post.cumId" class="author-actions">
-    <button @click="editPost">
-        <img src="./asset/edit.png" alt="수정" style="width:20px; height:20px;">
-    </button>
-    <button @click="deletePost">
-        <img src="./asset/delete.png" alt="삭제" style="width:20px; height:20px;">
     </button>
     </div>
     </div>
@@ -79,7 +74,7 @@
     const token = userStore.token;
 
     const route = useRoute();
-    const router = useRouter()
+    const router = useRouter();
     const postId = route.params.postId;
     const post = ref({});
 
@@ -114,7 +109,6 @@ onMounted(async () => {
     }
 })
 
-
     const currentUserId = ref(null);
 
     onMounted(() => {
@@ -132,6 +126,32 @@ onMounted(async () => {
         console.error("토큰 파싱 실패:", e);
         return null;
     }
+    }
+
+    const goToCommentList = () => {
+        router.push({ 
+            name: 'commentList', 
+            params: { postId },
+        })
+    }
+
+    const isLiked = ref(false);
+
+    const likes = async () => {
+        if (userStore.userId === post.cumId) return;
+
+        try {
+            console.log(postId);
+            const response = await axios.get(
+            `http://localhost:8000/main-client/boards/${route.params.postId}/select/likes`
+            );
+            // 현재 좋아요 요청 응답 데이터 없음 -> 좋아요 등록/ 좋아요 해제 문자열 반환하도록 백엔드 수정
+            isLiked.value = !!response.data && Object.keys(response.data).length > 0;
+        } catch (e) {
+            // 네트워크/에러시 기본값: 해제(default)
+            isLiked.value = false;
+            console.error('좋아요 상태 변경 실패:', e);
+        }
     }
 </script>
 
@@ -176,6 +196,10 @@ h1 {
 }
 div {
     margin: 12px 0;
+}
+button {
+    background: none;
+    border: none;
 }
 
 .board-detail__report-dropdown {
@@ -269,8 +293,8 @@ div {
 .icon-btn:hover { opacity: 1; }
 
 .author-actions {
-  max-width: 650px;
-  margin: 0 auto 36px auto;
+  max-width: 1200px;
+  margin: 0 auto 20px auto;
   display: flex;
   justify-content: flex-end;
   gap: 6px;

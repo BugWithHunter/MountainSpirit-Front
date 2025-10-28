@@ -35,24 +35,55 @@
             , postId
             , suspension_cycle
         from Report
+        ORDER BY reportDate DESC
+        <if test="limit != null and offset != null">
+            LIMIT #{limit} OFFSET #{offset}
+        </if>
     </select>
-    <!-- 조건별 조회 -->
-    <select id="findReportsByTypeAndStatus" resultMap="reportResultMap">
+
+    <!-- 타입별 조회 -->
+    <select id="findReportsByType" resultType="com.bughunters.mountainspirit.report.query.dto.ReportCheckDTO">
         SELECT
-              id
-            , reportDate
-            , reportType
-            , adminId
-            , reason
-            , isAccepted
-            , reportedId
-            , categoryId
-            , reportId
-            , crewPostId
-            , replyId
-            , postId
-            , suspension_cycle
-        FROM Report
+        r.id
+        , r.reportDate
+        , r.reportType
+        , r.adminId
+        , r.reason
+        , r.isAccepted
+        , r.reportedId
+        , r.reportId
+        , c.reportname
+        , r.crewPostId
+        , r.replyId
+        , r.postId
+        , r.suspension_cycle
+        FROM Report r
+        LEFT JOIN ReportCategory c ON r.categoryId = c.id
+        WHERE reportType = #{reportType}
+        ORDER BY reportDate DESC
+        <if test="limit != null and offset != null">
+            LIMIT #{limit} OFFSET #{offset}
+        </if>
+    </select>
+
+    <!-- 타입에 맞는 조건별 페이징 조회 -->
+    <select id="findReportsByTypeAndStatus" resultType="com.bughunters.mountainspirit.report.query.dto.ReportCheckDTO">
+        SELECT
+        r.id
+        , r.reportDate
+        , r.reportType
+        , r.adminId
+        , r.reason
+        , r.isAccepted
+        , r.reportedId
+        , r.reportId
+        , c.reportname
+        , r.crewPostId
+        , r.replyId
+        , r.postId
+        , r.suspension_cycle
+        FROM Report r
+        LEFT JOIN ReportCategory c ON r.categoryId = c.id
         WHERE 1=1
         <if test="reportType != null">
             AND reportType = #{reportType}
@@ -60,8 +91,39 @@
         <if test="isAccepted != null">
             AND isAccepted = #{isAccepted}
         </if>
+        ORDER BY reportDate DESC
+        <if test="limit != null and offset != null">
+            LIMIT #{limit} OFFSET #{offset}
+        </if>
     </select>
-    <!-- 회원 단건 신고 조회 -->
+
+    <select id="findReportDetailById" resultType="com.bughunters.mountainspirit.report.query.dto.ReportDetailDTO">
+        SELECT
+            r.id,
+            r.isAccepted,
+            r.reason AS reason,
+
+            CASE
+                WHEN r.crewPostId IS NOT NULL THEN c.title
+                WHEN r.postId IS NOT NULL THEN b.title
+                ELSE NULL
+            END AS title,
+
+            CASE
+                WHEN r.crewPostId IS NOT NULL THEN c.content
+                WHEN r.postId IS NOT NULL THEN b.content
+                WHEN r.replyId IS NOT NULL THEN m.content
+                ELSE NULL
+            END AS content
+
+        FROM Report r
+                 LEFT JOIN CrewBoard c ON r.crewPostId = c.id
+                 LEFT JOIN Board b ON r.postId = b.id
+                 LEFT JOIN Comment m ON r.replyId = m.id
+        WHERE r.id = #{id}
+    </select>
+
+    <!-- 신고가 승인된 회원 단건 신고 조회(본인 이의신청내역) -->
     <select id="findReportsByMemberId" resultMap="reportResultMap">
         SELECT
                id
@@ -79,5 +141,30 @@
              , suspension_cycle
         FROM Report
         WHERE reportedId = #{memberId}
+          AND isAccepted = 'Y'
+        ORDER BY reportDate DESC
+        <if test="limit != null and offset != null">
+            LIMIT #{limit} OFFSET #{offset}
+        </if>
+    </select>
+
+    <select id="selectReportMemberDetail" resultType="com.bughunters.mountainspirit.report.query.dto.ReportMemberDetailDTO">
+        SELECT
+            r.id AS reportId,
+            r.isAccepted,
+            r.reason,
+            r.reportedId,
+            m.memName,
+            m.crewId,
+            m.climbCnt,
+            m.score,
+            (
+                SELECT COUNT(*)
+                FROM Report r2
+                WHERE r2.reportedId = r.reportedId
+            ) AS reportCount
+        FROM Report r
+                 LEFT JOIN Member m ON r.reportedId = m.id
+        WHERE r.id = #{reportId}
     </select>
 </mapper>

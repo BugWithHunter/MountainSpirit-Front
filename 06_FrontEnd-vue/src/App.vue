@@ -1,14 +1,15 @@
 <script setup>
   import { ref } from 'vue';
-  import {RouterLink, RouterView} from 'vue-router';
+  import {RouterLink, RouterView, useRoute} from 'vue-router';
   import MountainAll from './views/mountainall/MountainAll.vue';
   import headerComponent from './components/Header.vue';
   import FooterView from './views/FooterView.vue';
 
+const route = useRoute();
 </script>
 
 <template>
-  <header>
+  <header v-if="!route.matched.some(r => r.meta.isAdmin)">
     <headerComponent></headerComponent>
   </header>
   <!-- 본문 -->
@@ -18,7 +19,7 @@
   </main>
 
   <!-- footer 하 -->
-  <footer>
+  <footer v-if="!route.matched.some(r => r.meta.isAdmin)">
     <FooterView/>
   </footer>
 </template>

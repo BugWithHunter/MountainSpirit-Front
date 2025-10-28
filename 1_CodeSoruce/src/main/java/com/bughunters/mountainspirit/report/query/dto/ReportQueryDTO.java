@@ -13,7 +13,7 @@ public class ReportQueryDTO {
     private long id;
     private LocalDateTime reportDate;
     private String reportType;
-    private String adminId;
+    private long adminId;
     private String reason;
     private String isAccepted;
     private long reportedId;

@@ -51,8 +51,8 @@
     import axios from 'axios';
     import { ref, onMounted } from 'vue';
     import { useRouter } from 'vue-router'
-    import Pagination from './Pagination.vue';
-    import WritePost from './WritePost.vue';
+    import Pagination from '@/views/Board/Pagination.vue';
+    import WritePost from '@/views/Board/WritePost.vue';
     import { useUserStore } from '@/stores/user';
 
 const userStore =  useUserStore();
@@ -73,7 +73,7 @@ const token = userStore.token;
     const isModalOpen = ref(false);
 
     // 데이터 가져오기
-    const fetchData = async (page = 1) => {
+    const fetchBoardList = async (page = 1) => {
     try {
         const response = await axios.get(`http://localhost:8000/main-client/boards/list?page=${page}`, {
         headers: {
@@ -90,11 +90,12 @@ const token = userStore.token;
 
     // 제목 클릭 시 이동 함수
     const goToDetail = (postId) => {
+        console.log('함수 실행됨..', postId);
         router.push(`/boards/detail/${postId}`)
     }
 
     onMounted(() => {
-        fetchData()
+        fetchBoardList(1)
     });
 
 
@@ -115,8 +116,9 @@ const onSearch = async (searchQuery) => {
     }
 };
 
-    
+    // 게시글 추가 버튼 클릭 이벤트
     const goWrite = () => {
+        console.log('aa');
         isModalOpen.value = true;
     }
 </script>
@@ -154,6 +156,9 @@ div {
     outline: none;
     margin-right: 4px;
     height: 36px;
+    cursor: pointer;
+}
+.post-title {
     cursor: pointer;
 }
 

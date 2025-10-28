@@ -1,5 +1,6 @@
 package com.bughunters.mountainspirit.report.query.service;
 
+import com.bughunters.mountainspirit.report.query.dto.BlacklistByIdDTO;
 import com.bughunters.mountainspirit.report.query.dto.BlacklistQueryDTO;
 import com.bughunters.mountainspirit.report.query.mapper.BlacklistQueryMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +19,13 @@ public class BlacklistQueryServiceImpl implements BlacklistQueryService {
     }
 
     @Override
-    public List<BlacklistQueryDTO> getAllBlacklist() {
-        return blacklistQueryMapper.selectAllBlacklist();
+    public List<BlacklistQueryDTO> getAllBlacklist(int page, int size) {
+        int offset = (page - 1) * size;
+        return blacklistQueryMapper.selectAllBlacklist(size, offset);
+    }
+
+    @Override
+    public List<BlacklistByIdDTO> getBlacklistById(Long id) {
+        return blacklistQueryMapper.selectBlacklistById(id);
     }
 }

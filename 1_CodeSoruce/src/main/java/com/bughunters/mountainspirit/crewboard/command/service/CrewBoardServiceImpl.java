@@ -9,7 +9,6 @@ import com.bughunters.mountainspirit.crewboard.command.entity.CrewBoardImage;
 import com.bughunters.mountainspirit.crewboard.command.repository.CrewBoardImageRepository;
 import com.bughunters.mountainspirit.crewboard.command.repository.CrewBoardRepository;
 import com.bughunters.mountainspirit.crewboard.command.repository.CrewLikesRepository;
-import com.bughunters.mountainspirit.crewmember.command.entity.CrewMember;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
@@ -48,12 +47,10 @@ public class CrewBoardServiceImpl implements CrewBoardService {
     @Override
     @Transactional
     public void registPost(BoardDTO boardDTO, List<MultipartFile> multiFiles) {
-        boardDTO.setCumId(199);    // @Authentication으로 회원 인식하면 이 라인 지울것!
         boardDTO.setIsDeleted("N");
         boardDTO.setCreateDate(LocalDateTime.now());
 
         choosePostType(boardDTO);
-
 
         modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
         CrewBoard crewBoard = modelMapper.map(boardDTO, CrewBoard.class);
@@ -97,21 +94,20 @@ public class CrewBoardServiceImpl implements CrewBoardService {
         crewBoardRepository.save(crewBoard);
     }
 
-    /* 필기. 좋아요를 누른 회웡ID는 service계층에서 @Authentication을 이용해서 받아오면 되는지? */
 
     @Override
     @Transactional
-    public void createOrDeleteLikesByPostId(int id) {
+    public void createOrDeleteLikesByPostId(int id, long userId) {
         CrewBoard crewBoard = crewBoardRepository.findById(id).orElseThrow(IllegalArgumentException::new);
 
         Likes likes = crewLikesRepository.findByPostId(crewBoard.getId());
-        if (likes != null && likes.getCumId() == 169) {    // 회원아이디는 얻어오는걸로 수정
+        if (likes != null && likes.getCumId() == userId) {
             crewLikesRepository.delete(likes);
         } else {
 
             LikesDTO likesDTO = new LikesDTO();
             likesDTO.setCrewPostId((long)id);
-            likesDTO.setCumId(169);    // 임의로 넣은 값임. 나중에 회원id로 받아올 것!
+            likesDTO.setCumId(userId);
 
             modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
             likes = modelMapper.map(likesDTO, Likes.class);

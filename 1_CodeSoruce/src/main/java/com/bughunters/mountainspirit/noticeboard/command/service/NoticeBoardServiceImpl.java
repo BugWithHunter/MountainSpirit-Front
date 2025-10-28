@@ -42,7 +42,6 @@ public class NoticeBoardServiceImpl implements NoticeBoardService {
     @Override
     @Transactional
     public void registPost(BoardDTO boardDTO, List<MultipartFile> multiFiles) {
-        boardDTO.setCumId(199);    // @Authentication으로 회원 인식하면 이 라인 지울것!
         boardDTO.setIsDeleted("N");
         boardDTO.setCreateDate(LocalDateTime.now());
 
