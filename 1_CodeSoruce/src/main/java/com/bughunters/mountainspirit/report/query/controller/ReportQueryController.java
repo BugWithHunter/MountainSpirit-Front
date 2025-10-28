@@ -3,10 +3,7 @@ package com.bughunters.mountainspirit.report.query.controller;
 
 import com.bughunters.mountainspirit.common.ResponseMessage;
 import com.bughunters.mountainspirit.common.UserInfo;
-import com.bughunters.mountainspirit.report.query.dto.ReportCheckDTO;
-import com.bughunters.mountainspirit.report.query.dto.ReportDetailDTO;
-import com.bughunters.mountainspirit.report.query.dto.ReportMemberDetailDTO;
-import com.bughunters.mountainspirit.report.query.dto.ReportQueryDTO;
+import com.bughunters.mountainspirit.report.query.dto.*;
 import com.bughunters.mountainspirit.report.query.service.ReportQueryService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
@@ -108,4 +105,10 @@ public class ReportQueryController {
         return ResponseEntity.ok().body(responseMessage);
     }
 
+    @GetMapping("/category/{targetId}")
+    public List<ReportCategoryDTO> selectReportCategory(
+            @PathVariable long targetId
+    ) {
+        return reportQueryService.selectReportCategory(targetId);
+    }
 }

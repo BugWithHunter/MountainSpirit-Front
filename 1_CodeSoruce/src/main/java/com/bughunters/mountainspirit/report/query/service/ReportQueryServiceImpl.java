@@ -51,4 +51,9 @@ public class ReportQueryServiceImpl implements ReportQueryService {
         return reportQueryMapper.selectReportMemberDetail(reportId);
     }
 
+    @Override
+    public List<ReportCategoryDTO> selectReportCategory(Long targetId) {
+        return reportQueryMapper.selectReportCategory(targetId);
+    }
+
 }

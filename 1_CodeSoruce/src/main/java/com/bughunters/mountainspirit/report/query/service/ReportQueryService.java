@@ -14,4 +14,6 @@ public interface ReportQueryService {
     List<ReportQueryDTO> selectReportsByMemberId(Long memberId, int page, int size);
     List<ReportMemberDetailDTO> selectReportMemberDetailById(Long reportId);
 
+    List<ReportCategoryDTO> selectReportCategory(Long targetId);
+
 }
