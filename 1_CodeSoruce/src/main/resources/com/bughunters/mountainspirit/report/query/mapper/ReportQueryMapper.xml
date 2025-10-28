@@ -126,22 +126,27 @@
     <!-- 신고가 승인된 회원 단건 신고 조회(본인 이의신청내역) -->
     <select id="findReportsByMemberId" resultMap="reportResultMap">
         SELECT
-               id
-             , reportDate
-             , reportType
-             , adminId
-             , reason
-             , isAccepted
-             , reportedId
-             , categoryId
-             , reportId
-             , crewPostId
-             , replyId
-             , postId
-             , suspension_cycle
+        id,
+        reportDate,
+        reportType,
+        adminId,
+        reason,
+        isAccepted,
+        reportedId,
+        categoryId,
+        reportId,
+        crewPostId,
+        replyId,
+        postId,
+        suspension_cycle
         FROM Report
         WHERE reportedId = #{memberId}
-          AND isAccepted = 'Y'
+        AND isAccepted = 'Y'
+        AND reportId NOT IN (
+        SELECT reportId
+        FROM ReportProtest
+        WHERE reportedId = #{memberId}
+        )
         ORDER BY reportDate DESC
         <if test="limit != null and offset != null">
             LIMIT #{limit} OFFSET #{offset}

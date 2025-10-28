@@ -316,7 +316,14 @@
     <select id="selectAllCountSummary" resultType="com.bughunters.mountainspirit.admin.query.dto.CrewDetailSummaryDTO">
         SELECT
         (SELECT COUNT(*) FROM CrewMember) AS totalCrewMemberCount,
-        (SELECT COUNT(*) FROM CrewMemberHistory WHERE crewMemberHistoryState = 'JOINED') AS activeCrewMemberCount,
+        (SELECT COUNT(*)
+        FROM CrewMemberHistory c1
+        WHERE c1.crewMemberHistoryState = 'JOINED'
+        AND c1.cumId NOT IN (
+        SELECT c2.cumId
+        FROM CrewMemberHistory c2
+        WHERE c2.crewMemberHistoryState IN ('QUITED', 'BANNED')
+        )) AS activeCrewMemberCount,
         (SELECT COUNT(*) FROM CrewClimbBoard) AS totalCrewClimbBoardCount,
         (SELECT COUNT(*) FROM CrewApply) AS totalCrewApplyCount,
         (SELECT COUNT(*) FROM CrewMemberHistory) AS totalCrewMemberHistoryCount

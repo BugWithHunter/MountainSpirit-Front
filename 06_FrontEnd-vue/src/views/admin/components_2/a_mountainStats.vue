@@ -131,7 +131,7 @@ onMounted(fetchData);
 
 .chart-box {
   width: 500px;
-  height: 400px;
+  height: 450px;
   background: #fff;
   position: relative;
   border-radius: 8px;
@@ -150,7 +150,7 @@ onMounted(fetchData);
 
 canvas {
   width: 100% !important;   /* ✅ 부모 영역에 맞춤 */
-  height: 350px !important; /* ✅ 원하는 세로 크기 */
+  height: 400px !important; /* ✅ 원하는 세로 크기 */
   display: block;
   margin: 0 auto;
 }

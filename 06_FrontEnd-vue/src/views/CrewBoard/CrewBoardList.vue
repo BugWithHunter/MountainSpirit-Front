@@ -56,10 +56,8 @@
     import { useRouter } from 'vue-router'
     import Pagination from '@/views/Board/Pagination.vue';
     import WritePost from '@/views/CrewBoard/WritePost.vue';
-
-    
     import { useUserStore } from '@/stores/user';
-    import WritePost from './WritePost.vue';
+
 
 const userStore =  useUserStore();
 const token = userStore.token;
