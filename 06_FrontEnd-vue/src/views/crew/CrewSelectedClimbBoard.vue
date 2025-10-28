@@ -5,12 +5,9 @@
     <div class="detail-body">
       <!-- 왼쪽: 등산 정보 -->
       <div class="left-box">
-        <img 
-          v-if="climbBoardData.imageUrl" 
-          :src="climbBoardData.imageUrl" 
-          alt="산 이미지" 
-          class="mountain-img"
-        />
+      <img :src="getImageUrl(climbBoardData.mountain.frtrlNm)" alt="산이미지" class="mountain-img">
+          
+        
         <div class="date-text">{{ climbBoardData.crewClimbStartDate }}</div>
         <div class="course-title">{{ climbBoardData.mountain.frtrlNm }}</div>
         <div class="plan-text">{{ climbBoardData.crewClimbContent }}</div>
@@ -64,11 +61,23 @@
     const climbBoardData = ref({
         imageUrl:'',
         crewClimbStartDate:'',
-        mountain:{},
+        mountain:{
+          frtrlNm:''
+        },
         crewClimbContent:'',
         member:{},
         crewClimbAmountOfPeople:0
     });
+
+        function getImageUrl(name) {
+          console.log(name);
+        try {
+            return new URL(`../../mountainpic/${name}.png`, import.meta.url).href;
+        } catch {
+            return new URL(`../../mountainpic/default.png`, import.meta.url).href;
+        }
+    }
+
     const getData = async ()=>{
         console.log('page mount,',`http://localhost:8000/main-client/crew-climb-board/climb-board/${climbId.params.climbId}`);
         const response = await axios.get(`http://localhost:8000/main-client/crew-climb-board/climb-board/${climbId.params.climbId}`,
