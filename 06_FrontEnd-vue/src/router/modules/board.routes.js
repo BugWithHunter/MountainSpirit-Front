@@ -86,7 +86,7 @@ export default [
         ],
     },
     {
-                path: 'commentList/:type/:postId',
+                path: '/commentList/:type/:postId',
                 name: 'commentList',
                 component: () => import('@/views/Comment/CommentList.vue'),
     },
