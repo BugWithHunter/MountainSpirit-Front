@@ -1,6 +1,6 @@
 <template>
     <div class="board-detail">
-    <h2>자유 게시글</h2>
+    <h2>공지사항 게시글</h2>
         <!-- (수정/삭제 버튼 구현 예시, 작성자만 보임) -->
     <div v-if="Number(currentUserId) === post.cumId" class="author-actions">
     <button @click="openEditModal">
@@ -60,10 +60,6 @@
     </div>
     </div>
     <div class="board-detail__footer">
-    <button class="icon-btn" @click="likes(post.cumId)">
-        <img v-if="!isLiked" src="./asset/defaultHeart.png" alt="좋아요" style="width:20px; height:20px;">
-        <img v-if="isLiked" src="./asset/fullheart.png" alt="좋아요" style="width:20px; height:20px;">
-    </button>
     <button @click="goToCommentList(postId)" class="icon-btn">
         <img src="./asset/comment.png" alt="댓글" style="width:20px; height:20px;">
     </button>
@@ -116,7 +112,7 @@
 async function fetchPostDetail() {
   try {
     const response = await axios.get(
-      `http://localhost:8000/main-client/boards/list/${route.params.postId}/select`,
+      `http://localhost:8000/main-client/noticeboards/list/${route.params.postId}/select`,
       {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -145,47 +141,15 @@ onMounted(fetchPostDetail);
         router.push({ 
             name: 'commentList',
             params: { 
-                type: 1,
+                type: 3,
                 postId: route.params.postId },
         })
-    }
-
-    const isLiked = ref(false);
-
-    // 좋아요 기능
-    const likes = async (writter) => {
-        console.log(userStore.token);
-        console.log(userStore.userId);
-        console.log(writter);
-
-        if (userStore.userId == writter) return;
-
-        try {
-            console.log(postId);
-            const response = await axios.get(
-            `http://localhost:8000/main-client/boards/${postId}/select/likes`,
-            {
-            headers: {
-                Authorization: `Bearer ${token}`
-            }
-            });
-            console.log(response.data);
-            if (response.data == "좋아요 등록") {
-                isLiked.value = true;
-            } else {
-                isLiked.value = false;
-            }
-        } catch (e) {
-            // 네트워크/에러시 기본값: 해제(default)
-            isLiked.value = false;
-            console.error('좋아요 상태 변경 실패:', e);
-        }
     }
 
 
     const deletePost = async () => {
         try {
-            const response = await axios.put(`http://localhost:8000/main-client/boards/delete/${postId}`,
+            const response = await axios.put(`http://localhost:8000/main-client/noticeboards/delete/${postId}`,
             {}, {
             headers: {
                 Authorization: `Bearer ${token}`
@@ -195,7 +159,7 @@ onMounted(fetchPostDetail);
         } catch (error) {
         console.error('게시글 삭제 실패:', error);
     }
-    router.push("/boards/list");
+    router.push("/noticeboards/list");
     }
 </script>
 
