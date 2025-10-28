@@ -87,27 +87,15 @@ public class ReportQueryController {
 
     // 로그인 된 회원 신고 조회: /reports/my
     // 마이페이지에서 사용자만 사용가능
-    @GetMapping("/my")
+    @GetMapping("/my/{memberId}")
     public ResponseEntity<ResponseMessage> selectReportsByMember(
+            @PathVariable Long memberId,
             @RequestParam(value = "page", defaultValue = "1") int page,
-            @RequestParam(value = "size", defaultValue = "10") int size,
-            HttpServletRequest request
+            @RequestParam(value = "size", defaultValue = "10") int size
     ){
 
-        UserInfo userInfo = (UserInfo) request.getAttribute("userInfo");
-
-        if (userInfo == null) {
-            ResponseMessage errorResponse = new ResponseMessage(
-                    HttpStatus.UNAUTHORIZED.value(),
-                    "로그인 필요",
-                    null
-            );
-        }
-
-        Long memberId = userInfo.getId();
         List<ReportQueryDTO> reports = reportQueryService.selectReportsByMemberId(memberId, page, size);
 
-        log.debug("memberId={} reports size={}", memberId, reports.size());
 
         Map<String, Object> result = new HashMap<>();
         result.put("reports", reports);
