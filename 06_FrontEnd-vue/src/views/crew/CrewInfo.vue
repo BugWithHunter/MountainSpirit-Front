@@ -9,7 +9,7 @@
         </div>
         <div v-if="role.roleId===2">
           <button @click="applyList" class="config-btn">크루 신청 리스트</button>
-          <button class="config-btn">크루 정보 수정</button>
+          <button @click="crewModify" class="config-btn">크루 정보 수정</button>
           <button class="leave-btn">크루 삭제</button>
         </div> 
          <div v-else>
@@ -57,6 +57,9 @@ const role = ref('');
 const members = ref([]);
 const applyList = ()=>{
   crewRouter.push(`/crew/info/applylist/${crewRoute.params.crewId}`);
+}
+const crewModify = ()=>{
+  crewRouter.push(`/crew/info/modify/${crewRoute.params.crewId}`);
 }
     onMounted(async () => {
         const [crewReq,memberReq] = await Promise.all([
