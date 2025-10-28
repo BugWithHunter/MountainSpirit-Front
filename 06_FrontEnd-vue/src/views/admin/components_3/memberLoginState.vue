@@ -17,7 +17,7 @@
   
       <!-- 로그인 시간대 분포 -->
       <div class="stats-row">
-        <div class="chart-card wide">
+        <div class="chart-card">
           <h2>시간대별 로그인 분포</h2>
           <canvas id="loginTimeChart"></canvas>
         </div>
@@ -192,7 +192,7 @@ new Chart(document.getElementById('loyaltyChart'), {
         ],
       },
       options: {
-        responsive: false,
+        responsive: true,
         maintainAspectRatio: false,
         scales: {
           y: { beginAtZero: true },
@@ -283,7 +283,7 @@ h3 {
 .chart-card canvas {
   flex-grow: 1;
   width: 100%;
-  height: 260px !important;
+  height: 360px !important;
   max-height: 320px;
   margin-top: 5px;
 }

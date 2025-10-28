@@ -9,9 +9,7 @@ import java.util.List;
 @Getter
 @Setter
 @ToString
-public class RequestStartClimbMountainQueryDTO {
-    private long cumId;
-    private String frtrlId;
-    private String poiId;
-    private String stateCode;
+public class ResponseMountainRankDTO {
+    private List<MountainRankDTO> mountainRank;
+    private List<SpiritProfileDTO>  spiritProfileDTO;
 }

@@ -15,7 +15,7 @@
                     <li><strong>가입일</strong><span>{{ userInfo.signInDate }}</span></li>
                 </ul>
                 <div class="actions">
-                    <button class="btn" @click="openModal('1213','12345',true)">비밀번호 변경</button>
+                    <button class="btn" @click="router.push('/member/modifyPassword')">비밀번호 변경</button>
                     <button class="btn ghost" @click="goToProtest">신고내역 조회</button>
                     <button class="btn ghost" @click="goToProtestConfirm">이의신청 확인</button>
                 </div>
@@ -82,6 +82,9 @@
     import { useUserStore } from '@/stores/user';
     import axios from 'axios';
     import BaseModal from '@/components/BaseModal.vue' // 경로는 프로젝트에 맞게
+    import { useLoadingStore } from '@/stores/loading'
+
+    const loading = useLoadingStore()
 
     const goToProtest = () => {
       router.push('/member-view/memberProtest');
@@ -115,9 +118,6 @@
     })
 
     function ModalConfirm() {
-        console.log('ModalConfirm 실행 됨')
-        console.log('모달 컨펌:' , tttt.value);
-        // router.push('/member/login');
     }
 
     async function onSubmit() {
@@ -161,30 +161,17 @@
             tasks.push(axios.get('http://localhost:8000/main-client/search/course',{headers: {Authorization: `Bearer ${userStore.token}`} }));
             tasks.push(axios.get('http://localhost:8000/main-client/search/mountain',{headers: {Authorization: `Bearer ${userStore.token}`} }));
             tasks.push(axios.get(`http://localhost:8000/main-client/climb-history/climbing-by-status?userId=${userStore.userId}&status=N`,{headers: {Authorization: `Bearer ${userStore.token}`} }));
-            
-            // tasks.push(axios.get(`http://localhost:8000/main-client/stamp/corse-stamp/${userStore.userId}`,{headers: {Authorization: `Bearer ${userStore.token}`} }));
-            // tasks.push(axios.get(`http://localhost:8000/member-client/member/member-info/${userStore.userId}`,{headers: {Authorization: `Bearer ${userStore.token}`} }));
-            
-            // tasks.push(axios.get(`http://localhost:8000/main-client/climb-history/climbing-by-status?userId=${userStore.userId}&status=Y`,{headers: {Authorization: `Bearer ${userStore.token}`} }));
-            
+
             // 그래프 데이터, 유저 정보(등산 완료시 갱신되는 데이터 통신은 replaceData() 함수로 실행)
             replaceData();
+
             // ② 모든 요청이 끝날 때까지 기다림 (모두 끝나면 배열로 반환됨)
             const resAll = await Promise.all([...tasks]);
 
             // ③ 각각 결과 사용
-            console.log('courses:', resAll[0].data);
-            console.log('mountains:', resAll[1].data);
-            console.log('notCompleteClimbing',resAll[2].data )
-            // console.log('hasStamp:', resAll[0].data);
-            // console.log('memberInfo:', resAll[3].data);
-
             courses.value     = resAll[0].data;
             mountains.value   = resAll[1].data;
             notCompleteClimbing.value = resAll[2].data;
-            // hasStamp.value      = resAll[0].data;
-            // userInfo.value      = resAll[3].data;
-
             // 도넛 차트에 들어갈 데이터
             stamps.value.push({name: '보유', value:hasStamp.value.length });
             stamps.value.push({name: '미보유', value: courses.value.length - hasStamp.value.length});
@@ -194,7 +181,6 @@
             // 산 + 코스 join
             // ① frtrlId 별로 코스들을 미리 묶어둠
             const courseMap = new Map();
-            console.log('courseMap:',courseMap);
 
             // courses 배열 순회  
             for (const c of courses.value) {
@@ -216,8 +202,6 @@
 
             });
 
-            // console.log('코스 + 산 머지:', mountainInfo.value);
-
         } catch (err) {
             // ④ 하나라도 실패하면 여기로 옴
             console.error('요청 중 에러 발생:', err);
@@ -226,11 +210,9 @@
 
     const changeMountain = () => {
         selectedCourse.value = null;
-        console.log(selectedMountain.value);
     }
     
     const changeCourse = () => {
-        console.log(selectedCourse.value);
     }
 
 
@@ -245,7 +227,6 @@
                     }
                     ,{headers: {Authorization: `Bearer ${userStore.token}`} 
                 })
-        console.log('등산 시작결과:', res.data);
 
         // 정상으로 아직 미완료 등산 목록에 추가
         if(res.data.httpStatus === 200) {
@@ -253,7 +234,6 @@
                  frtrlId: selectedCourse.value.frtrlId, poiId : selectedCourse.value.poiId
             })
 
-            console.log('등산 정상 시작 완료 후:', notCompleteClimbing.value);
             buttonflag.value = false;
         } else {
             //등산 시작 실패 에러메시지 모달창 출력
@@ -262,32 +242,42 @@
     }
 
     const endClimb = async() => {
-        const res = await axios.put(`http://localhost:8000/main-client/climb-history/climbing`,
-                    {
-                        'cumId' : userStore.userId,
-                        "frtrlId" : selectedCourse.value.frtrlId,     
-                        "poiId" : selectedCourse.value.poiId,         
-                        "stateCode" : "N"
-                    }
-                    ,{headers: {Authorization: `Bearer ${userStore.token}`} 
-                })
-
-        console.log('등산 완료결과:', res.data);
-        
-        if(res.data.httpStatus === 200) {
+        try {
+            loading.start();  // 스피너 ON + 화면 차단
+            const res = await axios.put(`http://localhost:8000/main-client/climb-history/climbing`,
+                        {
+                            'cumId' : userStore.userId,
+                            "frtrlId" : selectedCourse.value.frtrlId,     
+                            "poiId" : selectedCourse.value.poiId,         
+                            "stateCode" : "N"
+                        }
+                        ,{headers: {Authorization: `Bearer ${userStore.token}`} 
+                    })
             
-            // 등산 완료 후 미완료 리스트에서 제거
-            const index = notCompleteClimbing.value.findIndex(x => x.poiId == res.data.result.member.poiId);
-            if(index !== -1){
-                notCompleteClimbing.value.splice(index,1);
+            if(res.data.httpStatus === 200) {
+                
+                // 등산 완료 후 미완료 리스트에서 제거
+                const index = notCompleteClimbing.value.findIndex(x => x.poiId == res.data.result.member.poiId);
+                if(index !== -1){
+                    notCompleteClimbing.value.splice(index,1);
+                }
+
+                replaceData();
+                buttonflag.value = true;
+
+            } else {
+                openModal(res.data.message, '등산 완료 버튼');
             }
-
-            replaceData();
-            console.log('등반 정상 완료 후:', notCompleteClimbing.value);
-            buttonflag.value = true;
-
-        } else {
-            openModal(res.data.message, '등산 완료 버튼');
+        }
+        catch(error) {
+            console.error('❌ 서버 오류 코드:', error.response.status);
+            console.error('❌ 오류 내용:', error.response.data);
+            const errorMessage = error.response.status >= 500 ? 
+            '서버 이상' : error.response.data.message;
+            openModal(errorMessage,'등산 인증 실패', true);
+        }
+        finally {
+            loading.stop();  // 스피너 OFF + 화면 복귀
         }
     }
 
@@ -303,17 +293,9 @@
             const resAll = await Promise.all([...tasks]);
 
 
-            console.log('hasStamp:', resAll[0].data);
-            console.log('memberInfo:', resAll[1].data);
-            console.log('monthlyRecord:', resAll[2].data);
-
             hasStamp.value      = resAll[0].data;
             userInfo.value      = resAll[1].data;
             monthlyRecord.value = resAll[2].data;
-
-            console.log('월별 등산기록 회원아이디:',monthlyRecord.value.cumId);
-            console.log('월별 등산기록 xAxis:',monthlyRecord.value.xaxis);
-            console.log('월별 등산기록 yAxis:',monthlyRecord.value.yaxis);
 
             // 도넛 차트에 들어갈 데이터
             stamps.value = [] ;

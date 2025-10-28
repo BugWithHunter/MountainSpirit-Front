@@ -37,7 +37,7 @@
           <slot>은 부모 컴포넌트에서 <BaseModal> 안에 내용을 넣을 수 있게 함
           기본값으로 message를 표시함
         -->
-        <p class="desc" :id="descId">
+        <p class="desc" :id="descId" :class="{error : isError}">
           {{ message }}
         </p>
 
@@ -70,6 +70,7 @@ import { ref, watch, computed, onUnmounted, nextTick } from 'vue'
   - showCancel : 취소 버튼 표시 여부
 */
 const props = defineProps({
+  isError : { type: Boolean, default: false }, 
   open: { type: Boolean, default: false },
   title: { type: String, default: '알림' },
   message: { type: String, default: '' },
@@ -200,10 +201,14 @@ const onConfirm = async () => {
 /* 내용(메시지) 스타일 */
 .desc {
   margin: 0 0 16px;
-  color: red;
+  color: black;
   line-height: 1.5;
   font-size: 20;
   white-space: pre-line; /* 줄바꿈 문자(\n)를 실제 줄바꿈으로 표시 */
+}
+
+.desc.error {
+  color: red;
 }
 
 /* 버튼 묶음 */

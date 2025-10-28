@@ -7,6 +7,6 @@ export default [
     {
         path: '/privacy',
         name: 'privacy',
-        component: () => import('@/views/footerinfo/privacy.vue'),
+        component: () => import('@/views/footerinfo/Privacy.vue'),
     }
 ]

@@ -1,7 +1,7 @@
 <template>
     <div class="sidebar">
         <div class="logo">
-          <RouterLink to="/"><img src="/logo.png" alt="산신령"></RouterLink>
+          <RouterLink to="/admin"><img src="/logo.png" alt="산신령"></RouterLink>
         </div>
 
         <nav class="menu">

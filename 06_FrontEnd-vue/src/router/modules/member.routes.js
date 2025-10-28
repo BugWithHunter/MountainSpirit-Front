@@ -32,4 +32,11 @@ export default [
     name: 'protestConfirm',
     component: () => import('@/views/member/ProtestConfirm.vue')
   },
+  {
+    path: '/member/modifyPassword',
+    name: 'modifyPassword',
+    component: () => import('@/views/member/ModifyPassword.vue')
+  },
+
+  
 ];

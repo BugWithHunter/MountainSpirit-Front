@@ -11,6 +11,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
@@ -51,10 +52,19 @@ public class WebSecurity {
                 .cors(Customizer.withDefaults()) // cors 설정
                 // 기본 formLogin 필터 비활성화 (중복 방지)
                 .formLogin(AbstractHttpConfigurer::disable);
+
         http.authorizeHttpRequests(authz ->
                                 authz
                                         .requestMatchers(HttpMethod.OPTIONS,"/**").permitAll()     // 테스트를 위해 모든 권한 오픈
                                         .requestMatchers(HttpMethod.GET, "/img/**").permitAll()     // 이미지 경로는 누구나 접근 허용
+                                        .requestMatchers(HttpMethod.POST,"/member/member").permitAll()
+                                        .requestMatchers(
+                                                "/v3/api-docs/**",
+                                                "/swagger-ui/**",
+                                                "/swagger-ui.html",
+                                                "/swagger-resources/**",
+                                                "/webjars/**"
+                                        ).permitAll()
 //                                authz.requestMatchers(HttpMethod.GET, "/member/**").permitAll()
 //                                        .requestMatchers(HttpMethod.POST, "/users/**").permitAll()
 //                                        .requestMatchers(HttpMethod.GET, "/test").permitAll()

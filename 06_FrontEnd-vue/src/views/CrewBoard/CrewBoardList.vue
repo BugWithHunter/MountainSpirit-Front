@@ -56,8 +56,6 @@
     import { useRouter } from 'vue-router'
     import Pagination from '@/views/Board/Pagination.vue';
     import WritePost from '@/views/CrewBoard/WritePost.vue';
-
-    
     import { useUserStore } from '@/stores/user';
 
 const userStore =  useUserStore();

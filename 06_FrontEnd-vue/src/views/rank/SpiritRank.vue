@@ -33,8 +33,8 @@
 
         <ul class="kv-list">
           <li v-for="(row, i) in selectedDetailRows" :key="i">
-            <strong>{{ row.label }}</strong>
-            <span>{{ row.value }}</span>
+            <strong>{{ row.memName }}</strong>
+            <span>{{ row.count }}</span>
           </li>
         </ul>
       </article>
@@ -45,7 +45,10 @@
 <script setup>
 import { onMounted, ref, reactive, nextTick } from 'vue'
 import EchartDonut from '@/components/echart/EchartDonut.vue'
+import axios from 'axios';
+import { useUserStore } from '@/stores/user';
 
+const userStor = useUserStore();
 //--------------------------
 let map;
 // 각 마커를 순회하며 커스텀 오버레이 생성
@@ -83,19 +86,18 @@ let radius = ref(['40%' ,'60%']);
 
 function collapseMap(mountain) {
     
-    const newCenter = new kakao.maps.LatLng(mountain.lat, mountain.lng);
+    const newCenter = new kakao.maps.LatLng(mountain.lat, mountain.lot);
 
     if (!isCollapsed.value) {
         const desiredLevel = 8;
         isCollapsed.value = true;
 
-        map.setLevel(desiredLevel, { anchor: newCenter, animate: { duration: 300 } });
-        const newSize = sizeForLevel(desiredLevel)
-        overlays.forEach(({ markerEl }) => {
-            markerEl.style.width = `${newSize}px`
-            markerEl.style.height = `${newSize}px`
-    })
-
+          map.setLevel(desiredLevel, { anchor: newCenter, animate: { duration: 300 } });
+              const newSize = sizeForLevel(desiredLevel)
+              overlays.forEach(({ markerEl }) => {
+                  markerEl.style.width = `${newSize}px`
+                  markerEl.style.height = `${newSize}px`
+          })
     } 
     
     // 센터로 이동
@@ -132,7 +134,8 @@ function sizeForLevel(level) {
 }
 
 //  마커용 DOM 엘리먼트 생성 함수
-function createMarkerElement(initialSize, data) {
+function createMarkerElement(initialSize, frtrlId, frtrlNm, filePath) {
+  
   const el = document.createElement('div')
   el.className = 'circle-marker'
   el.style.width = `${initialSize}px`
@@ -144,8 +147,8 @@ function createMarkerElement(initialSize, data) {
   el.style.transition = 'width .12s ease, height .12s ease, transform .15s ease'
 
   const img = document.createElement('img')
-  img.src = data.img
-  img.alt = data.name
+  img.src = filePath
+  img.alt = ''
   img.style.width = '100%'
   img.style.height = '100%'
   img.style.objectFit = 'cover'
@@ -163,66 +166,70 @@ function createMarkerElement(initialSize, data) {
 
   //  click 이벤트: 콘솔 + alert
   el.addEventListener('click', () => {
-    selectedDetailRows.value = data.member;
-    panelTitle.value = data.mountainNm;
 
-    if( chartItems.value.length > 0)
-        chartItems.value = [];
-
-    console.log('selectedDetailRows 확인:', selectedDetailRows.value);
-
-    if(selectedDetailRows.value !== null) {            
-        console.log(selectedDetailRows.value);
-
-
-    // stamps.push({name: '흭득', value : 0 });
-    // stamps.push({name: '미흭득', value: 0});
-    // radius.push('40%');
-    // radius.push('65%');
-
-        selectedDetailRows.value.forEach((data) => {
-            chartItems.value.push({
-                name: data.label,
-                value: data.count
-            })
-        });
-
-        console.log('chartItems 확인:',  chartItems);
-    } 
+    replacee(frtrlId, frtrlNm);
   })
 
   return el
 }
 
-onMounted(() => {
-  // 지도 옵션
-  const center = new window.kakao.maps.LatLng(35.94699, 127.09598)
-  map = new window.kakao.maps.Map(mapContainer.value, {
-    center,
-    level: 12
-  })
+let mountainRank = ref({});
+
+const replacee = (frtrlId, frtrlNm) => {
+  
+      selectedDetailRows.value = mountainRank.value[frtrlId];
+      panelTitle.value = frtrlNm;
+
+      if( chartItems.value.length > 0)
+          chartItems.value = [];
+
+      if(selectedDetailRows.value !== null) {            
+          selectedDetailRows.value.forEach((data) => {
+              chartItems.value.push({
+                  name: data.memName,
+                  value: data.count
+              })
+          });
+      } 
+}
 
 
-  markerData.forEach(data => {
-    const level = map.getLevel()
-    const size = sizeForLevel(level)
-    const markerEl = createMarkerElement(size, data)
-
-    markerEl.addEventListener('click', (e) => {
-     e.stopPropagation();       // 지도의 click과 중복 방지
-     collapseMap(data);    // 오른쪽 패널 타이틀 업데이트 + 축소
-   })
-
-    const overlay = new window.kakao.maps.CustomOverlay({
-      position: new window.kakao.maps.LatLng(data.lat, data.lng),
-      content: markerEl,
-      xAnchor: 0.5,
-      yAnchor: 1.0,
-      map
+onMounted(async() =>  {
+    // 지도 옵션
+    const center = new window.kakao.maps.LatLng(35.94699, 127.09598)
+    map = new window.kakao.maps.Map(mapContainer.value, {
+      center,
+      level: 12
     })
 
-    overlays.push({ overlay, markerEl })
-  })
+    const responmse = await axios.get(`http://localhost:8000/main-client/climb-history/mountainRank`,{headers: {Authorization: `Bearer ${userStor.token}`} });
+    for (const [key, value] of Object.entries(responmse.data)) {
+          const level = map.getLevel()
+          const size = sizeForLevel(level)
+          const markerEl = createMarkerElement(size, value.frtrlId, value.frtrlNm, value.filePath);
+
+          markerEl.addEventListener('click', (e) => {
+              e.stopPropagation();       // 지도의 click과 중복 방지
+              collapseMap(value);    // 오른쪽 패널 타이틀 업데이트 + 축소
+          })
+
+          const overlay = new window.kakao.maps.CustomOverlay({
+              position: new window.kakao.maps.LatLng(value.lat, value.lot),
+              content: markerEl,
+              xAnchor: 0.5,
+              yAnchor: 1.0,
+              map
+          })
+          
+      overlays.push({ overlay, markerEl })
+
+      if (!mountainRank.value[key]) mountainRank.value[key] = [];
+      
+        if (Array.isArray(value.mountainRanks)) {
+          mountainRank.value[key].push(...value.mountainRanks);
+        }
+        
+    }
 
     // 줌 이벤트: 모든 마커 크기 동기 변경
     window.kakao.maps.event.addListener(map, 'zoom_changed', () => {
@@ -236,6 +243,7 @@ onMounted(() => {
 
 
 })
+
 </script>
 
 <style>

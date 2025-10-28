@@ -357,6 +357,7 @@ public class MemberServiceImpl implements MemberService {
             try {
                 Member member = modelMapper.map(memberDTO, Member.class);
                 member.setMemStsId(1L); //회원 상태 정상 상태로 초기 셋팅
+                member.setMemRankId(1L); //회원 상태 정상 상태로 초기 셋팅
                 member.setSignInDate(LocalDate.now());
                 member = memberRepository.save(member);
                 responseSignUpDTO.setMemberDTO(modelMapper.map(member, ResponseMemberDTO.class));

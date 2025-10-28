@@ -22,8 +22,6 @@
                 <h4>지원</h4>
                 <ul>
                     <li><RouterLink to="/">이용 가이드</RouterLink></li>
-                    <li><RouterLink to="/report">신고/제안하기</RouterLink></li>
-                    <li><a href="mailto:suhyun8913@naver.com">이메일 문의</a></li>
                 </ul>
                 </div>
                 <div>
@@ -63,8 +61,8 @@
     .footer{
     background: #0f172a; /* slate-900 느낌 */
     color: #e2e8f0;      /* slate-200 */
-    padding: 32px 0 16px;
-    margin-top: 48px;
+    padding-top: 48px;
+
     }
     .wrap{
     width: min(1100px, 92%);

@@ -1,16 +1,15 @@
 package com.bughunters.mountainspirit.climbhistory.query.controller;
 
-import com.bughunters.mountainspirit.climbhistory.query.dto.FindClimbCheckQueryDTO;
-import com.bughunters.mountainspirit.climbhistory.query.dto.FindNotCompleteClimbCheckQueryDTO;
-import com.bughunters.mountainspirit.climbhistory.query.dto.RequestStartClimbMountainQueryDTO;
-import com.bughunters.mountainspirit.climbhistory.query.dto.SelectClimbingRecordMonthlyDTO;
+import com.bughunters.mountainspirit.climbhistory.query.dto.*;
 import com.bughunters.mountainspirit.climbhistory.query.service.ClimbHistoryQueryService;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.client.reactive.ReactorClientHttpConnector;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/climb-history")
@@ -49,13 +48,22 @@ public class ClimbHistoryQueryController {
     }
 
     @GetMapping("/monthly-record/{id}")
-    public ResponseEntity<List<SelectClimbingRecordMonthlyDTO>> findClimbNotComplete(
+    public ResponseEntity<ResponseRecordMonthlyDTO> findClimbNotComplete(
             @PathVariable Long id) {
-        List<SelectClimbingRecordMonthlyDTO> selectClimbingRecordMonthlyDTO
+        ResponseRecordMonthlyDTO responseRecordMonthlyDTO
                 = climbHistoryQueryService.selectMonthlyRecord(id);
 
         return ResponseEntity.ok()
-                .body(selectClimbingRecordMonthlyDTO);
+                .body(responseRecordMonthlyDTO);
+    }
+
+    @GetMapping("/mountainRank")
+    public ResponseEntity<Map<String, SpiritProfileDTO>> findClimbNotComplete(HttpServletRequest request){
+        Map<String, SpiritProfileDTO> mountainRankDTO
+                = climbHistoryQueryService.findMountainRank(request);
+
+        return ResponseEntity.ok()
+                .body(mountainRankDTO);
     }
 
 

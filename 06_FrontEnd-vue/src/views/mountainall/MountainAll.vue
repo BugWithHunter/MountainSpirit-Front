@@ -68,7 +68,7 @@
     function ensureLogin() {
         if (!userStore.isLoggedIn || !userStore.token) {
             alert("로그인이 필요한 서비스입니다.");
-            router.push("/login");
+            router.push("/member/login");
             return false;
         }
         return true;
@@ -139,8 +139,8 @@
 <style scoped>
     .search{
         position: relative;
-        top: 10%;
-        left: 16%;
+        top: -1%;
+        left: 25%;
     }
 
     .search button{
