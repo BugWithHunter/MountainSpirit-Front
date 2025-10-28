@@ -66,23 +66,12 @@ public class ReportProtestQueryController {
     }
 
     // 로그인된 회원의 이의신청 조회
-    @GetMapping("/my")
+    @GetMapping("/my/{reportedId}")
     public ResponseEntity<ResponseMessage> getMyReportProtest(
+            @PathVariable Long reportedId,
             @RequestParam(value = "page", defaultValue = "1") int page,
-            @RequestParam(value = "size", defaultValue = "10") int size,
-            HttpServletRequest request) {
-        UserInfo userInfo = (UserInfo) request.getAttribute("userInfo");
+            @RequestParam(value = "size", defaultValue = "10") int size) {
 
-        if (userInfo == null) {
-            ResponseMessage unauthorizedMessage = new ResponseMessage(
-                    HttpStatus.UNAUTHORIZED.value(),
-                    "로그인이 필요합니다.",
-                    null
-            );
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(unauthorizedMessage);
-        }
-
-        Long reportedId = userInfo.getId();
         List<ReportProtestQueryDTO> protests = reportProtestQueryService.selectReportProtestByReportedId(reportedId, page, size);
 
         Map<String, Object> result = new HashMap<>();

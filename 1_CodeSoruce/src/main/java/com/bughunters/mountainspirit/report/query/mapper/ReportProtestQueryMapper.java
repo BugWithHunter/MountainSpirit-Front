@@ -14,7 +14,7 @@ public interface ReportProtestQueryMapper {
             @Param("offset") Integer offset
     );
     List<ReportProtestQueryDTO> selectReportProtestByReportedId(
-            Long reportedId,
+            @Param("reportedId") Long reportedId,
             @Param("limit") Integer limit,
             @Param("offset") Integer offset
     );
