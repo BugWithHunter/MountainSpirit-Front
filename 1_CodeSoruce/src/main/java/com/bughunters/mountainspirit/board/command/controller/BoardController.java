@@ -83,13 +83,14 @@ public class BoardController {
     }
 
     @GetMapping("/{id}/select/likes")
-    public void pushLikes(@PathVariable int id,
+    public String pushLikes(@PathVariable int id,
                           HttpServletRequest request) {
 
         UserInfo userInfo = (UserInfo) request.getAttribute("userInfo");
         long userId = userInfo.getId();
 
-        boardService.createOrDeleteLikesByPostId(id, userId);
+        String result = boardService.createOrDeleteLikesByPostId(id, userId);
+        return result;
     }
 
 }

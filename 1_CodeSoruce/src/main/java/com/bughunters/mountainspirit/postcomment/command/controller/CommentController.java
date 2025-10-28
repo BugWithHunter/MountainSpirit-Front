@@ -29,16 +29,6 @@ public class CommentController {
         commentService.registComment(newComment, userId);
     }
 
-    /* 설명. 수정하고 싶은 상태 */
-//    @PostMapping("/boards/{boardid}/comment")
-//
-//    @PostMapping("/crewboards/{crewboardid}/comment")
-//
-//    @PostMapping("/noticeboards/{noticeboardid}/comment")
-//
-//    @PostMapping("/perent-comment/{pid}/comment")
-
-
 
 
     @PutMapping("/comments/{id}/modify")

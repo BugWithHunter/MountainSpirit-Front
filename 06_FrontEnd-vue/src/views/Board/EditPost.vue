@@ -2,7 +2,7 @@
   <div class="modal-wrap">
     <div class="modal-container">
       <h3>게시글 작성</h3>
-      <form @submit.prevent="submitPost" enctype="multipart/form-data">
+      <form @submit.prevent="editPost" enctype="multipart/form-data">
         <label>제목</label>
         <input v-model="title" type="text" required>
         <label>내용</label>
@@ -37,10 +37,16 @@ import { useUserStore } from '@/stores/user';
 const userStore =  useUserStore();
 const token = userStore.token;
 
-const title = ref('');
-const content = ref('');
+const props = defineProps({
+  initTitle: String,
+  initContent: String,
+  initImages: Array,   // {url, name, ...}
+});
+
+const title = ref(props.initTitle);
+const content = ref(props.initContent);
+const previewList = ref([...props.initImages]);
 const files = ref([]);
-const previewList = ref([]);
 const emit = defineEmits(['close', 'post-success']);
 
 let fileId = 0;
@@ -76,7 +82,7 @@ function closeModal() {
     files.value = previewList.value.map(obj => obj.file);
     }
 
-    async function submitPost() {
+    async function editPost() {
     const formData = new FormData();
     formData.append('title', title.value);
     formData.append('content', content.value);
@@ -85,7 +91,7 @@ function closeModal() {
     }
 
     try {
-        await axios.post('http://localhost:8000/main-client/boards/insert', formData, {
+        await axios.put(`http://localhost:8000/main-client/boards/modify/${postId}`, formData, {
         headers: {
             Authorization: `Bearer ${token}`,
             'Content-Type': 'multipart/form-data'
@@ -93,7 +99,7 @@ function closeModal() {
         });
         emit('post-success');
     } catch (error) {
-        alert('게시글 등록 실패: ' + error);
+        alert('게시글 수정 실패: ' + error);
     }
     }
 </script>

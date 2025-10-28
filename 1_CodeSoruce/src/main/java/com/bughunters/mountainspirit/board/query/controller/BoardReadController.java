@@ -42,8 +42,8 @@ public class BoardReadController {
     }
 
     @GetMapping("/boards/search")     // postman에서도 쿼리스트링으로 수정
-    public List<BoardDTO> findDetailBoardByKeyword(@RequestParam String keyword,
-                                                   @RequestParam String type) {
+    public List<BoardDTO> findDetailBoardByKeyword(@RequestParam String type,
+                                                   @RequestParam String keyword) {
         List<BoardDTO> boardDTOList = boardReadService.getBoardInfoByKeyword(keyword, type);
 
         return boardDTOList;

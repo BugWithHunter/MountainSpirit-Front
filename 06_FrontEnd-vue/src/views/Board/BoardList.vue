@@ -11,10 +11,11 @@
         <button id="searchButton" @click="onSearch">
             <img src="./asset/search.png" alt="검색" style="width:20px; height:20px;">
         </button>
-        <button id="writeButton" @click="goWrite">
+        <button id="writeButton" @click="openWriteModal">
             <img src="./asset/more.png" alt="게시글 추가" style="width:20px; height:20px;">
         </button>
-        <WritePost v-if="isModalOpen" @close="isModalOpen = false" />
+
+        <WritePost v-if="showWriteModal" @close="showWriteModal = false" @post-success="onPostSuccess" />
     </div>
     <table>
         <thead>
@@ -36,7 +37,7 @@
     </table>
     <div class="pagination-wrapper">
             <pagination
-            v-if="pagingInfo"
+            v-if="!isSearching && pagingInfo"
             :current-page="pagingInfo.currentPage"
             :start-page="pagingInfo.startPage"
             :end-page="pagingInfo.endPage"
@@ -50,15 +51,14 @@
 <script setup>
     import axios from 'axios';
     import { ref, onMounted } from 'vue';
-    import { useRouter } from 'vue-router'
+    import { useRouter } from 'vue-router';
     import Pagination from '@/views/Board/Pagination.vue';
-    import WritePost from '@/views/Board/WritePost.vue';
     import { useUserStore } from '@/stores/user';
+    import WritePost from './WritePost.vue';
 
 const userStore =  useUserStore();
 const token = userStore.token;
     
-
     const router = useRouter();
     const postList = ref([]);
     const pagingInfo = ref({
@@ -66,14 +66,15 @@ const token = userStore.token;
         startPage: 1,
         endPage: 1,
         lastPage: 1
-    })
+    });
 
-    const searchType = ref('content');
-    const searchKeyword = ref('');
-    const isModalOpen = ref(false);
+    const searchType = ref('title');
+    const searchQuery = ref('');
+    const isSearching = ref(false);
 
     // 데이터 가져오기
     const fetchBoardList = async (page = 1) => {
+    isSearching.value = false;
     try {
         const response = await axios.get(`http://localhost:8000/main-client/boards/list?page=${page}`, {
         headers: {
@@ -87,6 +88,16 @@ const token = userStore.token;
     }
 };
 
+// 새로 만드는 WritePost
+const showWriteModal = ref(false);
+function openWriteModal() {
+  showWriteModal.value = true;
+}
+
+function onPostSuccess() {
+  showWriteModal.value = false;
+  fetchBoardList(1);
+}
 
     // 제목 클릭 시 이동 함수
     const goToDetail = (postId) => {
@@ -100,9 +111,12 @@ const token = userStore.token;
 
 
 // // 검색 함수
-const onSearch = async (searchQuery) => {
+const onSearch = async () => {
+    isSearching.value = true;
     try {
-        const response = await axios.get(`http://localhost:8000/main-client/boards/search/${searchQuery}`,
+        console.log(searchType.value);
+        console.log(searchQuery.value);
+        const response = await axios.get(`http://localhost:8000/main-client/boards/search?type=${searchType.value}&keyword=${searchQuery.value}`,
         {
             headers: {
             Authorization: `Bearer ${token}`
@@ -110,7 +124,7 @@ const onSearch = async (searchQuery) => {
         }
         );
         // 결과 처리: boardList에 검색 결과 저장
-        postList.value = response.data.boardList;
+        postList.value = response.data;
     } catch (error) {
         console.error('검색 실패', error);
     }
@@ -118,8 +132,7 @@ const onSearch = async (searchQuery) => {
 
     // 게시글 추가 버튼 클릭 이벤트
     const goWrite = () => {
-        console.log('aa');
-        isModalOpen.value = true;
+        router.push({ name: 'writePost'})
     }
 </script>
 
