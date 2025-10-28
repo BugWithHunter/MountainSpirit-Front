@@ -12,71 +12,61 @@
 
 
 <script setup>
-    import { onMounted, ref, defineProps, watch} from 'vue';
+    import { onMounted, ref, defineProps, watch, onBeforeUnmount, nextTick  } from 'vue';
 
     let myChart;
     let option;
 
     const props = defineProps({
-        chartItems : {type:Array, default: () => []},
-        radius     : {type:Array, default: () => ['48%','72%']},
+        cumId : {type:Number},
+        xAxis : {type:Array, default: () => []},
+        yAxis : {type:Array, default: () => []},
     });
     const chartDiv = ref(null);
     
-    function buildOption(items, radius) {
-        const data = (items ?? []).map(d => ({ name: d.name, value: d.value }));
-        const isEmpty = data.length === 0;
+    function buildOption(cumId, xAxis, yAxis) {
         return {
+            tooltip: {
+                trigger: 'axis', // 🔹 축 기준으로 호버 시 표시
+                axisPointer: {
+                    type: 'cross' // 🔹 십자선 커서
+                },
+                backgroundColor: 'rgba(50,50,50,0.8)',
+                borderColor: '#333',
+                textStyle: {
+                    color: '#fff'
+                },
+                formatter: (params) => {
+                    // params: 현재 마우스 위치의 데이터 정보 배열
+                    const item = params[0]; // 단일 시리즈라 0번째 사용
+                    return `
+                        <b>${item.axisValue}</b><br/>
+                        y: ${item.data}
+                    `;
+                }
+            },
             xAxis: {
                 type: 'category',
-                data: ['24-01', '24-01', '24-01', '24-01', '5', '6', '7', '8', '9', '10', '11', '12']
+                data: xAxis
             },
             yAxis: {
                 type: 'value'
             },
             series: [
                 {
-                    data: [10, 5, 3, 7, 0, 1, 2, 15, 2, 3, 4, 1,],
+                    data: yAxis,
                     type: 'line',
-                    color: '#1DDB16' //색상 코드
+                    color: '#1DDB16', //색상 코드
+                    // smooth: true,     // 🔹 라인을 부드럽게
+                    symbol: 'circle', // 🔹 데이터 점 표시
+                    symbolSize: 6,    // 🔹 점 크기
+                    lineStyle: {
+                        width: 2
+                    }
                 }
             ]
         };
     }
-
-
-    // onMounted(() => {
-    //     // 차트를 그릴 div 테그 선택
-    //     var myChart = echarts.init(chartDiv.value, null, {
-    //         renderer: 'canvas',
-    //         useDirtyRect: false
-    //     });
-    //     var app = {};
-    //     var option;
-
-    //     option = {
-    //         xAxis: {
-    //             type: 'category',
-    //             data: ['24-01', '24-01', '24-01', '24-01', '5', '6', '7', '8', '9', '10', '11', '12']
-    //         },
-    //         yAxis: {
-    //             type: 'value'
-    //         },
-    //         series: [
-    //             {
-    //                 data: [10, 5, 3, 7, 0, 1, 2, 15, 2, 3, 4, 1,],
-    //                 type: 'line',
-    //                 color: '#1DDB16' //색상 코드
-    //             }
-    //         ]
-    //     };
-
-    //     if (option && typeof option === 'object') {
-    //         myChart.setOption(option);
-    //     }
-
-    //     window.addEventListener('resize', myChart.resize);
-    // });
 
     function ensureChart() {
         if (!myChart && chartDiv.value) {
@@ -88,7 +78,7 @@
     function render() {
         ensureChart();
         if (!myChart) return;
-        const opt = buildOption(props.chartItems, props.radius);
+        const opt = buildOption(props.cumId, props.xAxis,props.yAxis);
         myChart.clear();               //  이전 상태 깨끗이
         myChart.setOption(opt, true);  //  notMerge=true: 완전 교체
         myChart.resize();
@@ -96,12 +86,12 @@
 
     onMounted(() => {
         nextTick(() => setTimeout(() => {
-        render();                    //  처음에도 현재 props로 렌더
+            render();                    //  처음에도 현재 props로 렌더
         }, 360));
     });
 
     watch(
-        () => [props.chartItems, props.radius],
+        () => [props.cumId, props.xAxis,props.yAxis],
         () => render(),
         { deep: true, immediate: true }        //  처음 값과 깊은 변경 모두 반영
     );

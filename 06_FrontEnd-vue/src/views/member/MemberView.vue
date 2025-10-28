@@ -54,7 +54,7 @@
                 </EchartDonut>
 
                 <EchartLine
-                :hsaStamp="hsaStamp" :totalStamp="totalStamp" 
+                :cumId="monthlyRecord.cumId" :xAxis="monthlyRecord.xaxis"  :yAxis="monthlyRecord.yaxis"
                 v-slot:title>
                     <h2 class="slot-title">월별 등산 기록</h2>
                 </EchartLine>
@@ -89,6 +89,7 @@
     const courses = ref([]);
     const mountains = ref([]);
     const userInfo = ref({});
+    const monthlyRecord = ref({});
     const notCompleteClimbing = ref([]);
 
     //로그인 안하고 url 치고 들어오는거 막기 위함
@@ -148,28 +149,32 @@
         try {
             // ① 병렬로 요청을 시작 (순서 상관 없음)
             const tasks = [];
-            tasks.push(axios.get(`http://localhost:8000/main-client/stamp/corse-stamp/${userStore.userId}`,{headers: {Authorization: `Bearer ${userStore.token}`} }));
             tasks.push(axios.get('http://localhost:8000/main-client/search/course',{headers: {Authorization: `Bearer ${userStore.token}`} }));
             tasks.push(axios.get('http://localhost:8000/main-client/search/mountain',{headers: {Authorization: `Bearer ${userStore.token}`} }));
-            tasks.push(axios.get(`http://localhost:8000/member-client/member/member-info/${userStore.userId}`,{headers: {Authorization: `Bearer ${userStore.token}`} }));
             tasks.push(axios.get(`http://localhost:8000/main-client/climb-history/climbing-by-status?userId=${userStore.userId}&status=N`,{headers: {Authorization: `Bearer ${userStore.token}`} }));
+            
+            // tasks.push(axios.get(`http://localhost:8000/main-client/stamp/corse-stamp/${userStore.userId}`,{headers: {Authorization: `Bearer ${userStore.token}`} }));
+            // tasks.push(axios.get(`http://localhost:8000/member-client/member/member-info/${userStore.userId}`,{headers: {Authorization: `Bearer ${userStore.token}`} }));
+            
             // tasks.push(axios.get(`http://localhost:8000/main-client/climb-history/climbing-by-status?userId=${userStore.userId}&status=Y`,{headers: {Authorization: `Bearer ${userStore.token}`} }));
             
+            // 그래프 데이터, 유저 정보(등산 완료시 갱신되는 데이터 통신은 replaceData() 함수로 실행)
+            replaceData();
             // ② 모든 요청이 끝날 때까지 기다림 (모두 끝나면 배열로 반환됨)
             const resAll = await Promise.all([...tasks]);
 
             // ③ 각각 결과 사용
-            console.log('hasStamp:', resAll[0].data);
-            console.log('courses:', resAll[1].data);
-            console.log('mountains:', resAll[2].data);
-            console.log('memberInfo:', resAll[3].data);
-            console.log('notCompleteClimbing',resAll[4].data )
+            console.log('courses:', resAll[0].data);
+            console.log('mountains:', resAll[1].data);
+            console.log('notCompleteClimbing',resAll[2].data )
+            // console.log('hasStamp:', resAll[0].data);
+            // console.log('memberInfo:', resAll[3].data);
 
-            hasStamp.value      = resAll[0].data;
-            courses.value     = resAll[1].data;
-            mountains.value   = resAll[2].data;
-            userInfo.value      = resAll[3].data;
-            notCompleteClimbing.value = resAll[4].data;
+            courses.value     = resAll[0].data;
+            mountains.value   = resAll[1].data;
+            notCompleteClimbing.value = resAll[2].data;
+            // hasStamp.value      = resAll[0].data;
+            // userInfo.value      = resAll[3].data;
 
             // 도넛 차트에 들어갈 데이터
             stamps.value.push({name: '보유', value:hasStamp.value.length });
@@ -284,11 +289,22 @@
             const tasks = [];
             tasks.push(axios.get(`http://localhost:8000/main-client/stamp/corse-stamp/${userStore.userId}`,{headers: {Authorization: `Bearer ${userStore.token}`} }));
             tasks.push(axios.get(`http://localhost:8000/member-client/member/member-info/${userStore.userId}`,{headers: {Authorization: `Bearer ${userStore.token}`} }));
+            tasks.push(axios.get(`http://localhost:8000/main-client/climb-history/monthly-record/${userStore.userId}`,{headers: {Authorization: `Bearer ${userStore.token}`} }));
             
             const resAll = await Promise.all([...tasks]);
 
+
+            console.log('hasStamp:', resAll[0].data);
+            console.log('memberInfo:', resAll[1].data);
+            console.log('monthlyRecord:', resAll[2].data);
+
             hasStamp.value      = resAll[0].data;
             userInfo.value      = resAll[1].data;
+            monthlyRecord.value = resAll[2].data;
+
+            console.log('월별 등산기록 회원아이디:',monthlyRecord.value.cumId);
+            console.log('월별 등산기록 xAxis:',monthlyRecord.value.xaxis);
+            console.log('월별 등산기록 yAxis:',monthlyRecord.value.yaxis);
 
             // 도넛 차트에 들어갈 데이터
             stamps.value = [] ;
