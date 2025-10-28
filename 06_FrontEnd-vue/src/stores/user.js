@@ -15,9 +15,9 @@ export const useUserStore = defineStore(
     const token         = ref('');
     const isLoggedIn    = ref(false); 
     const crewId        = ref(0);
-
+    
     // ----- Actions -----
-    function logIn({ userName, userEmail, profilePath, authorities,userId : uid, crewId : crew }) {
+    function logIn({ userName, userEmail, profilePath, authorities,userId : uid, crewId : crew, }) {
       name.value = userName
       email.value = userEmail
       profile.value = profilePath
