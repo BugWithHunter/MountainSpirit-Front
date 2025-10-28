@@ -40,8 +40,7 @@
                 <button @click.stop="modalOpen()">취소</button>
                 <button @click.stop="climbApply(climbBoardData.id,
                 climbBoardData.crewClimbAmountOfPeople,
-                climbBoardData.mountain.frtrlId,
-                77)">신청</button>
+                climbBoardData.mountain.frtrlId)">신청</button>
                 </div>
             </div>
             </div>
@@ -54,6 +53,9 @@
     import axios from 'axios';
     import { onMounted, ref } from 'vue';
     import { useRoute } from 'vue-router';
+        import { useUserStore } from '@/stores/user';
+    
+    const userStore = useUserStore();
     
     const climbId = useRoute();
     const modalCheck = ref(false);
@@ -71,7 +73,7 @@
         console.log('page mount,',`http://localhost:8000/main-client/crew-climb-board/climb-board/${climbId.params.climbId}`);
         const response = await axios.get(`http://localhost:8000/main-client/crew-climb-board/climb-board/${climbId.params.climbId}`,
         {
-                headers:{"Authorization":"Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJrYW5nOTk5OTk5QGV4YW1wbGUuY29tIiwiYXV0aCI6WyJST0xFX01FTUJFUiJdLCJ1c2VybmFtZSI6IuqwleyCsOyLoOuguSIsImlkIjoyMTcsImJpcnRoIjoiMTk4Ni0wMy0wOCIsIm1lbVN0c0lkIjoxLCJleHAiOjE3NjE1Njc3OTl9.hrkEktZ_X20kC-eju4Yx63eItDilxt5-2Fi0AjtGx6Xlryc9SQ8rYmwEFJ3Neiuj8GgLwHynCdPokZXlt1IZAA"}
+                headers:{"Authorization":`Bearer ${userStore.token}`}
         });
         climbBoardData.value = response.data;
         climbBoardData.value.imageUrl = 'https://placehold.co/300x200?text=Mountain';
@@ -82,19 +84,19 @@
     const modalOpen = ()=>{
         modalCheck.value = !modalCheck.value;
     }
-    const climbApply = async (crewClimbId,amountOfPeople,frtrlId,crewMemberId)=>{
-        console.log(crewClimbId,amountOfPeople,frtrlId,crewMemberId);
+    const climbApply = async (crewClimbId,amountOfPeople,frtrlId)=>{
+        console.log(crewClimbId,amountOfPeople,frtrlId);
         const response = await axios.post('http://localhost:8000/main-client/crew-climb-board/climb-apply',
         {
             crewClimbId:crewClimbId,
             crewClimbAmountOfPeople:amountOfPeople,
             frtrlId:frtrlId,
-            crewMemberId:crewMemberId
+            cumId:userStore.userId
         },
         {
             headers: {
                 "Content-Type": "application/json",
-                "Authorization":"Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJrYW5nOTk5OTk5QGV4YW1wbGUuY29tIiwiYXV0aCI6WyJST0xFX01FTUJFUiJdLCJ1c2VybmFtZSI6IuqwleyCsOyLoOuguSIsImlkIjoyMTcsImJpcnRoIjoiMTk4Ni0wMy0wOCIsIm1lbVN0c0lkIjoxLCJleHAiOjE3NjE1Njc3OTl9.hrkEktZ_X20kC-eju4Yx63eItDilxt5-2Fi0AjtGx6Xlryc9SQ8rYmwEFJ3Neiuj8GgLwHynCdPokZXlt1IZAA"
+                "Authorization":`Bearer ${userStore.token}`
               }
         }
     )

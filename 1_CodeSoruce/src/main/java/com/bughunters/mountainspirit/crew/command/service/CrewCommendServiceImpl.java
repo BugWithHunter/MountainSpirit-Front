@@ -50,7 +50,7 @@ public class CrewCommendServiceImpl implements CrewCommendService {
         Long crewId = null;
         try {
             crewId = insertCrewTransaction(crewRegistDTO);
-            log.info("CrewMember insert 완료, CrewId: {}",crewId);
+            log.info("Crew insert 완료, CrewId: {}",crewId);
 
             // Member 테이블에 Crew 정보 저장
             memberServiceClient.updateMemberCrewInfo(crewId, crewRegistDTO.getCumId());

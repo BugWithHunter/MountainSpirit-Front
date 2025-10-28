@@ -4,17 +4,20 @@
         <ul class="submenu-row">
           <li>
             <ul>
-              <li><RouterLink to="/crew/join">크루 가입</RouterLink></li>
-              <li><RouterLink to="/crew/create">크루 생성</RouterLink></li>
-              <li><RouterLink to="/crew/info/2">크루 정보</RouterLink></li>
-              <li><RouterLink to="/crew/climb">크루 등산 일정</RouterLink></li>
-              <li><RouterLink to="/crew/myclimb">내 크루 등산 기록</RouterLink></li>
+              <div v-if="userStore.crewId>0">
+                <li><RouterLink :to="`/crew/info/${userStore.crewId}`">크루 정보</RouterLink></li>
+                <li><RouterLink to="/crew/climb">크루 등산 일정</RouterLink></li>
+                <li><RouterLink to="/crew/myclimb">내 크루 등산 기록</RouterLink></li>
+              </div>
+              <div v-else>
+                <li><RouterLink to="/crew/join">크루 가입</RouterLink></li>
+                <li><RouterLink to="/crew/create">크루 생성</RouterLink></li>
+              </div>
             </ul>
           </li>
           <li>
             <ul>
               <li><RouterLink to="/spirit-rank">산신령 랭킹</RouterLink></li>
-              <li><RouterLink to="/">크루 랭킹</RouterLink></li>
             </ul>
           </li>
           <li>
@@ -37,7 +40,8 @@
 
     import {RouterLink} from 'vue-router';
     import { ref, watch } from 'vue'
-
+import { useUserStore } from '@/stores/user';
+    const userStore = useUserStore();
 
     const props = defineProps({
     showSubmenu : Boolean

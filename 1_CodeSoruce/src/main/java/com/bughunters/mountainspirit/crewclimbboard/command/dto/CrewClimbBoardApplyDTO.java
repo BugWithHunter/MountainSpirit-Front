@@ -9,7 +9,7 @@ import lombok.*;
 @ToString
 public class CrewClimbBoardApplyDTO {
     private Long crewClimbId;
-    private Long crewMemberId;
+    private Long cumId;
     private String frtrlId;
     private Integer crewClimbAmountOfPeople;
 }

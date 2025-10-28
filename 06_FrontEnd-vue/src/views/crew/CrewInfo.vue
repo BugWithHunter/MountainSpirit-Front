@@ -6,17 +6,15 @@
         <div class="crew-detail">
           <p>크루 생성일 : {{ crew.createdAt }}</p>
           <p>인원 : {{ crew.memberCount }} / {{ crew.maxCount }}</p>
-          <p>크루 티어 : {{ crew.tier }}</p>
         </div>
-        <!-- <div v-if="role===2">
-          <button class="leave-btn">크루 신청 리스트</button>
-          <button class="leave-btn">크루 정보 수정</button>
-          <button class="leave-btn">크루 삭제</button>
+        <div v-if="role.roleId===2">
+          <button @click="applyList" class="config-btn">크루 신청 리스트</button>
+          <button @click="crewModify" class="config-btn">크루 정보 수정</button>
+          <!-- <button class="leave-btn">크루 삭제</button> -->
         </div> 
          <div v-else>
-          <button class="leave-btn">크루 탈퇴</button>
-        </div>  -->
-        <button class="leave-btn">크루 탈퇴</button>
+          <button @click="modalCheck = !modalCheck" class="leave-btn">크루 탈퇴</button>
+        </div>
         
       </section>
 
@@ -36,14 +34,27 @@
           </li>
         </ul>
       </section>
+
+      <div class="modal-wrap" v-show="modalCheck">
+      <div class="modal-container">
+        <h3>정말로 크루를 탈퇴 하시겠습니까?</h3>
+        <div class="modal-btn">
+          <button @click.stop="modalOpen">취소</button>
+          <button @click.stop="crewLeave">크루 탈퇴</button>
+        </div>
+      </div>
+    </div>
+
       </div>
 </template>
 
 <script setup>
 import axios from 'axios';
 import { onMounted,ref } from 'vue';
-import { useRoute } from 'vue-router';
-
+import { useRoute,useRouter } from 'vue-router';
+    import { useUserStore } from '@/stores/user';
+    
+    const userStore = useUserStore();
 const crew = ref({
   name: "",
   createdAt: "",
@@ -52,15 +63,40 @@ const crew = ref({
   tier: "",
 });
 const crewRoute = useRoute();
+const crewRouter = useRouter();
 const role = ref('');
 const members = ref([]);
+const modalCheck = ref(false);
+const modalOpen = () => {
+  modalCheck.value = !modalCheck.value;
+}
+const applyList = ()=>{
+  crewRouter.push(`/crew/info/applylist/${crewRoute.params.crewId}`);
+}
+const crewModify = ()=>{
+  crewRouter.push(`/crew/info/modify/${crewRoute.params.crewId}`);
+}
+const crewLeave = async ()=>{
+  console.log(userStore.crewId,userStore.userId);
+  const response = axios.post('http://localhost:8000/main-client/crew-member/leave-crew',
+    {
+      crewId: userStore.crewId,
+      cumId: userStore.userId
+    },
+    {
+      headers:{"Authorization":`Bearer ${userStore.token}`}
+    }
+  )
+  userStore.changeCrew(0);
+  crewRouter.push('/');
+}
     onMounted(async () => {
         const [crewReq,memberReq] = await Promise.all([
             axios.get(`http://localhost:8000/main-client/crew/crew-info/${crewRoute.params.crewId}`,{
-                headers:{"Authorization":"Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJrYW5nOTk5OTk5QGV4YW1wbGUuY29tIiwiYXV0aCI6WyJST0xFX01FTUJFUiJdLCJ1c2VybmFtZSI6IuqwleyCsOyLoOuguSIsImlkIjoyMTcsImJpcnRoIjoiMTk4Ni0wMy0wOCIsIm1lbVN0c0lkIjoxLCJleHAiOjE3NjE1Njc3OTl9.hrkEktZ_X20kC-eju4Yx63eItDilxt5-2Fi0AjtGx6Xlryc9SQ8rYmwEFJ3Neiuj8GgLwHynCdPokZXlt1IZAA"}
+                headers:{"Authorization":`Bearer ${userStore.token}`}
             }),
             axios.get(`http://localhost:8000/main-client/crew-member/crew-member-list/${crewRoute.params.crewId}`,{
-                headers:{"Authorization":"Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJrYW5nOTk5OTk5QGV4YW1wbGUuY29tIiwiYXV0aCI6WyJST0xFX01FTUJFUiJdLCJ1c2VybmFtZSI6IuqwleyCsOyLoOuguSIsImlkIjoyMTcsImJpcnRoIjoiMTk4Ni0wMy0wOCIsIm1lbVN0c0lkIjoxLCJleHAiOjE3NjE1Njc3OTl9.hrkEktZ_X20kC-eju4Yx63eItDilxt5-2Fi0AjtGx6Xlryc9SQ8rYmwEFJ3Neiuj8GgLwHynCdPokZXlt1IZAA"}
+                headers:{"Authorization":`Bearer ${userStore.token}`}
             })
         ])
         
@@ -84,17 +120,16 @@ const members = ref([]);
       name: m.memberList.nickName,
       joinDate: m.crewMemberJoinDate,
       role: m.crewRole.crewRoleName,
+      roleId: m.crewRole.roleId
     }));
 
     console.log(crew.value);
     console.log(members.value);
     
-    let memberRole = members.value.find(member=>{
+    role.value = members.value.find(member=>{
       console.log(member.userId);
-      member.userId==200
+      if(member.userId==userStore.userId)return member;
     });
-    console.log(memberRole);
-    role.value = memberRole.userId;
     console.log(role.value);
     })
 </script>
@@ -121,7 +156,7 @@ const members = ref([]);
   border-radius: 10px;
   padding: 20px;
   width: 250px;
-  height: 200px;
+  height: 250px;
   text-align: center;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
@@ -153,6 +188,25 @@ const members = ref([]);
 
 .leave-btn:hover {
   background: #ff2418;
+  color: #ebebeb;
+  transition-duration: 0.5s;
+}
+
+.config-btn {
+  margin-top: 20px;
+  width: 100%;
+  background: #fff;
+  border: 2px solid #aaa;
+  color:#333;
+  border-radius: 6px;
+  padding: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  transition-duration: 0.5s;
+}
+
+.config-btn:hover {
+  background: #131313;
   color: #ebebeb;
   transition-duration: 0.5s;
 }
@@ -226,5 +280,50 @@ const members = ref([]);
   font-size: 0.9rem;
   font-weight: 500;
   color: #333;
+}
+
+/* 모달 */
+.modal-wrap {
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.1);
+}
+
+.modal-container {
+  position: relative;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 400px;
+  background: #fff;
+  border-radius: 10px;
+  padding: 20px;
+}
+
+.modal-btn {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.modal-btn button {
+  padding: 6px 12px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  cursor: pointer;
+}
+
+.modal-btn button:last-child {
+  background: #ff0000;
+  color: #fff;
+  border: none;
+}
+
+.modal-btn button:last-child:hover {
+  background: #ff0000;
 }
 </style>
