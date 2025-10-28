@@ -66,7 +66,7 @@ const crewRoute = useRoute();
 const crewRouter = useRouter();
 
 // form state
-const crewId = crewRoute.params.crewId // 수정할 크루 ID (라우트 or props로도 받을 수 있음)
+const crewId = crewRoute.params.crewId
 const crewName = ref('')
 const crewIsRecruit = ref(false)
 const crewMaxPeople = ref(10)

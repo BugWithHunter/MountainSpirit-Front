@@ -50,12 +50,16 @@ export const useUserStore = defineStore(
         profile.value = newProfile;
     }
 
+    function leaveCrew() {
+        crewId.value = 0;
+    }
+
     // ----- 반환 -----
     return {
       // 외부 노출용 readonly state
       name, email, roles, profile, token, isLoggedIn, userId,crewId,
       // actions
-      logIn, logOut, changeProfile , setToken
+      logIn, logOut, changeProfile , setToken, leaveCrew
     }
   },
   {
