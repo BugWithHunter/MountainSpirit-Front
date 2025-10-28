@@ -5,6 +5,7 @@
 <mapper namespace="com.bughunters.mountainspirit.climbhistory.query.mapper.MountainRankQueryRepository">
     <resultMap id="mountainRankMap" type="com.bughunters.mountainspirit.climbhistory.query.dto.MountainRankDTO">
         <result property="cumId" column="cumId"/>
+        <result property="memName" column="memName"/>
         <result property="frtrlId" column="frtrlId"/>
         <result property="mtRankId" column="mtRankId"/>
         <result property="rankName" column="rankName"/>
@@ -54,13 +55,14 @@
         )
         select
                a.cumId
+             , c.memName
              , a.frtrlId
              , a.mtRankId
              , b.rankName
              , a.count
           from climbingCount as a
-          join MountainRankStandard as b
-            on a.mtRankId = b.id
+          join MountainRankStandard as b on a.mtRankId = b.id
+          join Member as c on a.cumId = c.id
     </select>
 
     <select id="selectSpiritProfileMountain"

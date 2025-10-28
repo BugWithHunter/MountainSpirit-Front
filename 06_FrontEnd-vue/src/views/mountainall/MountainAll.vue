@@ -68,7 +68,7 @@
     function ensureLogin() {
         if (!userStore.isLoggedIn || !userStore.token) {
             alert("로그인이 필요한 서비스입니다.");
-            router.push("/login");
+            router.push("/member/login");
             return false;
         }
         return true;

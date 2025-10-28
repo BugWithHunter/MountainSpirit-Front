@@ -9,6 +9,7 @@ import lombok.*;
 @ToString
 public class MountainRankDTO {
     private Long cumId;
+    private String memName;
     private String frtrlId;
     private Long mtRankId;
     private String rankName;
