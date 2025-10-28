@@ -54,7 +54,7 @@
     </resultMap>
     <select id="findAllCrewClimbBoardByCrewId" parameterType="_long" resultMap="crewClimbBoardResultMap">
         SELECT
-               a.id
+            a.id
              , a.crewClimbStartDate
              , a.crewClimbRecruitStartDate
              , a.crewClimbRecruitEndDate
@@ -64,13 +64,15 @@
              , a.crewClimbIsEnded
              , a.crewId
              , a.crewMemberId
-             , (SELECT COUNT(*) FROM CrewClimbRecord WHERE crewClimbId = a.id) as amountOfPeople
+             , (SELECT COUNT(DISTINCT b.crewMemberId) FROM CrewClimbRecord b WHERE b.crewClimbId = a.id
+                                                                           AND b.crewMemberId IS NOT NULL
+        ) as amountOfPeople
              , b.frtrlId
              , b.frtrlNm
-          FROM CrewClimbBoard a JOIN Mountain b ON a.frtrlId = b.frtrlId
-         WHERE crewId = #{crewId}
-           AND crewClimbIsDeleted = 'N'
-           AND crewMemberId IS NOT NULL
+        FROM CrewClimbBoard a JOIN Mountain b ON a.frtrlId = b.frtrlId
+        WHERE crewId = #{crewId}
+          AND crewClimbIsDeleted = 'N'
+          AND crewMemberId IS NOT NULL
     </select>
     <select id="findOneCrewClimbBoardByCrewClimbBoardId" parameterType="_long" resultMap="findOneCrewClimbBoardByCrewClimbBoardIdResultMap">
         SELECT

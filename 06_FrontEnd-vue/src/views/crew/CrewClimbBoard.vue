@@ -24,7 +24,7 @@
     </div>
 
     <!-- 페이지네이션 -->
-    <div class="pagination">
+    <div class="pagination" >
       <button v-for="page in totalPages" :key="page" class="page-btn"
        :class="{ active: page === currentPage }" @click="changePage(page)">
         {{ page }}
@@ -32,7 +32,7 @@
     </div>
 
     <!-- 일정 등록 버튼 -->
-    <div class="register-btn-wrap">
+    <div class="register-btn-wrap" aria-disabled="true">
       <button class="register-btn">일정 등록</button>
     </div>
   </div>
@@ -49,6 +49,8 @@
     function climbBoardPage(climbId){
         router.push(`/crew/climb-board/${climbId}`);
     }
+
+
 
     const climbBoardData = ref({});
     const currentPage = ref(1);
@@ -144,6 +146,7 @@ h2 {
   justify-content: center;
   margin: 25px 0;
   gap: 6px;
+  display: none;
 }
 
 .page-btn {
@@ -173,6 +176,7 @@ h2 {
 .register-btn-wrap {
   display: flex;
   justify-content: flex-end;
+  display: none;
 }
 
 .register-btn {
