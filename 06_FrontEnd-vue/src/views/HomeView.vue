@@ -75,6 +75,10 @@
 
             <div class="notice">
                 <p class="noticetitle">📢 공지사항</p>
+                <p class="recdesc" @click="goToPostDetail(15)">1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;추석 연휴 고객센터 운영 안내</p>
+                <p class="recdesc" @click="goToPostDetail(14)">2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;등산 크루 모집 주의사항</p>
+                <p class="recdesc" @click="goToPostDetail(13)">3&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;등산 기록 기능 업데이트</p>
+                <p class="recdesc" @click="goToPostDetail(12)">4&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;9월 인기 등산 코스 추천</p>
                 <p class="noticecontent"></p>
             </div>
         </div>
@@ -137,6 +141,10 @@
             // 문제 시 대안: 목록 페이지로 키워드 검색 이동
             router.push({ name: "mountainAll", query: { keyword: name } });
         }
+    }
+
+    const goToPostDetail = (postId) => {
+        router.push(`/noticeboards/detail/${postId}`);
     }
 
     function next() {

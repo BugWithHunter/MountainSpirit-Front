@@ -59,7 +59,6 @@
 
     
     import { useUserStore } from '@/stores/user';
-    import WritePost from './WritePost.vue';
 
 const userStore =  useUserStore();
 const token = userStore.token;
