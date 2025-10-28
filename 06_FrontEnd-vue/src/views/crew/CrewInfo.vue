@@ -6,10 +6,9 @@
         <div class="crew-detail">
           <p>크루 생성일 : {{ crew.createdAt }}</p>
           <p>인원 : {{ crew.memberCount }} / {{ crew.maxCount }}</p>
-          <p>크루 티어 : {{ crew.tier }}</p>
         </div>
         <div v-if="role.roleId===2">
-          <button class="config-btn">크루 신청 리스트</button>
+          <button @click="applyList" class="config-btn">크루 신청 리스트</button>
           <button class="config-btn">크루 정보 수정</button>
           <button class="leave-btn">크루 삭제</button>
         </div> 
@@ -41,11 +40,10 @@
 <script setup>
 import axios from 'axios';
 import { onMounted,ref } from 'vue';
-import { useRoute } from 'vue-router';
+import { useRoute,useRouter } from 'vue-router';
     import { useUserStore } from '@/stores/user';
     
     const userStore = useUserStore();
-
 const crew = ref({
   name: "",
   createdAt: "",
@@ -54,8 +52,12 @@ const crew = ref({
   tier: "",
 });
 const crewRoute = useRoute();
+const crewRouter = useRouter();
 const role = ref('');
 const members = ref([]);
+const applyList = ()=>{
+  crewRouter.push(`/crew/info/applylist/${crewRoute.params.crewId}`);
+}
     onMounted(async () => {
         const [crewReq,memberReq] = await Promise.all([
             axios.get(`http://localhost:8000/main-client/crew/crew-info/${crewRoute.params.crewId}`,{
