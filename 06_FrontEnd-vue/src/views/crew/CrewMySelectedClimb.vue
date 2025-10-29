@@ -6,8 +6,8 @@
       <!-- 왼쪽: 등산 정보 -->
       <div class="left-box">
         <img :src="getImageUrl(climbBoardData.mountain.frtrlNm)" alt="산이미지" class="mountain-img">
-        <div class="date-text">{{ climbBoardData.crewClimbStartDate }}</div>
-        <div class="course-title">{{ climbBoardData.mountain.frtrlNm }}</div>
+        <div class="date-text">등산 일자: {{ climbBoardData.crewClimbStartDate }}</div>
+        <div class="course-title">산명: {{ climbBoardData.mountain.frtrlNm }}</div>
         
         <div class="plan-text">{{ climbBoardData.crewClimbContent }}</div>
       </div>
@@ -90,7 +90,7 @@
 }
 
 .title {
-  font-size: 1.5rem;
+  font-size: 1.8rem;
   font-weight: 700;
   margin-bottom: 20px;
 }
@@ -121,7 +121,7 @@
 }
 
 .info-row label {
-  font-size: 0.9rem;
+  font-size: 1.6rem;
   margin-bottom: 5px;
 }
 
@@ -129,11 +129,11 @@
   border: 1px solid #ccc;
   padding: 6px;
   border-radius: 5px;
-  font-size: 0.95rem;
+  font-size: 1.6rem;
 }
 
 .course-title {
-  font-size: 1.2rem;
+  font-size: 1.9rem;
   font-weight: 700;
 }
 
@@ -144,7 +144,7 @@
   border: 1px solid #ddd;
   padding: 10px;
   border-radius: 5px;
-  font-size: 0.95rem;
+  font-size: 1.3rem;
   color: #333;
 }
 
@@ -157,7 +157,7 @@
 
 .member-title {
   font-weight: 600;
-  font-size: 1rem;
+  font-size: 1.5rem;
   display: flex;
   justify-content: space-between;
   margin-bottom: 10px;
