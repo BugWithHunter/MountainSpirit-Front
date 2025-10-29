@@ -65,7 +65,11 @@
 
 
 ### 3-2. 산
-
+<details>
+  <summary>산 상세 페이지</summary>
+  
+  <img width="2626" height="1772" alt="Image" src="https://github.com/user-attachments/assets/4247aa0b-a4f7-463a-8224-022ba7da1304" />
+</details>
 
 ### 3-3. 게시판
 
@@ -196,6 +200,7 @@
 |정건일| |
 |윤서진||
 <br>
+
 
 
 
