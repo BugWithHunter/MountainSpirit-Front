@@ -38,7 +38,27 @@
 - 크루 게시판을 통해 같은 크루에 소속된 사람들과 소통
 
 ## 2. 📄와이어프레임
-![산신령 (3)](https://github.com/user-attachments/assets/067d9ec8-3c31-45d4-b471-b18c7a66eaea)
+<img width="3616" height="1614" alt="Image" src="https://github.com/user-attachments/assets/23d6106a-3960-40e9-be8e-aa2e65a92a0c" />
+
+<details>
+  <summary>회원</summary>
+</details>
+
+<details>
+  <summary>산</summary>
+</details>
+
+<details>
+  <summary>게시판</summary>
+</details>
+
+<details>
+  <summary>크루</summary>
+</details>
+
+<details>
+  <summary>운영자</summary>
+</details>
 
 ## 3. 🔧스토리보드
 ### 3-1. 회원
@@ -153,6 +173,7 @@
 |정건일| |
 |윤서진||
 <br>
+
 
 
 
