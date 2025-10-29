@@ -85,7 +85,7 @@ const crewApply = async () => {
     }
   )
   console.log('가입 신청 완료:', response.data)
-   showToast(response.data.responseResult || '가입 신청 완료! ✅')
+   showToast(response.data.responseResult || '잘못된 접근입니다.')
   modalCheck.value = false
 }
 </script>
