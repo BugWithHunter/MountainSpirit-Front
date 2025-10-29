@@ -42,6 +42,7 @@
 
 <details>
   <summary>회원</summary>
+  <img width="2446" height="1284" alt="Image" src="https://github.com/user-attachments/assets/a47d9489-b963-467e-9e79-3325c30b7a25" />
 </details>
 
 <details>
@@ -51,35 +52,52 @@
 
 <details>
   <summary>게시판</summary>
+  <img width="1958" height="1197" alt="image" src="https://github.com/user-attachments/assets/28d139db-aaba-4f5e-abee-c16b5e98a1e5" />
 </details>
 
 <details>
   <summary>크루</summary>
+<img width="2119" height="1246" alt="image" src="https://github.com/user-attachments/assets/cc3c27a8-9dd5-4038-a501-49428d12b138" />
 </details>
 
 <details>
   <summary>운영자</summary>
+  <img width="2033" height="1196" alt="image" src="https://github.com/user-attachments/assets/ca6d8ac2-021e-4eff-a347-c29865150a95" />
 </details>
 
 ## 3. 🔧스토리보드
 ### 3-1. 회원
-
+<details>
+  <summary>마이페이지</summary>
+  <img width="2547" height="1324" alt="image" src="https://github.com/user-attachments/assets/3757e571-946a-443d-ad87-b22b7c72fd50" />
+</details>
 
 ### 3-2. 산
 <details>
   <summary>산 상세 페이지</summary>
-  
   <img width="2626" height="1772" alt="Image" src="https://github.com/user-attachments/assets/4247aa0b-a4f7-463a-8224-022ba7da1304" />
 </details>
 
 ### 3-3. 게시판
 
+<details>
+  <summary>자유 게시판</summary>
+  <img width="1631" height="1502" alt="image" src="https://github.com/user-attachments/assets/a47eb4d2-7c7d-4476-9671-f2bd55bbad1b" />
+</details>
 
 ### 3-4. 크루
 
+<details>
+  <summary>산 상세 페이지</summary>
+  <img width="2629" height="1172" alt="image" src="https://github.com/user-attachments/assets/2fa81a38-4ed4-4fe3-82de-10b3724c25ab" />
+</details>
 
 ### 3-5 운영자
 
+<details>
+  <summary>산 상세 페이지</summary>
+  <img width="2556" height="1334" alt="image" src="https://github.com/user-attachments/assets/0f14d44a-4397-49b3-933b-6eb6e1269188" />
+</details>
 
 ## 4. 🚀테스트
 
@@ -89,6 +107,7 @@
 
 <details>
   <summary>회원</summary>
+  
 </details>
 
 <details>
@@ -217,6 +236,7 @@
 |정건일| 산과 코스에대한 백설계 및 프론트작업을 해주었고 전반적인 서류 작업에 대한 틀을 마련해주었습니다 갑작스럽게 다른분야로 간다는 이유로 학원을 그만둔다는 소식을 들었는데 이 분야에 대한 학업에 뜻이 없음에도 불구하고 팀원들을 위해서 프로젝트를 끝내고 그만두는 책임감에 감사하다는 말을 전합니다 |
 |윤서진||
 <br>
+
 
 
 
