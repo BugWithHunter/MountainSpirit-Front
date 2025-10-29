@@ -63,7 +63,9 @@
 
 
 ## 6. 기술 스택
+- 개발
 
+[![Vue.js](https://img.shields.io/badge/Vue.js-4FC08D?logo=vuedotjs&logoColor=fff)](#)
 
 ## 7. ✨동료 평가
 - 강형규
@@ -115,6 +117,7 @@
 |정건일| |
 |윤서진||
 <br>
+
 
 
 
