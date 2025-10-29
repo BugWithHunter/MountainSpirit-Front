@@ -135,14 +135,25 @@ const modal = reactive({
 
 // 폼 상태
 const form = reactive({
-  email       : 'test@naver.com',
-  password    : 'pwd045',
-  password2   : 'pwd045',
+  email       : '',
+  password    : '',
+  password2   : '',
   name        : '',
-  nickname    : '장군',
-  birth       : '1992-04-12',
-  gender      : 'M' // 'F' 또는 'M'
+  nickname    : '',
+  birth       : '',
+  gender      : '' // 'F' 또는 'M'
 })
+
+
+// const form = reactive({
+//   email       : 'test@naver.com',
+//   password    : 'pwd045',
+//   password2   : 'pwd045',
+//   name        : '',
+//   nickname    : '장군',
+//   birth       : '1992-04-12',
+//   gender      : 'M' // 'F' 또는 'M'
+// })
 
 // 에러 메시지
 const errors = reactive({
@@ -173,6 +184,13 @@ function validatePassword() {
   if (!form.password) errors.password = '비밀번호를 입력해 주세요.'
   else if (!pwRegex.test(form.password))
     errors.password = '6자 이상, 영문과 숫자를 포함해야 합니다.'
+
+  if(form.password2 !== ''){
+    if (form.password !== form.password2)
+        errors.password2 = '비밀번호가 일치하지 않습니다.'
+    else
+        errors.password2 = ''
+  }
 }
 
 function validatePassword2() {

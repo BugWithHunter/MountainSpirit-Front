@@ -176,7 +176,7 @@
                         },
                     }
                 );
-                alert("리뷰가 수정되었습니다!");
+                // alert("리뷰가 수정되었습니다!");
             }
             else{
                 const reviewData = {
@@ -192,7 +192,7 @@
                     },
                 });
 
-                alert("후기가 등록되었습니다!");
+                // alert("후기가 등록되었습니다!");
             }
             showModal.value = false;
             newReview.value = "";
@@ -222,7 +222,7 @@
             `http://localhost:8000/main-client/review/mountain/${id}`,
             { headers: { Authorization: `Bearer ${userStore.token}` } }
             );
-            alert("리뷰가 삭제되었습니다!");
+            // alert("리뷰가 삭제되었습니다!");
 
             const rRes = await axios.get(
                 `http://localhost:8000/main-client/review/mountain/${route.params.frtrlNm}`,

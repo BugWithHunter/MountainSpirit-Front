@@ -66,8 +66,10 @@
     }
 
     const userStore =  useUserStore();
-    const password = ref('pwd045');
-    const email = ref('user045@example.com');
+    const password = ref('');
+    const email = ref('');
+    // const password = ref('pwd045');
+    // const email = ref('user045@example.com');
     
     const router = useRouter();
     const moveSignUp = () => {
@@ -75,12 +77,10 @@
     }
 
   
-        const testImage =ref('');
+    const testImage = ref('');
 
-    // async 함수
     async function signIn() {
     try {
-        // 1️⃣ 서버로 POST 요청 보내기
         const response = await axios.post(
             'http://localhost:8000/member-client/login',
             {
@@ -91,13 +91,7 @@
                 headers: { 'Content-Type': 'application/json' }
             }
         );
-
-        
-        // ✅ 1. 응답 헤더에서 JWT 토큰 추출
-        const token = response.headers['token']; // 소문자로 써야 함!
-        
-
-        // 4️⃣ 원하는 필드만 추출
+        const token = response.headers['token']; 
         const { success, code, message, user, extra } = response.data;
         
         userStore.setToken(token);
@@ -108,8 +102,6 @@
         } else {
             router.push("/");
         }
-        
-
     } catch (error) {
         // 5️⃣ 에러 처리
         if (error.response) {
