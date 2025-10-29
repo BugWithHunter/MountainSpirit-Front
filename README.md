@@ -93,23 +93,22 @@
 
 <details>
   <summary>산</summary>
-  
-  <details>
-    <summary>🐢전체 산 목록</summary>
-  </details>
 
-  <details>
-    <summary>🐢산 상세 조회 & 후기 등록,수정,삭제</summary>
-  </details>
+  - 🐢전체 산 목록
+    
+  ![Image](https://github.com/user-attachments/assets/642d2583-c660-401e-b2ef-da5c6826278f)
 
-  <details>
-    <summary>🐢코스 상세 조회 & 후기 등록, 수정, 삭제</summary>
-  </details>
+  - 🐢산 상세 조회 & 후기 등록,수정,삭제
 
-  <details>
-    <summary>🐢산 검색 조회</summary>
-  </details>
-      
+  ![Image](https://github.com/user-attachments/assets/f5f0a0b0-62a0-4a45-ab56-240e8df77320)
+    
+  - 🐢코스 상세 조회 & 후기 등록, 수정, 삭제
+
+  ![Image](https://github.com/user-attachments/assets/cbf52781-5059-49a5-96a0-3ddff264b91f)
+
+  - 🐢산 검색 조회
+
+  ![Image](https://github.com/user-attachments/assets/529b9337-70e0-4720-bb05-96def748c808)
 </details>
 
 <details>
@@ -218,6 +217,7 @@
 |정건일| 산과 코스에대한 백설계 및 프론트작업을 해주었고 전반적인 서류 작업에 대한 틀을 마련해주었습니다 갑작스럽게 다른분야로 간다는 이유로 학원을 그만둔다는 소식을 들었는데 이 분야에 대한 학업에 뜻이 없음에도 불구하고 팀원들을 위해서 프로젝트를 끝내고 그만두는 책임감에 감사하다는 말을 전합니다 |
 |윤서진||
 <br>
+
 
 
 
