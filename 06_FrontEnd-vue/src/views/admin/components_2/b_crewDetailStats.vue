@@ -3,9 +3,9 @@
       <!-- 1. 상단 요약 카드 -->
       <div class="stats-cards">
         <div class="card" v-for="(value, key) in filteredSummary" :key="key">
-          <h3>{{ formatLabel(key) }}</h3>
-          <p>{{ value }} 개</p>
-        </div>
+         <h3>{{ formatLabel(key) }}</h3>
+         <p>{{ formatValue(key, value) }}</p>
+      </div>
       </div>
   
       <!-- 2~4. 차트 영역 -->
@@ -96,6 +96,12 @@
       totalCrewMemberHistoryCount: "크루구성원 히스토리 수",
     };
     return map[key] || key;
+  };
+
+  const formatValue = (key, value) => {
+    // 항목별 단위 지정
+    if (key === "totalCrewMemberCount") return `${value} 명`;
+   return `${value} 개`;
   };
   
   // 소속 비율
