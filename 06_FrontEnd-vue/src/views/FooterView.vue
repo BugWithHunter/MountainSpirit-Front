@@ -15,7 +15,7 @@
                     <li><RouterLink to="/mountain">산 목록</RouterLink></li>
                     <li><RouterLink to="/crew/join">크루</RouterLink></li>
                     <li><RouterLink to="/boards/list">게시판</RouterLink></li>
-                    <li><RouterLink to="/notice">공지사항</RouterLink></li>
+                    <li><RouterLink to="/noticeboards/list">공지사항</RouterLink></li>
                 </ul>
                 </div>
                 <div>
