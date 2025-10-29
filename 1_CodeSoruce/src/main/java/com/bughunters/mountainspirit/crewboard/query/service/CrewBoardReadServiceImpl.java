@@ -1,6 +1,5 @@
 package com.bughunters.mountainspirit.crewboard.query.service;
 
-import com.bughunters.mountainspirit.board.query.dto.BoardNameDTO;
 import com.bughunters.mountainspirit.crewboard.query.dto.CrewBoardDTO;
 import com.bughunters.mountainspirit.crewboard.query.dto.CrewBoardNameDTO;
 import com.bughunters.mountainspirit.crewboard.query.mapper.CrewBoardGetMapper;
@@ -28,10 +27,14 @@ public class CrewBoardReadServiceImpl implements CrewBoardReadService {
 
     @Override
     public Page<CrewBoardNameDTO> getBoardName(Pageable pageable) {
-        pageable = PageRequest.of(pageable.getPageNumber() <= 0 ? 0 : pageable.getPageNumber() - 1,
-                pageable.getPageSize());
-        List<CrewBoardNameDTO> boardList = crewBoardGetMapper.selectBoardName(pageable);
-        Page<CrewBoardNameDTO> boardPage = new PageImpl<>(boardList, pageable, boardList.size());
+        int pageNum = pageable.getPageNumber() <= 0 ? 0 : pageable.getPageNumber() - 1;
+        int pageSize = 7;
+        pageable = PageRequest.of(pageNum, pageSize);
+        int offset = (pageNum) * pageSize;
+        List<CrewBoardNameDTO> boardList = crewBoardGetMapper.selectBoardName(offset, pageSize);
+        long totalCount = crewBoardGetMapper.selectBoardNameCount();
+
+        Page<CrewBoardNameDTO> boardPage = new PageImpl<>(boardList, pageable, totalCount);
 
         return boardPage;
     }
@@ -44,9 +47,16 @@ public class CrewBoardReadServiceImpl implements CrewBoardReadService {
     }
 
     @Override
-    public List<CrewBoardDTO> getBoardInfoByKeyword(String keyword) {
-        List<CrewBoardDTO> crewBoardDTOList = crewBoardGetMapper.selectBoardInfoByKeyword(keyword);
+    public List<CrewBoardDTO> getBoardInfoByKeyword(String keyword, String type) {
+        List<CrewBoardDTO> boardDTOList;
 
-        return crewBoardDTOList;
+        if ("title".equals(type)) {
+            boardDTOList = crewBoardGetMapper.searchByTitle(keyword);
+        } else if ("content".equals(type)) {
+            boardDTOList = crewBoardGetMapper.searchByContent(keyword);
+        } else {
+            boardDTOList = crewBoardGetMapper.searchByTitleOrContent(keyword);
+        }
+        return boardDTOList;
     }
 }

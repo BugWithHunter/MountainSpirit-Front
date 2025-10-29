@@ -29,6 +29,7 @@ public class ResponseMemberDTO {
     private LocalDateTime loginLockUntil;
     private Integer score;
     private Long memRankId;
+    private String rankName;
     private Long memStsId;
     private Long crewId;
     private String profilePath;

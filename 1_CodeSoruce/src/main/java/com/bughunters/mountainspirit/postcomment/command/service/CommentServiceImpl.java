@@ -23,10 +23,10 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     @Transactional
-    public void registComment(RegistCommentDTO newComment) {
+    public void registComment(RegistCommentDTO newComment, long userId) {
         Comment comment = modelMapper.map(newComment, Comment.class);
         comment.setCreateDate(LocalDateTime.now());
-        comment.setCumId(185);  // 임의 설정
+        comment.setCumId(userId);
         commentRepository.save(comment);
     }
 

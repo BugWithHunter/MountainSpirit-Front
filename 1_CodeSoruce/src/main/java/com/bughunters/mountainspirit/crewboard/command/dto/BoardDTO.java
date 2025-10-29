@@ -2,6 +2,7 @@ package com.bughunters.mountainspirit.crewboard.command.dto;
 
 import com.bughunters.mountainspirit.crewboard.command.entity.CrewBoardImage;
 import lombok.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -12,7 +13,6 @@ import java.util.List;
 @Setter
 @ToString
 public class BoardDTO {
-    private long id;
     private String title;
     private String content;
     private LocalDateTime createDate;
@@ -22,5 +22,5 @@ public class BoardDTO {
     private long crewId;
     private long cumId;
 
-    private List<CrewBoardImage> crewBoardImages;
+    private List<MultipartFile> multiFiles;
 }

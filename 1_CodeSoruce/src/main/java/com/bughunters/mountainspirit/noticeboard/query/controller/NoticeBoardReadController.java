@@ -12,6 +12,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -40,9 +41,10 @@ public class NoticeBoardReadController {
         return boardDTOList;
     }
 
-    @GetMapping("/noticeboards/search/{keyword}")
-    public List<BoardDTO> findDetailBoardByKeyword(@PathVariable String keyword) {
-        List<BoardDTO> boardDTOList = noticeBoardReadService.getBoardInfoByKeyword(keyword);
+    @GetMapping("/noticeboards/search")
+    public List<BoardDTO> findDetailBoardByKeyword(@RequestParam String type,
+                                                   @RequestParam String keyword) {
+        List<BoardDTO> boardDTOList = noticeBoardReadService.getBoardInfoByKeyword(keyword, type);
 
         return boardDTOList;
     }

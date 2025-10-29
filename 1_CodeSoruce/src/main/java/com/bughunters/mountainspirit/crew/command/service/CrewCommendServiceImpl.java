@@ -6,6 +6,13 @@ import com.bughunters.mountainspirit.crew.command.dto.CrewModifyDTO;
 import com.bughunters.mountainspirit.crew.command.dto.CrewRegistDTO;
 import com.bughunters.mountainspirit.crew.command.entity.Crew;
 import com.bughunters.mountainspirit.crew.command.repository.CrewCommendRepository;
+import com.bughunters.mountainspirit.crewmember.command.dto.CrewApplyDTO;
+import com.bughunters.mountainspirit.crewmember.command.entity.CrewApplyHistory;
+import com.bughunters.mountainspirit.crewmember.command.entity.CrewMember;
+import com.bughunters.mountainspirit.crewmember.command.entity.CrewMemberHistory;
+import com.bughunters.mountainspirit.crewmember.command.infrastructure.MemberServiceClient;
+import com.bughunters.mountainspirit.crewmember.command.repository.CrewMemberCommendRepository;
+import com.bughunters.mountainspirit.crewmember.command.repository.CrewMemberHistoryCommendRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
@@ -20,23 +27,60 @@ import java.time.format.DateTimeFormatter;
 @Slf4j
 public class CrewCommendServiceImpl implements CrewCommendService {
     private final CrewCommendRepository crewCommendRepository;
+    CrewMemberCommendRepository crewMemberCommendRepository;
+    CrewMemberHistoryCommendRepository crewMemberHistoryCommendRepository;
+    MemberServiceClient memberServiceClient;
     ModelMapper modelMapper;
 
     @Autowired
-    public CrewCommendServiceImpl(CrewCommendRepository crewCommendRepository, ModelMapper modelMapper) {
+    public CrewCommendServiceImpl(CrewCommendRepository crewCommendRepository,
+                                  CrewMemberCommendRepository crewMemberCommendRepository,
+                                  CrewMemberHistoryCommendRepository crewMemberHistoryCommendRepository,
+                                  MemberServiceClient memberServiceClient,
+                                  ModelMapper modelMapper) {
         this.crewCommendRepository = crewCommendRepository;
+        this.crewMemberCommendRepository = crewMemberCommendRepository;
+        this.crewMemberHistoryCommendRepository = crewMemberHistoryCommendRepository;
+        this.memberServiceClient = memberServiceClient;
         this.modelMapper = modelMapper;
     }
 
+    @Override
+    public Long insertCrew(CrewRegistDTO crewRegistDTO) {
+        Long crewId = null;
+        try {
+            crewId = insertCrewTransaction(crewRegistDTO);
+            log.info("Crew insert 완료, CrewId: {}",crewId);
+
+            // Member 테이블에 Crew 정보 저장
+            memberServiceClient.updateMemberCrewInfo(crewId, crewRegistDTO.getCumId());
+        } catch (Exception e) {
+
+        }
+        return crewId;
+    }
+
     @Transactional
-    public void insertCrew(CrewRegistDTO crewRegistDTO) {
+    public Long insertCrewTransaction(CrewRegistDTO crewRegistDTO) {
+        Crew crew = null;
         modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
         // 기본값 세팅
-        Crew crew = setDefaultCrewValues(modelMapper.map(crewRegistDTO, Crew.class));
+        crew = setDefaultCrewValues(modelMapper.map(crewRegistDTO, Crew.class));
 
-//        log.info("crewEntity : {}", crew);
-
+        // Crew 테이블에 크루 정보 저장
         crewCommendRepository.save(crew);
+        log.info("crewEntity : {}", crew);
+
+        // CrewMember 테이블에 크루장 정보 저장
+        CrewMember crewMember = setCrewMemberInfo(crew.getId(), crewRegistDTO.getCumId());
+        crewMemberCommendRepository.save(crewMember);
+        log.info("service crewMember 값 : {}", crewMember);
+
+        // CrewMemberHistory 테이블에 정보 저장
+        CrewMemberHistory crewMemberHistory = setCrewMemberHistoryInfo(crew.getId(), crewRegistDTO.getCumId(), 2L);
+        log.info("service CrewMemberHistory 값 : {}", crewMemberHistory);
+        crewMemberHistoryCommendRepository.save(crewMemberHistory);
+        return crew.getId();
     }
 
     @Override
@@ -52,8 +96,6 @@ public class CrewCommendServiceImpl implements CrewCommendService {
         Crew crew = crewCommendRepository.findById(crewDeleteDTO.getId()).get();
         crew.setCrewIsDeleted('Y');
     }
-
-
 
 
     // ////////////////////////////클래스 내에서 사용되는 함수들////////////////////////////
@@ -85,5 +127,31 @@ public class CrewCommendServiceImpl implements CrewCommendService {
 
         if (!(crew.getCrewBanDate() == crewModifyDTO.getCrewBanDate()))
             crew.setCrewBanDate(crewModifyDTO.getCrewBanDate());
+    }
+
+    private CrewMember setCrewMemberInfo(Long crewId, Long cumId) {
+        LocalDateTime now = LocalDateTime.now();
+        CrewMember crewMember = new CrewMember();
+
+        crewMember.setCrewMemberJoinDate(now.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+        crewMember.setCrewMemberRoleUpdateDate(now.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+        crewMember.setCrewId(crewId);
+        crewMember.setCumId(cumId);
+        crewMember.setCrewRoleId(2L);
+        return crewMember;
+    }
+
+    private CrewMemberHistory setCrewMemberHistoryInfo(Long crewId, Long cumId, Long crewMemberRole) {
+        CrewMemberHistory crewMemberHistory = new CrewMemberHistory();
+        LocalDateTime now = LocalDateTime.now();
+
+        crewMemberHistory.setCrewRoleId(crewMemberRole);
+        crewMemberHistory.setCrewId(crewId);
+        crewMemberHistory.setCrewMemberHistoryJoinDate(now.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+        crewMemberHistory.setCrewMemberHistoryStateUpdateDate(now.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+        crewMemberHistory.setCrewMemberHistoryState("JOINED");
+        crewMemberHistory.setCrewMemberHistoryUpdateReason("크루 가입");
+        crewMemberHistory.setCumId(cumId);
+        return crewMemberHistory;
     }
 }

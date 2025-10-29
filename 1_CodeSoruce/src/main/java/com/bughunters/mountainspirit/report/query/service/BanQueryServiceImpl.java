@@ -1,6 +1,7 @@
 package com.bughunters.mountainspirit.report.query.service;
 
 import com.bughunters.mountainspirit.report.command.dto.ReportMemberDTO;
+import com.bughunters.mountainspirit.report.query.dto.BanByIdDTO;
 import com.bughunters.mountainspirit.report.query.dto.BanQueryDTO;
 import com.bughunters.mountainspirit.report.query.mapper.BanQueryMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,14 +20,15 @@ public class BanQueryServiceImpl implements BanQueryService {
     }
 
     @Override
-    public List<BanQueryDTO> selectAllBan() {
-        return banQueryMapper.selectAllBan();
+    public List<BanQueryDTO> selectAllBan(int page, int size) {
+        int offset = (page - 1) * size;
+        return banQueryMapper.selectAllBan(size, offset);
     }
 
     @Override
-    public ReportMemberDTO findReportedMember(Long reportedId) {
-        ReportMemberDTO reportMemberDTO = banQueryMapper.selectMemberByReportedId(reportedId);
-
-        return reportMemberDTO;
+    public List<BanByIdDTO> selectByIdBan(Long id) {
+        return banQueryMapper.selectByIdBan(id);
     }
+
+
 }

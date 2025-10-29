@@ -11,6 +11,28 @@ spring:
     name: gateway-server
   cloud:
     gateway:
+      default-filters:
+        - DedupeResponseHeader=Access-Control-Allow-Origin Access-Control-Allow-Credentials
+      globalcors:
+        cors-configurations:
+          '[/**]':
+            allowedOrigins:
+              - 'http://localhost:5173' # 허용하려는 도메인
+            allow-credentials: true # 요청 시 인증 정보를 전송하도록 허가
+            allowedHeaders: '*' # 허용하려는 헤더
+            allowedMethods: # 허용하려는 HTTP 메서드
+              - PUT
+              - GET
+              - POST
+              - PATCH
+              - DELETE
+              - OPTIONS
+            # CORS에서 “커스텀 응답 헤더”를 기본적으로 숨깁
+            # 아래처럼 보여질 것을 해제 해 줘야 함
+            exposedHeaders:
+              - token
+              - Authorization
+
       routes:
         - id: main-client
           uri: lb://MAIN-CLIENT
@@ -20,13 +42,18 @@ spring:
             - RewritePath=/main-client/(?<segment>.*), /$\{segment}
             - JwtTokenFilter
 
-#        - id: member-client2
-#          uri: lb://MEMBER-CLIENT
-#          predicates:
-#            - Path=/member-client/member/member,/member-client/login
-#            - Method=POST
-#          filters:
-#            - RewritePath=/member-client/(?<segment>.*), /$\{segment}
+        #        - id: member-client2
+        #          uri: lb://MEMBER-CLIENT
+        #          predicates:
+        #            - Path=/member-client/member/member,/member-client/login
+        #            - Method=POST
+        #          filters:
+        #            - RewritePath=/member-client/(?<segment>.*), /$\{segment}
+
+        - id: member-client-image-profile
+          uri: lb://MEMBER-CLIENT
+          predicates:
+            - Path=/img/**
 
         - id: member-client
           uri: lb://MEMBER-CLIENT
@@ -35,6 +62,13 @@ spring:
           filters:
             - RewritePath=/member-client/(?<segment>.*), /$\{segment}
             - JwtTokenFilter
+
+
+
+#        - id: member-images
+#          uri: http://localhost:8081
+#          predicates:
+#              - Path=/img/member/**
 
 #        - id: test-client
 #          uri: lb://TEST-CLIENT
@@ -47,8 +81,6 @@ spring:
 token:
   secret: v7o98gdK42iddFqTxH07Yjv18KbwIZWQZu7NRPeR9+ji9tOGDX2r8PO3mGptklEdEiIB0RMT066q3qb19YBfqQ==
   expiration_time: 43200000 # 12시간
-
-
 
 # 권한별 설정
 security:
@@ -67,7 +99,7 @@ security:
 
       # 멤버 읽기: USER 또는 ADMIN
       - pattern: /main-client/**
-        methods: [ GET, PUT, PATCH, DELETE  ]
+        methods: [ GET, PUT, PATCH, DELETE, POST  ]
         anyRole: [ ROLE_ADMIN , ROLE_MEMBER]   # 토큰은 ROLE_USER/ROLE_ADMIN 이고, 필터에서 ROLE_ 제거 정규화
 
       # 멤버 쓰기: ADMIN만
@@ -78,3 +110,4 @@ security:
       # 헬스체크 공개
       - pattern: /main-client/health
         permitAll: true
+

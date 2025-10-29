@@ -4,29 +4,32 @@
         <ul class="submenu-row">
           <li>
             <ul>
-              <li><RouterLink to="/">크루 가입</RouterLink></li>
-              <li><RouterLink to="/nested">크루 생성</RouterLink></li>
-              <li><RouterLink to="/">크루 정보</RouterLink></li>
-              <li><RouterLink to="/">크루 등산 일정</RouterLink></li>
-              <li><RouterLink to="/">내 크루 등산 기록</RouterLink></li>
+              <div v-if="userStore.crewId>0">
+                <li><RouterLink :to="`/crew/info/${userStore.crewId}`">크루 정보</RouterLink></li>
+                <li><RouterLink to="/crew/climb">크루 등산 일정</RouterLink></li>
+                <li><RouterLink to="/crew/myclimb">내 크루 등산 기록</RouterLink></li>
+              </div>
+              <div v-else>
+                <li><RouterLink to="/crew/join">크루 가입</RouterLink></li>
+                <li><RouterLink to="/crew/create">크루 생성</RouterLink></li>
+              </div>
             </ul>
           </li>
           <li>
             <ul>
-              <li><RouterLink to="/">산신령 랭킹</RouterLink></li>
-              <li><RouterLink to="/">크루 랭킹</RouterLink></li>
+              <li><RouterLink to="/spirit-rank">산신령 랭킹</RouterLink></li>
             </ul>
           </li>
           <li>
             <ul>
-              <li><RouterLink to="/">자유 게시판</RouterLink></li>
-              <li><RouterLink to="/">크루 게시판</RouterLink></li>
-              <li><RouterLink to="/">공지사항 게시판</RouterLink></li>
+              <li><RouterLink to="/boards/list">자유 게시판</RouterLink></li>
+              <li><RouterLink to="/crewboards/list">크루 게시판</RouterLink></li>
+              <li><RouterLink to="/noticeboards/list">공지사항 게시판</RouterLink></li>
             </ul>
           </li>
           <li>
             <ul>
-              <li><RouterLink to="/">산 전체 목록</RouterLink></li>
+              <li><RouterLink to="/mountain">산 전체 목록</RouterLink></li>
             </ul>
           </li>
         </ul>
@@ -36,8 +39,9 @@
 <script setup>
 
     import {RouterLink} from 'vue-router';
-    import { ref, defineProps ,watch } from 'vue'
-
+    import { ref, watch } from 'vue'
+import { useUserStore } from '@/stores/user';
+    const userStore = useUserStore();
 
     const props = defineProps({
     showSubmenu : Boolean
@@ -97,11 +101,11 @@
   font-weight: bold;
   margin-bottom: 8px;
   text-decoration: none;
-  color: rgb(30, 30, 233);
+  color: #02a360;
 }
 
 .submenu-row ul li:hover {
-  background-color: #f7f1ff;
+  background-color: #00c77425;
 }
 
 </style>

@@ -2,6 +2,8 @@ package com.bughunters.mountainspirit.climbhistory.query.dto;
 
 import lombok.*;
 
+import java.util.List;
+
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter

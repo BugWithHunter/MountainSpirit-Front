@@ -11,6 +11,7 @@ import java.time.LocalDateTime;
 public class BlacklistQueryDTO {
     private long id;
     private LocalDateTime createDate;
+    private String annotation;
     private Long adminId;   // nullable
     private long memberId;  // not null
 }

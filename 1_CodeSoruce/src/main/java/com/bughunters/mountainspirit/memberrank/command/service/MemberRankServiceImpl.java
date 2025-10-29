@@ -106,8 +106,8 @@ public class MemberRankServiceImpl implements MemberRankService {
     }
 
     private void modifyMountainRankOfMember(RequestRankDTO requestRankDTO, List<ResponseMountainRankDTO> responseMountainRankDTOs) {
-        //메모. 처음 해당 산의 코스 도장을 받은 경우 산 등급 insert
-        if (requestRankDTO.isFirstClimbForMountain()) {
+        //메모. 처음 해당 산의 코스 도장을 받은 경우 산 등급 insert( 도장이 한개인 산은 바로 산신령 후보로 올림)
+        if (requestRankDTO.isFirstClimbForMountain() && !requestRankDTO.isNewMountainStamp()) {
             MountainRank mountainRank = new MountainRank(
                     null, 1L, requestRankDTO.getCumId(), requestRankDTO.getFrtrlId()
             );
@@ -123,7 +123,13 @@ public class MemberRankServiceImpl implements MemberRankService {
             , List<ResponseMountainRankDTO> responseMountainRankDTOs) {
 
         //나의 랭크
-        MountainRank myRank = mountainsRankRepository.findByCumId(requestRankDTO.getCumId());
+        MountainRank myRank = mountainsRankRepository.findByCumIdAndFrtrlId(requestRankDTO.getCumId(),requestRankDTO.getFrtrlId());
+        if( myRank == null) {
+            myRank = new  MountainRank();
+            myRank.setCumId( requestRankDTO.getCumId());
+            myRank.setFrtrlId( requestRankDTO.getFrtrlId());
+            myRank.setMtRankId(1L);
+        }
 
         // 가장 높은 등급을 조회
         long maxRank = mountainRankStandardRepository.findAll()
@@ -138,7 +144,8 @@ public class MemberRankServiceImpl implements MemberRankService {
         );
         //메모. 최초 해당 산의 산도장을 획득 했을 경우 바로 산신령 등급으로 랭크 업
         if (requestRankDTO.isNewMountainStamp() && mountainRanks.isEmpty()) {
-            MountainRank mountainRank = mountainsRankRepository.findByCumId(requestRankDTO.getCumId());
+            MountainRank mountainRank = mountainsRankRepository.findByCumIdAndFrtrlId(requestRankDTO.getCumId(),requestRankDTO.getFrtrlId());
+            mountainRank = mountainRank == null ? myRank : mountainRank;
 
             //산신령으로 등급 조정
             mountainRank.setMtRankId(maxRank);
@@ -155,7 +162,7 @@ public class MemberRankServiceImpl implements MemberRankService {
                     memberRankQueryService.selectLotsOfClimbingByMountain(requestRankDTO.getFrtrlId());
 
             // 산 도장이 있고 내가 가장 많은 등산 횟수 보유자
-            if (higherClimbers.get(0).getCumId().equals(requestRankDTO.getCumId())
+            if ((higherClimbers.size() == 0 || higherClimbers.get(0).getCumId().equals(requestRankDTO.getCumId()))
             && myRank.getMtRankId() != maxRank) {
 
                 myRank.setMtRankId(maxRank);
@@ -169,7 +176,7 @@ public class MemberRankServiceImpl implements MemberRankService {
 
                     //산신령 등급에서 아래 단계로 등급 하락
                     MountainRank previousHighestRank
-                            = mountainsRankRepository.findByCumId(higherClimbers.get(1).getCumId());
+                            = mountainsRankRepository.findByCumIdAndFrtrlId(higherClimbers.get(1).getCumId(),higherClimbers.get(1).getFrtrlId());
                     previousHighestRank.setMtRankId(maxRank - 1);
                     MountainRank previousRank = mountainsRankRepository.save(previousHighestRank);
 

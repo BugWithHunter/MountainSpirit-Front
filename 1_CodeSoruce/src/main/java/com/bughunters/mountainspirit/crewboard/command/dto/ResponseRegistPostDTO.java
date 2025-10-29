@@ -1,9 +1,15 @@
 package com.bughunters.mountainspirit.crewboard.command.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
+@NoArgsConstructor
+@AllArgsConstructor
+@Getter
+@Setter
+@ToString
 public class ResponseRegistPostDTO {
     private String title;
 

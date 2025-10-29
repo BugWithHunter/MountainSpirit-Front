@@ -29,9 +29,9 @@ public class CrewMemberQueryController {
         return ResponseEntity.ok().body(resultList);
     }
 
-    @GetMapping("/crew-member-list/{crewId}")
-    public ResponseEntity<List<CrewAndMemberDTO>> findCrewMemberList(@PathVariable long crewId) {
-        List<CrewAndMemberDTO> crewMemberList = crewMemberQueryService.findCrewMemberListByCrewId(crewId);
+    @GetMapping("/crew-member-list/{cumId}")
+    public ResponseEntity<List<CrewAndMemberDTO>> findCrewMemberList(@PathVariable long cumId) {
+        List<CrewAndMemberDTO> crewMemberList = crewMemberQueryService.findCrewMemberListByCrewId(cumId);
         return ResponseEntity.ok().body(crewMemberList);
     }
 }

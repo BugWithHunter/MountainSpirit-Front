@@ -1,7 +1,7 @@
 package com.bughunters.mountainspirit.crewclimbboard.query.service;
 
 import com.bughunters.mountainspirit.crewclimbboard.query.dto.CrewClimbBoardAndMountainAndCrewMemberDTO;
-import com.bughunters.mountainspirit.crewclimbboard.query.dto.CrewClimbBoardDTO;
+import com.bughunters.mountainspirit.crewclimbboard.query.dto.CrewClimbBoardAndMountainDTO;
 import com.bughunters.mountainspirit.crewclimbboard.query.dto.MyCrewClimbBoardListDTO;
 import com.bughunters.mountainspirit.crewclimbboard.query.mapper.CrewClimbBoardQueryMapper;
 import lombok.extern.slf4j.Slf4j;
@@ -21,7 +21,7 @@ public class CrewClimbBoardQueryServiceImpl implements CrewClimbBoardQueryServic
     }
 
     @Override
-    public List<CrewClimbBoardDTO> findAllCrewClimbBoardByCrewId(Long crewId) {
+    public List<CrewClimbBoardAndMountainDTO> findAllCrewClimbBoardByCrewId(Long crewId) {
         return crewClimbBoardQueryMapper.findAllCrewClimbBoardByCrewId(crewId);
     }
 
@@ -31,7 +31,7 @@ public class CrewClimbBoardQueryServiceImpl implements CrewClimbBoardQueryServic
     }
 
     @Override
-    public List<MyCrewClimbBoardListDTO> findMyCrewClimbBoardByCrewMemberId(Long crewMemberId) {
-        return crewClimbBoardQueryMapper.findMyCrewClimbBoardByCrewMemberId(crewMemberId);
+    public List<MyCrewClimbBoardListDTO> findMyCrewClimbBoardByMemberId(Long memberId) {
+        return crewClimbBoardQueryMapper.findMyCrewClimbBoardByMemberId(memberId);
     }
 }

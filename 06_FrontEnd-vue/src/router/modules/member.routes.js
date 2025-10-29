@@ -3,7 +3,7 @@ export default [
     path: '/member',
     name: 'member',
     component: () => import('@/views/member/MemberSign.vue'),
-    
+
     children: [
       {
         path: 'login',
@@ -17,4 +17,26 @@ export default [
       },
     ],
   },
+  {
+    path: '/member-view',
+    name: 'member-view',
+    component: () => import('@/views/member/MemberView.vue'),
+  },
+  {
+    path: '/member-view/memberProtest',
+    name: 'memberProtest',
+    component: () => import('@/views/member/Protest.vue'),
+  },
+  {
+    path: '/member-view/protestConfirm',
+    name: 'protestConfirm',
+    component: () => import('@/views/member/ProtestConfirm.vue')
+  },
+  {
+    path: '/member/modifyPassword',
+    name: 'modifyPassword',
+    component: () => import('@/views/member/ModifyPassword.vue')
+  },
+
+  
 ];

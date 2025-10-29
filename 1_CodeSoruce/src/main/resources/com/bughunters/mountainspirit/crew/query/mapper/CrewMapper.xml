@@ -27,6 +27,10 @@
              , a.crewMaxPeople
              , a.crewRankGauge
           FROM Crew a
+         WHERE a.crewIsDeleted = 'N'
+         ORDER BY RAND()
+         LIMIT 10
+--       추후에 RAND()가 아닌 MRR기술등을 이용해서 랜덤값 추출 최적화 필요(RAND() 방식은 성능적으로 좋은 방법이 아니다.)
     </select>
     <select id="findOneCrewById" resultMap="crewInfoResultMap" parameterType="_long">
         SELECT

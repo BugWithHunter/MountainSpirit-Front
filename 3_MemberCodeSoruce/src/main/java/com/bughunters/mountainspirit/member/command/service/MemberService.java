@@ -2,6 +2,7 @@ package com.bughunters.mountainspirit.member.command.service;
 
 import com.bughunters.mountainspirit.member.command.dto.*;
 import com.bughunters.mountainspirit.member.command.entity.Member;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -26,9 +27,11 @@ public interface MemberService {
 
     boolean updateStatus(Long id, ReportMemberUpdateDTO dto);
 
-<<<<<<< HEAD
-    ResponseProfileImageDTO updateProfileImage(MultipartFile singleFile, Long id);
-=======
+
+    ResponseProfileImageDTO updateProfileImage(MultipartFile singleFile, Long id, HttpServletRequest request);
     void deleteCrewId(long crewId, long cumId);
->>>>>>> 24588987ae49cc71e0b4281134ca631c69ddd94f
+
+    boolean checkPassowrd(CheckPasswordDTO checkPasswordDTO);
+
+    boolean modifyPassword(ModifyPasswordDTO modifyPasswordDTO);
 }

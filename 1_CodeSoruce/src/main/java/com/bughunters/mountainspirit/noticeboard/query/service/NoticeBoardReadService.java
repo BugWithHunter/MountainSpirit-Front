@@ -13,5 +13,5 @@ public interface NoticeBoardReadService {
 
     List<BoardDTO> getBoardInfo(int id);
 
-    List<BoardDTO> getBoardInfoByKeyword(String keyword);
+    List<BoardDTO> getBoardInfoByKeyword(String keyword, String type);
 }

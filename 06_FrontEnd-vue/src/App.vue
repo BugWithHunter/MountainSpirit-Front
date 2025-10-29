@@ -1,22 +1,30 @@
 <script setup>
-  import {RouterLink, RouterView} from 'vue-router';
+  import { ref } from 'vue';
+  import {RouterLink, RouterView, useRoute} from 'vue-router';
+  import MountainAll from './views/mountainall/MountainAll.vue';
   import headerComponent from './components/Header.vue';
-  import FooterView from './views/sample/FooterView.vue';
+  import FooterView from './views/FooterView.vue';
+  import LoadingOverlay from '@/components/LoadingOverlay.vue'
+
+const route = useRoute();
 </script>
 
 <template>
-  <header>
+  <!-- 항상 맨 아래에 전역 오버레이 한 번만 -->
+  <header v-if="!route.matched.some(r => r.meta.isAdmin)">
     <headerComponent></headerComponent>
   </header>
   <!-- 본문 -->
   <main>
     <RouterView/>
+    <!-- <MountainAll/> -->
   </main>
-
+  
   <!-- footer 하 -->
-  <footer>
+  <footer v-if="!route.matched.some(r => r.meta.isAdmin)">
     <FooterView/>
   </footer>
+<LoadingOverlay />
 </template>
 
 <style scoped>
@@ -39,26 +47,37 @@
   flex-direction: column;   /* 세로 방향으로 배치: header → main → footer 순서로 쌓이게 함 */
 }
 
+
+
+.header { flex: 0 0 auto; }   /* 네가 쓰는 헤더 엘리먼트 클래스/태그에 맞춰 지정 */
+
 /*
   main 영역 설정
   본문이 화면의 가운데 오도록 정렬하고,
   flex: 1로 남는 공간을 차지하게 해서 footer를 아래로 밀어냄
 */
+
+
+
 main {
-  flex: 1;                    /* 남은 공간을 전부 main이 차지하도록 해서 footer를 하단으로 밀기 */
-  display: flex;              /* main 내부에서 또 중앙 정렬을 하기 위해 flex 설정 */
+  /*display: flex;              /* main 내부에서 또 중앙 정렬을 하기 위해 flex 설정 */
+
+  flex: 1 1 auto; 
+  min-height: calc(100vh);
   justify-content: center;    /* 가로 방향 중앙 정렬 */
   align-items: center;        /* 세로 방향 중앙 정렬 */
+  padding-bottom: 50px;
 }
 
 /*
   footer 영역 스타일
 */
-footer {
-  background: #0055cc;   /* 배경색 (파란색) */
-  color: #fff;            /* 글자색 흰색 */
-  font-size: 15px;        /* 글자 크기 설정 */
-  text-align: center;     /* 텍스트 가운데 정렬 */
-  padding: 2px 0;        /* 위아래 12px 여백 추가 — footer 높이를 확보하는 효과 */
-}
+/*footer {
+  /*flex: 0 0 auto;
+  /*background: #ccecdf;   /* 배경색 (파란색) */
+  /*color: #72798b;            /* 글자색 흰색 */
+  /*font-size: 15px;        /* 글자 크기 설정 */
+  /*text-align: center;     /* 텍스트 가운데 정렬 */
+  /*padding: 2px 0;        /* 위아래 12px 여백 추가 — footer 높이를 확보하는 효과 */
+/* } */
 </style>

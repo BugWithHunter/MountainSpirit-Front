@@ -95,7 +95,7 @@ public class ClimbHistoryServiceImpl implements ClimbHistoryService {
                     responseColeteClimbing.getResponseRankDTO(),
                     responseStatusDTO);
         } catch (Exception e) {
-
+            System.out.println(e.getMessage());
         }
 
         return findClimbCheckDTO;
