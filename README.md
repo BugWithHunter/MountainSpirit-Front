@@ -93,10 +93,8 @@
 
 - 버전 관리
 
-<div>
-<img src="https://img.shields.io/badge/git-F05032?style=for-the-badge&logo=git&logoColor=white">
-<img src="https://img.shields.io/badge/github-181717?style=for-the-badge&logo=github&logoColor=white">
-</div>
+[![Git](https://img.shields.io/badge/Git-F05032?logo=git&logoColor=fff)](#)
+[![GitHub](https://img.shields.io/badge/GitHub-%23121011.svg?logo=github&logoColor=white)](#)
 
 ## 7. ✨동료 평가
 - 강형규
@@ -148,6 +146,7 @@
 |정건일| |
 |윤서진||
 <br>
+
 
 
 
