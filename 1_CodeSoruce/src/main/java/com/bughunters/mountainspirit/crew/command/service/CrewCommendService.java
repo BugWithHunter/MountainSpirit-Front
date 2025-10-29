@@ -5,7 +5,7 @@ import com.bughunters.mountainspirit.crew.command.dto.CrewModifyDTO;
 import com.bughunters.mountainspirit.crew.command.dto.CrewRegistDTO;
 
 public interface CrewCommendService {
-    void insertCrew(CrewRegistDTO crewRegistDTO);
+    Long insertCrew(CrewRegistDTO crewRegistDTO);
 
     void modifyCrew(CrewModifyDTO crewModifyDTO);
 

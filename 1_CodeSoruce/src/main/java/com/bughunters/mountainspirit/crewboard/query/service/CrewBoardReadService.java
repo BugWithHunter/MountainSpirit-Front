@@ -13,5 +13,5 @@ public interface CrewBoardReadService {
 
     List<CrewBoardDTO> getBoardInfo(int id);
 
-    List<CrewBoardDTO> getBoardInfoByKeyword(String keyword);
+    List<CrewBoardDTO> getBoardInfoByKeyword(String keyword, String type);
 }

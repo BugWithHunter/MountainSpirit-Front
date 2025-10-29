@@ -25,14 +25,14 @@ public class MountainReviewController {
     @PostMapping("/mountain")   // insert - 산 후기
     public String registMountain(@RequestBody MountainReviewDTO newReview){
         mountainReviewService.registMountain(newReview);
-        String frtrlNm = mountainService.getMountainName(newReview.getFrtrlId());
-        return "/redirect:/mountainreview/review?mountainName=" + frtrlNm;
+//        String frtrlNm = mountainService.getMountainName(newReview.getFrtrlId());
+        return "산 후기 등록 성공";
     }
 
     @PutMapping("/mountain")    // update - 산 후기
     public String modifyMountain(@RequestBody MountainReviewDTO modifyReview){
         mountainReviewService.modifyMountain(modifyReview);
-        return "redirect:/mountainreview/" + modifyReview.getId();
+        return "산 후기 수정 성공";
     }
 
     @DeleteMapping("/mountain/{reviewCode}")    // delete - 산 후기
@@ -50,7 +50,7 @@ public class MountainReviewController {
     @PutMapping("/course")  // update - 코스 후기
     public String modifyCourse(@RequestBody CourseReviewDTO modifyReview){
         mountainReviewService.modifyCourse(modifyReview);
-        return "redirect:/mountainreview/" + modifyReview.getId();
+        return "코스 후기 수정";
     }
 
     @DeleteMapping("/course/{reviewCode}")  // delete - 코스 후기

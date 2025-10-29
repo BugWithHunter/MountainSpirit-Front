@@ -7,10 +7,13 @@ import com.bughunters.mountainspirit.member.command.service.MemberService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -37,8 +40,8 @@ public class MemberController {
     }
 
     @GetMapping("/member-info/{id}")
-    public Member findMember(@PathVariable Long id) {
-        Member member = memberService.findMember(id);
+    public ResponseMemberDTO findMember(@PathVariable Long id) {
+        ResponseMemberDTO member = memberService.findMember(id);
         return member;
     }
 
@@ -53,6 +56,8 @@ public class MemberController {
             Map<String, Object> responseMap = new HashMap<>();
             ResponseMessage responseMessage = new ResponseMessage();
 
+            HttpStatus httpStatus = HttpStatus.BAD_REQUEST;
+
             if (memberSignUpDTO.isBanMember()) {
                 responseMessage.setMessage(member.getMemName() + " 회원님은 가입이 제한된 회원 입니다.");
                 responseMap.put("memberInfo", memberSignUpDTO.getBlackListDTO());
@@ -61,6 +66,7 @@ public class MemberController {
             } else if (memberSignUpDTO.isExistingMember()) {
                 responseMessage.setMessage(member.getMemName() + " 님은 이미 존재하는 회원 정보입니다.");
             } else {
+                httpStatus = HttpStatus.OK;
                 responseMap.put("회원 정보", memberSignUpDTO.getMemberDTO());
                 responseMessage.setMessage("회원가입이 완료 되었습니다.");
             }
@@ -68,8 +74,8 @@ public class MemberController {
             if (!responseMap.isEmpty())
                 responseMessage.setResult(responseMap);
 
-            responseMessage.setHttpStatus(HttpStatus.OK.value());
-            return ResponseEntity.ok()
+            responseMessage.setHttpStatus(httpStatus.value());
+            return ResponseEntity.status(httpStatus)
                     .body(responseMessage);
         } catch (IllegalArgumentException e) {
             ResponseMessage responseMessage =
@@ -105,10 +111,7 @@ public class MemberController {
     @PutMapping("memberStatus")
     ResponseStatusDTO modifyStatusAfterClimbMountian(
             @RequestBody RequestModifyStatusOfMemberDTO modifyStatusOfMemberDTO) {
-        System.out.println("modifyStatusOfMemberDTO = " + modifyStatusOfMemberDTO);
-        System.out.println("modifyStatusAfterClimbMountian 들어옴 ");
         ResponseStatusDTO responseStatusDTO = memberService.modifyStatusAfterClimbMountian(modifyStatusOfMemberDTO);
-        System.out.println("modifyStatusAfterClimbMountian 서비스까지 실행함 ");
         return responseStatusDTO;
     }
 
@@ -123,9 +126,20 @@ public class MemberController {
                 .body(responseMessage);
     }
 
+    @GetMapping("/crew-quit")
+    public ResponseEntity<ResponseMessage> crewQuit(long crewId,long cumId) {
+        ResponseMessage responseMessage = new ResponseMessage();
+        log.info("넘어온 크루,유저 아이디 : {}, {}",crewId,cumId);
+        memberService.deleteCrewId(crewId,cumId);
+
+        responseMessage.setHttpStatus(HttpStatus.OK.value());
+        return ResponseEntity.ok()
+                .body(responseMessage);
+    }
+
     @GetMapping("/report/member-info/{id}")
     public ResponseEntity<ReportMemberDTO> getMemberInfo(@PathVariable Long id) {
-        Member member = memberService.findMember(id);
+        ResponseMemberDTO member = memberService.findMember(id);
         if (member == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
@@ -141,6 +155,10 @@ public class MemberController {
         return ResponseEntity.ok().body(dto);
     }
 
+
+    @GetMapping("/testConfigServer")
+    public String testConfigServer(@Value("${test.test1}") String test) {return test;}
+
     @PostMapping("/report/update-status/{memberId}")
     public ResponseEntity<Void> updateMemberStatus(@PathVariable Long memberId,
                                                    @RequestBody ReportMemberUpdateDTO dto) {
@@ -153,6 +171,80 @@ public class MemberController {
         }
         return ResponseEntity.ok().build();
     }
+
+    @PostMapping("/Profile/{id}")
+    public ResponseEntity<ResponseMessage> updateProfileImage(
+            @RequestParam MultipartFile singleFile,
+            @PathVariable Long id,
+            HttpServletRequest request) {
+        ResponseProfileImageDTO success = memberService.updateProfileImage(singleFile, id,request);
+
+
+        Map<String, Object> responseMap = new HashMap<>();
+        ResponseMessage responseMessage = new ResponseMessage();
+
+        if (success.isSuccessUpload() == true) {
+            responseMessage.setMessage("프로필 변경 완료");
+            responseMap.put("responseData", success);
+            responseMessage.setHttpStatus(HttpStatus.OK.value());
+        } else {
+            responseMessage.setMessage("프로필 변경 실패");
+            responseMessage.setHttpStatus(HttpStatus.EXPECTATION_FAILED.value());
+        }
+
+        if (!responseMap.isEmpty())
+            responseMessage.setResult(responseMap);
+
+
+        return ResponseEntity.ok()
+                .body(responseMessage);
+    }
+
+    @PostMapping("/password-info")
+    public ResponseEntity<ResponseMessage> checkPassword(@RequestBody CheckPasswordDTO checkPasswordDTO) {
+        boolean ableToPassword = memberService.checkPassowrd(checkPasswordDTO);
+
+        ResponseMessage responseMessage = new ResponseMessage();
+        HttpStatus httpStatus = ableToPassword ? HttpStatus.OK :HttpStatus.BAD_REQUEST;
+
+        if(ableToPassword)
+        {
+            responseMessage.setHttpStatus(httpStatus.value());
+            responseMessage.setMessage("password 일치");
+        }
+        else {
+            responseMessage.setHttpStatus(httpStatus.value());
+            responseMessage.setMessage("password 불 일치");
+        }
+
+        return ResponseEntity
+                .status(httpStatus)
+                .body(responseMessage);
+    }
+
+    @PostMapping("/member-password")
+    public ResponseEntity<ResponseMessage> modifyPassword(@RequestBody ModifyPasswordDTO modifyPasswordDTO) {
+
+        boolean ableToPassword = memberService.modifyPassword(modifyPasswordDTO);
+
+        ResponseMessage responseMessage = new ResponseMessage();
+        HttpStatus httpStatus = ableToPassword ? HttpStatus.OK :HttpStatus.BAD_REQUEST;
+
+        if(ableToPassword)
+        {
+            responseMessage.setHttpStatus(httpStatus.value());
+            responseMessage.setMessage("password 변경 완료");
+        }
+        else {
+            responseMessage.setHttpStatus(httpStatus.value());
+            responseMessage.setMessage("password 변경 실패");
+        }
+
+        return ResponseEntity
+                .status(httpStatus)
+                .body(responseMessage);
+    }
+
 
 
 

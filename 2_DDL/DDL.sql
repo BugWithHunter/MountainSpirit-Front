@@ -1,4 +1,4 @@
-/* ==================== 테이블 삭제 ============================= */
+`Member`/* ==================== 테이블 삭제 ============================= */
 DROP TABLE IF EXISTS Member;
 DROP TABLE IF EXISTS ScoreStandard;
 DROP TABLE IF EXISTS MountainRank;
@@ -54,7 +54,7 @@ DROP TABLE if EXISTS Ban;
 /* ==================== 테이블 생성 ============================= */
 CREATE TABLE Member (
 	id	bigint	 auto_increment	,
-	memId	varchar(255)	NOT NULL,
+	memId	varchar(255)	NULL,
 	email	varchar(255)	NOT NULL,
 	nickname	varchar(255)	NOT NULL,
 	memPwd	varchar(255)	NOT NULL,
@@ -583,6 +583,15 @@ CONSTRAINT ch_Ban_Date CHECK (endDate > startDate)
 );
 
 
+create table ProfileOfMember (
+	id bigint not null auto_increment,
+	dirPath varchar(255),
+	filePath varchar(255),
+	cumId bigint,
+	constraint pk_ProfileOfMember_id primary key(id)
+);
+
+
 /* ==================== 외래키 제약조건 생성 ============================= */
 
 alter table Member
@@ -778,3 +787,7 @@ FOREIGN KEY (adminId) REFERENCES Member (id);
 ALTER TABLE Ban
 ADD CONSTRAINT fk_Ban_ReportCategory_reportReasonId
 FOREIGN KEY (reportReasonId) REFERENCES ReportCategory (id);
+
+alter table ProfileOfMember 
+add constraint fk_ProfileOfMember_Member_cumId
+foreign key(cumId) references Member(id);

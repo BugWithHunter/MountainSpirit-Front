@@ -15,7 +15,7 @@ public class CrewBoardImage {
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Long id;
 
     @Column(name = "originName")
     private String originName;

@@ -3,6 +3,7 @@ package com.bughunters.mountainspirit.stamp.command.service;
 import com.bughunters.mountainspirit.memberrank.command.service.MemberRankService;
 import com.bughunters.mountainspirit.mountain.command.service.MountainService;
 import com.bughunters.mountainspirit.stamp.command.dto.RequestSubmmitClimbMountainDTO;
+import com.bughunters.mountainspirit.stamp.command.dto.ResponseCourseDTO;
 import com.bughunters.mountainspirit.stamp.command.dto.StampWithCourseAndMountainDTO;
 import com.bughunters.mountainspirit.stamp.command.entity.CourseStamp;
 import com.bughunters.mountainspirit.stamp.command.entity.MountainStamp;
@@ -45,14 +46,14 @@ public class StampServiceImpl implements StampService {
                 = mountainService.selectCoursesByPoiId(request.getFrtrlId());
 
         //메모. 현재 회원이 해당산의 가지고 있는전체 도장 조회
-        List<CourseStamp> courseStamps = courseStampRepository.findByCumId(request.getCumId());
+        List<CourseStamp> courseStamps = courseStampRepository.findByCumIdAndFrtrlId(request.getCumId() , request.getFrtrlId());
 
         //해당 산의 처음 최초 등산 인지 확인
         if(courseStamps.isEmpty()){
             stampDTO.setFirstClimbForMountain(true);
         }
 
-        MountainStamp mountainStamp = mountainStampRepository.findByCumId(request.getCumId());
+        MountainStamp mountainStamp = mountainStampRepository.findByCumIdAndFrtrlId(request.getCumId(), request.getFrtrlId());
 
         // 원래 산 도장이 있던 회원인지 조회
         if(mountainStamp != null){
@@ -84,13 +85,13 @@ public class StampServiceImpl implements StampService {
 
             //메모. 코스 도장 추가
             courseStampRepository.save(new CourseStamp(
-                    null, LocalDateTime.now(), request.getPoiId(), request.getCumId()));
+                    null, LocalDateTime.now(), request.getPoiId(), request.getCumId() , request.getFrtrlId()));
 
             //메모. 해당산의 모든 코스 수 == 회원의 기존 도장수 + 추가 도장 수가 같으면 모든 도장을 모아 산도장 흭득
             if (courses.size() == courseStamps.size() + 1) {
                 stampDTO.setNewMountainStamp(true);
 
-                if(mountainStampRepository.findByCumId(request.getCumId()) == null){
+                if(mountainStampRepository.findByCumIdAndFrtrlId(request.getCumId(), request.getFrtrlId()) == null){
                     //메모. 산 도장 추가
                     mountainStampRepository.save(new MountainStamp(
                             null, LocalDateTime.now(), request.getCumId(), request.getFrtrlId()));
@@ -100,6 +101,14 @@ public class StampServiceImpl implements StampService {
 
 
         return stampDTO;
+    }
+
+    @Override
+    public List<CourseStamp> findCourseStamp(Long memberId) {
+        //메모. 현재 회원이 해당산의 가지고 있는전체 도장 조회
+        List<CourseStamp> courseStamps = courseStampRepository.findByCumId(memberId);
+
+        return courseStamps;
     }
 
 

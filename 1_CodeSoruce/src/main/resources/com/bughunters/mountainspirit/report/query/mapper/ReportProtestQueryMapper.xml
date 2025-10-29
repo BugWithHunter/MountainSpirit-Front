@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bughunters.mountainspirit.report.query.mapper.ReportProtestQueryMapper">
+    <resultMap id="ReportProtestResultMap" type="com.bughunters.mountainspirit.report.query.dto.ReportProtestQueryDTO">
+        <id property="id" column="id"/>
+        <result property="appealDate" column="appealDate"/>
+        <result property="adminId" column="adminId"/>
+        <result property="appealReason" column="appealReason"/>
+        <result property="changeStatusReason" column="changeStatusReason"/>
+        <result property="isAccepted" column="isAccepted"/>
+        <result property="reportedId" column="reportedId"/>
+        <result property="reportId" column="reportId"/>
+    </resultMap>
+    <select id="selectAllReportProtest" resultMap="ReportProtestResultMap">
+        SELECT
+            id,
+            appealDate,
+            adminId,
+            appealReason,
+            changeStatusReason,
+            isAccepted,
+            reportedId,
+            reportId
+        FROM ReportProtest
+        ORDER BY appealDate DESC
+        <if test="limit != null and offset != null">
+            LIMIT #{limit} OFFSET #{offset}
+        </if>
+    </select>
+    <select id="selectReportProtestByReportedId" resultMap="ReportProtestResultMap">
+        SELECT
+            id,
+            appealDate,
+            adminId,
+            appealReason,
+            changeStatusReason,
+            isAccepted,
+            reportedId,
+            reportId
+        FROM ReportProtest
+        WHERE reportedId = #{reportedId}
+        ORDER BY appealDate DESC
+        <if test="limit != null and offset != null">
+            LIMIT #{limit} OFFSET #{offset}
+        </if>
+    </select>
+    <select id="findAppealDetailById" resultType="com.bughunters.mountainspirit.report.query.dto.AppealDetailByIdDTO">
+        SELECT
+            a.appealReason AS appealReason,
+            a.isAccepted,
+            -- 제목 (크루/자유게시판만)
+            CASE
+                WHEN r.crewPostId IS NOT NULL THEN c.title
+                WHEN r.postId IS NOT NULL THEN b.title
+                ELSE NULL
+                END AS title,
+
+            -- 내용 (크루/자유게시판/댓글)
+            CASE
+                WHEN r.crewPostId IS NOT NULL THEN c.content
+                WHEN r.postId IS NOT NULL THEN b.content
+                WHEN r.replyId IS NOT NULL THEN cm.content
+                ELSE NULL
+                END AS content
+
+        FROM ReportProtest a
+                 LEFT JOIN Report r ON a.reportId = r.id
+                 LEFT JOIN CrewBoard c ON r.crewPostId = c.id
+                 LEFT JOIN Board b ON r.postId = b.id
+                 LEFT JOIN Comment cm ON r.replyId = cm.id
+        WHERE a.id = #{appealId}
+    </select>
+
+</mapper>

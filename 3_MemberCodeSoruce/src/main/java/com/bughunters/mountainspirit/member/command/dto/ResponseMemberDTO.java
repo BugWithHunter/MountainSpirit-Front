@@ -1,15 +1,16 @@
 package com.bughunters.mountainspirit.member.command.dto;
 
+import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-@Builder
 public class ResponseMemberDTO {
 
     private Long id;
@@ -20,4 +21,16 @@ public class ResponseMemberDTO {
     private LocalDate birth;
     private String gender;
     private LocalDate signInDate;
+    private LocalDateTime lastLogin;
+    private Long climbCnt;
+    private Integer banCnt;
+    private Integer loginFailCnt;
+    private LocalDateTime quitDate;
+    private LocalDateTime loginLockUntil;
+    private Integer score;
+    private Long memRankId;
+    private String rankName;
+    private Long memStsId;
+    private Long crewId;
+    private String profilePath;
 }

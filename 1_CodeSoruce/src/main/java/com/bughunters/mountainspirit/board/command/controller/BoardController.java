@@ -5,6 +5,8 @@ import com.bughunters.mountainspirit.board.command.dto.BoardModifyDTO;
 import com.bughunters.mountainspirit.board.command.dto.RequestRegistPostDTO;
 import com.bughunters.mountainspirit.board.command.dto.ResponseRegistPostDTO;
 import com.bughunters.mountainspirit.board.command.service.BoardService;
+import com.bughunters.mountainspirit.common.UserInfo;
+import jakarta.servlet.http.HttpServletRequest;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -12,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -28,18 +31,25 @@ public class BoardController {
         this.modelMapper = modelMapper;
     }
 
-    /* 필기. 회원부분이랑 프로젝트 합쳐지면 @Authentication달기(userId 받아오기 위해서) */
     @PostMapping(value = "/insert", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<ResponseRegistPostDTO> insertPostInBoard(@RequestParam String title,
-                                                                   @RequestParam String content,
-                                                                   @RequestParam List<MultipartFile> multiFiles
-                                                               /*    @AuthenticationPrincipal UserDetail userDetails */) {
-//        Long userId = userDetails.getId();
+    public ResponseEntity<ResponseRegistPostDTO> insertPostInBoard(
+            @RequestParam String title,
+            @RequestParam String content,
+            @RequestParam(required = false) List<MultipartFile> multiFiles,
+            HttpServletRequest request) {
+
+        UserInfo userInfo = (UserInfo) request.getAttribute("userInfo");
+        long userId = userInfo.getId();
+
+
+        if (multiFiles == null) {
+            multiFiles = new ArrayList<>();
+        }
         RequestRegistPostDTO newPost = new RequestRegistPostDTO();
         newPost.setTitle(title);
         newPost.setContent(content);
         BoardDTO boardDTO = modelMapper.map(newPost, BoardDTO.class);
-//        boardDTO.setCumId(userId);
+        boardDTO.setCumId(userId);
 
         boardService.registPost(boardDTO, multiFiles);
         ResponseRegistPostDTO responsePost = modelMapper.map(boardDTO, ResponseRegistPostDTO.class);
@@ -71,8 +81,14 @@ public class BoardController {
     }
 
     @GetMapping("/{id}/select/likes")
-    public void pushLikes(@PathVariable int id) {
-        boardService.createOrDeleteLikesByPostId(id);
+    public String pushLikes(@PathVariable int id,
+                          HttpServletRequest request) {
+
+        UserInfo userInfo = (UserInfo) request.getAttribute("userInfo");
+        long userId = userInfo.getId();
+
+        String result = boardService.createOrDeleteLikesByPostId(id, userId);
+        return result;
     }
 
 }

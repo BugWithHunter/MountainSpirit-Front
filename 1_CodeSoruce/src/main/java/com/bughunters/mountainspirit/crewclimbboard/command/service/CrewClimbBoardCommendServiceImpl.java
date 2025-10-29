@@ -8,6 +8,8 @@ import com.bughunters.mountainspirit.crewclimbboard.command.entity.CrewClimbBoar
 import com.bughunters.mountainspirit.crewclimbboard.command.entity.CrewClimbRecord;
 import com.bughunters.mountainspirit.crewclimbboard.command.repository.CrewClimbBoardCommendRepository;
 import com.bughunters.mountainspirit.crewclimbboard.command.repository.CrewClimbRecordCommendRepository;
+import com.bughunters.mountainspirit.crewmember.command.entity.CrewMember;
+import com.bughunters.mountainspirit.crewmember.command.repository.CrewMemberCommendRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +21,7 @@ import java.util.List;
 @Service
 @Slf4j
 public class CrewClimbBoardCommendServiceImpl implements CrewClimbBoardCommendService {
+    private final CrewMemberCommendRepository crewMemberCommendRepository;
     ModelMapper modelMapper;
     private CrewClimbBoardCommendRepository crewClimbBoardCommendRepository;
     private CrewClimbRecordCommendRepository crewClimbRecordCommendRepository;
@@ -26,15 +29,17 @@ public class CrewClimbBoardCommendServiceImpl implements CrewClimbBoardCommendSe
     @Autowired
     public CrewClimbBoardCommendServiceImpl(CrewClimbBoardCommendRepository crewClimbBoardCommendRepository,
                                             ModelMapper modelMapper,
-                                            CrewClimbRecordCommendRepository crewClimbRecordCommendRepository) {
+                                            CrewClimbRecordCommendRepository crewClimbRecordCommendRepository, CrewMemberCommendRepository crewMemberCommendRepository) {
         this.crewClimbBoardCommendRepository = crewClimbBoardCommendRepository;
         this.modelMapper = modelMapper;
         this.crewClimbRecordCommendRepository = crewClimbRecordCommendRepository;
+        this.crewMemberCommendRepository = crewMemberCommendRepository;
     }
 
     @Override
     @Transactional
     public void registCrewClimbBoard(CrewClimbBoardDTO crewClimbBoardDTO) {
+
         // 넘어온 DTO값 맵핑 + default값 세팅
         CrewClimbBoard crewClimbBoard = modelMapper.map(crewClimbBoardDTO, CrewClimbBoard.class);
         log.info("Service 크루 모집 일정 넘어온거 맵핑 값 : {}", crewClimbBoard);
@@ -89,7 +94,7 @@ public class CrewClimbBoardCommendServiceImpl implements CrewClimbBoardCommendSe
             return;
         }
         crewClimbBoard.setCrewClimbIsDeleted('Y');
-        crewClimbRecordCommendRepository.deleteByCrewClimbId(id);
+        crewClimbRecordCommendRepository.deleteAllByCrewClimbId(id);
 
     }
 
@@ -115,6 +120,8 @@ public class CrewClimbBoardCommendServiceImpl implements CrewClimbBoardCommendSe
             return;
         }
 
+        CrewMember crewMember = crewMemberCommendRepository.findByCumId(crewClimbBoardApplyDTO.getCumId());
+        crewClimbBoardApplyDTO.setCumId(crewMember.getId());
         CrewClimbRecord crewClimbRecord = setCrewClimbRecordRegistInfo(crewClimbBoardApplyDTO);
         crewClimbRecordCommendRepository.save(crewClimbRecord);
 
@@ -132,6 +139,7 @@ public class CrewClimbBoardCommendServiceImpl implements CrewClimbBoardCommendSe
     }
 
     @Override
+    @Transactional
     public void cancelCrewClimb(CrewClimbBoardCancelDTO crewClimbBoardCancelDTO) {
         CrewClimbRecord crewClimbRecord = crewClimbRecordCommendRepository.findByCrewClimbIdAndCrewMemberId(crewClimbBoardCancelDTO.getCrewClimbId(),crewClimbBoardCancelDTO.getCrewMemberId());
         if(crewClimbRecord==null){
@@ -161,13 +169,16 @@ public class CrewClimbBoardCommendServiceImpl implements CrewClimbBoardCommendSe
         if (crewClimbBoard.getCrewClimbAmountOfPeople().equals(originalCrewClimbBoard.getCrewClimbAmountOfPeople())) {
             originalCrewClimbBoard.setCrewClimbAmountOfPeople(crewClimbBoard.getCrewClimbAmountOfPeople());
         }
+        if (crewClimbBoard.getCrewClimbIsEnded() != originalCrewClimbBoard.getCrewClimbIsEnded()) {
+            originalCrewClimbBoard.setCrewClimbIsEnded(crewClimbBoard.getCrewClimbIsEnded());
+        }
     }
 
     private static CrewClimbRecord setCrewClimbRecordRegistInfo(CrewClimbBoardApplyDTO crewClimbBoardApplyDTO) {
         CrewClimbRecord crewClimbRecord = new CrewClimbRecord();
 //        crewClimbRecord.setCrewClimbHistoryIsSucceed('N');
         crewClimbRecord.setCrewClimbId(crewClimbBoardApplyDTO.getCrewClimbId());
-        crewClimbRecord.setCrewMemberId(crewClimbBoardApplyDTO.getCrewMemberId());
+        crewClimbRecord.setCrewMemberId(crewClimbBoardApplyDTO.getCumId());
         crewClimbRecord.setFrtrlId(crewClimbBoardApplyDTO.getFrtrlId());
         return crewClimbRecord;
     }

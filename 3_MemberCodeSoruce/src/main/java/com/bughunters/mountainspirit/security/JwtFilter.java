@@ -23,10 +23,12 @@ public class JwtFilter extends OncePerRequestFilter {
     }
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+    public void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String authorizationHeader = request.getHeader("Authorization");
         log.info("헤더의 Authorization에 담긴 내용 확인: {}", authorizationHeader);
-        
+        log.info("URI={} method={} contentType={}",
+                request.getRequestURI(), request.getMethod(), request.getContentType());
+
         /* 설명. 토큰을 제대로 들고 왔다면 */
         if(authorizationHeader != null && authorizationHeader.startsWith("Bearer ")){
             String token = authorizationHeader.substring(7);

@@ -27,4 +27,7 @@ public class CourseStamp {
 
     @Column(name = "cumId")
     private Long cumId;
+
+    @Column(name = "frtrlId")
+    private String frtrlId;
 }

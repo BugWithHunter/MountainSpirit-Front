@@ -2,6 +2,7 @@ package com.bughunters.mountainspirit.noticeboard.command.dto;
 
 import com.bughunters.mountainspirit.noticeboard.command.entity.NoticeBoardImage;
 import lombok.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -12,7 +13,6 @@ import java.util.List;
 @Setter
 @ToString
 public class BoardDTO {
-    private long id;
     private String title;
     private String content;
     private LocalDateTime createDate;
@@ -20,5 +20,5 @@ public class BoardDTO {
     private String isDeleted;
     private long cumId;
 
-    private List<NoticeBoardImage> boardImages;
+    private List<MultipartFile> multiFiles;
 }

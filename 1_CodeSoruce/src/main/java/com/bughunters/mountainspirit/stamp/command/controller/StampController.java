@@ -1,17 +1,20 @@
 package com.bughunters.mountainspirit.stamp.command.controller;
 
 import com.bughunters.mountainspirit.stamp.command.dto.RequestSubmmitClimbMountainDTO;
+import com.bughunters.mountainspirit.stamp.command.dto.ResponseCourseDTO;
+import com.bughunters.mountainspirit.stamp.command.entity.CourseStamp;
+import com.bughunters.mountainspirit.stamp.command.service.StampService;
 import com.bughunters.mountainspirit.stamp.command.service.StampServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/stamp")
 public class StampController {
-    StampServiceImpl stampService;
+    StampService stampService;
 
     @Autowired
     public StampController(StampServiceImpl stampService) {
@@ -25,5 +28,13 @@ public class StampController {
 
 
         return "";
+    }
+
+    @GetMapping("/corse-stamp/{memberId}")
+    public ResponseEntity<List<CourseStamp>> findCourseStamp(@PathVariable Long memberId){
+        List<CourseStamp> stamps = stampService.findCourseStamp(memberId);
+
+        return ResponseEntity.ok()
+                .body(stamps);
     }
 }

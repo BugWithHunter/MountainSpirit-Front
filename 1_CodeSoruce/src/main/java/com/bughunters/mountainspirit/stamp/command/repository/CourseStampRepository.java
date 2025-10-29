@@ -8,4 +8,6 @@ import java.util.List;
 public interface CourseStampRepository extends JpaRepository<CourseStamp, Long> {
 
     List<CourseStamp> findByCumId(long cumId);
+
+    List<CourseStamp> findByCumIdAndFrtrlId(long cumId, String frtrlId);
 }

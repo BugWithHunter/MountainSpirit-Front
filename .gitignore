@@ -1,0 +1,4 @@
+#jar 파일 묶음 제외
+/10_build_jar/
+# config 설정 제외
+/7_config/

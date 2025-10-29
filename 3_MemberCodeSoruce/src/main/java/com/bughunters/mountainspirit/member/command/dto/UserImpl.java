@@ -16,6 +16,7 @@ public class UserImpl extends User {
     private String memberName;
     private String birth;
     private Long memStsId;
+    private Long crewId;
     private Integer loginFailCnt;
     private LocalDateTime loginLockUntil;
 
@@ -30,6 +31,7 @@ public class UserImpl extends User {
         this.memberName = user.getMemberName();
         this.birth = user.getBirth();
         this.memStsId = user.getMemStsId();
+        this.crewId = user.getCrewId() == null ? 0L : user.getCrewId();
         this.loginLockUntil = user.getLoginLockUntil();
     }
 }
