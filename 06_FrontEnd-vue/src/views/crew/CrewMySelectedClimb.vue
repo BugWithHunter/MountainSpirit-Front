@@ -5,12 +5,7 @@
     <div class="detail-body">
       <!-- 왼쪽: 등산 정보 -->
       <div class="left-box">
-        <img 
-          v-if="climbBoardData.imageUrl" 
-          :src="climbBoardData.imageUrl" 
-          alt="산 이미지" 
-          class="mountain-img"
-        />
+        <img :src="getImageUrl(climbBoardData.mountain.frtrlNm)" alt="산이미지" class="mountain-img">
         <div class="date-text">{{ climbBoardData.crewClimbStartDate }}</div>
         <div class="course-title">{{ climbBoardData.mountain.frtrlNm }}</div>
         
@@ -55,7 +50,15 @@
         if(flag==='Y')return "성공";
         else if(flag==='N')return "실패";
     }
-    
+
+    function getImageUrl(name) {
+          console.log(name);
+        try {
+            return new URL(`../../mountainpic/${name}.png`, import.meta.url).href;
+        } catch {
+            return new URL(`../../mountainpic/default.png`, import.meta.url).href;
+        }
+      }
     const climbBoardData = ref({
         imageUrl:'',
         crewClimbStartDate:'',
