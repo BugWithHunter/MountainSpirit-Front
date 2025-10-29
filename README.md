@@ -60,7 +60,12 @@
 
 
 ## 5. 문서
+### 5-1 요구사항 명세서
+<a href="https://docs.google.com/spreadsheets/d/1VBYRhzfoiGNax0MA7ngQUardj3lY4btuP-MUCo3M21k/edit?usp=sharing" target="_blank">🪝요구사항 명세서</a>
 
+### 5-2 WBS
+<a href="https://docs.google.com/spreadsheets/d/1VBYRhzfoiGNax0MA7ngQUardj3lY4btuP-MUCo3M21k/edit?usp=sharing" target="_blank">📆WBS</a>
+<img width="1299" height="638" alt="Image" src="https://github.com/user-attachments/assets/b729ddd1-5443-4364-a77c-9db64612fc1a" />
 
 ## 6. 기술 스택
 
@@ -138,6 +143,7 @@
 |정건일| |
 |윤서진||
 <br>
+
 
 
 
