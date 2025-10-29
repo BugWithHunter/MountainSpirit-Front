@@ -105,7 +105,11 @@ function onPostSuccess() {
     }
 
     onMounted(() => {
-        fetchBoardList(1)
+        console.log(token);
+        if (!token) {
+            alert('로그인하세요');
+        }
+        fetchBoardList(1);
     });
 
 

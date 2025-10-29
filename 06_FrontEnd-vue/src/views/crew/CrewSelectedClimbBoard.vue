@@ -265,4 +265,27 @@
   height: 100%;
   background: rgba(0, 0, 0, 0.1);
 }
+.modal-btn {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.modal-btn button {
+  padding: 6px 12px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  cursor: pointer;
+}
+
+.modal-btn button:last-child {
+  background: #007bff;
+  color: #fff;
+  border: none;
+}
+
+.modal-btn button:last-child:hover {
+  background: #005fcc;
+}
 </style>

@@ -99,6 +99,7 @@ h2 {
   border: 1px solid #ccc;
   border-radius: 10px;
   padding: 15px 20px;
+  font-size: 1.2rem;
 }
 
 .board-title {

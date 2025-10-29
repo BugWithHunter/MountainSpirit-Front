@@ -33,6 +33,9 @@
       </div>
     </div>
   </div>
+  <transition name="fade">
+      <div v-if="toastMessage" class="toast-message">{{ toastMessage }}</div>
+    </transition>
 </template>
 
 <script setup>
@@ -45,6 +48,16 @@ import { onMounted, ref } from 'vue'
 const crewList = ref([])
 const modalCheck = ref(false)
 const selectedCrew = ref(0)
+const toastMessage = ref('')   // ✅ 토스트 메시지 텍스트
+let toastTimer = null          // ✅ 자동 닫힘 타이머
+// ✅ 토스트 표시 함수
+const showToast = (message) => {
+  toastMessage.value = message
+  clearTimeout(toastTimer)
+  toastTimer = setTimeout(() => {
+    toastMessage.value = ''
+  }, 2500) // 2.5초 후 사라짐
+}
 
 onMounted(async () => {
   const response = await axios.get('http://localhost:8000/main-client/crew/crew-info', {
@@ -72,6 +85,7 @@ const crewApply = async () => {
     }
   )
   console.log('가입 신청 완료:', response.data)
+   showToast(response.data.responseResult || '잘못된 접근입니다.')
   modalCheck.value = false
 }
 </script>
@@ -198,5 +212,29 @@ const crewApply = async () => {
 
 .modal-btn button:last-child:hover {
   background: #005fcc;
+}
+/* ✅ 토스트 메시지 */
+.toast-message {
+  position: fixed;
+  bottom: 30px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #333;
+  color: #fff;
+  padding: 12px 24px;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+  font-size: 14px;
+  z-index: 999;
+}
+
+/* ✅ Fade 효과 */
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.5s;
+}
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
 }
 </style>

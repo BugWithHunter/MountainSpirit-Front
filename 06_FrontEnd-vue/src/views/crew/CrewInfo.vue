@@ -156,20 +156,20 @@ const crewLeave = async ()=>{
   border-radius: 10px;
   padding: 20px;
   width: 250px;
-  height: 250px;
+  height: 350px;
   text-align: center;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .crew-name {
-  font-size: 1.5rem;
+  font-size: 3rem;
   margin-bottom: 15px;
   color: #333;
 }
 
 .crew-detail p {
   margin: 5px 0;
-  font-size: 0.9rem;
+  font-size: 1.4rem;
   color: #666;
 }
 
@@ -223,7 +223,7 @@ const crewLeave = async ()=>{
 
 .crew-intro {
   box-shadow: 0px 0.5px 0.5px 0px rgb(211, 209, 209);   
-  font-size: 2rem;
+  font-size: 3rem;
   margin-bottom: 5px;
   height: 5cqmax;
   color: #444;
@@ -231,7 +231,7 @@ const crewLeave = async ()=>{
 }
 
 .member-title {
-  font-size: 1.1rem;
+  font-size: 1.7rem;
   font-weight: 700;
   margin-bottom: 10px;
   border-bottom: 1px solid #eaeaea;
@@ -268,16 +268,16 @@ const crewLeave = async ()=>{
 
 .name {
   font-weight: 600;
-  font-size: 1rem;
+  font-size: 1.5rem;
 }
 
 .date {
-  font-size: 0.85rem;
+  font-size: 1.2rem;
   color: #888;
 }
 
 .role {
-  font-size: 0.9rem;
+  font-size: 1.4rem;
   font-weight: 500;
   color: #333;
 }
