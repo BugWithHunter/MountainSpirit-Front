@@ -93,6 +93,23 @@
 
 <details>
   <summary>산</summary>
+  
+  <details>
+    <summary>전체 산 목록</summary>
+  </details>
+
+  <details>
+    <summary>산 상세 조회 & 후기 등록,수정,삭제</summary>
+  </details>
+
+  <details>
+    <summary>코스 상세 조회 & 후기 등록, 수정, 삭제</summary>
+  </details>
+
+  <details>
+    <summary>산 검색 조회</summary>
+  </details>
+      
 </details>
 
 <details>
@@ -201,6 +218,7 @@
 |정건일| |
 |윤서진||
 <br>
+
 
 
 
