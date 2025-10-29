@@ -13,7 +13,7 @@
 
 [2. 📄와이어프레임](#2-와이어프레임)
 
-[3. 🔧설계](#3-설계)
+[3. 🔧스토리보드](#3-스토리보)
 
 [4. 🚀테스트](#4-테스트)
 
@@ -40,21 +40,20 @@
 ## 2. 📄와이어프레임
 ![산신령 (3)](https://github.com/user-attachments/assets/067d9ec8-3c31-45d4-b471-b18c7a66eaea)
 
-## 3. 🔧설계
-### 3-1. MSA 시퀀스 다이어그램
-<img width="1321" height="1560" alt="image" src="https://github.com/user-attachments/assets/29236dfa-6ff4-4cb7-a1fe-71b1629ec417" />
+## 3. 🔧스토리보드
+### 3-1. 회원
 
-### 3-2. 논리 모델링
-<img width="2156" height="2044" alt="image" src="https://github.com/user-attachments/assets/db46cfd4-8ed1-441e-b392-2aebfa9c6783" />
 
-### 3-3. 물리 모델링
-<img width="5800" height="2842" alt="Image" src="https://github.com/user-attachments/assets/355e9759-ce68-4b22-8df7-ee1539663bb7" />
+### 3-2. 산
 
-### 3-4. MSA 아키텍처
-<img width="1283" height="625" alt="image" src="https://github.com/user-attachments/assets/4b5cbb70-7b2f-4119-bb90-3f2252f568a1" />
 
-<img width="1919" height="1006" alt="image" src="https://github.com/user-attachments/assets/f4e0ef09-9a58-4e5d-8c98-7d755f2f277b" />
+### 3-3. 크루
 
+
+### 3-4. 게시판
+
+
+### 3-5 운영자
 
 
 
@@ -109,6 +108,7 @@
 |정건일| |
 |윤서진||
 <br>
+
 
 
 
