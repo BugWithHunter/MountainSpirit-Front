@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bughunters.mountainspirit.board.query.mapper.BoardGetMapper">
+    <resultMap id="getBoardMap" type="com.bughunters.mountainspirit.board.query.dto.BoardNameDTO">
+        <id property="id" column="ID"/>
+        <result property="title" column="TITLE"/>
+        <result property="createDate" column="CREATEDATE"/>
+        <result property="cumId" column="CUMID"/>
+    </resultMap>
+    <select id="selectBoardName" resultMap="getBoardMap" parameterType="map">
+        SELECT
+               A.ID
+             , A.TITLE
+             , A.CREATEDATE
+             , A.CUMID
+          FROM Board A
+         WHERE A.ISDELETED = 'N'
+         ORDER BY A.CREATEDATE DESC
+         LIMIT #{offset}, #{limit}
+    </select>
+    <select id="selectBoardNameCount" resultType="long">
+        SELECT COUNT(*) FROM Board
+    </select>
+    <resultMap id="getBoardMap2" type="com.bughunters.mountainspirit.board.query.dto.BoardDTO">
+        <id property="id" column="ID"/>
+        <result property="title" column="TITLE"/>
+        <result property="content" column="CONTENT"/>
+        <result property="createDate" column="CREATEDATE"/>
+        <result property="modifyDate" column="MODIFYDATE"/>
+        <result property="isDeleted" column="ISDELETED"/>
+        <result property="cumId" column="CUMID"/>
+        <collection property="thumbnailDTOList" ofType="com.bughunters.mountainspirit.board.query.dto.ThumbnailDTO">
+            <result property="thumbnail" column="THUMBNAIL"/>
+        </collection>
+    </resultMap>
+    <select id="selectBoardInfoByPostId" resultMap="getBoardMap2" parameterType="_int">
+        SELECT
+               A.ID
+             , A.TITLE
+             , A.CONTENT
+             , A.CREATEDATE
+             , A.MODIFYDATE
+             , A.ISDELETED
+             , A.CUMID
+             , B.THUMBNAIL
+          FROM Board A
+          LEFT JOIN BoardImage B ON (A.ID = B.POSTID)
+         WHERE A.ID = #{id}
+    </select>
+    <select id="searchByTitle" resultMap="getBoardMap2" parameterType="string">
+        SELECT
+               A.ID
+             , A.TITLE
+             , A.CONTENT
+             , A.CREATEDATE
+             , A.MODIFYDATE
+             , A.ISDELETED
+             , A.CUMID
+             , B.THUMBNAIL
+          FROM Board A
+          LEFT JOIN BoardImage B ON (A.ID = B.POSTID)
+         WHERE A.TITLE LIKE CONCAT('%', #{keyword}, '%');
+    </select>
+    <select id="searchByContent" resultMap="getBoardMap2" parameterType="string">
+        SELECT
+               A.ID
+             , A.TITLE
+             , A.CONTENT
+             , A.CREATEDATE
+             , A.MODIFYDATE
+             , A.ISDELETED
+             , A.CUMID
+             , B.THUMBNAIL
+          FROM Board A
+          LEFT JOIN BoardImage B ON (A.ID = B.POSTID)
+         WHERE A.CONTENT LIKE CONCAT('%', #{keyword}, '%');
+    </select>
+    <select id="searchByTitleOrContent" resultMap="getBoardMap2" parameterType="string">
+        SELECT
+               A.ID
+             , A.TITLE
+             , A.CONTENT
+             , A.CREATEDATE
+             , A.MODIFYDATE
+             , A.ISDELETED
+             , A.CUMID
+             , B.THUMBNAIL
+          FROM Board A
+          LEFT JOIN BoardImage B ON (A.ID = B.POSTID)
+         WHERE A.TITLE LIKE CONCAT('%', #{keyword}, '%') OR A.CONTENT LIKE CONCAT('%', #{keyword}, '%');
+    </select>
+</mapper>

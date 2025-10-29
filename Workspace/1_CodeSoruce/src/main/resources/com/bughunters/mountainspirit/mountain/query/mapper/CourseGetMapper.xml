@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bughunters.mountainspirit.mountain.query.mapper.CourseGetMapper">
+    <resultMap type="com.bughunters.mountainspirit.mountain.query.dto.CourseDTO" id="courseResultMap">
+        <id property="poiId" column="poiId"/>
+        <result property="createDate" column="createDate"/>
+        <result property="lat" column="lat"/>
+        <result property="lot" column="lot"/>
+        <result property="aslAltide" column="aslAltide"/>
+        <result property="placeNm" column="placeNm"/>
+        <result property="dscrtCn" column="dscrtCn"/>
+        <result property="orgnExmnnPrgrsDrcntNm" column="orgnExmnnPrgrsDrcntNm"/>
+        <result property="sgnpstDstn1Nm" column="sgnpstDstn1Nm"/>
+        <result property="orgnSgnpstDstn1DrcntNm" column="orgnSgnpstDstn1DrcntNm"/>
+        <result property="sgnpstDstn2Nm" column="sgnpstDstn2Nm"/>
+        <result property="orgnSgnpstDstn2DrcntNm" column="orgnSgnpstDstn2DrcntNm"/>
+        <result property="sgnpstDstn3Nm" column="sgnpstDstn3Nm"/>
+        <result property="orgnSgnpstDstn3DrcntNm" column="orgnSgnpstDstn3DrcntNm"/>
+        <result property="sgnpstDstn4Nm" column="sgnpstDstn4Nm"/>
+        <result property="orgnSgnpstDstn4DrcntNm" column="orgnSgnpstDstn4DrcntNm"/>
+        <result property="orgnSgnpstDstn1DrcntCd" column="orgnSgnpstDstn1DrcntCd"/>
+        <result property="orgnSgnpstDstn2DrcntCd" column="orgnSgnpstDstn2DrcntCd"/>
+        <result property="orgnSgnpstDstn3DrcntCd" column="orgnSgnpstDstn3DrcntCd"/>
+        <result property="orgnSgnpstDstn4DrcntCd" column="orgnSgnpstDstn4DrcntCd"/>
+        <result property="crtrDt" column="crtrDt"/>
+        <result property="stampPath" column="stampPath"/>
+        <result property="stampUpdateDate" column="stampUpdateDate"/>
+        <result property="orgnPlaceTpeCd" column="orgnPlaceTpeCd"/>
+        <result property="frtrlId" column="frtrlId"/>
+        <result property="rankId" column="rankId"/>
+    </resultMap>
+    <select id="selectAllCourse" resultMap="courseResultMap">
+        select
+              poiId
+            , createDate
+            , lat
+            , lot
+            , aslAltide
+            , placeNm
+            , dscrtCn
+            , orgnExmnnPrgrsDrcntNm
+            , sgnpstDstn1Nm
+            , orgnSgnpstDstn1DrcntNm
+            , sgnpstDstn2Nm
+            , orgnSgnpstDstn2DrcntNm
+            , sgnpstDstn3Nm
+            , orgnSgnpstDstn3DrcntNm
+            , sgnpstDstn4Nm
+            , orgnSgnpstDstn4DrcntNm
+            , orgnSgnpstDstn1DrcntCd
+            , orgnSgnpstDstn2DrcntCd
+            , orgnSgnpstDstn3DrcntCd
+            , orgnSgnpstDstn4DrcntCd
+            , crtrDt
+            , stampPath
+            , stampUpdateDate
+            , orgnPlaceTpeCd
+            , frtrlId
+            , rankId
+          from Course
+    </select>
+    <select id="selectCourseByName" resultMap="courseResultMap" parameterType="string">
+        select
+               A.poiId
+             , A.createDate
+             , A.lat
+             , A.lot
+             , A.aslAltide
+             , A.placeNm
+             , A.dscrtCn
+             , A.orgnExmnnPrgrsDrcntNm
+             , A.sgnpstDstn1Nm
+             , A.orgnSgnpstDstn1DrcntNm
+             , A.sgnpstDstn2Nm
+             , A.orgnSgnpstDstn2DrcntNm
+             , A.sgnpstDstn3Nm
+             , A.orgnSgnpstDstn3DrcntNm
+             , A.sgnpstDstn4Nm
+             , A.orgnSgnpstDstn4DrcntNm
+             , A.orgnSgnpstDstn1DrcntCd
+             , A.orgnSgnpstDstn2DrcntCd
+             , A.orgnSgnpstDstn3DrcntCd
+             , A.orgnSgnpstDstn4DrcntCd
+             , A.crtrDt
+             , A.stampPath
+             , A.stampUpdateDate
+             , A.orgnPlaceTpeCd
+             , A.frtrlId
+             , A.rankId
+          from Course A
+          join Mountain B on B.frtrlId = A.frtrlId
+         where B.frtrlNm = #{searchWord}
+    </select>
+</mapper>
