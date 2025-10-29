@@ -9,17 +9,13 @@
         <div ref="mapContainer" class="map-box"></div>
       </article>
 
-      <!-- 하단: ECharts 카드(껍데기) -->
       <article class="card chart-card">
         <div class="chart-placeholder">
-          <!-- 나중에 ECharts 인스턴스 붙일 영역 -->
-          <!-- <div class="chart-canvas" :disaple="isCollapsed"> -->
           <div v-if="isCollapsed" class="chart-canvas" >
                 <EchartDonut 
                     :chartItems="chartItems" :radius="radius">
                 </EchartDonut> 
-        </div>
-        
+          </div>
         </div>
       </article>
     </div>
@@ -127,7 +123,7 @@ const markerData = [
 //  줌 레벨별 크기 매핑 함수
 function sizeForLevel(level) {
   const baseLevel = 8
-  const baseSize = 40
+  const baseSize = 50
   const step = 8
   const size = baseSize + (baseLevel - level) * step
   return Math.max(32, Math.min(size, 128))

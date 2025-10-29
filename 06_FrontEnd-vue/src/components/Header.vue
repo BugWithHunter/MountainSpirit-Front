@@ -27,13 +27,7 @@
             <ul class="login-submenu" :class="{ visible: showLoginMenu }">
               <template v-if="userStore.isLoggedIn">  <!--로그인 상태-->
                 <li><RouterLink to="/" @click="userStore.logOut">{{ loginMenu }}</RouterLink></li>
-
-                
-
                 <li><button class="link-btn" @click="openFilePicker">프로필 변경</button></li>
-
-
-                <!-- 드롭다운 밖(컴포넌트 최하단 아무 곳) -->
                 <input
                   ref="fileInput"
                   type="file"
@@ -43,8 +37,6 @@
                   tabindex="-1"
                   aria-hidden="true"
                 />
-
-
               </template>
               <template v-else> <!--로그아웃 상태-->
                 <li><RouterLink :to="{name : 'member-login'}">{{ loginMenu }}</RouterLink></li>
@@ -138,7 +130,6 @@ async function onFileSelected(e) {
     setTimeout(async() => {
       await userStore.changeProfile(urlPath)
     },300)
-    // alert('프로필이 변경되었습니다.')
   } catch (err) {
     console.error(err)
     alert('업로드 실패 :' , err)

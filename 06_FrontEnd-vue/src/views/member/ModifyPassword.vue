@@ -102,11 +102,10 @@ const pwRegex =
 
 
 async function validatePassword() {
-  errors.password = ''
   if (!form.password) errors.password = '비밀번호를 입력해 주세요.'
   else if (!pwRegex.test(form.password))
     errors.password = '6자 이상, 영문과 숫자를 포함해야 합니다.'
-  else {
+  else if (pwRegex.test(form.password)) {
       try {
           const response = await axios.post(
             'http://localhost:8000/member-client/member/password-info',
@@ -121,9 +120,12 @@ async function validatePassword() {
                 }
             } 
           );
+          errors.password = ''
       } catch(e) {
           errors.password = '비밀번호가 틀렸습니다.'
       }
+  } else {
+    errors.password = ''
   }       
 }
 
@@ -133,6 +135,14 @@ function validateNewPassword() {
   if (!form.newPassword) errors.newPassword = '비밀번호를 입력해 주세요.'
   else if (!pwRegex.test(form.newPassword))
     errors.newPassword = '6자 이상, 영문과 숫자를 포함해야 합니다.'
+  
+    
+  if(form.newPassword2 !== ''){
+    if (form.newPassword !== form.newPassword2)
+        errors.newPassword2 = '비밀번호가 일치하지 않습니다.'
+    else
+        errors.newPassword2 = ''
+  }
 }
 
 function validateNewPassword2() {

@@ -247,7 +247,7 @@
                         },
                     }
                 );
-                alert("후기가 수정되었습니다!");
+                // alert("후기가 수정되었습니다!");
             }
             else{
                 const reviewData = {
@@ -263,7 +263,7 @@
                     },
                 });
 
-                alert("후기가 등록되었습니다!");
+                // alert("후기가 등록되었습니다!");
             }
             showModal.value = false;
             newReview.value = "";
@@ -289,7 +289,7 @@
             `http://localhost:8000/main-client/review/course/${id}`,
             { headers: { Authorization: `Bearer ${userStore.token}` } }
             );
-            alert("리뷰가 삭제되었습니다!");
+            // alert("리뷰가 삭제되었습니다!");
 
             // 최신 리뷰 갱신
             const rRes = await axios.get(
