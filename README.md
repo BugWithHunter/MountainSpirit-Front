@@ -78,6 +78,29 @@
 
 ## 4. 테스트
 
+<details>
+  <summary>메인</summary>
+</details>
+
+<details>
+  <summary>회원</summary>
+</details>
+
+<details>
+  <summary>산</summary>
+</details>
+
+<details>
+  <summary>게시판</summary>
+</details>
+
+<details>
+  <summary>크루</summary>
+</details>
+
+<details>
+  <summary>운영자</summary>
+</details>
 
 ## 5. 문서
 ### 5-1 요구사항 명세서
@@ -173,6 +196,7 @@
 |정건일| |
 |윤서진||
 <br>
+
 
 
 
