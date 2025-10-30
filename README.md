@@ -186,6 +186,18 @@
 
 <details>
   <summary>운영자</summary>
+
+ - 운영자 로그인 시 관리자 페이지 접속
+   ![Adobe Express - adminLogin](https://github.com/user-attachments/assets/7821f363-bab3-4b34-91dc-9215009d0488)
+
+ - 관리자 페이지 구현
+
+   ![Adobe Express - adminPage](https://github.com/user-attachments/assets/9e0f7dc7-6a20-42c9-a2ba-b7f1ad400e26)
+
+ - 신고 시 처리 기능
+
+   ![Adobe Express - adminReport](https://github.com/user-attachments/assets/dba12210-9aeb-4ea5-9c61-75410b0622ce)
+
 </details>
 
 ## 5. 📗문서
@@ -282,6 +294,7 @@
 |정건일| 산과 코스에대한 백설계 및 프론트작업을 해주었고 전반적인 서류 작업에 대한 틀을 마련해주었습니다 갑작스럽게 다른분야로 간다는 이유로 학원을 그만둔다는 소식을 들었는데 이 분야에 대한 학업에 뜻이 없음에도 불구하고 팀원들을 위해서 프로젝트를 끝내고 그만두는 책임감에 감사하다는 말을 전합니다 |
 |윤서진| 본인이 맡은 부분뿐만 아니라 가장 중요한 메인페이지도 구현해주시고 footer 부분에도 디자인부터 데이터 입력까지 도맡아 해주셨습니다. 프론트엔드를 하면서 디자인에 가장 많이 기여하신 것 같고 문서 작업도 항상 앞장서서 해주셔서 감사합니다. |
 <br>
+
 
 
 
