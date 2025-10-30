@@ -88,14 +88,14 @@
 ### 3-4. 크루
 
 <details>
-  <summary>산 상세 페이지</summary>
+  <summary>크루 페이지</summary>
   <img width="2629" height="1172" alt="image" src="https://github.com/user-attachments/assets/2fa81a38-4ed4-4fe3-82de-10b3724c25ab" />
 </details>
 
 ### 3-5 운영자
 
 <details>
-  <summary>산 상세 페이지</summary>
+  <summary>운영자 페이지</summary>
   <img width="2556" height="1334" alt="image" src="https://github.com/user-attachments/assets/0f14d44a-4397-49b3-933b-6eb6e1269188" />
 </details>
 
@@ -249,6 +249,7 @@
 |정건일| 산과 코스에대한 백설계 및 프론트작업을 해주었고 전반적인 서류 작업에 대한 틀을 마련해주었습니다 갑작스럽게 다른분야로 간다는 이유로 학원을 그만둔다는 소식을 들었는데 이 분야에 대한 학업에 뜻이 없음에도 불구하고 팀원들을 위해서 프로젝트를 끝내고 그만두는 책임감에 감사하다는 말을 전합니다 |
 |윤서진| 본인이 맡은 부분뿐만 아니라 가장 중요한 메인페이지도 구현해주시고 footer 부분에도 디자인부터 데이터 입력까지 도맡아 해주셨습니다. 프론트엔드를 하면서 디자인에 가장 많이 기여하신 것 같고 문서 작업도 항상 앞장서서 해주셔서 감사합니다. |
 <br>
+
 
 
 
