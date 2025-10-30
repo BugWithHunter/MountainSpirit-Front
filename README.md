@@ -103,9 +103,6 @@
 
 <details>
   <summary>메인</summary>
-  
-  - 프로필 변경
-  ![프로필변경](https://github.com/user-attachments/assets/0b98b551-363e-4351-ad42-0d2e56ee7b3f)
 
   
   - 등산 기록
@@ -120,6 +117,16 @@
 <details>
   <summary>회원</summary>
   
+  - 프로필 변경
+  ![프로필변경](https://github.com/user-attachments/assets/0b98b551-363e-4351-ad42-0d2e56ee7b3f)
+
+  - 비밀번호 변경
+  ![비밀번호 변경](https://github.com/user-attachments/assets/cd97ef17-7a65-41dd-8d75-ac9b87d889a7)
+
+  - 회원가입
+    ![회원가입](https://github.com/user-attachments/assets/d2c288f2-4dce-4f6a-8a2a-cf99660888c8)
+
+
 </details>
 
 <details>
@@ -261,6 +268,7 @@
 |정건일| 산과 코스에대한 백설계 및 프론트작업을 해주었고 전반적인 서류 작업에 대한 틀을 마련해주었습니다 갑작스럽게 다른분야로 간다는 이유로 학원을 그만둔다는 소식을 들었는데 이 분야에 대한 학업에 뜻이 없음에도 불구하고 팀원들을 위해서 프로젝트를 끝내고 그만두는 책임감에 감사하다는 말을 전합니다 |
 |윤서진| 본인이 맡은 부분뿐만 아니라 가장 중요한 메인페이지도 구현해주시고 footer 부분에도 디자인부터 데이터 입력까지 도맡아 해주셨습니다. 프론트엔드를 하면서 디자인에 가장 많이 기여하신 것 같고 문서 작업도 항상 앞장서서 해주셔서 감사합니다. |
 <br>
+
 
 
 
